@@ -38,11 +38,13 @@
         }
       </style>
   </head>
-  <body  id="app" class="container" onclick="createRipple(event)">
+  <body  id="app" class="container" >
     <script type="module" src="/src/main.js"></script>
   </body>
   <script>
+      //onclick="createRipple(event)"
       function createRipple(event) {
+
           const container = event.currentTarget;
           const ripple = document.createElement("span");
           const size = Math.max(container.clientWidth, container.clientHeight);

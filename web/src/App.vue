@@ -1,58 +1,39 @@
+<script setup>
+</script>
+
 <template>
-  <a-space direction="vertical" :style="{ width: '100%' }" :size="[0, 48]">
-    <a-layout>
-      <a-layout-header :style="headerStyle">Header</a-layout-header>
-      <a-layout-content :style="contentStyle">Content</a-layout-content>
-      <a-layout-footer :style="footerStyle">Footer</a-layout-footer>
-    </a-layout>
-
-    <a-layout>
-      <a-layout-header :style="headerStyle">Header</a-layout-header>
-      <a-layout>
-        <a-layout-sider :style="siderStyle">Sider</a-layout-sider>
-        <a-layout-content :style="contentStyle">Content</a-layout-content>
-      </a-layout>
-      <a-layout-footer :style="footerStyle">Footer</a-layout-footer>
-    </a-layout>
-
-    <a-layout>
-      <a-layout-header :style="headerStyle">Header</a-layout-header>
-      <a-layout>
-        <a-layout-content :style="contentStyle">Content</a-layout-content>
-        <a-layout-sider :style="siderStyle">Sider</a-layout-sider>
-      </a-layout>
-      <a-layout-footer :style="footerStyle">Footer</a-layout-footer>
-    </a-layout>
-
-    <a-layout>
-      <a-layout-sider :style="siderStyle">Sider</a-layout-sider>
-      <a-layout>
-        <a-layout-header :style="headerStyle">Header</a-layout-header>
-        <a-layout-content :style="contentStyle">Content</a-layout-content>
-        <a-layout-footer :style="footerStyle">Footer</a-layout-footer>
-      </a-layout>
-    </a-layout>
-  </a-space>
+  <router-view />
 </template>
 
 <style scoped>
-.content {
+.layout-header {
+  color: #d47777;
+  height: max-content;
+  padding-inline: 10px;
+  line-height: 50px;
+  transition: background-color 2s;
+  background-color: transparent;
+  z-index: 99;
   display: flex;
-  min-height: 100vh;
-  line-height: 1.1;
+  align-items: center; /* 垂直居中 */
+}
+.layout-header .menu{
+  margin-left: auto
+}
+.layout-header:hover {
+  background-color: #7dbcea;
+}
+
+.layout-content{
   text-align: center;
-  flex-direction: column;
-  justify-content: center;
+  line-height: 120px;
+  color: #d47777;
+  background-color: transparent;
 }
 
-.content h1 {
-  font-size: 3.6rem;
-  font-weight: 700;
-}
-
-.content p {
-  font-size: 1.2rem;
-  font-weight: 400;
-  opacity: 0.5;
+.layout-footer{
+  text-align: center;
+  color: #d47777;
+  background-color: transparent;
 }
 </style>

@@ -1,43 +1,12 @@
-# Rsbuild Project
+# Vue 3 + Vite
 
-## Setup
+This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
 
-Install the dependencies:
+Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://vuejs.org/guide/scaling-up/tooling.html#ide-support).
 
-```bash
-pnpm install
 ```
+npm create vite@latest
+npm i --save ant-design-vue@4.x
 
-## Get Started
 
-Start the dev server:
-
-```bash
-pnpm dev
-```
-
-Build the app for production:
-
-```bash
-pnpm build
-```
-
-Preview the production build locally:
-
-```bash
-pnpm preview
-```
-## Version
-
-[How to init](https://antdv.com/docs/vue/getting-started-cn)
-
-```bash
-npm create rsbuild@latest
-nvm use 16.20.1  //If node version is higher than 15, it can be ignore!
-npm run dev
-```
-
-##Install
-```
-npm install vue-router@4
 ```
