@@ -1,7 +1,8 @@
 <template>
-  <div>about</div>
-</template>
+  <div class="main-container" style="background-color: red" >
 
+  </div>
+</template>
 <script>
 export default {
 }
