@@ -3,61 +3,86 @@
     <a-col :md="5" :sm="24" :xs="24" style="background-color: #1a1a1a" >
       1
     </a-col>
-    <a-col :md="14" :sm="24" :xs="24"  style="background-color: #992929" >
-      <a-card hoverable style="width: 300px">
+    <a-col :md="14" :sm="24" :xs="24"  style="background-color: #992929;text-align: center" >
+      <a-card title="Default size card" style="width: 100%;text-align: left" :hoverable="true" :bodyStyle="{padding:0}">
+        <template #extra><a href="#">Edit</a></template>
+        <div style="height: 130px;display: flex">
+          <a-avatar :size="100" shape="square" style="margin: 15px;">
+            <template #icon><UserOutlined /></template>
+          </a-avatar>
+          <div class="ellipsis-multiline2">
+           &nbsp; &nbsp;  We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.  We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently. We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.
+          </div>
+        </div>
         <template #actions>
-          <!--            <setting-outlined key="setting" />-->
-          <!--            <edit-outlined key="edit" />-->
-          <!--            <ellipsis-outlined key="ellipsis" />-->
+          <span><HeartOutlined /> 999+</span>
+          <LikeOutlined ></LikeOutlined>
+          <DislikeOutlined />
         </template>
-        <template #cover>
-          <img
-              alt="example"
-              src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-          />
-        </template>
-        <a-card-meta title="Card title" description="This is the description">
-          <template #avatar>
-            <a-avatar src="https://joeschmoe.io/api/v1/random" />
-          </template>
-        </a-card-meta>
       </a-card>
-      <div style="background: #ececec; padding: 30px">
-        <a-card title="Card title" :bordered="false" style="width: 300px">
-          <p>Card content</p>
-          <p>Card content</p>
-          <p>Card content</p>
-        </a-card>
-      </div>
-      <a-card title="Default size card" style="width: 300px">
-        <template #extra><a href="#">more</a></template>
-        <p>card content</p>
-        <p>card content</p>
-        <p>card content</p>
-      </a-card>
-      <a-card size="small" title="Small size card" style="width: 300px">
-        <template #extra><a href="#">more</a></template>
-        <p>card content</p>
-        <p>card content</p>
-        <p>card content</p>
-      </a-card>
-      <a-card hoverable style="width: 300px">
+      <a-card title="Default size card" style="width: 100%;text-align: left" :hoverable="true" :bodyStyle="{padding:0}">
+        <template #extra><a href="#">Edit</a></template>
+        <div style="height: 130px;display: flex">
+          <a-avatar :size="100" shape="square" style="margin: 15px;">
+            <template #icon><UserOutlined /></template>
+          </a-avatar>
+          <div class="ellipsis-multiline2">
+            &nbsp; &nbsp;  We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.  We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently. We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.
+          </div>
+        </div>
         <template #actions>
-          <!--            <setting-outlined key="setting" />-->
-          <!--            <edit-outlined key="edit" />-->
-          <!--            <ellipsis-outlined key="ellipsis" />-->
+          <span><HeartOutlined /> 999+</span>
+          <LikeOutlined ></LikeOutlined>
+          <DislikeOutlined />
         </template>
-        <template #cover>
-          <img
-              alt="example"
-              src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-          />
+      </a-card>
+      <a-card title="Default size card" style="width: 100%;text-align: left" :hoverable="true" :bodyStyle="{padding:0}">
+        <template #extra><a href="#">Edit</a></template>
+        <div style="height: 130px;display: flex">
+          <a-avatar :size="100" shape="square" style="margin: 15px;">
+            <template #icon><UserOutlined /></template>
+          </a-avatar>
+          <div class="ellipsis-multiline2">
+            &nbsp; &nbsp;  We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.  We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently. We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.
+          </div>
+        </div>
+        <template #actions>
+          <span><HeartOutlined /> 999+</span>
+          <LikeOutlined ></LikeOutlined>
+          <DislikeOutlined />
         </template>
-        <a-card-meta title="Card title" description="This is the description">
-          <template #avatar>
-            <a-avatar src="https://joeschmoe.io/api/v1/random" />
-          </template>
-        </a-card-meta>
+      </a-card>
+      <a-card title="Default size card" style="width: 100%;text-align: left" :hoverable="true" :bodyStyle="{padding:0}">
+        <template #extra><a href="#">Edit</a></template>
+        <div style="height: 130px;display: flex">
+          <a-avatar :size="100" shape="square" style="margin: 15px;">
+            <template #icon><UserOutlined /></template>
+          </a-avatar>
+          <div class="ellipsis-multiline2">
+            &nbsp; &nbsp;  We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.  We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently. We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.
+          </div>
+        </div>
+        <template #actions>
+          <span><HeartOutlined /> 999+</span>
+          <LikeOutlined ></LikeOutlined>
+          <DislikeOutlined />
+        </template>
+      </a-card>
+      <a-card title="Default size card" style="width: 100%;text-align: left" :hoverable="true" :bodyStyle="{padding:0}">
+        <template #extra><a href="#">Edit</a></template>
+        <div style="height: 130px;display: flex">
+          <a-avatar :size="100" shape="square" style="margin: 15px;">
+            <template #icon><UserOutlined /></template>
+          </a-avatar>
+          <div class="ellipsis-multiline2">
+            &nbsp; &nbsp;  We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.  We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently. We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.
+          </div>
+        </div>
+        <template #actions>
+          <span><HeartOutlined /> 999+</span>
+          <LikeOutlined ></LikeOutlined>
+          <DislikeOutlined />
+        </template>
       </a-card>
     </a-col>
     <a-col :md="5" :sm="24" :xs="24"  style="background-color: #1a1a1a" >
@@ -66,11 +91,43 @@
   </a-row>
 </template>
 
-<script>
-export default {
-}
+<script setup>
+import {UserOutlined, HeartOutlined, LikeOutlined, DislikeOutlined } from '@ant-design/icons-vue';
 </script>
 
 <style scoped>
+.blog-content-eclipses{
+  flex: 1; /* 右边部分自适应 */
+  overflow: hidden; /* 超出部分隐藏 */
+  text-overflow: ellipsis; /* 文字溢出显示省略号 */
+  white-space: nowrap; /* 文字不换行 */
+  background-color: lightgreen; /* 仅为了视觉效果 */
+  margin: 15px 15px 15px 0;
+}
+.ellipsis-multiline2{
+  flex: 1; /* 右边部分自适应 */
+  margin: 15px 15px 15px 0;
+  /*word-break: break-all;*/
+  /*word-wrap: break-word;*/
+  /*overflow: hidden;*/
+  /*text-overflow: ellipsis;*/
+  /*display: -webkit-box;*/
+  /*-webkit-box-orient: vertical;*/
+  /*-webkit-line-clamp: 3;*/
 
+
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4; /* 显示3行 */
+  overflow: hidden;
+  font-size: 15px;
+  text-overflow: ellipsis;
+}
+.ellipsis-multiline {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 </style>
