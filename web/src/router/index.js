@@ -27,6 +27,18 @@ export const constantRoutes = [
                 meta: { title: '日记',  affix: true }
             },
             {
+                path: 'blog/detail/:id(\\d+)',
+                component: () => import('@/views/blog/Detail.vue'),
+                name: 'blog-detail',
+                meta: { title: '日记',  affix: true }
+            },
+            {
+                path: 'blog/edit/:id(\\d+)',
+                component: () => import('@/views/blog/Edit.vue'),
+                name: 'blog-edit',
+                meta: { title: '日记',  affix: true }
+            },
+            {
                 path: 'user',
                 component: () => import('@/views/user/Index.vue'),
                 name: 'user',
