@@ -40,7 +40,8 @@ const goToAbout=(path)=> {
         </a-col>
         <a-col  :md="8" :sm="24" :xs="24">
           <a-avatar :size="44" class="layout-content-menu-item" @click="openDialog" >登陆</a-avatar>
-          <a-avatar :size="44" class="layout-content-menu-item" @click="getInfoData" >测试</a-avatar>
+          <a-avatar :size="44" class="layout-content-menu-item" @click="getInfoData" >杂谈</a-avatar>
+          <a-avatar :size="44" class="layout-content-menu-item" @click="getInfoData" >留言</a-avatar>
           <a-avatar :size="44" class="layout-content-menu-item" @click="goToAbout('/about')" >关于</a-avatar>
           <a-avatar :size="44" class="layout-content-menu-item" @click="goToAbout('/travel')" >旅行</a-avatar>
           <a-avatar :size="44" class="layout-content-menu-item" @click="goToAbout('/blog')" >日记</a-avatar>

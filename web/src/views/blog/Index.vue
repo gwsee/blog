@@ -8,12 +8,12 @@
         <a-input v-model:value="value" placeholder="you can search blog title from here!"
                  style="width: calc(90% - 140px);height: 40px;background-color: transparent" />
         <a-button type="default" style="height: 40px;width: 70px" @click="onQuery">Query</a-button>
-        <a-button type="default" style="height: 40px;width: 70px" @click="onQuery">New</a-button>
+        <a-button type="default" style="height: 40px;width: 70px" @click="toRoute('/blog/edit/0')">New</a-button>
       </a-input-group>
       <a-card title="Default size card" class="blog-card" :hoverable="true" :bodyStyle="{padding:0}">
         <template #extra><a href="#">Edit</a></template>
         <div style="height: 130px;display: flex">
-          <a-avatar :size="100" shape="square" style="margin: 15px;">
+          <a-avatar :size="100"  style="margin: 15px;">
             <template #icon><UserOutlined /></template>
           </a-avatar>
           <div class="blog-content-eclipses">
@@ -29,7 +29,27 @@
       <a-card title="Default size card" class="blog-card" :hoverable="true" :bodyStyle="{padding:0}">
         <template #extra><a href="#">Edit</a></template>
         <div style="height: 130px;display: flex">
-          <a-avatar :size="100" shape="square" style="margin: 15px;">
+          <a-avatar :size="100"  style="margin: 15px;">
+            <a-image
+                :width="100"
+                src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+            />
+          </a-avatar>
+
+          <div class="blog-content-eclipses">
+            &nbsp; &nbsp;  We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.  We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently. We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.
+          </div>
+        </div>
+        <template #actions>
+          <span><HeartOutlined /> 999+</span>
+          <LikeOutlined ></LikeOutlined>
+          <DislikeOutlined />
+        </template>
+      </a-card>
+      <a-card title="Default size card" class="blog-card" :hoverable="true" :bodyStyle="{padding:0}">
+        <template #extra><a href="#">Edit</a></template>
+        <div style="height: 130px;display: flex">
+          <a-avatar :size="100"  style="margin: 15px;">
             <template #icon><UserOutlined /></template>
           </a-avatar>
           <div class="blog-content-eclipses">
@@ -45,7 +65,7 @@
       <a-card title="Default size card" class="blog-card" :hoverable="true" :bodyStyle="{padding:0}">
         <template #extra><a href="#">Edit</a></template>
         <div style="height: 130px;display: flex">
-          <a-avatar :size="100" shape="square" style="margin: 15px;">
+          <a-avatar :size="100"  style="margin: 15px;">
             <template #icon><UserOutlined /></template>
           </a-avatar>
           <div class="blog-content-eclipses">
@@ -61,23 +81,7 @@
       <a-card title="Default size card" class="blog-card" :hoverable="true" :bodyStyle="{padding:0}">
         <template #extra><a href="#">Edit</a></template>
         <div style="height: 130px;display: flex">
-          <a-avatar :size="100" shape="square" style="margin: 15px;">
-            <template #icon><UserOutlined /></template>
-          </a-avatar>
-          <div class="blog-content-eclipses">
-            &nbsp; &nbsp;  We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.  We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently. We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.
-          </div>
-        </div>
-        <template #actions>
-          <span><HeartOutlined /> 999+</span>
-          <LikeOutlined ></LikeOutlined>
-          <DislikeOutlined />
-        </template>
-      </a-card>
-      <a-card title="Default size card" class="blog-card" :hoverable="true" :bodyStyle="{padding:0}">
-        <template #extra><a href="#">Edit</a></template>
-        <div style="height: 130px;display: flex">
-          <a-avatar :size="100" shape="square" style="margin: 15px;">
+          <a-avatar :size="100"  style="margin: 15px;">
             <template #icon><UserOutlined /></template>
           </a-avatar>
           <div class="blog-content-eclipses">
@@ -99,6 +103,11 @@
 
 <script setup>
 import {UserOutlined, HeartOutlined, LikeOutlined, DislikeOutlined } from '@ant-design/icons-vue';
+import { useRouter } from 'vue-router';
+const router = useRouter();
+const toRoute=(path)=> {
+  router.push(path)
+}
 </script>
 
 <style scoped>

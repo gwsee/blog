@@ -11,9 +11,25 @@
         <a-form-item label="Description">
           <a-textarea v-model:value="formState.desc" />
         </a-form-item>
-        <a-form-item label="IsHidden">
-          <a-switch v-model:checked="formState.delivery" />
-        </a-form-item>
+        <a-row  >
+          <a-col :md="12" :sm="24" :xs="24"   >
+            <a-form-item label="IsHidden">
+              <a-switch v-model:checked="formState.delivery" />
+            </a-form-item>
+          </a-col>
+          <a-col :md="12" :sm="24" :xs="24"   >
+            <a-form-item label="Tag">
+              <a-select
+                  v-model:value="formState.tags"
+                  mode="tags"
+                  class="tag-class"
+                  placeholder="Tags Mode"
+                  :options="options"
+                  @change="handleChange"
+              ></a-select>
+            </a-form-item>
+          </a-col>
+        </a-row>
         <a-form-item label="Cover">
           <a-upload action="/upload.do" :maxCount="1" list-type="picture-card">
             <div>
@@ -23,7 +39,7 @@
           </a-upload>
         </a-form-item>
 
-        <a-form-item label="Resources">
+        <a-form-item label="Content">
           <div style="border: 1px solid #ccc">
             <Toolbar
                 style="border-bottom: 1px solid #ccc"
@@ -41,9 +57,9 @@
           </div>
         </a-form-item>
 
-        <a-form-item :wrapper-col="{ span: 14, offset: 4 }" style="text-align: center">
+        <a-form-item :wrapper-col="{ span: 14, offset: 5 }" style="text-align: center">
           <a-button type="primary" @click="onSubmit">Create</a-button>
-          <a-button style="margin-left: 10px">Cancel</a-button>
+          <a-button style="margin-left: 10px" @click="toRoute('/blog')">Cancel</a-button>
         </a-form-item>
       </a-form>
     </a-col>
@@ -76,7 +92,9 @@ onBeforeUnmount(() => {
   if (editor == null) return
   editor.destroy()
 })
-
+const handleChange = (value) => {
+  console.log(`selected ${value}`);
+};
 const handleCreated = (editor) => {
   editorRef.value = editor // 记录 editor 实例，重要！
 }
@@ -85,13 +103,21 @@ const formState = reactive({
   delivery: false,
   type: [],
   resource: '',
+  tags:[],
   desc: '<p>Hello from CKEditor 5 in Vue!</p>',
 });
+const options = [...Array(25)].map((_, i) => ({ value: (i + 10).toString(36) + (i + 1) }));
 const onSubmit = () => {
   console.log('submit!', toRaw(formState));
 };
-const labelCol = { style: { width: '120px' } };
-const wrapperCol = { span: 20 };
+const labelCol = { style: { width: '100px' } };
+const wrapperCol = { span: 24 };
+
+import { useRouter } from 'vue-router';
+const router = useRouter();
+const toRoute=(path)=> {
+  router.push(path)
+}
 </script>
 
 <style scoped>
@@ -107,10 +133,12 @@ const wrapperCol = { span: 20 };
 }
 
 .blog-card-edit{
-  width: 95%;
+  width: 90%;
   margin-top: 20px;
   text-align: left;
   margin-left: auto;
   margin-right: auto;
+}
+.tag-class{
 }
 </style>
