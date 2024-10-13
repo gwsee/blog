@@ -3,6 +3,7 @@ package schema
 import (
 	"blog/internal/ent/schema/mixin"
 	"entgo.io/ent"
+	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/field"
@@ -21,7 +22,11 @@ func (Blog) Fields() []ent.Field {
 		field.Int8("is_hidden").Default(0).Comment("是否隐藏:0否,1是"),
 		field.JSON("tags", []string{}).Comment("标签"),
 		field.String("cover").Comment("封面"),
-		field.String("content").NotEmpty().Comment("内容"),
+		field.String("content").NotEmpty().Comment("内容").
+			SchemaType(map[string]string{
+				dialect.MySQL:    "text", // Override MySQL.
+				dialect.Postgres: "text", // Override Postgres.
+			}),
 	}
 }
 
