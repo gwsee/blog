@@ -1,21 +1,64 @@
-###1：博客
-```
-如果公司开除了，但是又没有自己一个展示自己的地方，社交圈子也少，于是我们应该有个自己的博客吧？
+# Kratos Project Template
 
-如果你喜欢他；请给他个星；有了星星 我才有动力去完成他！
+## Install Kratos
+```
+go install github.com/go-kratos/kratos/cmd/kratos/v2@latest
+```
+## Create a service
+```
+# Create a template project
+kratos new server
 
-开源，肯定开源；会做成最简单的部署方式！
+cd server
+# Add a proto template
+kratos proto add api/server/server.proto
+# Generate the proto code
+kratos proto client api/server/server.proto
+# Generate the source code of service by proto file
+kratos proto server api/server/server.proto -t internal/service
+
+go generate ./...
+go build -o ./bin/ ./...
+./bin/server -conf ./configs
 ```
-###2：开始设计
+## Generate other auxiliary files by Makefile
 ```
-计划中：
-    后端：golang
-    前端：vue
-    管理：react
-功能点
-    首页--登录;
-         游历(简历)
-         留言
-         随笔(日常记录)
-         学习(学习记录)
+# Download and update dependencies
+make init
+# Generate API files (include: pb.go, http, grpc, validate, swagger) by proto file
+make api
+# Generate all files
+make all
+```
+## Automated Initialization (wire)
+```
+# install wire
+go get github.com/google/wire/cmd/wire
+
+# generate wire
+cd cmd/server
+wire
+```
+
+## Docker
+```bash
+# build
+docker build -t <your-docker-image-name> .
+
+# run
+docker run --rm -p 8000:8000 -p 9000:9000 -v </path/to/your/configs>:/data/conf <your-docker-image-name>
+```
+
+## CMD
+```bash
+kratos new blog
+cd blog
+
+kratos new app/blog --nomod
+kratos proto add api/helloworld/v1/demo.proto
+kratos proto client api/helloworld/v1/demo.proto ##不会生成http文件
+kratos proto client api/helloworld/v1/demo.proto  -- --go-http_opt=omitempty=false ##会生成http文件
+kratos proto server api/helloworld/v1/demo.proto -t internal/service
+
+
 ```
