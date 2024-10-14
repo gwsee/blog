@@ -16,7 +16,7 @@ type Account struct {
 	config `json:"-"`
 	// ID of the ent.
 	// 账户ID
-	ID int32 `json:"id,omitempty"`
+	ID int `json:"id,omitempty"`
 	// 创建时间
 	CreatedAt int64 `json:"created_at,omitempty"`
 	// 创建人
@@ -71,7 +71,7 @@ func (a *Account) assignValues(columns []string, values []any) error {
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			a.ID = int32(value.Int64)
+			a.ID = int(value.Int64)
 		case account.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field created_at", values[i])

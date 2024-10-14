@@ -12,5 +12,8 @@ type Account func(*sql.Selector)
 // Blog is the predicate function for blog builders.
 type Blog func(*sql.Selector)
 
+// BlogContent is the predicate function for blogcontent builders.
+type BlogContent func(*sql.Selector)
+
 // Comment is the predicate function for comment builders.
 type Comment func(*sql.Selector)

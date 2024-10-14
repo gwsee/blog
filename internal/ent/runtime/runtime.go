@@ -5,6 +5,7 @@ package runtime
 import (
 	"blog/internal/ent/account"
 	"blog/internal/ent/blog"
+	"blog/internal/ent/blogcontent"
 	"blog/internal/ent/comment"
 	"blog/internal/ent/schema"
 )
@@ -72,7 +73,7 @@ func init() {
 	// accountDescID is the schema descriptor for id field.
 	accountDescID := accountFields[0].Descriptor()
 	// account.IDValidator is a validator for the "id" field. It is called by the builders before save.
-	account.IDValidator = accountDescID.Validators[0].(func(int32) error)
+	account.IDValidator = accountDescID.Validators[0].(func(int) error)
 	blogMixin := schema.Blog{}.Mixin()
 	blogMixinHooks0 := blogMixin[0].Hooks()
 	blogMixinHooks1 := blogMixin[1].Hooks()
@@ -128,7 +129,13 @@ func init() {
 	// blogDescID is the schema descriptor for id field.
 	blogDescID := blogFields[0].Descriptor()
 	// blog.IDValidator is a validator for the "id" field. It is called by the builders before save.
-	blog.IDValidator = blogDescID.Validators[0].(func(int32) error)
+	blog.IDValidator = blogDescID.Validators[0].(func(int) error)
+	blogcontentFields := schema.BlogContent{}.Fields()
+	_ = blogcontentFields
+	// blogcontentDescContent is the schema descriptor for content field.
+	blogcontentDescContent := blogcontentFields[1].Descriptor()
+	// blogcontent.ContentValidator is a validator for the "content" field. It is called by the builders before save.
+	blogcontent.ContentValidator = blogcontentDescContent.Validators[0].(func(string) error)
 	commentMixin := schema.Comment{}.Mixin()
 	commentMixinHooks0 := commentMixin[0].Hooks()
 	commentMixinHooks1 := commentMixin[1].Hooks()
@@ -176,39 +183,35 @@ func init() {
 	// commentDescAccountID is the schema descriptor for account_id field.
 	commentDescAccountID := commentFields[0].Descriptor()
 	// comment.AccountIDValidator is a validator for the "account_id" field. It is called by the builders before save.
-	comment.AccountIDValidator = commentDescAccountID.Validators[0].(func(int32) error)
-	// commentDescKind is the schema descriptor for kind field.
-	commentDescKind := commentFields[1].Descriptor()
-	// comment.DefaultKind holds the default value on creation for the kind field.
-	comment.DefaultKind = commentDescKind.Default.(int8)
-	// commentDescKindID is the schema descriptor for kind_id field.
-	commentDescKindID := commentFields[2].Descriptor()
-	// comment.KindIDValidator is a validator for the "kind_id" field. It is called by the builders before save.
-	comment.KindIDValidator = commentDescKindID.Validators[0].(func(int32) error)
+	comment.AccountIDValidator = commentDescAccountID.Validators[0].(func(int) error)
+	// commentDescBlogID is the schema descriptor for blog_id field.
+	commentDescBlogID := commentFields[1].Descriptor()
+	// comment.BlogIDValidator is a validator for the "blog_id" field. It is called by the builders before save.
+	comment.BlogIDValidator = commentDescBlogID.Validators[0].(func(int) error)
 	// commentDescTopID is the schema descriptor for top_id field.
-	commentDescTopID := commentFields[4].Descriptor()
+	commentDescTopID := commentFields[3].Descriptor()
 	// comment.DefaultTopID holds the default value on creation for the top_id field.
-	comment.DefaultTopID = commentDescTopID.Default.(int32)
+	comment.DefaultTopID = commentDescTopID.Default.(int)
 	// commentDescParentID is the schema descriptor for parent_id field.
-	commentDescParentID := commentFields[5].Descriptor()
+	commentDescParentID := commentFields[4].Descriptor()
 	// comment.DefaultParentID holds the default value on creation for the parent_id field.
-	comment.DefaultParentID = commentDescParentID.Default.(int32)
+	comment.DefaultParentID = commentDescParentID.Default.(int)
+	// commentDescLevel is the schema descriptor for level field.
+	commentDescLevel := commentFields[5].Descriptor()
+	// comment.DefaultLevel holds the default value on creation for the level field.
+	comment.DefaultLevel = commentDescLevel.Default.(int)
+	// commentDescTotal is the schema descriptor for total field.
+	commentDescTotal := commentFields[6].Descriptor()
+	// comment.DefaultTotal holds the default value on creation for the total field.
+	comment.DefaultTotal = commentDescTotal.Default.(int)
 	// commentDescStatus is the schema descriptor for status field.
-	commentDescStatus := commentFields[6].Descriptor()
+	commentDescStatus := commentFields[7].Descriptor()
 	// comment.DefaultStatus holds the default value on creation for the status field.
 	comment.DefaultStatus = commentDescStatus.Default.(int8)
-	// commentDescLevel is the schema descriptor for level field.
-	commentDescLevel := commentFields[7].Descriptor()
-	// comment.DefaultLevel holds the default value on creation for the level field.
-	comment.DefaultLevel = commentDescLevel.Default.(int32)
-	// commentDescTotal is the schema descriptor for total field.
-	commentDescTotal := commentFields[8].Descriptor()
-	// comment.DefaultTotal holds the default value on creation for the total field.
-	comment.DefaultTotal = commentDescTotal.Default.(int32)
 	// commentDescID is the schema descriptor for id field.
-	commentDescID := commentFields[3].Descriptor()
+	commentDescID := commentFields[2].Descriptor()
 	// comment.IDValidator is a validator for the "id" field. It is called by the builders before save.
-	comment.IDValidator = commentDescID.Validators[0].(func(int32) error)
+	comment.IDValidator = commentDescID.Validators[0].(func(int) error)
 }
 
 const (

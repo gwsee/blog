@@ -28,20 +28,18 @@ const (
 	FieldDeletedBy = "deleted_by"
 	// FieldAccountID holds the string denoting the account_id field in the database.
 	FieldAccountID = "account_id"
-	// FieldKind holds the string denoting the kind field in the database.
-	FieldKind = "kind"
-	// FieldKindID holds the string denoting the kind_id field in the database.
-	FieldKindID = "kind_id"
+	// FieldBlogID holds the string denoting the blog_id field in the database.
+	FieldBlogID = "blog_id"
 	// FieldTopID holds the string denoting the top_id field in the database.
 	FieldTopID = "top_id"
 	// FieldParentID holds the string denoting the parent_id field in the database.
 	FieldParentID = "parent_id"
-	// FieldStatus holds the string denoting the status field in the database.
-	FieldStatus = "status"
 	// FieldLevel holds the string denoting the level field in the database.
 	FieldLevel = "level"
 	// FieldTotal holds the string denoting the total field in the database.
 	FieldTotal = "total"
+	// FieldStatus holds the string denoting the status field in the database.
+	FieldStatus = "status"
 	// FieldContent holds the string denoting the content field in the database.
 	FieldContent = "content"
 	// Table holds the table name of the comment in the database.
@@ -59,13 +57,12 @@ var Columns = []string{
 	FieldDeletedAt,
 	FieldDeletedBy,
 	FieldAccountID,
-	FieldKind,
-	FieldKindID,
+	FieldBlogID,
 	FieldTopID,
 	FieldParentID,
-	FieldStatus,
 	FieldLevel,
 	FieldTotal,
+	FieldStatus,
 	FieldContent,
 }
 
@@ -104,23 +101,21 @@ var (
 	// DefaultDeletedBy holds the default value on creation for the "deleted_by" field.
 	DefaultDeletedBy string
 	// AccountIDValidator is a validator for the "account_id" field. It is called by the builders before save.
-	AccountIDValidator func(int32) error
-	// DefaultKind holds the default value on creation for the "kind" field.
-	DefaultKind int8
-	// KindIDValidator is a validator for the "kind_id" field. It is called by the builders before save.
-	KindIDValidator func(int32) error
+	AccountIDValidator func(int) error
+	// BlogIDValidator is a validator for the "blog_id" field. It is called by the builders before save.
+	BlogIDValidator func(int) error
 	// DefaultTopID holds the default value on creation for the "top_id" field.
-	DefaultTopID int32
+	DefaultTopID int
 	// DefaultParentID holds the default value on creation for the "parent_id" field.
-	DefaultParentID int32
+	DefaultParentID int
+	// DefaultLevel holds the default value on creation for the "level" field.
+	DefaultLevel int
+	// DefaultTotal holds the default value on creation for the "total" field.
+	DefaultTotal int
 	// DefaultStatus holds the default value on creation for the "status" field.
 	DefaultStatus int8
-	// DefaultLevel holds the default value on creation for the "level" field.
-	DefaultLevel int32
-	// DefaultTotal holds the default value on creation for the "total" field.
-	DefaultTotal int32
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
-	IDValidator func(int32) error
+	IDValidator func(int) error
 )
 
 // OrderOption defines the ordering options for the Comment queries.
@@ -171,14 +166,9 @@ func ByAccountID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldAccountID, opts...).ToFunc()
 }
 
-// ByKind orders the results by the kind field.
-func ByKind(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldKind, opts...).ToFunc()
-}
-
-// ByKindID orders the results by the kind_id field.
-func ByKindID(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldKindID, opts...).ToFunc()
+// ByBlogID orders the results by the blog_id field.
+func ByBlogID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldBlogID, opts...).ToFunc()
 }
 
 // ByTopID orders the results by the top_id field.
@@ -191,11 +181,6 @@ func ByParentID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldParentID, opts...).ToFunc()
 }
 
-// ByStatus orders the results by the status field.
-func ByStatus(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldStatus, opts...).ToFunc()
-}
-
 // ByLevel orders the results by the level field.
 func ByLevel(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldLevel, opts...).ToFunc()
@@ -204,6 +189,11 @@ func ByLevel(opts ...sql.OrderTermOption) OrderOption {
 // ByTotal orders the results by the total field.
 func ByTotal(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldTotal, opts...).ToFunc()
+}
+
+// ByStatus orders the results by the status field.
+func ByStatus(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldStatus, opts...).ToFunc()
 }
 
 // ByContent orders the results by the content field.

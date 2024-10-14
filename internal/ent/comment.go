@@ -16,7 +16,7 @@ type Comment struct {
 	config `json:"-"`
 	// ID of the ent.
 	// 评论ID
-	ID int32 `json:"id,omitempty"`
+	ID int `json:"id,omitempty"`
 	// 创建时间
 	CreatedAt int64 `json:"created_at,omitempty"`
 	// 创建人
@@ -32,21 +32,19 @@ type Comment struct {
 	// 删除人
 	DeletedBy string `json:"deleted_by,omitempty"`
 	// 账户ID
-	AccountID int32 `json:"account_id,omitempty"`
-	// 对应类型;0评论
-	Kind int8 `json:"kind,omitempty"`
+	AccountID int `json:"account_id,omitempty"`
 	// 对应类型的ID
-	KindID int32 `json:"kind_id,omitempty"`
+	BlogID int `json:"blog_id,omitempty"`
 	// 顶级ID
-	TopID int32 `json:"top_id,omitempty"`
+	TopID int `json:"top_id,omitempty"`
 	// 父评论
-	ParentID int32 `json:"parent_id,omitempty"`
+	ParentID int `json:"parent_id,omitempty"`
+	// 第几楼
+	Level int `json:"level,omitempty"`
+	// 当前级有多少数据;状态未0的
+	Total int `json:"total,omitempty"`
 	// 0显示,1隐藏
 	Status int8 `json:"status,omitempty"`
-	// 第几楼
-	Level int32 `json:"level,omitempty"`
-	// 当前级有多少数据;状态未0的
-	Total int32 `json:"total,omitempty"`
 	// 评论内容
 	Content      string `json:"content,omitempty"`
 	selectValues sql.SelectValues
@@ -57,7 +55,7 @@ func (*Comment) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case comment.FieldID, comment.FieldCreatedAt, comment.FieldUpdatedAt, comment.FieldIsDeleted, comment.FieldDeletedAt, comment.FieldAccountID, comment.FieldKind, comment.FieldKindID, comment.FieldTopID, comment.FieldParentID, comment.FieldStatus, comment.FieldLevel, comment.FieldTotal:
+		case comment.FieldID, comment.FieldCreatedAt, comment.FieldUpdatedAt, comment.FieldIsDeleted, comment.FieldDeletedAt, comment.FieldAccountID, comment.FieldBlogID, comment.FieldTopID, comment.FieldParentID, comment.FieldLevel, comment.FieldTotal, comment.FieldStatus:
 			values[i] = new(sql.NullInt64)
 		case comment.FieldCreatedBy, comment.FieldUpdatedBy, comment.FieldDeletedBy, comment.FieldContent:
 			values[i] = new(sql.NullString)
@@ -81,7 +79,7 @@ func (c *Comment) assignValues(columns []string, values []any) error {
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			c.ID = int32(value.Int64)
+			c.ID = int(value.Int64)
 		case comment.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field created_at", values[i])
@@ -128,49 +126,43 @@ func (c *Comment) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field account_id", values[i])
 			} else if value.Valid {
-				c.AccountID = int32(value.Int64)
+				c.AccountID = int(value.Int64)
 			}
-		case comment.FieldKind:
+		case comment.FieldBlogID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field kind", values[i])
+				return fmt.Errorf("unexpected type %T for field blog_id", values[i])
 			} else if value.Valid {
-				c.Kind = int8(value.Int64)
-			}
-		case comment.FieldKindID:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field kind_id", values[i])
-			} else if value.Valid {
-				c.KindID = int32(value.Int64)
+				c.BlogID = int(value.Int64)
 			}
 		case comment.FieldTopID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field top_id", values[i])
 			} else if value.Valid {
-				c.TopID = int32(value.Int64)
+				c.TopID = int(value.Int64)
 			}
 		case comment.FieldParentID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field parent_id", values[i])
 			} else if value.Valid {
-				c.ParentID = int32(value.Int64)
+				c.ParentID = int(value.Int64)
+			}
+		case comment.FieldLevel:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field level", values[i])
+			} else if value.Valid {
+				c.Level = int(value.Int64)
+			}
+		case comment.FieldTotal:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field total", values[i])
+			} else if value.Valid {
+				c.Total = int(value.Int64)
 			}
 		case comment.FieldStatus:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field status", values[i])
 			} else if value.Valid {
 				c.Status = int8(value.Int64)
-			}
-		case comment.FieldLevel:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field level", values[i])
-			} else if value.Valid {
-				c.Level = int32(value.Int64)
-			}
-		case comment.FieldTotal:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field total", values[i])
-			} else if value.Valid {
-				c.Total = int32(value.Int64)
 			}
 		case comment.FieldContent:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -238,11 +230,8 @@ func (c *Comment) String() string {
 	builder.WriteString("account_id=")
 	builder.WriteString(fmt.Sprintf("%v", c.AccountID))
 	builder.WriteString(", ")
-	builder.WriteString("kind=")
-	builder.WriteString(fmt.Sprintf("%v", c.Kind))
-	builder.WriteString(", ")
-	builder.WriteString("kind_id=")
-	builder.WriteString(fmt.Sprintf("%v", c.KindID))
+	builder.WriteString("blog_id=")
+	builder.WriteString(fmt.Sprintf("%v", c.BlogID))
 	builder.WriteString(", ")
 	builder.WriteString("top_id=")
 	builder.WriteString(fmt.Sprintf("%v", c.TopID))
@@ -250,14 +239,14 @@ func (c *Comment) String() string {
 	builder.WriteString("parent_id=")
 	builder.WriteString(fmt.Sprintf("%v", c.ParentID))
 	builder.WriteString(", ")
-	builder.WriteString("status=")
-	builder.WriteString(fmt.Sprintf("%v", c.Status))
-	builder.WriteString(", ")
 	builder.WriteString("level=")
 	builder.WriteString(fmt.Sprintf("%v", c.Level))
 	builder.WriteString(", ")
 	builder.WriteString("total=")
 	builder.WriteString(fmt.Sprintf("%v", c.Total))
+	builder.WriteString(", ")
+	builder.WriteString("status=")
+	builder.WriteString(fmt.Sprintf("%v", c.Status))
 	builder.WriteString(", ")
 	builder.WriteString("content=")
 	builder.WriteString(c.Content)

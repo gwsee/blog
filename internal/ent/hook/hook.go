@@ -32,6 +32,18 @@ func (f BlogFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error)
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.BlogMutation", m)
 }
 
+// The BlogContentFunc type is an adapter to allow the use of ordinary
+// function as BlogContent mutator.
+type BlogContentFunc func(context.Context, *ent.BlogContentMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f BlogContentFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.BlogContentMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.BlogContentMutation", m)
+}
+
 // The CommentFunc type is an adapter to allow the use of ordinary
 // function as Comment mutator.
 type CommentFunc func(context.Context, *ent.CommentMutation) (ent.Value, error)

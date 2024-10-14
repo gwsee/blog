@@ -9,6 +9,7 @@ import (
 	"blog/internal/ent"
 	"blog/internal/ent/account"
 	"blog/internal/ent/blog"
+	"blog/internal/ent/blogcontent"
 	"blog/internal/ent/comment"
 	"blog/internal/ent/predicate"
 
@@ -125,6 +126,33 @@ func (f TraverseBlog) Traverse(ctx context.Context, q ent.Query) error {
 	return fmt.Errorf("unexpected query type %T. expect *ent.BlogQuery", q)
 }
 
+// The BlogContentFunc type is an adapter to allow the use of ordinary function as a Querier.
+type BlogContentFunc func(context.Context, *ent.BlogContentQuery) (ent.Value, error)
+
+// Query calls f(ctx, q).
+func (f BlogContentFunc) Query(ctx context.Context, q ent.Query) (ent.Value, error) {
+	if q, ok := q.(*ent.BlogContentQuery); ok {
+		return f(ctx, q)
+	}
+	return nil, fmt.Errorf("unexpected query type %T. expect *ent.BlogContentQuery", q)
+}
+
+// The TraverseBlogContent type is an adapter to allow the use of ordinary function as Traverser.
+type TraverseBlogContent func(context.Context, *ent.BlogContentQuery) error
+
+// Intercept is a dummy implementation of Intercept that returns the next Querier in the pipeline.
+func (f TraverseBlogContent) Intercept(next ent.Querier) ent.Querier {
+	return next
+}
+
+// Traverse calls f(ctx, q).
+func (f TraverseBlogContent) Traverse(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.BlogContentQuery); ok {
+		return f(ctx, q)
+	}
+	return fmt.Errorf("unexpected query type %T. expect *ent.BlogContentQuery", q)
+}
+
 // The CommentFunc type is an adapter to allow the use of ordinary function as a Querier.
 type CommentFunc func(context.Context, *ent.CommentQuery) (ent.Value, error)
 
@@ -159,6 +187,8 @@ func NewQuery(q ent.Query) (Query, error) {
 		return &query[*ent.AccountQuery, predicate.Account, account.OrderOption]{typ: ent.TypeAccount, tq: q}, nil
 	case *ent.BlogQuery:
 		return &query[*ent.BlogQuery, predicate.Blog, blog.OrderOption]{typ: ent.TypeBlog, tq: q}, nil
+	case *ent.BlogContentQuery:
+		return &query[*ent.BlogContentQuery, predicate.BlogContent, blogcontent.OrderOption]{typ: ent.TypeBlogContent, tq: q}, nil
 	case *ent.CommentQuery:
 		return &query[*ent.CommentQuery, predicate.Comment, comment.OrderOption]{typ: ent.TypeComment, tq: q}, nil
 	default:

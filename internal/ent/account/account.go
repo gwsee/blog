@@ -95,7 +95,7 @@ var (
 	// DefaultStatus holds the default value on creation for the "status" field.
 	DefaultStatus int8
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
-	IDValidator func(int32) error
+	IDValidator func(int) error
 )
 
 // OrderOption defines the ordering options for the Account queries.

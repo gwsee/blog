@@ -82,8 +82,8 @@ func (cq *CommentQuery) FirstX(ctx context.Context) *Comment {
 
 // FirstID returns the first Comment ID from the query.
 // Returns a *NotFoundError when no Comment ID was found.
-func (cq *CommentQuery) FirstID(ctx context.Context) (id int32, err error) {
-	var ids []int32
+func (cq *CommentQuery) FirstID(ctx context.Context) (id int, err error) {
+	var ids []int
 	if ids, err = cq.Limit(1).IDs(setContextOp(ctx, cq.ctx, ent.OpQueryFirstID)); err != nil {
 		return
 	}
@@ -95,7 +95,7 @@ func (cq *CommentQuery) FirstID(ctx context.Context) (id int32, err error) {
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (cq *CommentQuery) FirstIDX(ctx context.Context) int32 {
+func (cq *CommentQuery) FirstIDX(ctx context.Context) int {
 	id, err := cq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -133,8 +133,8 @@ func (cq *CommentQuery) OnlyX(ctx context.Context) *Comment {
 // OnlyID is like Only, but returns the only Comment ID in the query.
 // Returns a *NotSingularError when more than one Comment ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (cq *CommentQuery) OnlyID(ctx context.Context) (id int32, err error) {
-	var ids []int32
+func (cq *CommentQuery) OnlyID(ctx context.Context) (id int, err error) {
+	var ids []int
 	if ids, err = cq.Limit(2).IDs(setContextOp(ctx, cq.ctx, ent.OpQueryOnlyID)); err != nil {
 		return
 	}
@@ -150,7 +150,7 @@ func (cq *CommentQuery) OnlyID(ctx context.Context) (id int32, err error) {
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (cq *CommentQuery) OnlyIDX(ctx context.Context) int32 {
+func (cq *CommentQuery) OnlyIDX(ctx context.Context) int {
 	id, err := cq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -178,7 +178,7 @@ func (cq *CommentQuery) AllX(ctx context.Context) []*Comment {
 }
 
 // IDs executes the query and returns a list of Comment IDs.
-func (cq *CommentQuery) IDs(ctx context.Context) (ids []int32, err error) {
+func (cq *CommentQuery) IDs(ctx context.Context) (ids []int, err error) {
 	if cq.ctx.Unique == nil && cq.path != nil {
 		cq.Unique(true)
 	}
@@ -190,7 +190,7 @@ func (cq *CommentQuery) IDs(ctx context.Context) (ids []int32, err error) {
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (cq *CommentQuery) IDsX(ctx context.Context) []int32 {
+func (cq *CommentQuery) IDsX(ctx context.Context) []int {
 	ids, err := cq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -365,7 +365,7 @@ func (cq *CommentQuery) sqlCount(ctx context.Context) (int, error) {
 }
 
 func (cq *CommentQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(comment.Table, comment.Columns, sqlgraph.NewFieldSpec(comment.FieldID, field.TypeInt32))
+	_spec := sqlgraph.NewQuerySpec(comment.Table, comment.Columns, sqlgraph.NewFieldSpec(comment.FieldID, field.TypeInt))
 	_spec.From = cq.sql
 	if unique := cq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique

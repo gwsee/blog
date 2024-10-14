@@ -15,17 +15,28 @@ type Blog struct {
 
 func (Blog) Fields() []ent.Field {
 	return []ent.Field{
-		field.Int32("id").Unique().Positive().Comment("博客ID"),
-		field.Int32("account_id").Comment("账户ID"),
-		field.String("title").Comment("标题"),
-		field.String("description").Comment("描述"),
-		field.Int8("is_hidden").Default(0).Comment("是否隐藏:0否,1是"),
+		field.Int("id").Unique().Positive().Comment("博客ID"),
+		field.Int("account_id").Comment("账户ID"),
+		field.String("title").Comment("标题").
+			SchemaType(map[string]string{
+				dialect.MySQL: "varchar(100)",
+			}),
+		field.String("description").Comment("描述").
+			SchemaType(map[string]string{
+				dialect.MySQL: "varchar(255)",
+			}),
+		field.Int8("is_hidden").Default(0).Comment("是否隐藏:0否,1是").
+			SchemaType(map[string]string{
+				dialect.MySQL: "tinyint",
+			}),
 		field.JSON("tags", []string{}).Comment("标签"),
-		field.String("cover").Comment("封面"),
+		field.String("cover").Comment("封面").
+			SchemaType(map[string]string{
+				dialect.MySQL: "varchar(200)",
+			}),
 		field.String("content").NotEmpty().Comment("内容").
 			SchemaType(map[string]string{
-				dialect.MySQL:    "text", // Override MySQL.
-				dialect.Postgres: "text", // Override Postgres.
+				dialect.MySQL: "text",
 			}),
 	}
 }

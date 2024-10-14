@@ -9,47 +9,47 @@ import (
 )
 
 // ID filters vertices based on their ID field.
-func ID(id int32) predicate.Blog {
+func ID(id int) predicate.Blog {
 	return predicate.Blog(sql.FieldEQ(FieldID, id))
 }
 
 // IDEQ applies the EQ predicate on the ID field.
-func IDEQ(id int32) predicate.Blog {
+func IDEQ(id int) predicate.Blog {
 	return predicate.Blog(sql.FieldEQ(FieldID, id))
 }
 
 // IDNEQ applies the NEQ predicate on the ID field.
-func IDNEQ(id int32) predicate.Blog {
+func IDNEQ(id int) predicate.Blog {
 	return predicate.Blog(sql.FieldNEQ(FieldID, id))
 }
 
 // IDIn applies the In predicate on the ID field.
-func IDIn(ids ...int32) predicate.Blog {
+func IDIn(ids ...int) predicate.Blog {
 	return predicate.Blog(sql.FieldIn(FieldID, ids...))
 }
 
 // IDNotIn applies the NotIn predicate on the ID field.
-func IDNotIn(ids ...int32) predicate.Blog {
+func IDNotIn(ids ...int) predicate.Blog {
 	return predicate.Blog(sql.FieldNotIn(FieldID, ids...))
 }
 
 // IDGT applies the GT predicate on the ID field.
-func IDGT(id int32) predicate.Blog {
+func IDGT(id int) predicate.Blog {
 	return predicate.Blog(sql.FieldGT(FieldID, id))
 }
 
 // IDGTE applies the GTE predicate on the ID field.
-func IDGTE(id int32) predicate.Blog {
+func IDGTE(id int) predicate.Blog {
 	return predicate.Blog(sql.FieldGTE(FieldID, id))
 }
 
 // IDLT applies the LT predicate on the ID field.
-func IDLT(id int32) predicate.Blog {
+func IDLT(id int) predicate.Blog {
 	return predicate.Blog(sql.FieldLT(FieldID, id))
 }
 
 // IDLTE applies the LTE predicate on the ID field.
-func IDLTE(id int32) predicate.Blog {
+func IDLTE(id int) predicate.Blog {
 	return predicate.Blog(sql.FieldLTE(FieldID, id))
 }
 
@@ -89,7 +89,7 @@ func DeletedBy(v string) predicate.Blog {
 }
 
 // AccountID applies equality check predicate on the "account_id" field. It's identical to AccountIDEQ.
-func AccountID(v int32) predicate.Blog {
+func AccountID(v int) predicate.Blog {
 	return predicate.Blog(sql.FieldEQ(FieldAccountID, v))
 }
 
@@ -474,42 +474,42 @@ func DeletedByContainsFold(v string) predicate.Blog {
 }
 
 // AccountIDEQ applies the EQ predicate on the "account_id" field.
-func AccountIDEQ(v int32) predicate.Blog {
+func AccountIDEQ(v int) predicate.Blog {
 	return predicate.Blog(sql.FieldEQ(FieldAccountID, v))
 }
 
 // AccountIDNEQ applies the NEQ predicate on the "account_id" field.
-func AccountIDNEQ(v int32) predicate.Blog {
+func AccountIDNEQ(v int) predicate.Blog {
 	return predicate.Blog(sql.FieldNEQ(FieldAccountID, v))
 }
 
 // AccountIDIn applies the In predicate on the "account_id" field.
-func AccountIDIn(vs ...int32) predicate.Blog {
+func AccountIDIn(vs ...int) predicate.Blog {
 	return predicate.Blog(sql.FieldIn(FieldAccountID, vs...))
 }
 
 // AccountIDNotIn applies the NotIn predicate on the "account_id" field.
-func AccountIDNotIn(vs ...int32) predicate.Blog {
+func AccountIDNotIn(vs ...int) predicate.Blog {
 	return predicate.Blog(sql.FieldNotIn(FieldAccountID, vs...))
 }
 
 // AccountIDGT applies the GT predicate on the "account_id" field.
-func AccountIDGT(v int32) predicate.Blog {
+func AccountIDGT(v int) predicate.Blog {
 	return predicate.Blog(sql.FieldGT(FieldAccountID, v))
 }
 
 // AccountIDGTE applies the GTE predicate on the "account_id" field.
-func AccountIDGTE(v int32) predicate.Blog {
+func AccountIDGTE(v int) predicate.Blog {
 	return predicate.Blog(sql.FieldGTE(FieldAccountID, v))
 }
 
 // AccountIDLT applies the LT predicate on the "account_id" field.
-func AccountIDLT(v int32) predicate.Blog {
+func AccountIDLT(v int) predicate.Blog {
 	return predicate.Blog(sql.FieldLT(FieldAccountID, v))
 }
 
 // AccountIDLTE applies the LTE predicate on the "account_id" field.
-func AccountIDLTE(v int32) predicate.Blog {
+func AccountIDLTE(v int) predicate.Blog {
 	return predicate.Blog(sql.FieldLTE(FieldAccountID, v))
 }
 

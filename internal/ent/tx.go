@@ -18,6 +18,8 @@ type Tx struct {
 	Account *AccountClient
 	// Blog is the client for interacting with the Blog builders.
 	Blog *BlogClient
+	// BlogContent is the client for interacting with the BlogContent builders.
+	BlogContent *BlogContentClient
 	// Comment is the client for interacting with the Comment builders.
 	Comment *CommentClient
 
@@ -153,6 +155,7 @@ func (tx *Tx) Client() *Client {
 func (tx *Tx) init() {
 	tx.Account = NewAccountClient(tx.config)
 	tx.Blog = NewBlogClient(tx.config)
+	tx.BlogContent = NewBlogContentClient(tx.config)
 	tx.Comment = NewCommentClient(tx.config)
 }
 

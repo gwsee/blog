@@ -120,7 +120,7 @@ func (bc *BlogCreate) SetNillableDeletedBy(s *string) *BlogCreate {
 }
 
 // SetAccountID sets the "account_id" field.
-func (bc *BlogCreate) SetAccountID(i int32) *BlogCreate {
+func (bc *BlogCreate) SetAccountID(i int) *BlogCreate {
 	bc.mutation.SetAccountID(i)
 	return bc
 }
@@ -170,7 +170,7 @@ func (bc *BlogCreate) SetContent(s string) *BlogCreate {
 }
 
 // SetID sets the "id" field.
-func (bc *BlogCreate) SetID(i int32) *BlogCreate {
+func (bc *BlogCreate) SetID(i int) *BlogCreate {
 	bc.mutation.SetID(i)
 	return bc
 }
@@ -317,7 +317,7 @@ func (bc *BlogCreate) sqlSave(ctx context.Context) (*Blog, error) {
 	}
 	if _spec.ID.Value != _node.ID {
 		id := _spec.ID.Value.(int64)
-		_node.ID = int32(id)
+		_node.ID = int(id)
 	}
 	bc.mutation.id = &_node.ID
 	bc.mutation.done = true
@@ -327,7 +327,7 @@ func (bc *BlogCreate) sqlSave(ctx context.Context) (*Blog, error) {
 func (bc *BlogCreate) createSpec() (*Blog, *sqlgraph.CreateSpec) {
 	var (
 		_node = &Blog{config: bc.config}
-		_spec = sqlgraph.NewCreateSpec(blog.Table, sqlgraph.NewFieldSpec(blog.FieldID, field.TypeInt32))
+		_spec = sqlgraph.NewCreateSpec(blog.Table, sqlgraph.NewFieldSpec(blog.FieldID, field.TypeInt))
 	)
 	_spec.OnConflict = bc.conflict
 	if id, ok := bc.mutation.ID(); ok {
@@ -363,7 +363,7 @@ func (bc *BlogCreate) createSpec() (*Blog, *sqlgraph.CreateSpec) {
 		_node.DeletedBy = value
 	}
 	if value, ok := bc.mutation.AccountID(); ok {
-		_spec.SetField(blog.FieldAccountID, field.TypeInt32, value)
+		_spec.SetField(blog.FieldAccountID, field.TypeInt, value)
 		_node.AccountID = value
 	}
 	if value, ok := bc.mutation.Title(); ok {
@@ -521,7 +521,7 @@ func (u *BlogUpsert) UpdateDeletedBy() *BlogUpsert {
 }
 
 // SetAccountID sets the "account_id" field.
-func (u *BlogUpsert) SetAccountID(v int32) *BlogUpsert {
+func (u *BlogUpsert) SetAccountID(v int) *BlogUpsert {
 	u.Set(blog.FieldAccountID, v)
 	return u
 }
@@ -533,7 +533,7 @@ func (u *BlogUpsert) UpdateAccountID() *BlogUpsert {
 }
 
 // AddAccountID adds v to the "account_id" field.
-func (u *BlogUpsert) AddAccountID(v int32) *BlogUpsert {
+func (u *BlogUpsert) AddAccountID(v int) *BlogUpsert {
 	u.Add(blog.FieldAccountID, v)
 	return u
 }
@@ -762,14 +762,14 @@ func (u *BlogUpsertOne) UpdateDeletedBy() *BlogUpsertOne {
 }
 
 // SetAccountID sets the "account_id" field.
-func (u *BlogUpsertOne) SetAccountID(v int32) *BlogUpsertOne {
+func (u *BlogUpsertOne) SetAccountID(v int) *BlogUpsertOne {
 	return u.Update(func(s *BlogUpsert) {
 		s.SetAccountID(v)
 	})
 }
 
 // AddAccountID adds v to the "account_id" field.
-func (u *BlogUpsertOne) AddAccountID(v int32) *BlogUpsertOne {
+func (u *BlogUpsertOne) AddAccountID(v int) *BlogUpsertOne {
 	return u.Update(func(s *BlogUpsert) {
 		s.AddAccountID(v)
 	})
@@ -889,7 +889,7 @@ func (u *BlogUpsertOne) ExecX(ctx context.Context) {
 }
 
 // Exec executes the UPSERT query and returns the inserted/updated ID.
-func (u *BlogUpsertOne) ID(ctx context.Context) (id int32, err error) {
+func (u *BlogUpsertOne) ID(ctx context.Context) (id int, err error) {
 	node, err := u.create.Save(ctx)
 	if err != nil {
 		return id, err
@@ -898,7 +898,7 @@ func (u *BlogUpsertOne) ID(ctx context.Context) (id int32, err error) {
 }
 
 // IDX is like ID, but panics if an error occurs.
-func (u *BlogUpsertOne) IDX(ctx context.Context) int32 {
+func (u *BlogUpsertOne) IDX(ctx context.Context) int {
 	id, err := u.ID(ctx)
 	if err != nil {
 		panic(err)
@@ -955,7 +955,7 @@ func (bcb *BlogCreateBulk) Save(ctx context.Context) ([]*Blog, error) {
 				mutation.id = &nodes[i].ID
 				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
 					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int32(id)
+					nodes[i].ID = int(id)
 				}
 				mutation.done = true
 				return nodes[i], nil
@@ -1185,14 +1185,14 @@ func (u *BlogUpsertBulk) UpdateDeletedBy() *BlogUpsertBulk {
 }
 
 // SetAccountID sets the "account_id" field.
-func (u *BlogUpsertBulk) SetAccountID(v int32) *BlogUpsertBulk {
+func (u *BlogUpsertBulk) SetAccountID(v int) *BlogUpsertBulk {
 	return u.Update(func(s *BlogUpsert) {
 		s.SetAccountID(v)
 	})
 }
 
 // AddAccountID adds v to the "account_id" field.
-func (u *BlogUpsertBulk) AddAccountID(v int32) *BlogUpsertBulk {
+func (u *BlogUpsertBulk) AddAccountID(v int) *BlogUpsertBulk {
 	return u.Update(func(s *BlogUpsert) {
 		s.AddAccountID(v)
 	})

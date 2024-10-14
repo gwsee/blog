@@ -17,7 +17,7 @@ type Blog struct {
 	config `json:"-"`
 	// ID of the ent.
 	// 博客ID
-	ID int32 `json:"id,omitempty"`
+	ID int `json:"id,omitempty"`
 	// 创建时间
 	CreatedAt int64 `json:"created_at,omitempty"`
 	// 创建人
@@ -33,7 +33,7 @@ type Blog struct {
 	// 删除人
 	DeletedBy string `json:"deleted_by,omitempty"`
 	// 账户ID
-	AccountID int32 `json:"account_id,omitempty"`
+	AccountID int `json:"account_id,omitempty"`
 	// 标题
 	Title string `json:"title,omitempty"`
 	// 描述
@@ -80,7 +80,7 @@ func (b *Blog) assignValues(columns []string, values []any) error {
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			b.ID = int32(value.Int64)
+			b.ID = int(value.Int64)
 		case blog.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field created_at", values[i])
@@ -127,7 +127,7 @@ func (b *Blog) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field account_id", values[i])
 			} else if value.Valid {
-				b.AccountID = int32(value.Int64)
+				b.AccountID = int(value.Int64)
 			}
 		case blog.FieldTitle:
 			if value, ok := values[i].(*sql.NullString); !ok {

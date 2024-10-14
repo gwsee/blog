@@ -112,14 +112,14 @@ func (bu *BlogUpdate) SetNillableDeletedBy(s *string) *BlogUpdate {
 }
 
 // SetAccountID sets the "account_id" field.
-func (bu *BlogUpdate) SetAccountID(i int32) *BlogUpdate {
+func (bu *BlogUpdate) SetAccountID(i int) *BlogUpdate {
 	bu.mutation.ResetAccountID()
 	bu.mutation.SetAccountID(i)
 	return bu
 }
 
 // SetNillableAccountID sets the "account_id" field if the given value is not nil.
-func (bu *BlogUpdate) SetNillableAccountID(i *int32) *BlogUpdate {
+func (bu *BlogUpdate) SetNillableAccountID(i *int) *BlogUpdate {
 	if i != nil {
 		bu.SetAccountID(*i)
 	}
@@ -127,7 +127,7 @@ func (bu *BlogUpdate) SetNillableAccountID(i *int32) *BlogUpdate {
 }
 
 // AddAccountID adds i to the "account_id" field.
-func (bu *BlogUpdate) AddAccountID(i int32) *BlogUpdate {
+func (bu *BlogUpdate) AddAccountID(i int) *BlogUpdate {
 	bu.mutation.AddAccountID(i)
 	return bu
 }
@@ -282,7 +282,7 @@ func (bu *BlogUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if err := bu.check(); err != nil {
 		return n, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(blog.Table, blog.Columns, sqlgraph.NewFieldSpec(blog.FieldID, field.TypeInt32))
+	_spec := sqlgraph.NewUpdateSpec(blog.Table, blog.Columns, sqlgraph.NewFieldSpec(blog.FieldID, field.TypeInt))
 	if ps := bu.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -315,10 +315,10 @@ func (bu *BlogUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.SetField(blog.FieldDeletedBy, field.TypeString, value)
 	}
 	if value, ok := bu.mutation.AccountID(); ok {
-		_spec.SetField(blog.FieldAccountID, field.TypeInt32, value)
+		_spec.SetField(blog.FieldAccountID, field.TypeInt, value)
 	}
 	if value, ok := bu.mutation.AddedAccountID(); ok {
-		_spec.AddField(blog.FieldAccountID, field.TypeInt32, value)
+		_spec.AddField(blog.FieldAccountID, field.TypeInt, value)
 	}
 	if value, ok := bu.mutation.Title(); ok {
 		_spec.SetField(blog.FieldTitle, field.TypeString, value)
@@ -450,14 +450,14 @@ func (buo *BlogUpdateOne) SetNillableDeletedBy(s *string) *BlogUpdateOne {
 }
 
 // SetAccountID sets the "account_id" field.
-func (buo *BlogUpdateOne) SetAccountID(i int32) *BlogUpdateOne {
+func (buo *BlogUpdateOne) SetAccountID(i int) *BlogUpdateOne {
 	buo.mutation.ResetAccountID()
 	buo.mutation.SetAccountID(i)
 	return buo
 }
 
 // SetNillableAccountID sets the "account_id" field if the given value is not nil.
-func (buo *BlogUpdateOne) SetNillableAccountID(i *int32) *BlogUpdateOne {
+func (buo *BlogUpdateOne) SetNillableAccountID(i *int) *BlogUpdateOne {
 	if i != nil {
 		buo.SetAccountID(*i)
 	}
@@ -465,7 +465,7 @@ func (buo *BlogUpdateOne) SetNillableAccountID(i *int32) *BlogUpdateOne {
 }
 
 // AddAccountID adds i to the "account_id" field.
-func (buo *BlogUpdateOne) AddAccountID(i int32) *BlogUpdateOne {
+func (buo *BlogUpdateOne) AddAccountID(i int) *BlogUpdateOne {
 	buo.mutation.AddAccountID(i)
 	return buo
 }
@@ -633,7 +633,7 @@ func (buo *BlogUpdateOne) sqlSave(ctx context.Context) (_node *Blog, err error) 
 	if err := buo.check(); err != nil {
 		return _node, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(blog.Table, blog.Columns, sqlgraph.NewFieldSpec(blog.FieldID, field.TypeInt32))
+	_spec := sqlgraph.NewUpdateSpec(blog.Table, blog.Columns, sqlgraph.NewFieldSpec(blog.FieldID, field.TypeInt))
 	id, ok := buo.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "Blog.id" for update`)}
@@ -683,10 +683,10 @@ func (buo *BlogUpdateOne) sqlSave(ctx context.Context) (_node *Blog, err error) 
 		_spec.SetField(blog.FieldDeletedBy, field.TypeString, value)
 	}
 	if value, ok := buo.mutation.AccountID(); ok {
-		_spec.SetField(blog.FieldAccountID, field.TypeInt32, value)
+		_spec.SetField(blog.FieldAccountID, field.TypeInt, value)
 	}
 	if value, ok := buo.mutation.AddedAccountID(); ok {
-		_spec.AddField(blog.FieldAccountID, field.TypeInt32, value)
+		_spec.AddField(blog.FieldAccountID, field.TypeInt, value)
 	}
 	if value, ok := buo.mutation.Title(); ok {
 		_spec.SetField(blog.FieldTitle, field.TypeString, value)

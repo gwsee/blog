@@ -1,7 +1,7 @@
 package server
 
 import (
-	v1 "blog/api/helloworld/v1"
+	v1 "blog/api/blog/v1"
 	"blog/internal/conf"
 	"blog/internal/service"
 

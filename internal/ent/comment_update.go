@@ -111,14 +111,14 @@ func (cu *CommentUpdate) SetNillableDeletedBy(s *string) *CommentUpdate {
 }
 
 // SetAccountID sets the "account_id" field.
-func (cu *CommentUpdate) SetAccountID(i int32) *CommentUpdate {
+func (cu *CommentUpdate) SetAccountID(i int) *CommentUpdate {
 	cu.mutation.ResetAccountID()
 	cu.mutation.SetAccountID(i)
 	return cu
 }
 
 // SetNillableAccountID sets the "account_id" field if the given value is not nil.
-func (cu *CommentUpdate) SetNillableAccountID(i *int32) *CommentUpdate {
+func (cu *CommentUpdate) SetNillableAccountID(i *int) *CommentUpdate {
 	if i != nil {
 		cu.SetAccountID(*i)
 	}
@@ -126,62 +126,41 @@ func (cu *CommentUpdate) SetNillableAccountID(i *int32) *CommentUpdate {
 }
 
 // AddAccountID adds i to the "account_id" field.
-func (cu *CommentUpdate) AddAccountID(i int32) *CommentUpdate {
+func (cu *CommentUpdate) AddAccountID(i int) *CommentUpdate {
 	cu.mutation.AddAccountID(i)
 	return cu
 }
 
-// SetKind sets the "kind" field.
-func (cu *CommentUpdate) SetKind(i int8) *CommentUpdate {
-	cu.mutation.ResetKind()
-	cu.mutation.SetKind(i)
+// SetBlogID sets the "blog_id" field.
+func (cu *CommentUpdate) SetBlogID(i int) *CommentUpdate {
+	cu.mutation.ResetBlogID()
+	cu.mutation.SetBlogID(i)
 	return cu
 }
 
-// SetNillableKind sets the "kind" field if the given value is not nil.
-func (cu *CommentUpdate) SetNillableKind(i *int8) *CommentUpdate {
+// SetNillableBlogID sets the "blog_id" field if the given value is not nil.
+func (cu *CommentUpdate) SetNillableBlogID(i *int) *CommentUpdate {
 	if i != nil {
-		cu.SetKind(*i)
+		cu.SetBlogID(*i)
 	}
 	return cu
 }
 
-// AddKind adds i to the "kind" field.
-func (cu *CommentUpdate) AddKind(i int8) *CommentUpdate {
-	cu.mutation.AddKind(i)
-	return cu
-}
-
-// SetKindID sets the "kind_id" field.
-func (cu *CommentUpdate) SetKindID(i int32) *CommentUpdate {
-	cu.mutation.ResetKindID()
-	cu.mutation.SetKindID(i)
-	return cu
-}
-
-// SetNillableKindID sets the "kind_id" field if the given value is not nil.
-func (cu *CommentUpdate) SetNillableKindID(i *int32) *CommentUpdate {
-	if i != nil {
-		cu.SetKindID(*i)
-	}
-	return cu
-}
-
-// AddKindID adds i to the "kind_id" field.
-func (cu *CommentUpdate) AddKindID(i int32) *CommentUpdate {
-	cu.mutation.AddKindID(i)
+// AddBlogID adds i to the "blog_id" field.
+func (cu *CommentUpdate) AddBlogID(i int) *CommentUpdate {
+	cu.mutation.AddBlogID(i)
 	return cu
 }
 
 // SetTopID sets the "top_id" field.
-func (cu *CommentUpdate) SetTopID(i int32) *CommentUpdate {
+func (cu *CommentUpdate) SetTopID(i int) *CommentUpdate {
 	cu.mutation.ResetTopID()
 	cu.mutation.SetTopID(i)
 	return cu
 }
 
 // SetNillableTopID sets the "top_id" field if the given value is not nil.
-func (cu *CommentUpdate) SetNillableTopID(i *int32) *CommentUpdate {
+func (cu *CommentUpdate) SetNillableTopID(i *int) *CommentUpdate {
 	if i != nil {
 		cu.SetTopID(*i)
 	}
@@ -189,20 +168,20 @@ func (cu *CommentUpdate) SetNillableTopID(i *int32) *CommentUpdate {
 }
 
 // AddTopID adds i to the "top_id" field.
-func (cu *CommentUpdate) AddTopID(i int32) *CommentUpdate {
+func (cu *CommentUpdate) AddTopID(i int) *CommentUpdate {
 	cu.mutation.AddTopID(i)
 	return cu
 }
 
 // SetParentID sets the "parent_id" field.
-func (cu *CommentUpdate) SetParentID(i int32) *CommentUpdate {
+func (cu *CommentUpdate) SetParentID(i int) *CommentUpdate {
 	cu.mutation.ResetParentID()
 	cu.mutation.SetParentID(i)
 	return cu
 }
 
 // SetNillableParentID sets the "parent_id" field if the given value is not nil.
-func (cu *CommentUpdate) SetNillableParentID(i *int32) *CommentUpdate {
+func (cu *CommentUpdate) SetNillableParentID(i *int) *CommentUpdate {
 	if i != nil {
 		cu.SetParentID(*i)
 	}
@@ -210,8 +189,50 @@ func (cu *CommentUpdate) SetNillableParentID(i *int32) *CommentUpdate {
 }
 
 // AddParentID adds i to the "parent_id" field.
-func (cu *CommentUpdate) AddParentID(i int32) *CommentUpdate {
+func (cu *CommentUpdate) AddParentID(i int) *CommentUpdate {
 	cu.mutation.AddParentID(i)
+	return cu
+}
+
+// SetLevel sets the "level" field.
+func (cu *CommentUpdate) SetLevel(i int) *CommentUpdate {
+	cu.mutation.ResetLevel()
+	cu.mutation.SetLevel(i)
+	return cu
+}
+
+// SetNillableLevel sets the "level" field if the given value is not nil.
+func (cu *CommentUpdate) SetNillableLevel(i *int) *CommentUpdate {
+	if i != nil {
+		cu.SetLevel(*i)
+	}
+	return cu
+}
+
+// AddLevel adds i to the "level" field.
+func (cu *CommentUpdate) AddLevel(i int) *CommentUpdate {
+	cu.mutation.AddLevel(i)
+	return cu
+}
+
+// SetTotal sets the "total" field.
+func (cu *CommentUpdate) SetTotal(i int) *CommentUpdate {
+	cu.mutation.ResetTotal()
+	cu.mutation.SetTotal(i)
+	return cu
+}
+
+// SetNillableTotal sets the "total" field if the given value is not nil.
+func (cu *CommentUpdate) SetNillableTotal(i *int) *CommentUpdate {
+	if i != nil {
+		cu.SetTotal(*i)
+	}
+	return cu
+}
+
+// AddTotal adds i to the "total" field.
+func (cu *CommentUpdate) AddTotal(i int) *CommentUpdate {
+	cu.mutation.AddTotal(i)
 	return cu
 }
 
@@ -233,48 +254,6 @@ func (cu *CommentUpdate) SetNillableStatus(i *int8) *CommentUpdate {
 // AddStatus adds i to the "status" field.
 func (cu *CommentUpdate) AddStatus(i int8) *CommentUpdate {
 	cu.mutation.AddStatus(i)
-	return cu
-}
-
-// SetLevel sets the "level" field.
-func (cu *CommentUpdate) SetLevel(i int32) *CommentUpdate {
-	cu.mutation.ResetLevel()
-	cu.mutation.SetLevel(i)
-	return cu
-}
-
-// SetNillableLevel sets the "level" field if the given value is not nil.
-func (cu *CommentUpdate) SetNillableLevel(i *int32) *CommentUpdate {
-	if i != nil {
-		cu.SetLevel(*i)
-	}
-	return cu
-}
-
-// AddLevel adds i to the "level" field.
-func (cu *CommentUpdate) AddLevel(i int32) *CommentUpdate {
-	cu.mutation.AddLevel(i)
-	return cu
-}
-
-// SetTotal sets the "total" field.
-func (cu *CommentUpdate) SetTotal(i int32) *CommentUpdate {
-	cu.mutation.ResetTotal()
-	cu.mutation.SetTotal(i)
-	return cu
-}
-
-// SetNillableTotal sets the "total" field if the given value is not nil.
-func (cu *CommentUpdate) SetNillableTotal(i *int32) *CommentUpdate {
-	if i != nil {
-		cu.SetTotal(*i)
-	}
-	return cu
-}
-
-// AddTotal adds i to the "total" field.
-func (cu *CommentUpdate) AddTotal(i int32) *CommentUpdate {
-	cu.mutation.AddTotal(i)
 	return cu
 }
 
@@ -346,9 +325,9 @@ func (cu *CommentUpdate) check() error {
 			return &ValidationError{Name: "account_id", err: fmt.Errorf(`ent: validator failed for field "Comment.account_id": %w`, err)}
 		}
 	}
-	if v, ok := cu.mutation.KindID(); ok {
-		if err := comment.KindIDValidator(v); err != nil {
-			return &ValidationError{Name: "kind_id", err: fmt.Errorf(`ent: validator failed for field "Comment.kind_id": %w`, err)}
+	if v, ok := cu.mutation.BlogID(); ok {
+		if err := comment.BlogIDValidator(v); err != nil {
+			return &ValidationError{Name: "blog_id", err: fmt.Errorf(`ent: validator failed for field "Comment.blog_id": %w`, err)}
 		}
 	}
 	return nil
@@ -358,7 +337,7 @@ func (cu *CommentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if err := cu.check(); err != nil {
 		return n, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(comment.Table, comment.Columns, sqlgraph.NewFieldSpec(comment.FieldID, field.TypeInt32))
+	_spec := sqlgraph.NewUpdateSpec(comment.Table, comment.Columns, sqlgraph.NewFieldSpec(comment.FieldID, field.TypeInt))
 	if ps := cu.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -391,52 +370,46 @@ func (cu *CommentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.SetField(comment.FieldDeletedBy, field.TypeString, value)
 	}
 	if value, ok := cu.mutation.AccountID(); ok {
-		_spec.SetField(comment.FieldAccountID, field.TypeInt32, value)
+		_spec.SetField(comment.FieldAccountID, field.TypeInt, value)
 	}
 	if value, ok := cu.mutation.AddedAccountID(); ok {
-		_spec.AddField(comment.FieldAccountID, field.TypeInt32, value)
+		_spec.AddField(comment.FieldAccountID, field.TypeInt, value)
 	}
-	if value, ok := cu.mutation.Kind(); ok {
-		_spec.SetField(comment.FieldKind, field.TypeInt8, value)
+	if value, ok := cu.mutation.BlogID(); ok {
+		_spec.SetField(comment.FieldBlogID, field.TypeInt, value)
 	}
-	if value, ok := cu.mutation.AddedKind(); ok {
-		_spec.AddField(comment.FieldKind, field.TypeInt8, value)
-	}
-	if value, ok := cu.mutation.KindID(); ok {
-		_spec.SetField(comment.FieldKindID, field.TypeInt32, value)
-	}
-	if value, ok := cu.mutation.AddedKindID(); ok {
-		_spec.AddField(comment.FieldKindID, field.TypeInt32, value)
+	if value, ok := cu.mutation.AddedBlogID(); ok {
+		_spec.AddField(comment.FieldBlogID, field.TypeInt, value)
 	}
 	if value, ok := cu.mutation.TopID(); ok {
-		_spec.SetField(comment.FieldTopID, field.TypeInt32, value)
+		_spec.SetField(comment.FieldTopID, field.TypeInt, value)
 	}
 	if value, ok := cu.mutation.AddedTopID(); ok {
-		_spec.AddField(comment.FieldTopID, field.TypeInt32, value)
+		_spec.AddField(comment.FieldTopID, field.TypeInt, value)
 	}
 	if value, ok := cu.mutation.ParentID(); ok {
-		_spec.SetField(comment.FieldParentID, field.TypeInt32, value)
+		_spec.SetField(comment.FieldParentID, field.TypeInt, value)
 	}
 	if value, ok := cu.mutation.AddedParentID(); ok {
-		_spec.AddField(comment.FieldParentID, field.TypeInt32, value)
+		_spec.AddField(comment.FieldParentID, field.TypeInt, value)
+	}
+	if value, ok := cu.mutation.Level(); ok {
+		_spec.SetField(comment.FieldLevel, field.TypeInt, value)
+	}
+	if value, ok := cu.mutation.AddedLevel(); ok {
+		_spec.AddField(comment.FieldLevel, field.TypeInt, value)
+	}
+	if value, ok := cu.mutation.Total(); ok {
+		_spec.SetField(comment.FieldTotal, field.TypeInt, value)
+	}
+	if value, ok := cu.mutation.AddedTotal(); ok {
+		_spec.AddField(comment.FieldTotal, field.TypeInt, value)
 	}
 	if value, ok := cu.mutation.Status(); ok {
 		_spec.SetField(comment.FieldStatus, field.TypeInt8, value)
 	}
 	if value, ok := cu.mutation.AddedStatus(); ok {
 		_spec.AddField(comment.FieldStatus, field.TypeInt8, value)
-	}
-	if value, ok := cu.mutation.Level(); ok {
-		_spec.SetField(comment.FieldLevel, field.TypeInt32, value)
-	}
-	if value, ok := cu.mutation.AddedLevel(); ok {
-		_spec.AddField(comment.FieldLevel, field.TypeInt32, value)
-	}
-	if value, ok := cu.mutation.Total(); ok {
-		_spec.SetField(comment.FieldTotal, field.TypeInt32, value)
-	}
-	if value, ok := cu.mutation.AddedTotal(); ok {
-		_spec.AddField(comment.FieldTotal, field.TypeInt32, value)
 	}
 	if value, ok := cu.mutation.Content(); ok {
 		_spec.SetField(comment.FieldContent, field.TypeString, value)
@@ -545,14 +518,14 @@ func (cuo *CommentUpdateOne) SetNillableDeletedBy(s *string) *CommentUpdateOne {
 }
 
 // SetAccountID sets the "account_id" field.
-func (cuo *CommentUpdateOne) SetAccountID(i int32) *CommentUpdateOne {
+func (cuo *CommentUpdateOne) SetAccountID(i int) *CommentUpdateOne {
 	cuo.mutation.ResetAccountID()
 	cuo.mutation.SetAccountID(i)
 	return cuo
 }
 
 // SetNillableAccountID sets the "account_id" field if the given value is not nil.
-func (cuo *CommentUpdateOne) SetNillableAccountID(i *int32) *CommentUpdateOne {
+func (cuo *CommentUpdateOne) SetNillableAccountID(i *int) *CommentUpdateOne {
 	if i != nil {
 		cuo.SetAccountID(*i)
 	}
@@ -560,62 +533,41 @@ func (cuo *CommentUpdateOne) SetNillableAccountID(i *int32) *CommentUpdateOne {
 }
 
 // AddAccountID adds i to the "account_id" field.
-func (cuo *CommentUpdateOne) AddAccountID(i int32) *CommentUpdateOne {
+func (cuo *CommentUpdateOne) AddAccountID(i int) *CommentUpdateOne {
 	cuo.mutation.AddAccountID(i)
 	return cuo
 }
 
-// SetKind sets the "kind" field.
-func (cuo *CommentUpdateOne) SetKind(i int8) *CommentUpdateOne {
-	cuo.mutation.ResetKind()
-	cuo.mutation.SetKind(i)
+// SetBlogID sets the "blog_id" field.
+func (cuo *CommentUpdateOne) SetBlogID(i int) *CommentUpdateOne {
+	cuo.mutation.ResetBlogID()
+	cuo.mutation.SetBlogID(i)
 	return cuo
 }
 
-// SetNillableKind sets the "kind" field if the given value is not nil.
-func (cuo *CommentUpdateOne) SetNillableKind(i *int8) *CommentUpdateOne {
+// SetNillableBlogID sets the "blog_id" field if the given value is not nil.
+func (cuo *CommentUpdateOne) SetNillableBlogID(i *int) *CommentUpdateOne {
 	if i != nil {
-		cuo.SetKind(*i)
+		cuo.SetBlogID(*i)
 	}
 	return cuo
 }
 
-// AddKind adds i to the "kind" field.
-func (cuo *CommentUpdateOne) AddKind(i int8) *CommentUpdateOne {
-	cuo.mutation.AddKind(i)
-	return cuo
-}
-
-// SetKindID sets the "kind_id" field.
-func (cuo *CommentUpdateOne) SetKindID(i int32) *CommentUpdateOne {
-	cuo.mutation.ResetKindID()
-	cuo.mutation.SetKindID(i)
-	return cuo
-}
-
-// SetNillableKindID sets the "kind_id" field if the given value is not nil.
-func (cuo *CommentUpdateOne) SetNillableKindID(i *int32) *CommentUpdateOne {
-	if i != nil {
-		cuo.SetKindID(*i)
-	}
-	return cuo
-}
-
-// AddKindID adds i to the "kind_id" field.
-func (cuo *CommentUpdateOne) AddKindID(i int32) *CommentUpdateOne {
-	cuo.mutation.AddKindID(i)
+// AddBlogID adds i to the "blog_id" field.
+func (cuo *CommentUpdateOne) AddBlogID(i int) *CommentUpdateOne {
+	cuo.mutation.AddBlogID(i)
 	return cuo
 }
 
 // SetTopID sets the "top_id" field.
-func (cuo *CommentUpdateOne) SetTopID(i int32) *CommentUpdateOne {
+func (cuo *CommentUpdateOne) SetTopID(i int) *CommentUpdateOne {
 	cuo.mutation.ResetTopID()
 	cuo.mutation.SetTopID(i)
 	return cuo
 }
 
 // SetNillableTopID sets the "top_id" field if the given value is not nil.
-func (cuo *CommentUpdateOne) SetNillableTopID(i *int32) *CommentUpdateOne {
+func (cuo *CommentUpdateOne) SetNillableTopID(i *int) *CommentUpdateOne {
 	if i != nil {
 		cuo.SetTopID(*i)
 	}
@@ -623,20 +575,20 @@ func (cuo *CommentUpdateOne) SetNillableTopID(i *int32) *CommentUpdateOne {
 }
 
 // AddTopID adds i to the "top_id" field.
-func (cuo *CommentUpdateOne) AddTopID(i int32) *CommentUpdateOne {
+func (cuo *CommentUpdateOne) AddTopID(i int) *CommentUpdateOne {
 	cuo.mutation.AddTopID(i)
 	return cuo
 }
 
 // SetParentID sets the "parent_id" field.
-func (cuo *CommentUpdateOne) SetParentID(i int32) *CommentUpdateOne {
+func (cuo *CommentUpdateOne) SetParentID(i int) *CommentUpdateOne {
 	cuo.mutation.ResetParentID()
 	cuo.mutation.SetParentID(i)
 	return cuo
 }
 
 // SetNillableParentID sets the "parent_id" field if the given value is not nil.
-func (cuo *CommentUpdateOne) SetNillableParentID(i *int32) *CommentUpdateOne {
+func (cuo *CommentUpdateOne) SetNillableParentID(i *int) *CommentUpdateOne {
 	if i != nil {
 		cuo.SetParentID(*i)
 	}
@@ -644,8 +596,50 @@ func (cuo *CommentUpdateOne) SetNillableParentID(i *int32) *CommentUpdateOne {
 }
 
 // AddParentID adds i to the "parent_id" field.
-func (cuo *CommentUpdateOne) AddParentID(i int32) *CommentUpdateOne {
+func (cuo *CommentUpdateOne) AddParentID(i int) *CommentUpdateOne {
 	cuo.mutation.AddParentID(i)
+	return cuo
+}
+
+// SetLevel sets the "level" field.
+func (cuo *CommentUpdateOne) SetLevel(i int) *CommentUpdateOne {
+	cuo.mutation.ResetLevel()
+	cuo.mutation.SetLevel(i)
+	return cuo
+}
+
+// SetNillableLevel sets the "level" field if the given value is not nil.
+func (cuo *CommentUpdateOne) SetNillableLevel(i *int) *CommentUpdateOne {
+	if i != nil {
+		cuo.SetLevel(*i)
+	}
+	return cuo
+}
+
+// AddLevel adds i to the "level" field.
+func (cuo *CommentUpdateOne) AddLevel(i int) *CommentUpdateOne {
+	cuo.mutation.AddLevel(i)
+	return cuo
+}
+
+// SetTotal sets the "total" field.
+func (cuo *CommentUpdateOne) SetTotal(i int) *CommentUpdateOne {
+	cuo.mutation.ResetTotal()
+	cuo.mutation.SetTotal(i)
+	return cuo
+}
+
+// SetNillableTotal sets the "total" field if the given value is not nil.
+func (cuo *CommentUpdateOne) SetNillableTotal(i *int) *CommentUpdateOne {
+	if i != nil {
+		cuo.SetTotal(*i)
+	}
+	return cuo
+}
+
+// AddTotal adds i to the "total" field.
+func (cuo *CommentUpdateOne) AddTotal(i int) *CommentUpdateOne {
+	cuo.mutation.AddTotal(i)
 	return cuo
 }
 
@@ -667,48 +661,6 @@ func (cuo *CommentUpdateOne) SetNillableStatus(i *int8) *CommentUpdateOne {
 // AddStatus adds i to the "status" field.
 func (cuo *CommentUpdateOne) AddStatus(i int8) *CommentUpdateOne {
 	cuo.mutation.AddStatus(i)
-	return cuo
-}
-
-// SetLevel sets the "level" field.
-func (cuo *CommentUpdateOne) SetLevel(i int32) *CommentUpdateOne {
-	cuo.mutation.ResetLevel()
-	cuo.mutation.SetLevel(i)
-	return cuo
-}
-
-// SetNillableLevel sets the "level" field if the given value is not nil.
-func (cuo *CommentUpdateOne) SetNillableLevel(i *int32) *CommentUpdateOne {
-	if i != nil {
-		cuo.SetLevel(*i)
-	}
-	return cuo
-}
-
-// AddLevel adds i to the "level" field.
-func (cuo *CommentUpdateOne) AddLevel(i int32) *CommentUpdateOne {
-	cuo.mutation.AddLevel(i)
-	return cuo
-}
-
-// SetTotal sets the "total" field.
-func (cuo *CommentUpdateOne) SetTotal(i int32) *CommentUpdateOne {
-	cuo.mutation.ResetTotal()
-	cuo.mutation.SetTotal(i)
-	return cuo
-}
-
-// SetNillableTotal sets the "total" field if the given value is not nil.
-func (cuo *CommentUpdateOne) SetNillableTotal(i *int32) *CommentUpdateOne {
-	if i != nil {
-		cuo.SetTotal(*i)
-	}
-	return cuo
-}
-
-// AddTotal adds i to the "total" field.
-func (cuo *CommentUpdateOne) AddTotal(i int32) *CommentUpdateOne {
-	cuo.mutation.AddTotal(i)
 	return cuo
 }
 
@@ -793,9 +745,9 @@ func (cuo *CommentUpdateOne) check() error {
 			return &ValidationError{Name: "account_id", err: fmt.Errorf(`ent: validator failed for field "Comment.account_id": %w`, err)}
 		}
 	}
-	if v, ok := cuo.mutation.KindID(); ok {
-		if err := comment.KindIDValidator(v); err != nil {
-			return &ValidationError{Name: "kind_id", err: fmt.Errorf(`ent: validator failed for field "Comment.kind_id": %w`, err)}
+	if v, ok := cuo.mutation.BlogID(); ok {
+		if err := comment.BlogIDValidator(v); err != nil {
+			return &ValidationError{Name: "blog_id", err: fmt.Errorf(`ent: validator failed for field "Comment.blog_id": %w`, err)}
 		}
 	}
 	return nil
@@ -805,7 +757,7 @@ func (cuo *CommentUpdateOne) sqlSave(ctx context.Context) (_node *Comment, err e
 	if err := cuo.check(); err != nil {
 		return _node, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(comment.Table, comment.Columns, sqlgraph.NewFieldSpec(comment.FieldID, field.TypeInt32))
+	_spec := sqlgraph.NewUpdateSpec(comment.Table, comment.Columns, sqlgraph.NewFieldSpec(comment.FieldID, field.TypeInt))
 	id, ok := cuo.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "Comment.id" for update`)}
@@ -855,52 +807,46 @@ func (cuo *CommentUpdateOne) sqlSave(ctx context.Context) (_node *Comment, err e
 		_spec.SetField(comment.FieldDeletedBy, field.TypeString, value)
 	}
 	if value, ok := cuo.mutation.AccountID(); ok {
-		_spec.SetField(comment.FieldAccountID, field.TypeInt32, value)
+		_spec.SetField(comment.FieldAccountID, field.TypeInt, value)
 	}
 	if value, ok := cuo.mutation.AddedAccountID(); ok {
-		_spec.AddField(comment.FieldAccountID, field.TypeInt32, value)
+		_spec.AddField(comment.FieldAccountID, field.TypeInt, value)
 	}
-	if value, ok := cuo.mutation.Kind(); ok {
-		_spec.SetField(comment.FieldKind, field.TypeInt8, value)
+	if value, ok := cuo.mutation.BlogID(); ok {
+		_spec.SetField(comment.FieldBlogID, field.TypeInt, value)
 	}
-	if value, ok := cuo.mutation.AddedKind(); ok {
-		_spec.AddField(comment.FieldKind, field.TypeInt8, value)
-	}
-	if value, ok := cuo.mutation.KindID(); ok {
-		_spec.SetField(comment.FieldKindID, field.TypeInt32, value)
-	}
-	if value, ok := cuo.mutation.AddedKindID(); ok {
-		_spec.AddField(comment.FieldKindID, field.TypeInt32, value)
+	if value, ok := cuo.mutation.AddedBlogID(); ok {
+		_spec.AddField(comment.FieldBlogID, field.TypeInt, value)
 	}
 	if value, ok := cuo.mutation.TopID(); ok {
-		_spec.SetField(comment.FieldTopID, field.TypeInt32, value)
+		_spec.SetField(comment.FieldTopID, field.TypeInt, value)
 	}
 	if value, ok := cuo.mutation.AddedTopID(); ok {
-		_spec.AddField(comment.FieldTopID, field.TypeInt32, value)
+		_spec.AddField(comment.FieldTopID, field.TypeInt, value)
 	}
 	if value, ok := cuo.mutation.ParentID(); ok {
-		_spec.SetField(comment.FieldParentID, field.TypeInt32, value)
+		_spec.SetField(comment.FieldParentID, field.TypeInt, value)
 	}
 	if value, ok := cuo.mutation.AddedParentID(); ok {
-		_spec.AddField(comment.FieldParentID, field.TypeInt32, value)
+		_spec.AddField(comment.FieldParentID, field.TypeInt, value)
+	}
+	if value, ok := cuo.mutation.Level(); ok {
+		_spec.SetField(comment.FieldLevel, field.TypeInt, value)
+	}
+	if value, ok := cuo.mutation.AddedLevel(); ok {
+		_spec.AddField(comment.FieldLevel, field.TypeInt, value)
+	}
+	if value, ok := cuo.mutation.Total(); ok {
+		_spec.SetField(comment.FieldTotal, field.TypeInt, value)
+	}
+	if value, ok := cuo.mutation.AddedTotal(); ok {
+		_spec.AddField(comment.FieldTotal, field.TypeInt, value)
 	}
 	if value, ok := cuo.mutation.Status(); ok {
 		_spec.SetField(comment.FieldStatus, field.TypeInt8, value)
 	}
 	if value, ok := cuo.mutation.AddedStatus(); ok {
 		_spec.AddField(comment.FieldStatus, field.TypeInt8, value)
-	}
-	if value, ok := cuo.mutation.Level(); ok {
-		_spec.SetField(comment.FieldLevel, field.TypeInt32, value)
-	}
-	if value, ok := cuo.mutation.AddedLevel(); ok {
-		_spec.AddField(comment.FieldLevel, field.TypeInt32, value)
-	}
-	if value, ok := cuo.mutation.Total(); ok {
-		_spec.SetField(comment.FieldTotal, field.TypeInt32, value)
-	}
-	if value, ok := cuo.mutation.AddedTotal(); ok {
-		_spec.AddField(comment.FieldTotal, field.TypeInt32, value)
 	}
 	if value, ok := cuo.mutation.Content(); ok {
 		_spec.SetField(comment.FieldContent, field.TypeString, value)

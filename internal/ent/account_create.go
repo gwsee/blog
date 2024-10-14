@@ -152,7 +152,7 @@ func (ac *AccountCreate) SetNillableStatus(i *int8) *AccountCreate {
 }
 
 // SetID sets the "id" field.
-func (ac *AccountCreate) SetID(i int32) *AccountCreate {
+func (ac *AccountCreate) SetID(i int) *AccountCreate {
 	ac.mutation.SetID(i)
 	return ac
 }
@@ -295,7 +295,7 @@ func (ac *AccountCreate) sqlSave(ctx context.Context) (*Account, error) {
 	}
 	if _spec.ID.Value != _node.ID {
 		id := _spec.ID.Value.(int64)
-		_node.ID = int32(id)
+		_node.ID = int(id)
 	}
 	ac.mutation.id = &_node.ID
 	ac.mutation.done = true
@@ -305,7 +305,7 @@ func (ac *AccountCreate) sqlSave(ctx context.Context) (*Account, error) {
 func (ac *AccountCreate) createSpec() (*Account, *sqlgraph.CreateSpec) {
 	var (
 		_node = &Account{config: ac.config}
-		_spec = sqlgraph.NewCreateSpec(account.Table, sqlgraph.NewFieldSpec(account.FieldID, field.TypeInt32))
+		_spec = sqlgraph.NewCreateSpec(account.Table, sqlgraph.NewFieldSpec(account.FieldID, field.TypeInt))
 	)
 	_spec.OnConflict = ac.conflict
 	if id, ok := ac.mutation.ID(); ok {
@@ -764,7 +764,7 @@ func (u *AccountUpsertOne) ExecX(ctx context.Context) {
 }
 
 // Exec executes the UPSERT query and returns the inserted/updated ID.
-func (u *AccountUpsertOne) ID(ctx context.Context) (id int32, err error) {
+func (u *AccountUpsertOne) ID(ctx context.Context) (id int, err error) {
 	node, err := u.create.Save(ctx)
 	if err != nil {
 		return id, err
@@ -773,7 +773,7 @@ func (u *AccountUpsertOne) ID(ctx context.Context) (id int32, err error) {
 }
 
 // IDX is like ID, but panics if an error occurs.
-func (u *AccountUpsertOne) IDX(ctx context.Context) int32 {
+func (u *AccountUpsertOne) IDX(ctx context.Context) int {
 	id, err := u.ID(ctx)
 	if err != nil {
 		panic(err)
@@ -830,7 +830,7 @@ func (acb *AccountCreateBulk) Save(ctx context.Context) ([]*Account, error) {
 				mutation.id = &nodes[i].ID
 				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
 					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int32(id)
+					nodes[i].ID = int(id)
 				}
 				mutation.done = true
 				return nodes[i], nil

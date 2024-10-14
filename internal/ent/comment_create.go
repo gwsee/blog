@@ -120,39 +120,25 @@ func (cc *CommentCreate) SetNillableDeletedBy(s *string) *CommentCreate {
 }
 
 // SetAccountID sets the "account_id" field.
-func (cc *CommentCreate) SetAccountID(i int32) *CommentCreate {
+func (cc *CommentCreate) SetAccountID(i int) *CommentCreate {
 	cc.mutation.SetAccountID(i)
 	return cc
 }
 
-// SetKind sets the "kind" field.
-func (cc *CommentCreate) SetKind(i int8) *CommentCreate {
-	cc.mutation.SetKind(i)
-	return cc
-}
-
-// SetNillableKind sets the "kind" field if the given value is not nil.
-func (cc *CommentCreate) SetNillableKind(i *int8) *CommentCreate {
-	if i != nil {
-		cc.SetKind(*i)
-	}
-	return cc
-}
-
-// SetKindID sets the "kind_id" field.
-func (cc *CommentCreate) SetKindID(i int32) *CommentCreate {
-	cc.mutation.SetKindID(i)
+// SetBlogID sets the "blog_id" field.
+func (cc *CommentCreate) SetBlogID(i int) *CommentCreate {
+	cc.mutation.SetBlogID(i)
 	return cc
 }
 
 // SetTopID sets the "top_id" field.
-func (cc *CommentCreate) SetTopID(i int32) *CommentCreate {
+func (cc *CommentCreate) SetTopID(i int) *CommentCreate {
 	cc.mutation.SetTopID(i)
 	return cc
 }
 
 // SetNillableTopID sets the "top_id" field if the given value is not nil.
-func (cc *CommentCreate) SetNillableTopID(i *int32) *CommentCreate {
+func (cc *CommentCreate) SetNillableTopID(i *int) *CommentCreate {
 	if i != nil {
 		cc.SetTopID(*i)
 	}
@@ -160,15 +146,43 @@ func (cc *CommentCreate) SetNillableTopID(i *int32) *CommentCreate {
 }
 
 // SetParentID sets the "parent_id" field.
-func (cc *CommentCreate) SetParentID(i int32) *CommentCreate {
+func (cc *CommentCreate) SetParentID(i int) *CommentCreate {
 	cc.mutation.SetParentID(i)
 	return cc
 }
 
 // SetNillableParentID sets the "parent_id" field if the given value is not nil.
-func (cc *CommentCreate) SetNillableParentID(i *int32) *CommentCreate {
+func (cc *CommentCreate) SetNillableParentID(i *int) *CommentCreate {
 	if i != nil {
 		cc.SetParentID(*i)
+	}
+	return cc
+}
+
+// SetLevel sets the "level" field.
+func (cc *CommentCreate) SetLevel(i int) *CommentCreate {
+	cc.mutation.SetLevel(i)
+	return cc
+}
+
+// SetNillableLevel sets the "level" field if the given value is not nil.
+func (cc *CommentCreate) SetNillableLevel(i *int) *CommentCreate {
+	if i != nil {
+		cc.SetLevel(*i)
+	}
+	return cc
+}
+
+// SetTotal sets the "total" field.
+func (cc *CommentCreate) SetTotal(i int) *CommentCreate {
+	cc.mutation.SetTotal(i)
+	return cc
+}
+
+// SetNillableTotal sets the "total" field if the given value is not nil.
+func (cc *CommentCreate) SetNillableTotal(i *int) *CommentCreate {
+	if i != nil {
+		cc.SetTotal(*i)
 	}
 	return cc
 }
@@ -187,34 +201,6 @@ func (cc *CommentCreate) SetNillableStatus(i *int8) *CommentCreate {
 	return cc
 }
 
-// SetLevel sets the "level" field.
-func (cc *CommentCreate) SetLevel(i int32) *CommentCreate {
-	cc.mutation.SetLevel(i)
-	return cc
-}
-
-// SetNillableLevel sets the "level" field if the given value is not nil.
-func (cc *CommentCreate) SetNillableLevel(i *int32) *CommentCreate {
-	if i != nil {
-		cc.SetLevel(*i)
-	}
-	return cc
-}
-
-// SetTotal sets the "total" field.
-func (cc *CommentCreate) SetTotal(i int32) *CommentCreate {
-	cc.mutation.SetTotal(i)
-	return cc
-}
-
-// SetNillableTotal sets the "total" field if the given value is not nil.
-func (cc *CommentCreate) SetNillableTotal(i *int32) *CommentCreate {
-	if i != nil {
-		cc.SetTotal(*i)
-	}
-	return cc
-}
-
 // SetContent sets the "content" field.
 func (cc *CommentCreate) SetContent(s string) *CommentCreate {
 	cc.mutation.SetContent(s)
@@ -222,7 +208,7 @@ func (cc *CommentCreate) SetContent(s string) *CommentCreate {
 }
 
 // SetID sets the "id" field.
-func (cc *CommentCreate) SetID(i int32) *CommentCreate {
+func (cc *CommentCreate) SetID(i int) *CommentCreate {
 	cc.mutation.SetID(i)
 	return cc
 }
@@ -292,10 +278,6 @@ func (cc *CommentCreate) defaults() error {
 		v := comment.DefaultDeletedBy
 		cc.mutation.SetDeletedBy(v)
 	}
-	if _, ok := cc.mutation.Kind(); !ok {
-		v := comment.DefaultKind
-		cc.mutation.SetKind(v)
-	}
 	if _, ok := cc.mutation.TopID(); !ok {
 		v := comment.DefaultTopID
 		cc.mutation.SetTopID(v)
@@ -304,10 +286,6 @@ func (cc *CommentCreate) defaults() error {
 		v := comment.DefaultParentID
 		cc.mutation.SetParentID(v)
 	}
-	if _, ok := cc.mutation.Status(); !ok {
-		v := comment.DefaultStatus
-		cc.mutation.SetStatus(v)
-	}
 	if _, ok := cc.mutation.Level(); !ok {
 		v := comment.DefaultLevel
 		cc.mutation.SetLevel(v)
@@ -315,6 +293,10 @@ func (cc *CommentCreate) defaults() error {
 	if _, ok := cc.mutation.Total(); !ok {
 		v := comment.DefaultTotal
 		cc.mutation.SetTotal(v)
+	}
+	if _, ok := cc.mutation.Status(); !ok {
+		v := comment.DefaultStatus
+		cc.mutation.SetStatus(v)
 	}
 	return nil
 }
@@ -350,15 +332,12 @@ func (cc *CommentCreate) check() error {
 			return &ValidationError{Name: "account_id", err: fmt.Errorf(`ent: validator failed for field "Comment.account_id": %w`, err)}
 		}
 	}
-	if _, ok := cc.mutation.Kind(); !ok {
-		return &ValidationError{Name: "kind", err: errors.New(`ent: missing required field "Comment.kind"`)}
+	if _, ok := cc.mutation.BlogID(); !ok {
+		return &ValidationError{Name: "blog_id", err: errors.New(`ent: missing required field "Comment.blog_id"`)}
 	}
-	if _, ok := cc.mutation.KindID(); !ok {
-		return &ValidationError{Name: "kind_id", err: errors.New(`ent: missing required field "Comment.kind_id"`)}
-	}
-	if v, ok := cc.mutation.KindID(); ok {
-		if err := comment.KindIDValidator(v); err != nil {
-			return &ValidationError{Name: "kind_id", err: fmt.Errorf(`ent: validator failed for field "Comment.kind_id": %w`, err)}
+	if v, ok := cc.mutation.BlogID(); ok {
+		if err := comment.BlogIDValidator(v); err != nil {
+			return &ValidationError{Name: "blog_id", err: fmt.Errorf(`ent: validator failed for field "Comment.blog_id": %w`, err)}
 		}
 	}
 	if _, ok := cc.mutation.TopID(); !ok {
@@ -367,14 +346,14 @@ func (cc *CommentCreate) check() error {
 	if _, ok := cc.mutation.ParentID(); !ok {
 		return &ValidationError{Name: "parent_id", err: errors.New(`ent: missing required field "Comment.parent_id"`)}
 	}
-	if _, ok := cc.mutation.Status(); !ok {
-		return &ValidationError{Name: "status", err: errors.New(`ent: missing required field "Comment.status"`)}
-	}
 	if _, ok := cc.mutation.Level(); !ok {
 		return &ValidationError{Name: "level", err: errors.New(`ent: missing required field "Comment.level"`)}
 	}
 	if _, ok := cc.mutation.Total(); !ok {
 		return &ValidationError{Name: "total", err: errors.New(`ent: missing required field "Comment.total"`)}
+	}
+	if _, ok := cc.mutation.Status(); !ok {
+		return &ValidationError{Name: "status", err: errors.New(`ent: missing required field "Comment.status"`)}
 	}
 	if _, ok := cc.mutation.Content(); !ok {
 		return &ValidationError{Name: "content", err: errors.New(`ent: missing required field "Comment.content"`)}
@@ -400,7 +379,7 @@ func (cc *CommentCreate) sqlSave(ctx context.Context) (*Comment, error) {
 	}
 	if _spec.ID.Value != _node.ID {
 		id := _spec.ID.Value.(int64)
-		_node.ID = int32(id)
+		_node.ID = int(id)
 	}
 	cc.mutation.id = &_node.ID
 	cc.mutation.done = true
@@ -410,7 +389,7 @@ func (cc *CommentCreate) sqlSave(ctx context.Context) (*Comment, error) {
 func (cc *CommentCreate) createSpec() (*Comment, *sqlgraph.CreateSpec) {
 	var (
 		_node = &Comment{config: cc.config}
-		_spec = sqlgraph.NewCreateSpec(comment.Table, sqlgraph.NewFieldSpec(comment.FieldID, field.TypeInt32))
+		_spec = sqlgraph.NewCreateSpec(comment.Table, sqlgraph.NewFieldSpec(comment.FieldID, field.TypeInt))
 	)
 	_spec.OnConflict = cc.conflict
 	if id, ok := cc.mutation.ID(); ok {
@@ -446,36 +425,32 @@ func (cc *CommentCreate) createSpec() (*Comment, *sqlgraph.CreateSpec) {
 		_node.DeletedBy = value
 	}
 	if value, ok := cc.mutation.AccountID(); ok {
-		_spec.SetField(comment.FieldAccountID, field.TypeInt32, value)
+		_spec.SetField(comment.FieldAccountID, field.TypeInt, value)
 		_node.AccountID = value
 	}
-	if value, ok := cc.mutation.Kind(); ok {
-		_spec.SetField(comment.FieldKind, field.TypeInt8, value)
-		_node.Kind = value
-	}
-	if value, ok := cc.mutation.KindID(); ok {
-		_spec.SetField(comment.FieldKindID, field.TypeInt32, value)
-		_node.KindID = value
+	if value, ok := cc.mutation.BlogID(); ok {
+		_spec.SetField(comment.FieldBlogID, field.TypeInt, value)
+		_node.BlogID = value
 	}
 	if value, ok := cc.mutation.TopID(); ok {
-		_spec.SetField(comment.FieldTopID, field.TypeInt32, value)
+		_spec.SetField(comment.FieldTopID, field.TypeInt, value)
 		_node.TopID = value
 	}
 	if value, ok := cc.mutation.ParentID(); ok {
-		_spec.SetField(comment.FieldParentID, field.TypeInt32, value)
+		_spec.SetField(comment.FieldParentID, field.TypeInt, value)
 		_node.ParentID = value
+	}
+	if value, ok := cc.mutation.Level(); ok {
+		_spec.SetField(comment.FieldLevel, field.TypeInt, value)
+		_node.Level = value
+	}
+	if value, ok := cc.mutation.Total(); ok {
+		_spec.SetField(comment.FieldTotal, field.TypeInt, value)
+		_node.Total = value
 	}
 	if value, ok := cc.mutation.Status(); ok {
 		_spec.SetField(comment.FieldStatus, field.TypeInt8, value)
 		_node.Status = value
-	}
-	if value, ok := cc.mutation.Level(); ok {
-		_spec.SetField(comment.FieldLevel, field.TypeInt32, value)
-		_node.Level = value
-	}
-	if value, ok := cc.mutation.Total(); ok {
-		_spec.SetField(comment.FieldTotal, field.TypeInt32, value)
-		_node.Total = value
 	}
 	if value, ok := cc.mutation.Content(); ok {
 		_spec.SetField(comment.FieldContent, field.TypeString, value)
@@ -612,7 +587,7 @@ func (u *CommentUpsert) UpdateDeletedBy() *CommentUpsert {
 }
 
 // SetAccountID sets the "account_id" field.
-func (u *CommentUpsert) SetAccountID(v int32) *CommentUpsert {
+func (u *CommentUpsert) SetAccountID(v int) *CommentUpsert {
 	u.Set(comment.FieldAccountID, v)
 	return u
 }
@@ -624,49 +599,31 @@ func (u *CommentUpsert) UpdateAccountID() *CommentUpsert {
 }
 
 // AddAccountID adds v to the "account_id" field.
-func (u *CommentUpsert) AddAccountID(v int32) *CommentUpsert {
+func (u *CommentUpsert) AddAccountID(v int) *CommentUpsert {
 	u.Add(comment.FieldAccountID, v)
 	return u
 }
 
-// SetKind sets the "kind" field.
-func (u *CommentUpsert) SetKind(v int8) *CommentUpsert {
-	u.Set(comment.FieldKind, v)
+// SetBlogID sets the "blog_id" field.
+func (u *CommentUpsert) SetBlogID(v int) *CommentUpsert {
+	u.Set(comment.FieldBlogID, v)
 	return u
 }
 
-// UpdateKind sets the "kind" field to the value that was provided on create.
-func (u *CommentUpsert) UpdateKind() *CommentUpsert {
-	u.SetExcluded(comment.FieldKind)
+// UpdateBlogID sets the "blog_id" field to the value that was provided on create.
+func (u *CommentUpsert) UpdateBlogID() *CommentUpsert {
+	u.SetExcluded(comment.FieldBlogID)
 	return u
 }
 
-// AddKind adds v to the "kind" field.
-func (u *CommentUpsert) AddKind(v int8) *CommentUpsert {
-	u.Add(comment.FieldKind, v)
-	return u
-}
-
-// SetKindID sets the "kind_id" field.
-func (u *CommentUpsert) SetKindID(v int32) *CommentUpsert {
-	u.Set(comment.FieldKindID, v)
-	return u
-}
-
-// UpdateKindID sets the "kind_id" field to the value that was provided on create.
-func (u *CommentUpsert) UpdateKindID() *CommentUpsert {
-	u.SetExcluded(comment.FieldKindID)
-	return u
-}
-
-// AddKindID adds v to the "kind_id" field.
-func (u *CommentUpsert) AddKindID(v int32) *CommentUpsert {
-	u.Add(comment.FieldKindID, v)
+// AddBlogID adds v to the "blog_id" field.
+func (u *CommentUpsert) AddBlogID(v int) *CommentUpsert {
+	u.Add(comment.FieldBlogID, v)
 	return u
 }
 
 // SetTopID sets the "top_id" field.
-func (u *CommentUpsert) SetTopID(v int32) *CommentUpsert {
+func (u *CommentUpsert) SetTopID(v int) *CommentUpsert {
 	u.Set(comment.FieldTopID, v)
 	return u
 }
@@ -678,13 +635,13 @@ func (u *CommentUpsert) UpdateTopID() *CommentUpsert {
 }
 
 // AddTopID adds v to the "top_id" field.
-func (u *CommentUpsert) AddTopID(v int32) *CommentUpsert {
+func (u *CommentUpsert) AddTopID(v int) *CommentUpsert {
 	u.Add(comment.FieldTopID, v)
 	return u
 }
 
 // SetParentID sets the "parent_id" field.
-func (u *CommentUpsert) SetParentID(v int32) *CommentUpsert {
+func (u *CommentUpsert) SetParentID(v int) *CommentUpsert {
 	u.Set(comment.FieldParentID, v)
 	return u
 }
@@ -696,8 +653,44 @@ func (u *CommentUpsert) UpdateParentID() *CommentUpsert {
 }
 
 // AddParentID adds v to the "parent_id" field.
-func (u *CommentUpsert) AddParentID(v int32) *CommentUpsert {
+func (u *CommentUpsert) AddParentID(v int) *CommentUpsert {
 	u.Add(comment.FieldParentID, v)
+	return u
+}
+
+// SetLevel sets the "level" field.
+func (u *CommentUpsert) SetLevel(v int) *CommentUpsert {
+	u.Set(comment.FieldLevel, v)
+	return u
+}
+
+// UpdateLevel sets the "level" field to the value that was provided on create.
+func (u *CommentUpsert) UpdateLevel() *CommentUpsert {
+	u.SetExcluded(comment.FieldLevel)
+	return u
+}
+
+// AddLevel adds v to the "level" field.
+func (u *CommentUpsert) AddLevel(v int) *CommentUpsert {
+	u.Add(comment.FieldLevel, v)
+	return u
+}
+
+// SetTotal sets the "total" field.
+func (u *CommentUpsert) SetTotal(v int) *CommentUpsert {
+	u.Set(comment.FieldTotal, v)
+	return u
+}
+
+// UpdateTotal sets the "total" field to the value that was provided on create.
+func (u *CommentUpsert) UpdateTotal() *CommentUpsert {
+	u.SetExcluded(comment.FieldTotal)
+	return u
+}
+
+// AddTotal adds v to the "total" field.
+func (u *CommentUpsert) AddTotal(v int) *CommentUpsert {
+	u.Add(comment.FieldTotal, v)
 	return u
 }
 
@@ -716,42 +709,6 @@ func (u *CommentUpsert) UpdateStatus() *CommentUpsert {
 // AddStatus adds v to the "status" field.
 func (u *CommentUpsert) AddStatus(v int8) *CommentUpsert {
 	u.Add(comment.FieldStatus, v)
-	return u
-}
-
-// SetLevel sets the "level" field.
-func (u *CommentUpsert) SetLevel(v int32) *CommentUpsert {
-	u.Set(comment.FieldLevel, v)
-	return u
-}
-
-// UpdateLevel sets the "level" field to the value that was provided on create.
-func (u *CommentUpsert) UpdateLevel() *CommentUpsert {
-	u.SetExcluded(comment.FieldLevel)
-	return u
-}
-
-// AddLevel adds v to the "level" field.
-func (u *CommentUpsert) AddLevel(v int32) *CommentUpsert {
-	u.Add(comment.FieldLevel, v)
-	return u
-}
-
-// SetTotal sets the "total" field.
-func (u *CommentUpsert) SetTotal(v int32) *CommentUpsert {
-	u.Set(comment.FieldTotal, v)
-	return u
-}
-
-// UpdateTotal sets the "total" field to the value that was provided on create.
-func (u *CommentUpsert) UpdateTotal() *CommentUpsert {
-	u.SetExcluded(comment.FieldTotal)
-	return u
-}
-
-// AddTotal adds v to the "total" field.
-func (u *CommentUpsert) AddTotal(v int32) *CommentUpsert {
-	u.Add(comment.FieldTotal, v)
 	return u
 }
 
@@ -913,14 +870,14 @@ func (u *CommentUpsertOne) UpdateDeletedBy() *CommentUpsertOne {
 }
 
 // SetAccountID sets the "account_id" field.
-func (u *CommentUpsertOne) SetAccountID(v int32) *CommentUpsertOne {
+func (u *CommentUpsertOne) SetAccountID(v int) *CommentUpsertOne {
 	return u.Update(func(s *CommentUpsert) {
 		s.SetAccountID(v)
 	})
 }
 
 // AddAccountID adds v to the "account_id" field.
-func (u *CommentUpsertOne) AddAccountID(v int32) *CommentUpsertOne {
+func (u *CommentUpsertOne) AddAccountID(v int) *CommentUpsertOne {
 	return u.Update(func(s *CommentUpsert) {
 		s.AddAccountID(v)
 	})
@@ -933,57 +890,36 @@ func (u *CommentUpsertOne) UpdateAccountID() *CommentUpsertOne {
 	})
 }
 
-// SetKind sets the "kind" field.
-func (u *CommentUpsertOne) SetKind(v int8) *CommentUpsertOne {
+// SetBlogID sets the "blog_id" field.
+func (u *CommentUpsertOne) SetBlogID(v int) *CommentUpsertOne {
 	return u.Update(func(s *CommentUpsert) {
-		s.SetKind(v)
+		s.SetBlogID(v)
 	})
 }
 
-// AddKind adds v to the "kind" field.
-func (u *CommentUpsertOne) AddKind(v int8) *CommentUpsertOne {
+// AddBlogID adds v to the "blog_id" field.
+func (u *CommentUpsertOne) AddBlogID(v int) *CommentUpsertOne {
 	return u.Update(func(s *CommentUpsert) {
-		s.AddKind(v)
+		s.AddBlogID(v)
 	})
 }
 
-// UpdateKind sets the "kind" field to the value that was provided on create.
-func (u *CommentUpsertOne) UpdateKind() *CommentUpsertOne {
+// UpdateBlogID sets the "blog_id" field to the value that was provided on create.
+func (u *CommentUpsertOne) UpdateBlogID() *CommentUpsertOne {
 	return u.Update(func(s *CommentUpsert) {
-		s.UpdateKind()
-	})
-}
-
-// SetKindID sets the "kind_id" field.
-func (u *CommentUpsertOne) SetKindID(v int32) *CommentUpsertOne {
-	return u.Update(func(s *CommentUpsert) {
-		s.SetKindID(v)
-	})
-}
-
-// AddKindID adds v to the "kind_id" field.
-func (u *CommentUpsertOne) AddKindID(v int32) *CommentUpsertOne {
-	return u.Update(func(s *CommentUpsert) {
-		s.AddKindID(v)
-	})
-}
-
-// UpdateKindID sets the "kind_id" field to the value that was provided on create.
-func (u *CommentUpsertOne) UpdateKindID() *CommentUpsertOne {
-	return u.Update(func(s *CommentUpsert) {
-		s.UpdateKindID()
+		s.UpdateBlogID()
 	})
 }
 
 // SetTopID sets the "top_id" field.
-func (u *CommentUpsertOne) SetTopID(v int32) *CommentUpsertOne {
+func (u *CommentUpsertOne) SetTopID(v int) *CommentUpsertOne {
 	return u.Update(func(s *CommentUpsert) {
 		s.SetTopID(v)
 	})
 }
 
 // AddTopID adds v to the "top_id" field.
-func (u *CommentUpsertOne) AddTopID(v int32) *CommentUpsertOne {
+func (u *CommentUpsertOne) AddTopID(v int) *CommentUpsertOne {
 	return u.Update(func(s *CommentUpsert) {
 		s.AddTopID(v)
 	})
@@ -997,14 +933,14 @@ func (u *CommentUpsertOne) UpdateTopID() *CommentUpsertOne {
 }
 
 // SetParentID sets the "parent_id" field.
-func (u *CommentUpsertOne) SetParentID(v int32) *CommentUpsertOne {
+func (u *CommentUpsertOne) SetParentID(v int) *CommentUpsertOne {
 	return u.Update(func(s *CommentUpsert) {
 		s.SetParentID(v)
 	})
 }
 
 // AddParentID adds v to the "parent_id" field.
-func (u *CommentUpsertOne) AddParentID(v int32) *CommentUpsertOne {
+func (u *CommentUpsertOne) AddParentID(v int) *CommentUpsertOne {
 	return u.Update(func(s *CommentUpsert) {
 		s.AddParentID(v)
 	})
@@ -1014,6 +950,48 @@ func (u *CommentUpsertOne) AddParentID(v int32) *CommentUpsertOne {
 func (u *CommentUpsertOne) UpdateParentID() *CommentUpsertOne {
 	return u.Update(func(s *CommentUpsert) {
 		s.UpdateParentID()
+	})
+}
+
+// SetLevel sets the "level" field.
+func (u *CommentUpsertOne) SetLevel(v int) *CommentUpsertOne {
+	return u.Update(func(s *CommentUpsert) {
+		s.SetLevel(v)
+	})
+}
+
+// AddLevel adds v to the "level" field.
+func (u *CommentUpsertOne) AddLevel(v int) *CommentUpsertOne {
+	return u.Update(func(s *CommentUpsert) {
+		s.AddLevel(v)
+	})
+}
+
+// UpdateLevel sets the "level" field to the value that was provided on create.
+func (u *CommentUpsertOne) UpdateLevel() *CommentUpsertOne {
+	return u.Update(func(s *CommentUpsert) {
+		s.UpdateLevel()
+	})
+}
+
+// SetTotal sets the "total" field.
+func (u *CommentUpsertOne) SetTotal(v int) *CommentUpsertOne {
+	return u.Update(func(s *CommentUpsert) {
+		s.SetTotal(v)
+	})
+}
+
+// AddTotal adds v to the "total" field.
+func (u *CommentUpsertOne) AddTotal(v int) *CommentUpsertOne {
+	return u.Update(func(s *CommentUpsert) {
+		s.AddTotal(v)
+	})
+}
+
+// UpdateTotal sets the "total" field to the value that was provided on create.
+func (u *CommentUpsertOne) UpdateTotal() *CommentUpsertOne {
+	return u.Update(func(s *CommentUpsert) {
+		s.UpdateTotal()
 	})
 }
 
@@ -1035,48 +1013,6 @@ func (u *CommentUpsertOne) AddStatus(v int8) *CommentUpsertOne {
 func (u *CommentUpsertOne) UpdateStatus() *CommentUpsertOne {
 	return u.Update(func(s *CommentUpsert) {
 		s.UpdateStatus()
-	})
-}
-
-// SetLevel sets the "level" field.
-func (u *CommentUpsertOne) SetLevel(v int32) *CommentUpsertOne {
-	return u.Update(func(s *CommentUpsert) {
-		s.SetLevel(v)
-	})
-}
-
-// AddLevel adds v to the "level" field.
-func (u *CommentUpsertOne) AddLevel(v int32) *CommentUpsertOne {
-	return u.Update(func(s *CommentUpsert) {
-		s.AddLevel(v)
-	})
-}
-
-// UpdateLevel sets the "level" field to the value that was provided on create.
-func (u *CommentUpsertOne) UpdateLevel() *CommentUpsertOne {
-	return u.Update(func(s *CommentUpsert) {
-		s.UpdateLevel()
-	})
-}
-
-// SetTotal sets the "total" field.
-func (u *CommentUpsertOne) SetTotal(v int32) *CommentUpsertOne {
-	return u.Update(func(s *CommentUpsert) {
-		s.SetTotal(v)
-	})
-}
-
-// AddTotal adds v to the "total" field.
-func (u *CommentUpsertOne) AddTotal(v int32) *CommentUpsertOne {
-	return u.Update(func(s *CommentUpsert) {
-		s.AddTotal(v)
-	})
-}
-
-// UpdateTotal sets the "total" field to the value that was provided on create.
-func (u *CommentUpsertOne) UpdateTotal() *CommentUpsertOne {
-	return u.Update(func(s *CommentUpsert) {
-		s.UpdateTotal()
 	})
 }
 
@@ -1110,7 +1046,7 @@ func (u *CommentUpsertOne) ExecX(ctx context.Context) {
 }
 
 // Exec executes the UPSERT query and returns the inserted/updated ID.
-func (u *CommentUpsertOne) ID(ctx context.Context) (id int32, err error) {
+func (u *CommentUpsertOne) ID(ctx context.Context) (id int, err error) {
 	node, err := u.create.Save(ctx)
 	if err != nil {
 		return id, err
@@ -1119,7 +1055,7 @@ func (u *CommentUpsertOne) ID(ctx context.Context) (id int32, err error) {
 }
 
 // IDX is like ID, but panics if an error occurs.
-func (u *CommentUpsertOne) IDX(ctx context.Context) int32 {
+func (u *CommentUpsertOne) IDX(ctx context.Context) int {
 	id, err := u.ID(ctx)
 	if err != nil {
 		panic(err)
@@ -1176,7 +1112,7 @@ func (ccb *CommentCreateBulk) Save(ctx context.Context) ([]*Comment, error) {
 				mutation.id = &nodes[i].ID
 				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
 					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int32(id)
+					nodes[i].ID = int(id)
 				}
 				mutation.done = true
 				return nodes[i], nil
@@ -1406,14 +1342,14 @@ func (u *CommentUpsertBulk) UpdateDeletedBy() *CommentUpsertBulk {
 }
 
 // SetAccountID sets the "account_id" field.
-func (u *CommentUpsertBulk) SetAccountID(v int32) *CommentUpsertBulk {
+func (u *CommentUpsertBulk) SetAccountID(v int) *CommentUpsertBulk {
 	return u.Update(func(s *CommentUpsert) {
 		s.SetAccountID(v)
 	})
 }
 
 // AddAccountID adds v to the "account_id" field.
-func (u *CommentUpsertBulk) AddAccountID(v int32) *CommentUpsertBulk {
+func (u *CommentUpsertBulk) AddAccountID(v int) *CommentUpsertBulk {
 	return u.Update(func(s *CommentUpsert) {
 		s.AddAccountID(v)
 	})
@@ -1426,57 +1362,36 @@ func (u *CommentUpsertBulk) UpdateAccountID() *CommentUpsertBulk {
 	})
 }
 
-// SetKind sets the "kind" field.
-func (u *CommentUpsertBulk) SetKind(v int8) *CommentUpsertBulk {
+// SetBlogID sets the "blog_id" field.
+func (u *CommentUpsertBulk) SetBlogID(v int) *CommentUpsertBulk {
 	return u.Update(func(s *CommentUpsert) {
-		s.SetKind(v)
+		s.SetBlogID(v)
 	})
 }
 
-// AddKind adds v to the "kind" field.
-func (u *CommentUpsertBulk) AddKind(v int8) *CommentUpsertBulk {
+// AddBlogID adds v to the "blog_id" field.
+func (u *CommentUpsertBulk) AddBlogID(v int) *CommentUpsertBulk {
 	return u.Update(func(s *CommentUpsert) {
-		s.AddKind(v)
+		s.AddBlogID(v)
 	})
 }
 
-// UpdateKind sets the "kind" field to the value that was provided on create.
-func (u *CommentUpsertBulk) UpdateKind() *CommentUpsertBulk {
+// UpdateBlogID sets the "blog_id" field to the value that was provided on create.
+func (u *CommentUpsertBulk) UpdateBlogID() *CommentUpsertBulk {
 	return u.Update(func(s *CommentUpsert) {
-		s.UpdateKind()
-	})
-}
-
-// SetKindID sets the "kind_id" field.
-func (u *CommentUpsertBulk) SetKindID(v int32) *CommentUpsertBulk {
-	return u.Update(func(s *CommentUpsert) {
-		s.SetKindID(v)
-	})
-}
-
-// AddKindID adds v to the "kind_id" field.
-func (u *CommentUpsertBulk) AddKindID(v int32) *CommentUpsertBulk {
-	return u.Update(func(s *CommentUpsert) {
-		s.AddKindID(v)
-	})
-}
-
-// UpdateKindID sets the "kind_id" field to the value that was provided on create.
-func (u *CommentUpsertBulk) UpdateKindID() *CommentUpsertBulk {
-	return u.Update(func(s *CommentUpsert) {
-		s.UpdateKindID()
+		s.UpdateBlogID()
 	})
 }
 
 // SetTopID sets the "top_id" field.
-func (u *CommentUpsertBulk) SetTopID(v int32) *CommentUpsertBulk {
+func (u *CommentUpsertBulk) SetTopID(v int) *CommentUpsertBulk {
 	return u.Update(func(s *CommentUpsert) {
 		s.SetTopID(v)
 	})
 }
 
 // AddTopID adds v to the "top_id" field.
-func (u *CommentUpsertBulk) AddTopID(v int32) *CommentUpsertBulk {
+func (u *CommentUpsertBulk) AddTopID(v int) *CommentUpsertBulk {
 	return u.Update(func(s *CommentUpsert) {
 		s.AddTopID(v)
 	})
@@ -1490,14 +1405,14 @@ func (u *CommentUpsertBulk) UpdateTopID() *CommentUpsertBulk {
 }
 
 // SetParentID sets the "parent_id" field.
-func (u *CommentUpsertBulk) SetParentID(v int32) *CommentUpsertBulk {
+func (u *CommentUpsertBulk) SetParentID(v int) *CommentUpsertBulk {
 	return u.Update(func(s *CommentUpsert) {
 		s.SetParentID(v)
 	})
 }
 
 // AddParentID adds v to the "parent_id" field.
-func (u *CommentUpsertBulk) AddParentID(v int32) *CommentUpsertBulk {
+func (u *CommentUpsertBulk) AddParentID(v int) *CommentUpsertBulk {
 	return u.Update(func(s *CommentUpsert) {
 		s.AddParentID(v)
 	})
@@ -1507,6 +1422,48 @@ func (u *CommentUpsertBulk) AddParentID(v int32) *CommentUpsertBulk {
 func (u *CommentUpsertBulk) UpdateParentID() *CommentUpsertBulk {
 	return u.Update(func(s *CommentUpsert) {
 		s.UpdateParentID()
+	})
+}
+
+// SetLevel sets the "level" field.
+func (u *CommentUpsertBulk) SetLevel(v int) *CommentUpsertBulk {
+	return u.Update(func(s *CommentUpsert) {
+		s.SetLevel(v)
+	})
+}
+
+// AddLevel adds v to the "level" field.
+func (u *CommentUpsertBulk) AddLevel(v int) *CommentUpsertBulk {
+	return u.Update(func(s *CommentUpsert) {
+		s.AddLevel(v)
+	})
+}
+
+// UpdateLevel sets the "level" field to the value that was provided on create.
+func (u *CommentUpsertBulk) UpdateLevel() *CommentUpsertBulk {
+	return u.Update(func(s *CommentUpsert) {
+		s.UpdateLevel()
+	})
+}
+
+// SetTotal sets the "total" field.
+func (u *CommentUpsertBulk) SetTotal(v int) *CommentUpsertBulk {
+	return u.Update(func(s *CommentUpsert) {
+		s.SetTotal(v)
+	})
+}
+
+// AddTotal adds v to the "total" field.
+func (u *CommentUpsertBulk) AddTotal(v int) *CommentUpsertBulk {
+	return u.Update(func(s *CommentUpsert) {
+		s.AddTotal(v)
+	})
+}
+
+// UpdateTotal sets the "total" field to the value that was provided on create.
+func (u *CommentUpsertBulk) UpdateTotal() *CommentUpsertBulk {
+	return u.Update(func(s *CommentUpsert) {
+		s.UpdateTotal()
 	})
 }
 
@@ -1528,48 +1485,6 @@ func (u *CommentUpsertBulk) AddStatus(v int8) *CommentUpsertBulk {
 func (u *CommentUpsertBulk) UpdateStatus() *CommentUpsertBulk {
 	return u.Update(func(s *CommentUpsert) {
 		s.UpdateStatus()
-	})
-}
-
-// SetLevel sets the "level" field.
-func (u *CommentUpsertBulk) SetLevel(v int32) *CommentUpsertBulk {
-	return u.Update(func(s *CommentUpsert) {
-		s.SetLevel(v)
-	})
-}
-
-// AddLevel adds v to the "level" field.
-func (u *CommentUpsertBulk) AddLevel(v int32) *CommentUpsertBulk {
-	return u.Update(func(s *CommentUpsert) {
-		s.AddLevel(v)
-	})
-}
-
-// UpdateLevel sets the "level" field to the value that was provided on create.
-func (u *CommentUpsertBulk) UpdateLevel() *CommentUpsertBulk {
-	return u.Update(func(s *CommentUpsert) {
-		s.UpdateLevel()
-	})
-}
-
-// SetTotal sets the "total" field.
-func (u *CommentUpsertBulk) SetTotal(v int32) *CommentUpsertBulk {
-	return u.Update(func(s *CommentUpsert) {
-		s.SetTotal(v)
-	})
-}
-
-// AddTotal adds v to the "total" field.
-func (u *CommentUpsertBulk) AddTotal(v int32) *CommentUpsertBulk {
-	return u.Update(func(s *CommentUpsert) {
-		s.AddTotal(v)
-	})
-}
-
-// UpdateTotal sets the "total" field to the value that was provided on create.
-func (u *CommentUpsertBulk) UpdateTotal() *CommentUpsertBulk {
-	return u.Update(func(s *CommentUpsert) {
-		s.UpdateTotal()
 	})
 }
 
