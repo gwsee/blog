@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package app.blogs.api;
+
+option go_package = "blog/app/blogs/api;api";
+option java_multiple_files = true;
+option java_package = "app.blogs.api";
+
+service Blogs {
+	rpc CreateBlogs (CreateBlogsRequest) returns (CreateBlogsReply);
+	rpc UpdateBlogs (UpdateBlogsRequest) returns (UpdateBlogsReply);
+	rpc DeleteBlogs (DeleteBlogsRequest) returns (DeleteBlogsReply);
+	rpc GetBlogs (GetBlogsRequest) returns (GetBlogsReply);
+	rpc ListBlogs (ListBlogsRequest) returns (ListBlogsReply);
+}
+
+message CreateBlogsRequest {}
+message CreateBlogsReply {}
+
+message UpdateBlogsRequest {}
+message UpdateBlogsReply {}
+
+message DeleteBlogsRequest {}
+message DeleteBlogsReply {}
+
+message GetBlogsRequest {}
+message GetBlogsReply {}
+
+message ListBlogsRequest {}
+message ListBlogsReply {}
