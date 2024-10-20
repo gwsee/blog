@@ -1,6 +1,7 @@
 package data
 
 import (
+	"blog/internal/ent/migrate"
 	"context"
 
 	"blog/app/account/internal/biz"
@@ -15,6 +16,9 @@ type greeterRepo struct {
 
 // NewGreeterRepo .
 func NewGreeterRepo(data *Data, logger log.Logger) biz.GreeterRepo {
+	if err := data.db.Schema.Create(context.TODO(), migrate.WithForeignKeys(false), migrate.WithDropColumn(true)); err != nil {
+		panic(err)
+	}
 	return &greeterRepo{
 		data: data,
 		log:  log.NewHelper(logger),

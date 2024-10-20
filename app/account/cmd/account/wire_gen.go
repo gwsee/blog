@@ -7,7 +7,7 @@
 package main
 
 import (
-	"blog/app/account/internal/biz"
+	_ "blog/app/account/internal/biz"
 	"blog/app/account/internal/conf"
 	"blog/app/account/internal/data"
 	"blog/app/account/internal/server"
@@ -24,15 +24,15 @@ import (
 
 // wireApp init kratos application.
 func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*kratos.App, func(), error) {
-	dataData, cleanup, err := data.NewData(confData, logger)
+	_, cleanup, err := data.NewData(confData, logger) //dataData
 	if err != nil {
 		return nil, nil, err
 	}
-	greeterRepo := data.NewGreeterRepo(dataData, logger)
-	greeterUsecase := biz.NewGreeterUsecase(greeterRepo, logger)
-	greeterService := service.NewGreeterService(greeterUsecase)
-	grpcServer := server.NewGRPCServer(confServer, greeterService, logger)
-	httpServer := server.NewHTTPServer(confServer, greeterService, logger)
+	//accountRepo := data.NewGreeterRepo(dataData, logger)
+	//accountUsecase := biz.NewGreeterUsecase(accountRepo, logger)
+	accountService := service.NewAccountService() //accountUsecase
+	grpcServer := server.NewGRPCServer(confServer, accountService, logger)
+	httpServer := server.NewHTTPServer(confServer, accountService, logger)
 	app := newApp(logger, grpcServer, httpServer)
 	return app, func() {
 		cleanup()
