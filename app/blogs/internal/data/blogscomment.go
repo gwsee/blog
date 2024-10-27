@@ -33,7 +33,7 @@ func (o *blogsCommentRepo) CreateBlogsComment(ctx context.Context, data *biz.Blo
 		}
 	}
 	_, err := o.data.db.BlogsComment.Create().
-		SetAccountID(int(data.AccountId)). //todo 获取账户ID
+		SetAccountID(int(data.AccountId)).
 		SetBlogID(int(data.BlogId)).
 		SetTopID(int(data.TopId)).
 		SetParentID(int(data.ParentId)).
@@ -72,8 +72,10 @@ func (o *blogsCommentRepo) GetBlogsComment(ctx context.Context, id int64) (*biz.
 	}, err
 }
 func (o *blogsCommentRepo) ListBlogsComment(ctx context.Context, query *biz.BlogsCommentQuery) (int64, []*biz.BlogsComment, error) {
-	tx := o.data.db.BlogsComment.Query().Where(blogscomment.IDGT(int(query.GetStart())))
-	//todo 查询可见的 或者 自己的
+	tx := o.data.db.BlogsComment.Query().Where(blogscomment.IDGT(int(query.GetStart()))).Where(blogscomment.Or(
+		blogscomment.AccountIDEQ(int(query.AccountId)),
+		blogscomment.StatusEQ(NotHidden),
+	))
 	list, err := tx.Limit(int(query.GetPageSize())).
 		Order(ent.Asc(blogscomment.FieldID)).All(ctx)
 	if err != nil {

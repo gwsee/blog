@@ -7,7 +7,14 @@ import (
 	"blog/internal/ent/blogscontent"
 	"blog/internal/ent/migrate"
 	"context"
+	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqljson"
 	"github.com/go-kratos/kratos/v2/log"
+)
+
+const (
+	NotHidden = iota
+	IsHidden
 )
 
 type blogsRepo struct {
@@ -102,12 +109,17 @@ func (o *blogsRepo) GetBlogs(ctx context.Context, id int64) (*biz.Blogs, error) 
 	}, err
 }
 func (o *blogsRepo) ListBlogs(ctx context.Context, query *biz.BlogsQuery) (int64, []*biz.Blogs, error) {
-	tx := o.data.db.Blogs.Query().Where(blogs.IsHidden(0)) // todo  查看自己的或者查询公共的
+	tx := o.data.db.Blogs.Query().Where(blogs.Or(
+		blogs.AccountIDEQ(int(query.AccountId)),
+		blogs.IsHiddenEQ(NotHidden),
+	))
 	if query.Title != "" {
 		tx = tx.Where(blogs.TitleContains(query.Title))
 	}
 	if len(query.Tags) > 0 {
-		//todo 查询标签
+		tx = tx.Where(func(selector *sql.Selector) {
+			selector.Where(sqljson.ValueContains(blogs.FieldTags, query.Tags))
+		})
 		//tx = tx.Where(blogs.Tags)
 	}
 	total, err := tx.Count(ctx)

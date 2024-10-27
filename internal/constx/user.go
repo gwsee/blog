@@ -2,12 +2,13 @@ package constx
 
 import "context"
 
-const UserInfo = "user_info"
+const UserInfo = "_user_info"
 const EmptyUser = ""
 
 var DefaultUser User
 
 type User struct {
+	Id   int64  `json:"id"`
 	Name string `json:"name"`
 }
 
