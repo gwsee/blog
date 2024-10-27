@@ -58,14 +58,18 @@ func init() {
 	accountDescDeletedBy := accountMixinFields1[2].Descriptor()
 	// account.DefaultDeletedBy holds the default value on creation for the deleted_by field.
 	account.DefaultDeletedBy = accountDescDeletedBy.Default.(string)
+	// accountDescAccount is the schema descriptor for account field.
+	accountDescAccount := accountFields[1].Descriptor()
+	// account.AccountValidator is a validator for the "account" field. It is called by the builders before save.
+	account.AccountValidator = accountDescAccount.Validators[0].(func(string) error)
 	// accountDescPassword is the schema descriptor for password field.
 	accountDescPassword := accountFields[2].Descriptor()
 	// account.PasswordValidator is a validator for the "password" field. It is called by the builders before save.
 	account.PasswordValidator = accountDescPassword.Validators[0].(func(string) error)
 	// accountDescEmail is the schema descriptor for email field.
 	accountDescEmail := accountFields[3].Descriptor()
-	// account.EmailValidator is a validator for the "email" field. It is called by the builders before save.
-	account.EmailValidator = accountDescEmail.Validators[0].(func(string) error)
+	// account.DefaultEmail holds the default value on creation for the email field.
+	account.DefaultEmail = accountDescEmail.Default.(string)
 	// accountDescStatus is the schema descriptor for status field.
 	accountDescStatus := accountFields[4].Descriptor()
 	// account.DefaultStatus holds the default value on creation for the status field.

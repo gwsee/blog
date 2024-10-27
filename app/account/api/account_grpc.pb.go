@@ -19,11 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Account_CreateAccount_FullMethodName = "/app.account.api.Account/CreateAccount"
-	Account_UpdateAccount_FullMethodName = "/app.account.api.Account/UpdateAccount"
-	Account_DeleteAccount_FullMethodName = "/app.account.api.Account/DeleteAccount"
-	Account_GetAccount_FullMethodName    = "/app.account.api.Account/GetAccount"
-	Account_ListAccount_FullMethodName   = "/app.account.api.Account/ListAccount"
+	Account_CreateAccount_FullMethodName  = "/app.account.api.Account/CreateAccount"
+	Account_ResetPassword_FullMethodName  = "/app.account.api.Account/ResetPassword"
+	Account_LoginByAccount_FullMethodName = "/app.account.api.Account/LoginByAccount"
 )
 
 // AccountClient is the client API for Account service.
@@ -31,10 +29,8 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AccountClient interface {
 	CreateAccount(ctx context.Context, in *CreateAccountRequest, opts ...grpc.CallOption) (*CreateAccountReply, error)
-	UpdateAccount(ctx context.Context, in *UpdateAccountRequest, opts ...grpc.CallOption) (*UpdateAccountReply, error)
-	DeleteAccount(ctx context.Context, in *DeleteAccountRequest, opts ...grpc.CallOption) (*DeleteAccountReply, error)
-	GetAccount(ctx context.Context, in *GetAccountRequest, opts ...grpc.CallOption) (*GetAccountReply, error)
-	ListAccount(ctx context.Context, in *ListAccountRequest, opts ...grpc.CallOption) (*ListAccountReply, error)
+	ResetPassword(ctx context.Context, in *ResetPasswordRequest, opts ...grpc.CallOption) (*ResetPasswordReply, error)
+	LoginByAccount(ctx context.Context, in *LoginByAccountRequest, opts ...grpc.CallOption) (*LoginByAccountReply, error)
 }
 
 type accountClient struct {
@@ -55,40 +51,20 @@ func (c *accountClient) CreateAccount(ctx context.Context, in *CreateAccountRequ
 	return out, nil
 }
 
-func (c *accountClient) UpdateAccount(ctx context.Context, in *UpdateAccountRequest, opts ...grpc.CallOption) (*UpdateAccountReply, error) {
+func (c *accountClient) ResetPassword(ctx context.Context, in *ResetPasswordRequest, opts ...grpc.CallOption) (*ResetPasswordReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UpdateAccountReply)
-	err := c.cc.Invoke(ctx, Account_UpdateAccount_FullMethodName, in, out, cOpts...)
+	out := new(ResetPasswordReply)
+	err := c.cc.Invoke(ctx, Account_ResetPassword_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *accountClient) DeleteAccount(ctx context.Context, in *DeleteAccountRequest, opts ...grpc.CallOption) (*DeleteAccountReply, error) {
+func (c *accountClient) LoginByAccount(ctx context.Context, in *LoginByAccountRequest, opts ...grpc.CallOption) (*LoginByAccountReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(DeleteAccountReply)
-	err := c.cc.Invoke(ctx, Account_DeleteAccount_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *accountClient) GetAccount(ctx context.Context, in *GetAccountRequest, opts ...grpc.CallOption) (*GetAccountReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetAccountReply)
-	err := c.cc.Invoke(ctx, Account_GetAccount_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *accountClient) ListAccount(ctx context.Context, in *ListAccountRequest, opts ...grpc.CallOption) (*ListAccountReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListAccountReply)
-	err := c.cc.Invoke(ctx, Account_ListAccount_FullMethodName, in, out, cOpts...)
+	out := new(LoginByAccountReply)
+	err := c.cc.Invoke(ctx, Account_LoginByAccount_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -100,10 +76,8 @@ func (c *accountClient) ListAccount(ctx context.Context, in *ListAccountRequest,
 // for forward compatibility.
 type AccountServer interface {
 	CreateAccount(context.Context, *CreateAccountRequest) (*CreateAccountReply, error)
-	UpdateAccount(context.Context, *UpdateAccountRequest) (*UpdateAccountReply, error)
-	DeleteAccount(context.Context, *DeleteAccountRequest) (*DeleteAccountReply, error)
-	GetAccount(context.Context, *GetAccountRequest) (*GetAccountReply, error)
-	ListAccount(context.Context, *ListAccountRequest) (*ListAccountReply, error)
+	ResetPassword(context.Context, *ResetPasswordRequest) (*ResetPasswordReply, error)
+	LoginByAccount(context.Context, *LoginByAccountRequest) (*LoginByAccountReply, error)
 	mustEmbedUnimplementedAccountServer()
 }
 
@@ -117,17 +91,11 @@ type UnimplementedAccountServer struct{}
 func (UnimplementedAccountServer) CreateAccount(context.Context, *CreateAccountRequest) (*CreateAccountReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateAccount not implemented")
 }
-func (UnimplementedAccountServer) UpdateAccount(context.Context, *UpdateAccountRequest) (*UpdateAccountReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateAccount not implemented")
+func (UnimplementedAccountServer) ResetPassword(context.Context, *ResetPasswordRequest) (*ResetPasswordReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ResetPassword not implemented")
 }
-func (UnimplementedAccountServer) DeleteAccount(context.Context, *DeleteAccountRequest) (*DeleteAccountReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteAccount not implemented")
-}
-func (UnimplementedAccountServer) GetAccount(context.Context, *GetAccountRequest) (*GetAccountReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetAccount not implemented")
-}
-func (UnimplementedAccountServer) ListAccount(context.Context, *ListAccountRequest) (*ListAccountReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListAccount not implemented")
+func (UnimplementedAccountServer) LoginByAccount(context.Context, *LoginByAccountRequest) (*LoginByAccountReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LoginByAccount not implemented")
 }
 func (UnimplementedAccountServer) mustEmbedUnimplementedAccountServer() {}
 func (UnimplementedAccountServer) testEmbeddedByValue()                 {}
@@ -168,74 +136,38 @@ func _Account_CreateAccount_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Account_UpdateAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateAccountRequest)
+func _Account_ResetPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResetPasswordRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AccountServer).UpdateAccount(ctx, in)
+		return srv.(AccountServer).ResetPassword(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Account_UpdateAccount_FullMethodName,
+		FullMethod: Account_ResetPassword_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AccountServer).UpdateAccount(ctx, req.(*UpdateAccountRequest))
+		return srv.(AccountServer).ResetPassword(ctx, req.(*ResetPasswordRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Account_DeleteAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteAccountRequest)
+func _Account_LoginByAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LoginByAccountRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AccountServer).DeleteAccount(ctx, in)
+		return srv.(AccountServer).LoginByAccount(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Account_DeleteAccount_FullMethodName,
+		FullMethod: Account_LoginByAccount_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AccountServer).DeleteAccount(ctx, req.(*DeleteAccountRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Account_GetAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetAccountRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AccountServer).GetAccount(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Account_GetAccount_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AccountServer).GetAccount(ctx, req.(*GetAccountRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Account_ListAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListAccountRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AccountServer).ListAccount(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Account_ListAccount_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AccountServer).ListAccount(ctx, req.(*ListAccountRequest))
+		return srv.(AccountServer).LoginByAccount(ctx, req.(*LoginByAccountRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -252,20 +184,12 @@ var Account_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Account_CreateAccount_Handler,
 		},
 		{
-			MethodName: "UpdateAccount",
-			Handler:    _Account_UpdateAccount_Handler,
+			MethodName: "ResetPassword",
+			Handler:    _Account_ResetPassword_Handler,
 		},
 		{
-			MethodName: "DeleteAccount",
-			Handler:    _Account_DeleteAccount_Handler,
-		},
-		{
-			MethodName: "GetAccount",
-			Handler:    _Account_GetAccount_Handler,
-		},
-		{
-			MethodName: "ListAccount",
-			Handler:    _Account_ListAccount_Handler,
+			MethodName: "LoginByAccount",
+			Handler:    _Account_LoginByAccount_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -88,10 +88,12 @@ var (
 	DefaultDeletedAt int64
 	// DefaultDeletedBy holds the default value on creation for the "deleted_by" field.
 	DefaultDeletedBy string
+	// AccountValidator is a validator for the "account" field. It is called by the builders before save.
+	AccountValidator func(string) error
 	// PasswordValidator is a validator for the "password" field. It is called by the builders before save.
 	PasswordValidator func(string) error
-	// EmailValidator is a validator for the "email" field. It is called by the builders before save.
-	EmailValidator func(string) error
+	// DefaultEmail holds the default value on creation for the "email" field.
+	DefaultEmail string
 	// DefaultStatus holds the default value on creation for the "status" field.
 	DefaultStatus int8
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.

@@ -7,6 +7,7 @@
 package main
 
 import (
+	"blog/app/account/internal/biz"
 	_ "blog/app/account/internal/biz"
 	"blog/app/account/internal/conf"
 	"blog/app/account/internal/data"
@@ -23,16 +24,19 @@ import (
 // Injectors from wire.go:
 
 // wireApp init kratos application.
-func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*kratos.App, func(), error) {
-	_, cleanup, err := data.NewData(confData, logger) //dataData
+func wireApp(cfg *conf.Bootstrap, logger log.Logger) (*kratos.App, func(), error) {
+	dataData, cleanup, err := data.NewData(cfg.Data, logger) //dataData
 	if err != nil {
 		return nil, nil, err
 	}
 	//accountRepo := data.NewGreeterRepo(dataData, logger)
 	//accountUsecase := biz.NewGreeterUsecase(accountRepo, logger)
-	accountService := service.NewAccountService() //accountUsecase
-	grpcServer := server.NewGRPCServer(confServer, accountService, logger)
-	httpServer := server.NewHTTPServer(confServer, accountService, logger)
+	accountRepo :=data.NewAccountRepo(dataData,logger)
+	accountUserCase:=biz.NewAccountUseCase(cfg.Auth,accountRepo,logger)
+
+	accountService := service.NewAccountService(accountUserCase) //accountUsecase
+	grpcServer := server.NewGRPCServer(cfg.Server, accountService, logger)
+	httpServer := server.NewHTTPServer(cfg.Server, accountService, logger)
 	app := newApp(logger, grpcServer, httpServer)
 	return app, func() {
 		cleanup()

@@ -222,14 +222,14 @@ func (au *AccountUpdate) defaults() error {
 
 // check runs all checks and user-defined validators on the builder.
 func (au *AccountUpdate) check() error {
+	if v, ok := au.mutation.Account(); ok {
+		if err := account.AccountValidator(v); err != nil {
+			return &ValidationError{Name: "account", err: fmt.Errorf(`ent: validator failed for field "Account.account": %w`, err)}
+		}
+	}
 	if v, ok := au.mutation.Password(); ok {
 		if err := account.PasswordValidator(v); err != nil {
 			return &ValidationError{Name: "password", err: fmt.Errorf(`ent: validator failed for field "Account.password": %w`, err)}
-		}
-	}
-	if v, ok := au.mutation.Email(); ok {
-		if err := account.EmailValidator(v); err != nil {
-			return &ValidationError{Name: "email", err: fmt.Errorf(`ent: validator failed for field "Account.email": %w`, err)}
 		}
 	}
 	return nil
@@ -514,14 +514,14 @@ func (auo *AccountUpdateOne) defaults() error {
 
 // check runs all checks and user-defined validators on the builder.
 func (auo *AccountUpdateOne) check() error {
+	if v, ok := auo.mutation.Account(); ok {
+		if err := account.AccountValidator(v); err != nil {
+			return &ValidationError{Name: "account", err: fmt.Errorf(`ent: validator failed for field "Account.account": %w`, err)}
+		}
+	}
 	if v, ok := auo.mutation.Password(); ok {
 		if err := account.PasswordValidator(v); err != nil {
 			return &ValidationError{Name: "password", err: fmt.Errorf(`ent: validator failed for field "Account.password": %w`, err)}
-		}
-	}
-	if v, ok := auo.mutation.Email(); ok {
-		if err := account.EmailValidator(v); err != nil {
-			return &ValidationError{Name: "email", err: fmt.Errorf(`ent: validator failed for field "Account.email": %w`, err)}
 		}
 	}
 	return nil

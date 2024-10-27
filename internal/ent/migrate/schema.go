@@ -12,16 +12,16 @@ var (
 	// AccountColumns holds the columns for the "account" table.
 	AccountColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true, Comment: "账户ID"},
-		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1728911106},
+		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1730003847},
 		{Name: "created_by", Type: field.TypeString, Comment: "创建人", Default: ""},
-		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1728911106},
+		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1730003847},
 		{Name: "updated_by", Type: field.TypeString, Comment: "更新人", Default: ""},
 		{Name: "is_deleted", Type: field.TypeUint8, Comment: "是否删除;0：正常，1：删除", Default: 0},
 		{Name: "deleted_at", Type: field.TypeInt64, Comment: "软删除时间", Default: 0},
 		{Name: "deleted_by", Type: field.TypeString, Comment: "删除人", Default: ""},
 		{Name: "account", Type: field.TypeString, Unique: true, Comment: "账户", SchemaType: map[string]string{"mysql": "varchar(100)"}},
 		{Name: "password", Type: field.TypeString, Comment: "密码", SchemaType: map[string]string{"mysql": "varchar(200)"}},
-		{Name: "email", Type: field.TypeString, Comment: "邮箱", SchemaType: map[string]string{"mysql": "varchar(100)"}},
+		{Name: "email", Type: field.TypeString, Comment: "邮箱", Default: "", SchemaType: map[string]string{"mysql": "varchar(100)"}},
 		{Name: "status", Type: field.TypeInt8, Comment: "状态:0失效,1正常", Default: 1, SchemaType: map[string]string{"mysql": "tinyint"}},
 	}
 	// AccountTable holds the schema information for the "account" table.
@@ -34,9 +34,9 @@ var (
 	// BlogsColumns holds the columns for the "blogs" table.
 	BlogsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true, Comment: "博客ID"},
-		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1728911106},
+		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1730003847},
 		{Name: "created_by", Type: field.TypeString, Comment: "创建人", Default: ""},
-		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1728911106},
+		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1730003847},
 		{Name: "updated_by", Type: field.TypeString, Comment: "更新人", Default: ""},
 		{Name: "is_deleted", Type: field.TypeUint8, Comment: "是否删除;0：正常，1：删除", Default: 0},
 		{Name: "deleted_at", Type: field.TypeInt64, Comment: "软删除时间", Default: 0},
@@ -71,9 +71,9 @@ var (
 	// CommentsColumns holds the columns for the "comments" table.
 	CommentsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true, Comment: "评论ID"},
-		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1728911106},
+		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1730003847},
 		{Name: "created_by", Type: field.TypeString, Comment: "创建人", Default: ""},
-		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1728911106},
+		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1730003847},
 		{Name: "updated_by", Type: field.TypeString, Comment: "更新人", Default: ""},
 		{Name: "is_deleted", Type: field.TypeUint8, Comment: "是否删除;0：正常，1：删除", Default: 0},
 		{Name: "deleted_at", Type: field.TypeInt64, Comment: "软删除时间", Default: 0},

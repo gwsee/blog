@@ -8,23 +8,27 @@ option java_package = "app.account.api";
 
 service Account {
 	rpc CreateAccount (CreateAccountRequest) returns (CreateAccountReply);
-	rpc UpdateAccount (UpdateAccountRequest) returns (UpdateAccountReply);
-	rpc DeleteAccount (DeleteAccountRequest) returns (DeleteAccountReply);
-	rpc GetAccount (GetAccountRequest) returns (GetAccountReply);
-	rpc ListAccount (ListAccountRequest) returns (ListAccountReply);
+	rpc ResetPassword (ResetPasswordRequest) returns (ResetPasswordReply);
+	rpc LoginByAccount (LoginByAccountRequest) returns (LoginByAccountReply);
 }
 
-message CreateAccountRequest {}
+message CreateAccountRequest {
+	string Account = 1;
+	string Password = 2;
+	string Email = 3;
+}
 message CreateAccountReply {}
 
-message UpdateAccountRequest {}
-message UpdateAccountReply {}
+message ResetPasswordRequest {
+	string Account = 1;
+	string Password = 2;
+}
+message ResetPasswordReply {}
 
-message DeleteAccountRequest {}
-message DeleteAccountReply {}
-
-message GetAccountRequest {}
-message GetAccountReply {}
-
-message ListAccountRequest {}
-message ListAccountReply {}
+message LoginByAccountRequest {
+	string Account = 1;
+	string Password = 2;
+}
+message LoginByAccountReply {
+	string Token = 1;
+}

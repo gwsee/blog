@@ -16,7 +16,7 @@ type Account struct {
 func (Account) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int("id").Unique().Positive().Comment("账户ID"),
-		field.String("account").Unique().Comment("账户").
+		field.String("account").Unique().NotEmpty().Comment("账户").
 			SchemaType(map[string]string{
 				dialect.MySQL: "varchar(100)",
 			}),
@@ -24,7 +24,7 @@ func (Account) Fields() []ent.Field {
 			SchemaType(map[string]string{
 				dialect.MySQL: "varchar(200)",
 			}),
-		field.String("email").NotEmpty().Comment("邮箱").
+		field.String("email").Default("").Comment("邮箱").
 			SchemaType(map[string]string{
 				dialect.MySQL: "varchar(100)",
 			}),

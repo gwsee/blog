@@ -137,6 +137,14 @@ func (ac *AccountCreate) SetEmail(s string) *AccountCreate {
 	return ac
 }
 
+// SetNillableEmail sets the "email" field if the given value is not nil.
+func (ac *AccountCreate) SetNillableEmail(s *string) *AccountCreate {
+	if s != nil {
+		ac.SetEmail(*s)
+	}
+	return ac
+}
+
 // SetStatus sets the "status" field.
 func (ac *AccountCreate) SetStatus(i int8) *AccountCreate {
 	ac.mutation.SetStatus(i)
@@ -222,6 +230,10 @@ func (ac *AccountCreate) defaults() error {
 		v := account.DefaultDeletedBy
 		ac.mutation.SetDeletedBy(v)
 	}
+	if _, ok := ac.mutation.Email(); !ok {
+		v := account.DefaultEmail
+		ac.mutation.SetEmail(v)
+	}
 	if _, ok := ac.mutation.Status(); !ok {
 		v := account.DefaultStatus
 		ac.mutation.SetStatus(v)
@@ -255,6 +267,11 @@ func (ac *AccountCreate) check() error {
 	if _, ok := ac.mutation.Account(); !ok {
 		return &ValidationError{Name: "account", err: errors.New(`ent: missing required field "Account.account"`)}
 	}
+	if v, ok := ac.mutation.Account(); ok {
+		if err := account.AccountValidator(v); err != nil {
+			return &ValidationError{Name: "account", err: fmt.Errorf(`ent: validator failed for field "Account.account": %w`, err)}
+		}
+	}
 	if _, ok := ac.mutation.Password(); !ok {
 		return &ValidationError{Name: "password", err: errors.New(`ent: missing required field "Account.password"`)}
 	}
@@ -265,11 +282,6 @@ func (ac *AccountCreate) check() error {
 	}
 	if _, ok := ac.mutation.Email(); !ok {
 		return &ValidationError{Name: "email", err: errors.New(`ent: missing required field "Account.email"`)}
-	}
-	if v, ok := ac.mutation.Email(); ok {
-		if err := account.EmailValidator(v); err != nil {
-			return &ValidationError{Name: "email", err: fmt.Errorf(`ent: validator failed for field "Account.email": %w`, err)}
-		}
 	}
 	if _, ok := ac.mutation.Status(); !ok {
 		return &ValidationError{Name: "status", err: errors.New(`ent: missing required field "Account.status"`)}

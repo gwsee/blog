@@ -20,32 +20,26 @@ var _ = binding.EncodeURL
 const _ = http.SupportPackageIsVersion1
 
 const OperationAccountCreateAccount = "/app.account.api.Account/CreateAccount"
-const OperationAccountDeleteAccount = "/app.account.api.Account/DeleteAccount"
-const OperationAccountGetAccount = "/app.account.api.Account/GetAccount"
-const OperationAccountListAccount = "/app.account.api.Account/ListAccount"
-const OperationAccountUpdateAccount = "/app.account.api.Account/UpdateAccount"
+const OperationAccountLoginByAccount = "/app.account.api.Account/LoginByAccount"
+const OperationAccountResetPassword = "/app.account.api.Account/ResetPassword"
 
 type AccountHTTPServer interface {
 	CreateAccount(context.Context, *CreateAccountRequest) (*CreateAccountReply, error)
-	DeleteAccount(context.Context, *DeleteAccountRequest) (*DeleteAccountReply, error)
-	GetAccount(context.Context, *GetAccountRequest) (*GetAccountReply, error)
-	ListAccount(context.Context, *ListAccountRequest) (*ListAccountReply, error)
-	UpdateAccount(context.Context, *UpdateAccountRequest) (*UpdateAccountReply, error)
+	LoginByAccount(context.Context, *LoginByAccountRequest) (*LoginByAccountReply, error)
+	ResetPassword(context.Context, *ResetPasswordRequest) (*ResetPasswordReply, error)
 }
 
 func RegisterAccountHTTPServer(s *http.Server, srv AccountHTTPServer) {
 	r := s.Route("/")
 	r.POST("/app.account.api.Account/CreateAccount", _Account_CreateAccount0_HTTP_Handler(srv))
-	r.POST("/app.account.api.Account/UpdateAccount", _Account_UpdateAccount0_HTTP_Handler(srv))
-	r.POST("/app.account.api.Account/DeleteAccount", _Account_DeleteAccount0_HTTP_Handler(srv))
-	r.POST("/app.account.api.Account/GetAccount", _Account_GetAccount0_HTTP_Handler(srv))
-	r.POST("/app.account.api.Account/ListAccount", _Account_ListAccount0_HTTP_Handler(srv))
+	r.POST("/app.account.api.Account/ResetPassword", _Account_ResetPassword0_HTTP_Handler(srv))
+	r.POST("/app.account.api.Account/LoginByAccount", _Account_LoginByAccount0_HTTP_Handler(srv))
 }
 
 func _Account_CreateAccount0_HTTP_Handler(srv AccountHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in CreateAccountRequest
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationAccountCreateAccount)
@@ -61,88 +55,48 @@ func _Account_CreateAccount0_HTTP_Handler(srv AccountHTTPServer) func(ctx http.C
 	}
 }
 
-func _Account_UpdateAccount0_HTTP_Handler(srv AccountHTTPServer) func(ctx http.Context) error {
+func _Account_ResetPassword0_HTTP_Handler(srv AccountHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in UpdateAccountRequest
-		if err := ctx.BindQuery(&in); err != nil {
+		var in ResetPasswordRequest
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAccountUpdateAccount)
+		http.SetOperation(ctx, OperationAccountResetPassword)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.UpdateAccount(ctx, req.(*UpdateAccountRequest))
+			return srv.ResetPassword(ctx, req.(*ResetPasswordRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*UpdateAccountReply)
+		reply := out.(*ResetPasswordReply)
 		return ctx.Result(200, reply)
 	}
 }
 
-func _Account_DeleteAccount0_HTTP_Handler(srv AccountHTTPServer) func(ctx http.Context) error {
+func _Account_LoginByAccount0_HTTP_Handler(srv AccountHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in DeleteAccountRequest
-		if err := ctx.BindQuery(&in); err != nil {
+		var in LoginByAccountRequest
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAccountDeleteAccount)
+		http.SetOperation(ctx, OperationAccountLoginByAccount)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.DeleteAccount(ctx, req.(*DeleteAccountRequest))
+			return srv.LoginByAccount(ctx, req.(*LoginByAccountRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*DeleteAccountReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _Account_GetAccount0_HTTP_Handler(srv AccountHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in GetAccountRequest
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationAccountGetAccount)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.GetAccount(ctx, req.(*GetAccountRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*GetAccountReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _Account_ListAccount0_HTTP_Handler(srv AccountHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in ListAccountRequest
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationAccountListAccount)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ListAccount(ctx, req.(*ListAccountRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*ListAccountReply)
+		reply := out.(*LoginByAccountReply)
 		return ctx.Result(200, reply)
 	}
 }
 
 type AccountHTTPClient interface {
 	CreateAccount(ctx context.Context, req *CreateAccountRequest, opts ...http.CallOption) (rsp *CreateAccountReply, err error)
-	DeleteAccount(ctx context.Context, req *DeleteAccountRequest, opts ...http.CallOption) (rsp *DeleteAccountReply, err error)
-	GetAccount(ctx context.Context, req *GetAccountRequest, opts ...http.CallOption) (rsp *GetAccountReply, err error)
-	ListAccount(ctx context.Context, req *ListAccountRequest, opts ...http.CallOption) (rsp *ListAccountReply, err error)
-	UpdateAccount(ctx context.Context, req *UpdateAccountRequest, opts ...http.CallOption) (rsp *UpdateAccountReply, err error)
+	LoginByAccount(ctx context.Context, req *LoginByAccountRequest, opts ...http.CallOption) (rsp *LoginByAccountReply, err error)
+	ResetPassword(ctx context.Context, req *ResetPasswordRequest, opts ...http.CallOption) (rsp *ResetPasswordReply, err error)
 }
 
 type AccountHTTPClientImpl struct {
@@ -166,11 +120,11 @@ func (c *AccountHTTPClientImpl) CreateAccount(ctx context.Context, in *CreateAcc
 	return &out, nil
 }
 
-func (c *AccountHTTPClientImpl) DeleteAccount(ctx context.Context, in *DeleteAccountRequest, opts ...http.CallOption) (*DeleteAccountReply, error) {
-	var out DeleteAccountReply
-	pattern := "/app.account.api.Account/DeleteAccount"
+func (c *AccountHTTPClientImpl) LoginByAccount(ctx context.Context, in *LoginByAccountRequest, opts ...http.CallOption) (*LoginByAccountReply, error) {
+	var out LoginByAccountReply
+	pattern := "/app.account.api.Account/LoginByAccount"
 	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationAccountDeleteAccount))
+	opts = append(opts, http.Operation(OperationAccountLoginByAccount))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, nil, &out, opts...)
 	if err != nil {
@@ -179,37 +133,11 @@ func (c *AccountHTTPClientImpl) DeleteAccount(ctx context.Context, in *DeleteAcc
 	return &out, nil
 }
 
-func (c *AccountHTTPClientImpl) GetAccount(ctx context.Context, in *GetAccountRequest, opts ...http.CallOption) (*GetAccountReply, error) {
-	var out GetAccountReply
-	pattern := "/app.account.api.Account/GetAccount"
+func (c *AccountHTTPClientImpl) ResetPassword(ctx context.Context, in *ResetPasswordRequest, opts ...http.CallOption) (*ResetPasswordReply, error) {
+	var out ResetPasswordReply
+	pattern := "/app.account.api.Account/ResetPassword"
 	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationAccountGetAccount))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
-func (c *AccountHTTPClientImpl) ListAccount(ctx context.Context, in *ListAccountRequest, opts ...http.CallOption) (*ListAccountReply, error) {
-	var out ListAccountReply
-	pattern := "/app.account.api.Account/ListAccount"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationAccountListAccount))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
-func (c *AccountHTTPClientImpl) UpdateAccount(ctx context.Context, in *UpdateAccountRequest, opts ...http.CallOption) (*UpdateAccountReply, error) {
-	var out UpdateAccountReply
-	pattern := "/app.account.api.Account/UpdateAccount"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationAccountUpdateAccount))
+	opts = append(opts, http.Operation(OperationAccountResetPassword))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, nil, &out, opts...)
 	if err != nil {
