@@ -1,31 +1,33 @@
 package service
 
 import (
+	"blog/app/blogs/internal/biz"
 	"context"
 
-	pb "blog/app/blogs/api"
+	pb "blog/api/blogs/v1"
 )
 
 type BlogsService struct {
 	pb.UnimplementedBlogsServer
+	bc *biz.BlogsUseCase
 }
 
-func NewBlogsService() *BlogsService {
-	return &BlogsService{}
+func NewBlogsService(bc *biz.BlogsUseCase) *BlogsService {
+	return &BlogsService{bc: bc}
 }
 
 func (s *BlogsService) CreateBlogs(ctx context.Context, req *pb.CreateBlogsRequest) (*pb.CreateBlogsReply, error) {
-	return &pb.CreateBlogsReply{}, nil
+	return s.bc.CreateBlogs(ctx, req)
 }
 func (s *BlogsService) UpdateBlogs(ctx context.Context, req *pb.UpdateBlogsRequest) (*pb.UpdateBlogsReply, error) {
-	return &pb.UpdateBlogsReply{}, nil
+	return s.bc.UpdateBlogs(ctx, req)
 }
 func (s *BlogsService) DeleteBlogs(ctx context.Context, req *pb.DeleteBlogsRequest) (*pb.DeleteBlogsReply, error) {
-	return &pb.DeleteBlogsReply{}, nil
+	return s.bc.DeleteBlogs(ctx, req)
 }
 func (s *BlogsService) GetBlogs(ctx context.Context, req *pb.GetBlogsRequest) (*pb.GetBlogsReply, error) {
-	return &pb.GetBlogsReply{}, nil
+	return s.bc.GetBlogs(ctx, req)
 }
 func (s *BlogsService) ListBlogs(ctx context.Context, req *pb.ListBlogsRequest) (*pb.ListBlogsReply, error) {
-	return &pb.ListBlogsReply{}, nil
+	return s.bc.ListBlogs(ctx, req)
 }

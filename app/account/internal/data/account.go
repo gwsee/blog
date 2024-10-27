@@ -20,7 +20,8 @@ type accountRepo struct {
 }
 
 func NewAccountRepo(data *Data, logger log.Logger) biz.AccountRepo {
-	if err := data.db.Schema.Create(context.TODO(), migrate.WithForeignKeys(false), migrate.WithDropColumn(true)); err != nil {
+	if err := data.db.Schema.Create(context.TODO(), migrate.WithForeignKeys(false),
+		migrate.WithDropColumn(true)); err != nil {
 		panic(err)
 	}
 	return &accountRepo{

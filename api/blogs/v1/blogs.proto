@@ -55,6 +55,8 @@ message BlogsHeader {
 	HiddenType IsHidden = 4;//是否隐藏
 	repeated string tags = 5;//标签
 	string Cover = 6;//封面
+	int64 AccountId = 7;//所属帐号ID
+	int64 CreatedAt = 8;//创建时间
 }
 
 message GetBlogsReply {

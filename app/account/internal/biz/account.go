@@ -33,7 +33,7 @@ func NewAccountUseCase(conf *conf.Auth, repo AccountRepo, logger log.Logger) *Ac
 	return &AccountUseCase{
 		key:  conf.ApiKey,
 		repo: repo,
-		log:  log.NewHelper(log.With(logger, "module", "app/account-service")),
+		log:  log.NewHelper(log.With(logger, "module", "app/account-account-service")),
 	}
 }
 

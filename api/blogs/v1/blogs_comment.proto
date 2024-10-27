@@ -51,6 +51,8 @@ message GetBlogsCommentReply {
 	int64 Total =6; //总数
 	int64 Status = 7; //是否隐藏
 	string Content = 8; //评论内容
+	int64 AccountId = 9;//评论人帐号ID
+	int64 CreatedAt = 10;//创建时间
 }
 
 message ListBlogsCommentRequest {
@@ -58,6 +60,7 @@ message ListBlogsCommentRequest {
 	int64 BlogId =2; //博客的ID
 	int64 ParentId =3; //回复的那个评论的ID
 	string Content = 4; //评论内容
+	int64 AccountId = 5;//查看某人的评论
 }
 message ListBlogsCommentReply {
 	int64 End =1;
