@@ -1,10 +1,10 @@
 syntax = "proto3";
 
-package app.blogs.api;
+package api.blogs.v1;
 
-option go_package = "blog/app/blogs/api;api";
+option go_package = "blog/api/blogs/v1;v1";
 option java_multiple_files = true;
-option java_package = "app.blogs.api";
+option java_package = "api.blogs.v1";
 
 service Blogs {
 	rpc CreateBlogs (CreateBlogsRequest) returns (CreateBlogsReply);

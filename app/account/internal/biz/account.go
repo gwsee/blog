@@ -1,7 +1,7 @@
 package biz
 
 import (
-	"blog/app/account/api/v1"
+	"blog/api/account/v1"
 	"blog/app/account/internal/conf"
 	"blog/internal/common"
 	"context"
@@ -61,15 +61,14 @@ func (uc *AccountUseCase) LoginByAccount(ctx context.Context, req *v1.LoginByAcc
 	if err != nil {
 		return
 	}
-	if account.Password != req.Password {
+	if account.Password != common.MD5(req.Password) {
 		return nil, errors.New("account password error")
 	}
 	claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"user_id": account.Id,
 		"account": req.Account,
 	})
-	//TODO 设置key
-	signedStr, err := claims.SignedString(uc.key)
+	signedStr, err := claims.SignedString([]byte(uc.key))
 	if err != nil {
 		return nil, err
 	}

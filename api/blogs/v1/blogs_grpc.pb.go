@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             v5.28.2
-// source: app/blogs/api/blogs.proto
+// source: api/blogs/v1/blogs.proto
 
-package api
+package v1
 
 import (
 	context "context"
@@ -19,11 +19,11 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Blogs_CreateBlogs_FullMethodName = "/app.blogs.api.Blogs/CreateBlogs"
-	Blogs_UpdateBlogs_FullMethodName = "/app.blogs.api.Blogs/UpdateBlogs"
-	Blogs_DeleteBlogs_FullMethodName = "/app.blogs.api.Blogs/DeleteBlogs"
-	Blogs_GetBlogs_FullMethodName    = "/app.blogs.api.Blogs/GetBlogs"
-	Blogs_ListBlogs_FullMethodName   = "/app.blogs.api.Blogs/ListBlogs"
+	Blogs_CreateBlogs_FullMethodName = "/api.blogs.v1.Blogs/CreateBlogs"
+	Blogs_UpdateBlogs_FullMethodName = "/api.blogs.v1.Blogs/UpdateBlogs"
+	Blogs_DeleteBlogs_FullMethodName = "/api.blogs.v1.Blogs/DeleteBlogs"
+	Blogs_GetBlogs_FullMethodName    = "/api.blogs.v1.Blogs/GetBlogs"
+	Blogs_ListBlogs_FullMethodName   = "/api.blogs.v1.Blogs/ListBlogs"
 )
 
 // BlogsClient is the client API for Blogs service.
@@ -244,7 +244,7 @@ func _Blogs_ListBlogs_Handler(srv interface{}, ctx context.Context, dec func(int
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Blogs_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "app.blogs.api.Blogs",
+	ServiceName: "api.blogs.v1.Blogs",
 	HandlerType: (*BlogsServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -269,5 +269,5 @@ var Blogs_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "app/blogs/api/blogs.proto",
+	Metadata: "api/blogs/v1/blogs.proto",
 }

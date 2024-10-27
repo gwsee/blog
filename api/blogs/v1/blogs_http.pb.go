@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-http v2.8.0
 // - protoc             v5.28.2
-// source: app/blogs/api/blogs.proto
+// source: api/blogs/v1/blogs.proto
 
-package api
+package v1
 
 import (
 	context "context"
@@ -19,11 +19,11 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const OperationBlogsCreateBlogs = "/app.blogs.api.Blogs/CreateBlogs"
-const OperationBlogsDeleteBlogs = "/app.blogs.api.Blogs/DeleteBlogs"
-const OperationBlogsGetBlogs = "/app.blogs.api.Blogs/GetBlogs"
-const OperationBlogsListBlogs = "/app.blogs.api.Blogs/ListBlogs"
-const OperationBlogsUpdateBlogs = "/app.blogs.api.Blogs/UpdateBlogs"
+const OperationBlogsCreateBlogs = "/api.blogs.v1.Blogs/CreateBlogs"
+const OperationBlogsDeleteBlogs = "/api.blogs.v1.Blogs/DeleteBlogs"
+const OperationBlogsGetBlogs = "/api.blogs.v1.Blogs/GetBlogs"
+const OperationBlogsListBlogs = "/api.blogs.v1.Blogs/ListBlogs"
+const OperationBlogsUpdateBlogs = "/api.blogs.v1.Blogs/UpdateBlogs"
 
 type BlogsHTTPServer interface {
 	CreateBlogs(context.Context, *CreateBlogsRequest) (*CreateBlogsReply, error)
@@ -35,11 +35,11 @@ type BlogsHTTPServer interface {
 
 func RegisterBlogsHTTPServer(s *http.Server, srv BlogsHTTPServer) {
 	r := s.Route("/")
-	r.POST("/app.blogs.api.Blogs/CreateBlogs", _Blogs_CreateBlogs0_HTTP_Handler(srv))
-	r.POST("/app.blogs.api.Blogs/UpdateBlogs", _Blogs_UpdateBlogs0_HTTP_Handler(srv))
-	r.POST("/app.blogs.api.Blogs/DeleteBlogs", _Blogs_DeleteBlogs0_HTTP_Handler(srv))
-	r.POST("/app.blogs.api.Blogs/GetBlogs", _Blogs_GetBlogs0_HTTP_Handler(srv))
-	r.POST("/app.blogs.api.Blogs/ListBlogs", _Blogs_ListBlogs0_HTTP_Handler(srv))
+	r.POST("/api.blogs.v1.Blogs/CreateBlogs", _Blogs_CreateBlogs0_HTTP_Handler(srv))
+	r.POST("/api.blogs.v1.Blogs/UpdateBlogs", _Blogs_UpdateBlogs0_HTTP_Handler(srv))
+	r.POST("/api.blogs.v1.Blogs/DeleteBlogs", _Blogs_DeleteBlogs0_HTTP_Handler(srv))
+	r.POST("/api.blogs.v1.Blogs/GetBlogs", _Blogs_GetBlogs0_HTTP_Handler(srv))
+	r.POST("/api.blogs.v1.Blogs/ListBlogs", _Blogs_ListBlogs0_HTTP_Handler(srv))
 }
 
 func _Blogs_CreateBlogs0_HTTP_Handler(srv BlogsHTTPServer) func(ctx http.Context) error {
@@ -155,7 +155,7 @@ func NewBlogsHTTPClient(client *http.Client) BlogsHTTPClient {
 
 func (c *BlogsHTTPClientImpl) CreateBlogs(ctx context.Context, in *CreateBlogsRequest, opts ...http.CallOption) (*CreateBlogsReply, error) {
 	var out CreateBlogsReply
-	pattern := "/app.blogs.api.Blogs/CreateBlogs"
+	pattern := "/api.blogs.v1.Blogs/CreateBlogs"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationBlogsCreateBlogs))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -168,7 +168,7 @@ func (c *BlogsHTTPClientImpl) CreateBlogs(ctx context.Context, in *CreateBlogsRe
 
 func (c *BlogsHTTPClientImpl) DeleteBlogs(ctx context.Context, in *DeleteBlogsRequest, opts ...http.CallOption) (*DeleteBlogsReply, error) {
 	var out DeleteBlogsReply
-	pattern := "/app.blogs.api.Blogs/DeleteBlogs"
+	pattern := "/api.blogs.v1.Blogs/DeleteBlogs"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationBlogsDeleteBlogs))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -181,7 +181,7 @@ func (c *BlogsHTTPClientImpl) DeleteBlogs(ctx context.Context, in *DeleteBlogsRe
 
 func (c *BlogsHTTPClientImpl) GetBlogs(ctx context.Context, in *GetBlogsRequest, opts ...http.CallOption) (*GetBlogsReply, error) {
 	var out GetBlogsReply
-	pattern := "/app.blogs.api.Blogs/GetBlogs"
+	pattern := "/api.blogs.v1.Blogs/GetBlogs"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationBlogsGetBlogs))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -194,7 +194,7 @@ func (c *BlogsHTTPClientImpl) GetBlogs(ctx context.Context, in *GetBlogsRequest,
 
 func (c *BlogsHTTPClientImpl) ListBlogs(ctx context.Context, in *ListBlogsRequest, opts ...http.CallOption) (*ListBlogsReply, error) {
 	var out ListBlogsReply
-	pattern := "/app.blogs.api.Blogs/ListBlogs"
+	pattern := "/api.blogs.v1.Blogs/ListBlogs"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationBlogsListBlogs))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -207,7 +207,7 @@ func (c *BlogsHTTPClientImpl) ListBlogs(ctx context.Context, in *ListBlogsReques
 
 func (c *BlogsHTTPClientImpl) UpdateBlogs(ctx context.Context, in *UpdateBlogsRequest, opts ...http.CallOption) (*UpdateBlogsReply, error) {
 	var out UpdateBlogsReply
-	pattern := "/app.blogs.api.Blogs/UpdateBlogs"
+	pattern := "/api.blogs.v1.Blogs/UpdateBlogs"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationBlogsUpdateBlogs))
 	opts = append(opts, http.PathTemplate(pattern))

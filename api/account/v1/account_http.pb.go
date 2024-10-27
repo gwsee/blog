@@ -39,7 +39,7 @@ func RegisterAccountHTTPServer(s *http.Server, srv AccountHTTPServer) {
 func _Account_CreateAccount0_HTTP_Handler(srv AccountHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in CreateAccountRequest
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationAccountCreateAccount)
@@ -58,7 +58,7 @@ func _Account_CreateAccount0_HTTP_Handler(srv AccountHTTPServer) func(ctx http.C
 func _Account_ResetPassword0_HTTP_Handler(srv AccountHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in ResetPasswordRequest
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationAccountResetPassword)
@@ -77,7 +77,7 @@ func _Account_ResetPassword0_HTTP_Handler(srv AccountHTTPServer) func(ctx http.C
 func _Account_LoginByAccount0_HTTP_Handler(srv AccountHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in LoginByAccountRequest
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationAccountLoginByAccount)
