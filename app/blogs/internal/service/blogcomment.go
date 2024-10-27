@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 
-	pb "blog/app/blogs/api"
+	pb "blog/api/blogs/v1"
 )
 
 type BlogCommentService struct {

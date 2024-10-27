@@ -3,7 +3,7 @@
 package ent
 
 import (
-	"blog/internal/ent/blog"
+	"blog/internal/ent/blogs"
 	"blog/internal/ent/predicate"
 	"context"
 	"fmt"
@@ -15,64 +15,64 @@ import (
 	"entgo.io/ent/schema/field"
 )
 
-// BlogQuery is the builder for querying Blog entities.
-type BlogQuery struct {
+// BlogsQuery is the builder for querying Blogs entities.
+type BlogsQuery struct {
 	config
 	ctx        *QueryContext
-	order      []blog.OrderOption
+	order      []blogs.OrderOption
 	inters     []Interceptor
-	predicates []predicate.Blog
+	predicates []predicate.Blogs
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
 }
 
-// Where adds a new predicate for the BlogQuery builder.
-func (bq *BlogQuery) Where(ps ...predicate.Blog) *BlogQuery {
+// Where adds a new predicate for the BlogsQuery builder.
+func (bq *BlogsQuery) Where(ps ...predicate.Blogs) *BlogsQuery {
 	bq.predicates = append(bq.predicates, ps...)
 	return bq
 }
 
 // Limit the number of records to be returned by this query.
-func (bq *BlogQuery) Limit(limit int) *BlogQuery {
+func (bq *BlogsQuery) Limit(limit int) *BlogsQuery {
 	bq.ctx.Limit = &limit
 	return bq
 }
 
 // Offset to start from.
-func (bq *BlogQuery) Offset(offset int) *BlogQuery {
+func (bq *BlogsQuery) Offset(offset int) *BlogsQuery {
 	bq.ctx.Offset = &offset
 	return bq
 }
 
 // Unique configures the query builder to filter duplicate records on query.
 // By default, unique is set to true, and can be disabled using this method.
-func (bq *BlogQuery) Unique(unique bool) *BlogQuery {
+func (bq *BlogsQuery) Unique(unique bool) *BlogsQuery {
 	bq.ctx.Unique = &unique
 	return bq
 }
 
 // Order specifies how the records should be ordered.
-func (bq *BlogQuery) Order(o ...blog.OrderOption) *BlogQuery {
+func (bq *BlogsQuery) Order(o ...blogs.OrderOption) *BlogsQuery {
 	bq.order = append(bq.order, o...)
 	return bq
 }
 
-// First returns the first Blog entity from the query.
-// Returns a *NotFoundError when no Blog was found.
-func (bq *BlogQuery) First(ctx context.Context) (*Blog, error) {
+// First returns the first Blogs entity from the query.
+// Returns a *NotFoundError when no Blogs was found.
+func (bq *BlogsQuery) First(ctx context.Context) (*Blogs, error) {
 	nodes, err := bq.Limit(1).All(setContextOp(ctx, bq.ctx, ent.OpQueryFirst))
 	if err != nil {
 		return nil, err
 	}
 	if len(nodes) == 0 {
-		return nil, &NotFoundError{blog.Label}
+		return nil, &NotFoundError{blogs.Label}
 	}
 	return nodes[0], nil
 }
 
 // FirstX is like First, but panics if an error occurs.
-func (bq *BlogQuery) FirstX(ctx context.Context) *Blog {
+func (bq *BlogsQuery) FirstX(ctx context.Context) *Blogs {
 	node, err := bq.First(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -80,22 +80,22 @@ func (bq *BlogQuery) FirstX(ctx context.Context) *Blog {
 	return node
 }
 
-// FirstID returns the first Blog ID from the query.
-// Returns a *NotFoundError when no Blog ID was found.
-func (bq *BlogQuery) FirstID(ctx context.Context) (id int, err error) {
+// FirstID returns the first Blogs ID from the query.
+// Returns a *NotFoundError when no Blogs ID was found.
+func (bq *BlogsQuery) FirstID(ctx context.Context) (id int, err error) {
 	var ids []int
 	if ids, err = bq.Limit(1).IDs(setContextOp(ctx, bq.ctx, ent.OpQueryFirstID)); err != nil {
 		return
 	}
 	if len(ids) == 0 {
-		err = &NotFoundError{blog.Label}
+		err = &NotFoundError{blogs.Label}
 		return
 	}
 	return ids[0], nil
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (bq *BlogQuery) FirstIDX(ctx context.Context) int {
+func (bq *BlogsQuery) FirstIDX(ctx context.Context) int {
 	id, err := bq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -103,10 +103,10 @@ func (bq *BlogQuery) FirstIDX(ctx context.Context) int {
 	return id
 }
 
-// Only returns a single Blog entity found by the query, ensuring it only returns one.
-// Returns a *NotSingularError when more than one Blog entity is found.
-// Returns a *NotFoundError when no Blog entities are found.
-func (bq *BlogQuery) Only(ctx context.Context) (*Blog, error) {
+// Only returns a single Blogs entity found by the query, ensuring it only returns one.
+// Returns a *NotSingularError when more than one Blogs entity is found.
+// Returns a *NotFoundError when no Blogs entities are found.
+func (bq *BlogsQuery) Only(ctx context.Context) (*Blogs, error) {
 	nodes, err := bq.Limit(2).All(setContextOp(ctx, bq.ctx, ent.OpQueryOnly))
 	if err != nil {
 		return nil, err
@@ -115,14 +115,14 @@ func (bq *BlogQuery) Only(ctx context.Context) (*Blog, error) {
 	case 1:
 		return nodes[0], nil
 	case 0:
-		return nil, &NotFoundError{blog.Label}
+		return nil, &NotFoundError{blogs.Label}
 	default:
-		return nil, &NotSingularError{blog.Label}
+		return nil, &NotSingularError{blogs.Label}
 	}
 }
 
 // OnlyX is like Only, but panics if an error occurs.
-func (bq *BlogQuery) OnlyX(ctx context.Context) *Blog {
+func (bq *BlogsQuery) OnlyX(ctx context.Context) *Blogs {
 	node, err := bq.Only(ctx)
 	if err != nil {
 		panic(err)
@@ -130,10 +130,10 @@ func (bq *BlogQuery) OnlyX(ctx context.Context) *Blog {
 	return node
 }
 
-// OnlyID is like Only, but returns the only Blog ID in the query.
-// Returns a *NotSingularError when more than one Blog ID is found.
+// OnlyID is like Only, but returns the only Blogs ID in the query.
+// Returns a *NotSingularError when more than one Blogs ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (bq *BlogQuery) OnlyID(ctx context.Context) (id int, err error) {
+func (bq *BlogsQuery) OnlyID(ctx context.Context) (id int, err error) {
 	var ids []int
 	if ids, err = bq.Limit(2).IDs(setContextOp(ctx, bq.ctx, ent.OpQueryOnlyID)); err != nil {
 		return
@@ -142,15 +142,15 @@ func (bq *BlogQuery) OnlyID(ctx context.Context) (id int, err error) {
 	case 1:
 		id = ids[0]
 	case 0:
-		err = &NotFoundError{blog.Label}
+		err = &NotFoundError{blogs.Label}
 	default:
-		err = &NotSingularError{blog.Label}
+		err = &NotSingularError{blogs.Label}
 	}
 	return
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (bq *BlogQuery) OnlyIDX(ctx context.Context) int {
+func (bq *BlogsQuery) OnlyIDX(ctx context.Context) int {
 	id, err := bq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -158,18 +158,18 @@ func (bq *BlogQuery) OnlyIDX(ctx context.Context) int {
 	return id
 }
 
-// All executes the query and returns a list of Blogs.
-func (bq *BlogQuery) All(ctx context.Context) ([]*Blog, error) {
+// All executes the query and returns a list of BlogsSlice.
+func (bq *BlogsQuery) All(ctx context.Context) ([]*Blogs, error) {
 	ctx = setContextOp(ctx, bq.ctx, ent.OpQueryAll)
 	if err := bq.prepareQuery(ctx); err != nil {
 		return nil, err
 	}
-	qr := querierAll[[]*Blog, *BlogQuery]()
-	return withInterceptors[[]*Blog](ctx, bq, qr, bq.inters)
+	qr := querierAll[[]*Blogs, *BlogsQuery]()
+	return withInterceptors[[]*Blogs](ctx, bq, qr, bq.inters)
 }
 
 // AllX is like All, but panics if an error occurs.
-func (bq *BlogQuery) AllX(ctx context.Context) []*Blog {
+func (bq *BlogsQuery) AllX(ctx context.Context) []*Blogs {
 	nodes, err := bq.All(ctx)
 	if err != nil {
 		panic(err)
@@ -177,20 +177,20 @@ func (bq *BlogQuery) AllX(ctx context.Context) []*Blog {
 	return nodes
 }
 
-// IDs executes the query and returns a list of Blog IDs.
-func (bq *BlogQuery) IDs(ctx context.Context) (ids []int, err error) {
+// IDs executes the query and returns a list of Blogs IDs.
+func (bq *BlogsQuery) IDs(ctx context.Context) (ids []int, err error) {
 	if bq.ctx.Unique == nil && bq.path != nil {
 		bq.Unique(true)
 	}
 	ctx = setContextOp(ctx, bq.ctx, ent.OpQueryIDs)
-	if err = bq.Select(blog.FieldID).Scan(ctx, &ids); err != nil {
+	if err = bq.Select(blogs.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
 	return ids, nil
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (bq *BlogQuery) IDsX(ctx context.Context) []int {
+func (bq *BlogsQuery) IDsX(ctx context.Context) []int {
 	ids, err := bq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -199,16 +199,16 @@ func (bq *BlogQuery) IDsX(ctx context.Context) []int {
 }
 
 // Count returns the count of the given query.
-func (bq *BlogQuery) Count(ctx context.Context) (int, error) {
+func (bq *BlogsQuery) Count(ctx context.Context) (int, error) {
 	ctx = setContextOp(ctx, bq.ctx, ent.OpQueryCount)
 	if err := bq.prepareQuery(ctx); err != nil {
 		return 0, err
 	}
-	return withInterceptors[int](ctx, bq, querierCount[*BlogQuery](), bq.inters)
+	return withInterceptors[int](ctx, bq, querierCount[*BlogsQuery](), bq.inters)
 }
 
 // CountX is like Count, but panics if an error occurs.
-func (bq *BlogQuery) CountX(ctx context.Context) int {
+func (bq *BlogsQuery) CountX(ctx context.Context) int {
 	count, err := bq.Count(ctx)
 	if err != nil {
 		panic(err)
@@ -217,7 +217,7 @@ func (bq *BlogQuery) CountX(ctx context.Context) int {
 }
 
 // Exist returns true if the query has elements in the graph.
-func (bq *BlogQuery) Exist(ctx context.Context) (bool, error) {
+func (bq *BlogsQuery) Exist(ctx context.Context) (bool, error) {
 	ctx = setContextOp(ctx, bq.ctx, ent.OpQueryExist)
 	switch _, err := bq.FirstID(ctx); {
 	case IsNotFound(err):
@@ -230,7 +230,7 @@ func (bq *BlogQuery) Exist(ctx context.Context) (bool, error) {
 }
 
 // ExistX is like Exist, but panics if an error occurs.
-func (bq *BlogQuery) ExistX(ctx context.Context) bool {
+func (bq *BlogsQuery) ExistX(ctx context.Context) bool {
 	exist, err := bq.Exist(ctx)
 	if err != nil {
 		panic(err)
@@ -238,18 +238,18 @@ func (bq *BlogQuery) ExistX(ctx context.Context) bool {
 	return exist
 }
 
-// Clone returns a duplicate of the BlogQuery builder, including all associated steps. It can be
+// Clone returns a duplicate of the BlogsQuery builder, including all associated steps. It can be
 // used to prepare common query builders and use them differently after the clone is made.
-func (bq *BlogQuery) Clone() *BlogQuery {
+func (bq *BlogsQuery) Clone() *BlogsQuery {
 	if bq == nil {
 		return nil
 	}
-	return &BlogQuery{
+	return &BlogsQuery{
 		config:     bq.config,
 		ctx:        bq.ctx.Clone(),
-		order:      append([]blog.OrderOption{}, bq.order...),
+		order:      append([]blogs.OrderOption{}, bq.order...),
 		inters:     append([]Interceptor{}, bq.inters...),
-		predicates: append([]predicate.Blog{}, bq.predicates...),
+		predicates: append([]predicate.Blogs{}, bq.predicates...),
 		// clone intermediate query.
 		sql:  bq.sql.Clone(),
 		path: bq.path,
@@ -266,15 +266,15 @@ func (bq *BlogQuery) Clone() *BlogQuery {
 //		Count int `json:"count,omitempty"`
 //	}
 //
-//	client.Blog.Query().
-//		GroupBy(blog.FieldCreatedAt).
+//	client.Blogs.Query().
+//		GroupBy(blogs.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
-func (bq *BlogQuery) GroupBy(field string, fields ...string) *BlogGroupBy {
+func (bq *BlogsQuery) GroupBy(field string, fields ...string) *BlogsGroupBy {
 	bq.ctx.Fields = append([]string{field}, fields...)
-	grbuild := &BlogGroupBy{build: bq}
+	grbuild := &BlogsGroupBy{build: bq}
 	grbuild.flds = &bq.ctx.Fields
-	grbuild.label = blog.Label
+	grbuild.label = blogs.Label
 	grbuild.scan = grbuild.Scan
 	return grbuild
 }
@@ -288,23 +288,23 @@ func (bq *BlogQuery) GroupBy(field string, fields ...string) *BlogGroupBy {
 //		CreatedAt int64 `json:"created_at,omitempty"`
 //	}
 //
-//	client.Blog.Query().
-//		Select(blog.FieldCreatedAt).
+//	client.Blogs.Query().
+//		Select(blogs.FieldCreatedAt).
 //		Scan(ctx, &v)
-func (bq *BlogQuery) Select(fields ...string) *BlogSelect {
+func (bq *BlogsQuery) Select(fields ...string) *BlogsSelect {
 	bq.ctx.Fields = append(bq.ctx.Fields, fields...)
-	sbuild := &BlogSelect{BlogQuery: bq}
-	sbuild.label = blog.Label
+	sbuild := &BlogsSelect{BlogsQuery: bq}
+	sbuild.label = blogs.Label
 	sbuild.flds, sbuild.scan = &bq.ctx.Fields, sbuild.Scan
 	return sbuild
 }
 
-// Aggregate returns a BlogSelect configured with the given aggregations.
-func (bq *BlogQuery) Aggregate(fns ...AggregateFunc) *BlogSelect {
+// Aggregate returns a BlogsSelect configured with the given aggregations.
+func (bq *BlogsQuery) Aggregate(fns ...AggregateFunc) *BlogsSelect {
 	return bq.Select().Aggregate(fns...)
 }
 
-func (bq *BlogQuery) prepareQuery(ctx context.Context) error {
+func (bq *BlogsQuery) prepareQuery(ctx context.Context) error {
 	for _, inter := range bq.inters {
 		if inter == nil {
 			return fmt.Errorf("ent: uninitialized interceptor (forgotten import ent/runtime?)")
@@ -316,7 +316,7 @@ func (bq *BlogQuery) prepareQuery(ctx context.Context) error {
 		}
 	}
 	for _, f := range bq.ctx.Fields {
-		if !blog.ValidColumn(f) {
+		if !blogs.ValidColumn(f) {
 			return &ValidationError{Name: f, err: fmt.Errorf("ent: invalid field %q for query", f)}
 		}
 	}
@@ -330,16 +330,16 @@ func (bq *BlogQuery) prepareQuery(ctx context.Context) error {
 	return nil
 }
 
-func (bq *BlogQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Blog, error) {
+func (bq *BlogsQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Blogs, error) {
 	var (
-		nodes = []*Blog{}
+		nodes = []*Blogs{}
 		_spec = bq.querySpec()
 	)
 	_spec.ScanValues = func(columns []string) ([]any, error) {
-		return (*Blog).scanValues(nil, columns)
+		return (*Blogs).scanValues(nil, columns)
 	}
 	_spec.Assign = func(columns []string, values []any) error {
-		node := &Blog{config: bq.config}
+		node := &Blogs{config: bq.config}
 		nodes = append(nodes, node)
 		return node.assignValues(columns, values)
 	}
@@ -355,7 +355,7 @@ func (bq *BlogQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Blog, e
 	return nodes, nil
 }
 
-func (bq *BlogQuery) sqlCount(ctx context.Context) (int, error) {
+func (bq *BlogsQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := bq.querySpec()
 	_spec.Node.Columns = bq.ctx.Fields
 	if len(bq.ctx.Fields) > 0 {
@@ -364,8 +364,8 @@ func (bq *BlogQuery) sqlCount(ctx context.Context) (int, error) {
 	return sqlgraph.CountNodes(ctx, bq.driver, _spec)
 }
 
-func (bq *BlogQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(blog.Table, blog.Columns, sqlgraph.NewFieldSpec(blog.FieldID, field.TypeInt))
+func (bq *BlogsQuery) querySpec() *sqlgraph.QuerySpec {
+	_spec := sqlgraph.NewQuerySpec(blogs.Table, blogs.Columns, sqlgraph.NewFieldSpec(blogs.FieldID, field.TypeInt))
 	_spec.From = bq.sql
 	if unique := bq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique
@@ -374,9 +374,9 @@ func (bq *BlogQuery) querySpec() *sqlgraph.QuerySpec {
 	}
 	if fields := bq.ctx.Fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
-		_spec.Node.Columns = append(_spec.Node.Columns, blog.FieldID)
+		_spec.Node.Columns = append(_spec.Node.Columns, blogs.FieldID)
 		for i := range fields {
-			if fields[i] != blog.FieldID {
+			if fields[i] != blogs.FieldID {
 				_spec.Node.Columns = append(_spec.Node.Columns, fields[i])
 			}
 		}
@@ -404,12 +404,12 @@ func (bq *BlogQuery) querySpec() *sqlgraph.QuerySpec {
 	return _spec
 }
 
-func (bq *BlogQuery) sqlQuery(ctx context.Context) *sql.Selector {
+func (bq *BlogsQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	builder := sql.Dialect(bq.driver.Dialect())
-	t1 := builder.Table(blog.Table)
+	t1 := builder.Table(blogs.Table)
 	columns := bq.ctx.Fields
 	if len(columns) == 0 {
-		columns = blog.Columns
+		columns = blogs.Columns
 	}
 	selector := builder.Select(t1.Columns(columns...)...).From(t1)
 	if bq.sql != nil {
@@ -436,28 +436,28 @@ func (bq *BlogQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	return selector
 }
 
-// BlogGroupBy is the group-by builder for Blog entities.
-type BlogGroupBy struct {
+// BlogsGroupBy is the group-by builder for Blogs entities.
+type BlogsGroupBy struct {
 	selector
-	build *BlogQuery
+	build *BlogsQuery
 }
 
 // Aggregate adds the given aggregation functions to the group-by query.
-func (bgb *BlogGroupBy) Aggregate(fns ...AggregateFunc) *BlogGroupBy {
+func (bgb *BlogsGroupBy) Aggregate(fns ...AggregateFunc) *BlogsGroupBy {
 	bgb.fns = append(bgb.fns, fns...)
 	return bgb
 }
 
 // Scan applies the selector query and scans the result into the given value.
-func (bgb *BlogGroupBy) Scan(ctx context.Context, v any) error {
+func (bgb *BlogsGroupBy) Scan(ctx context.Context, v any) error {
 	ctx = setContextOp(ctx, bgb.build.ctx, ent.OpQueryGroupBy)
 	if err := bgb.build.prepareQuery(ctx); err != nil {
 		return err
 	}
-	return scanWithInterceptors[*BlogQuery, *BlogGroupBy](ctx, bgb.build, bgb, bgb.build.inters, v)
+	return scanWithInterceptors[*BlogsQuery, *BlogsGroupBy](ctx, bgb.build, bgb, bgb.build.inters, v)
 }
 
-func (bgb *BlogGroupBy) sqlScan(ctx context.Context, root *BlogQuery, v any) error {
+func (bgb *BlogsGroupBy) sqlScan(ctx context.Context, root *BlogsQuery, v any) error {
 	selector := root.sqlQuery(ctx).Select()
 	aggregation := make([]string, 0, len(bgb.fns))
 	for _, fn := range bgb.fns {
@@ -484,28 +484,28 @@ func (bgb *BlogGroupBy) sqlScan(ctx context.Context, root *BlogQuery, v any) err
 	return sql.ScanSlice(rows, v)
 }
 
-// BlogSelect is the builder for selecting fields of Blog entities.
-type BlogSelect struct {
-	*BlogQuery
+// BlogsSelect is the builder for selecting fields of Blogs entities.
+type BlogsSelect struct {
+	*BlogsQuery
 	selector
 }
 
 // Aggregate adds the given aggregation functions to the selector query.
-func (bs *BlogSelect) Aggregate(fns ...AggregateFunc) *BlogSelect {
+func (bs *BlogsSelect) Aggregate(fns ...AggregateFunc) *BlogsSelect {
 	bs.fns = append(bs.fns, fns...)
 	return bs
 }
 
 // Scan applies the selector query and scans the result into the given value.
-func (bs *BlogSelect) Scan(ctx context.Context, v any) error {
+func (bs *BlogsSelect) Scan(ctx context.Context, v any) error {
 	ctx = setContextOp(ctx, bs.ctx, ent.OpQuerySelect)
 	if err := bs.prepareQuery(ctx); err != nil {
 		return err
 	}
-	return scanWithInterceptors[*BlogQuery, *BlogSelect](ctx, bs.BlogQuery, bs, bs.inters, v)
+	return scanWithInterceptors[*BlogsQuery, *BlogsSelect](ctx, bs.BlogsQuery, bs, bs.inters, v)
 }
 
-func (bs *BlogSelect) sqlScan(ctx context.Context, root *BlogQuery, v any) error {
+func (bs *BlogsSelect) sqlScan(ctx context.Context, root *BlogsQuery, v any) error {
 	selector := root.sqlQuery(ctx)
 	aggregation := make([]string, 0, len(bs.fns))
 	for _, fn := range bs.fns {

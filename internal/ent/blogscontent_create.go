@@ -3,7 +3,7 @@
 package ent
 
 import (
-	"blog/internal/ent/blogcontent"
+	"blog/internal/ent/blogscontent"
 	"context"
 	"errors"
 	"fmt"
@@ -13,38 +13,38 @@ import (
 	"entgo.io/ent/schema/field"
 )
 
-// BlogContentCreate is the builder for creating a BlogContent entity.
-type BlogContentCreate struct {
+// BlogsContentCreate is the builder for creating a BlogsContent entity.
+type BlogsContentCreate struct {
 	config
-	mutation *BlogContentMutation
+	mutation *BlogsContentMutation
 	hooks    []Hook
 	conflict []sql.ConflictOption
 }
 
 // SetContent sets the "content" field.
-func (bcc *BlogContentCreate) SetContent(s string) *BlogContentCreate {
+func (bcc *BlogsContentCreate) SetContent(s string) *BlogsContentCreate {
 	bcc.mutation.SetContent(s)
 	return bcc
 }
 
 // SetID sets the "id" field.
-func (bcc *BlogContentCreate) SetID(i int) *BlogContentCreate {
+func (bcc *BlogsContentCreate) SetID(i int) *BlogsContentCreate {
 	bcc.mutation.SetID(i)
 	return bcc
 }
 
-// Mutation returns the BlogContentMutation object of the builder.
-func (bcc *BlogContentCreate) Mutation() *BlogContentMutation {
+// Mutation returns the BlogsContentMutation object of the builder.
+func (bcc *BlogsContentCreate) Mutation() *BlogsContentMutation {
 	return bcc.mutation
 }
 
-// Save creates the BlogContent in the database.
-func (bcc *BlogContentCreate) Save(ctx context.Context) (*BlogContent, error) {
+// Save creates the BlogsContent in the database.
+func (bcc *BlogsContentCreate) Save(ctx context.Context) (*BlogsContent, error) {
 	return withHooks(ctx, bcc.sqlSave, bcc.mutation, bcc.hooks)
 }
 
 // SaveX calls Save and panics if Save returns an error.
-func (bcc *BlogContentCreate) SaveX(ctx context.Context) *BlogContent {
+func (bcc *BlogsContentCreate) SaveX(ctx context.Context) *BlogsContent {
 	v, err := bcc.Save(ctx)
 	if err != nil {
 		panic(err)
@@ -53,32 +53,32 @@ func (bcc *BlogContentCreate) SaveX(ctx context.Context) *BlogContent {
 }
 
 // Exec executes the query.
-func (bcc *BlogContentCreate) Exec(ctx context.Context) error {
+func (bcc *BlogsContentCreate) Exec(ctx context.Context) error {
 	_, err := bcc.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (bcc *BlogContentCreate) ExecX(ctx context.Context) {
+func (bcc *BlogsContentCreate) ExecX(ctx context.Context) {
 	if err := bcc.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (bcc *BlogContentCreate) check() error {
+func (bcc *BlogsContentCreate) check() error {
 	if _, ok := bcc.mutation.Content(); !ok {
-		return &ValidationError{Name: "content", err: errors.New(`ent: missing required field "BlogContent.content"`)}
+		return &ValidationError{Name: "content", err: errors.New(`ent: missing required field "BlogsContent.content"`)}
 	}
 	if v, ok := bcc.mutation.Content(); ok {
-		if err := blogcontent.ContentValidator(v); err != nil {
-			return &ValidationError{Name: "content", err: fmt.Errorf(`ent: validator failed for field "BlogContent.content": %w`, err)}
+		if err := blogscontent.ContentValidator(v); err != nil {
+			return &ValidationError{Name: "content", err: fmt.Errorf(`ent: validator failed for field "BlogsContent.content": %w`, err)}
 		}
 	}
 	return nil
 }
 
-func (bcc *BlogContentCreate) sqlSave(ctx context.Context) (*BlogContent, error) {
+func (bcc *BlogsContentCreate) sqlSave(ctx context.Context) (*BlogsContent, error) {
 	if err := bcc.check(); err != nil {
 		return nil, err
 	}
@@ -98,10 +98,10 @@ func (bcc *BlogContentCreate) sqlSave(ctx context.Context) (*BlogContent, error)
 	return _node, nil
 }
 
-func (bcc *BlogContentCreate) createSpec() (*BlogContent, *sqlgraph.CreateSpec) {
+func (bcc *BlogsContentCreate) createSpec() (*BlogsContent, *sqlgraph.CreateSpec) {
 	var (
-		_node = &BlogContent{config: bcc.config}
-		_spec = sqlgraph.NewCreateSpec(blogcontent.Table, sqlgraph.NewFieldSpec(blogcontent.FieldID, field.TypeInt))
+		_node = &BlogsContent{config: bcc.config}
+		_spec = sqlgraph.NewCreateSpec(blogscontent.Table, sqlgraph.NewFieldSpec(blogscontent.FieldID, field.TypeInt))
 	)
 	_spec.OnConflict = bcc.conflict
 	if id, ok := bcc.mutation.ID(); ok {
@@ -109,7 +109,7 @@ func (bcc *BlogContentCreate) createSpec() (*BlogContent, *sqlgraph.CreateSpec) 
 		_spec.ID.Value = id
 	}
 	if value, ok := bcc.mutation.Content(); ok {
-		_spec.SetField(blogcontent.FieldContent, field.TypeString, value)
+		_spec.SetField(blogscontent.FieldContent, field.TypeString, value)
 		_node.Content = value
 	}
 	return _node, _spec
@@ -118,7 +118,7 @@ func (bcc *BlogContentCreate) createSpec() (*BlogContent, *sqlgraph.CreateSpec) 
 // OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
 // of the `INSERT` statement. For example:
 //
-//	client.BlogContent.Create().
+//	client.BlogsContent.Create().
 //		SetContent(v).
 //		OnConflict(
 //			// Update the row with the new values
@@ -127,13 +127,13 @@ func (bcc *BlogContentCreate) createSpec() (*BlogContent, *sqlgraph.CreateSpec) 
 //		).
 //		// Override some of the fields with custom
 //		// update values.
-//		Update(func(u *ent.BlogContentUpsert) {
+//		Update(func(u *ent.BlogsContentUpsert) {
 //			SetContent(v+v).
 //		}).
 //		Exec(ctx)
-func (bcc *BlogContentCreate) OnConflict(opts ...sql.ConflictOption) *BlogContentUpsertOne {
+func (bcc *BlogsContentCreate) OnConflict(opts ...sql.ConflictOption) *BlogsContentUpsertOne {
 	bcc.conflict = opts
-	return &BlogContentUpsertOne{
+	return &BlogsContentUpsertOne{
 		create: bcc,
 	}
 }
@@ -141,57 +141,57 @@ func (bcc *BlogContentCreate) OnConflict(opts ...sql.ConflictOption) *BlogConten
 // OnConflictColumns calls `OnConflict` and configures the columns
 // as conflict target. Using this option is equivalent to using:
 //
-//	client.BlogContent.Create().
+//	client.BlogsContent.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-func (bcc *BlogContentCreate) OnConflictColumns(columns ...string) *BlogContentUpsertOne {
+func (bcc *BlogsContentCreate) OnConflictColumns(columns ...string) *BlogsContentUpsertOne {
 	bcc.conflict = append(bcc.conflict, sql.ConflictColumns(columns...))
-	return &BlogContentUpsertOne{
+	return &BlogsContentUpsertOne{
 		create: bcc,
 	}
 }
 
 type (
-	// BlogContentUpsertOne is the builder for "upsert"-ing
-	//  one BlogContent node.
-	BlogContentUpsertOne struct {
-		create *BlogContentCreate
+	// BlogsContentUpsertOne is the builder for "upsert"-ing
+	//  one BlogsContent node.
+	BlogsContentUpsertOne struct {
+		create *BlogsContentCreate
 	}
 
-	// BlogContentUpsert is the "OnConflict" setter.
-	BlogContentUpsert struct {
+	// BlogsContentUpsert is the "OnConflict" setter.
+	BlogsContentUpsert struct {
 		*sql.UpdateSet
 	}
 )
 
 // SetContent sets the "content" field.
-func (u *BlogContentUpsert) SetContent(v string) *BlogContentUpsert {
-	u.Set(blogcontent.FieldContent, v)
+func (u *BlogsContentUpsert) SetContent(v string) *BlogsContentUpsert {
+	u.Set(blogscontent.FieldContent, v)
 	return u
 }
 
 // UpdateContent sets the "content" field to the value that was provided on create.
-func (u *BlogContentUpsert) UpdateContent() *BlogContentUpsert {
-	u.SetExcluded(blogcontent.FieldContent)
+func (u *BlogsContentUpsert) UpdateContent() *BlogsContentUpsert {
+	u.SetExcluded(blogscontent.FieldContent)
 	return u
 }
 
 // UpdateNewValues updates the mutable fields using the new values that were set on create except the ID field.
 // Using this option is equivalent to using:
 //
-//	client.BlogContent.Create().
+//	client.BlogsContent.Create().
 //		OnConflict(
 //			sql.ResolveWithNewValues(),
 //			sql.ResolveWith(func(u *sql.UpdateSet) {
-//				u.SetIgnore(blogcontent.FieldID)
+//				u.SetIgnore(blogscontent.FieldID)
 //			}),
 //		).
 //		Exec(ctx)
-func (u *BlogContentUpsertOne) UpdateNewValues() *BlogContentUpsertOne {
+func (u *BlogsContentUpsertOne) UpdateNewValues() *BlogsContentUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
 		if _, exists := u.create.mutation.ID(); exists {
-			s.SetIgnore(blogcontent.FieldID)
+			s.SetIgnore(blogscontent.FieldID)
 		}
 	}))
 	return u
@@ -200,61 +200,61 @@ func (u *BlogContentUpsertOne) UpdateNewValues() *BlogContentUpsertOne {
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//	client.BlogContent.Create().
+//	client.BlogsContent.Create().
 //	    OnConflict(sql.ResolveWithIgnore()).
 //	    Exec(ctx)
-func (u *BlogContentUpsertOne) Ignore() *BlogContentUpsertOne {
+func (u *BlogsContentUpsertOne) Ignore() *BlogsContentUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
 }
 
 // DoNothing configures the conflict_action to `DO NOTHING`.
 // Supported only by SQLite and PostgreSQL.
-func (u *BlogContentUpsertOne) DoNothing() *BlogContentUpsertOne {
+func (u *BlogsContentUpsertOne) DoNothing() *BlogsContentUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.DoNothing())
 	return u
 }
 
-// Update allows overriding fields `UPDATE` values. See the BlogContentCreate.OnConflict
+// Update allows overriding fields `UPDATE` values. See the BlogsContentCreate.OnConflict
 // documentation for more info.
-func (u *BlogContentUpsertOne) Update(set func(*BlogContentUpsert)) *BlogContentUpsertOne {
+func (u *BlogsContentUpsertOne) Update(set func(*BlogsContentUpsert)) *BlogsContentUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
-		set(&BlogContentUpsert{UpdateSet: update})
+		set(&BlogsContentUpsert{UpdateSet: update})
 	}))
 	return u
 }
 
 // SetContent sets the "content" field.
-func (u *BlogContentUpsertOne) SetContent(v string) *BlogContentUpsertOne {
-	return u.Update(func(s *BlogContentUpsert) {
+func (u *BlogsContentUpsertOne) SetContent(v string) *BlogsContentUpsertOne {
+	return u.Update(func(s *BlogsContentUpsert) {
 		s.SetContent(v)
 	})
 }
 
 // UpdateContent sets the "content" field to the value that was provided on create.
-func (u *BlogContentUpsertOne) UpdateContent() *BlogContentUpsertOne {
-	return u.Update(func(s *BlogContentUpsert) {
+func (u *BlogsContentUpsertOne) UpdateContent() *BlogsContentUpsertOne {
+	return u.Update(func(s *BlogsContentUpsert) {
 		s.UpdateContent()
 	})
 }
 
 // Exec executes the query.
-func (u *BlogContentUpsertOne) Exec(ctx context.Context) error {
+func (u *BlogsContentUpsertOne) Exec(ctx context.Context) error {
 	if len(u.create.conflict) == 0 {
-		return errors.New("ent: missing options for BlogContentCreate.OnConflict")
+		return errors.New("ent: missing options for BlogsContentCreate.OnConflict")
 	}
 	return u.create.Exec(ctx)
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (u *BlogContentUpsertOne) ExecX(ctx context.Context) {
+func (u *BlogsContentUpsertOne) ExecX(ctx context.Context) {
 	if err := u.create.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // Exec executes the UPSERT query and returns the inserted/updated ID.
-func (u *BlogContentUpsertOne) ID(ctx context.Context) (id int, err error) {
+func (u *BlogsContentUpsertOne) ID(ctx context.Context) (id int, err error) {
 	node, err := u.create.Save(ctx)
 	if err != nil {
 		return id, err
@@ -263,7 +263,7 @@ func (u *BlogContentUpsertOne) ID(ctx context.Context) (id int, err error) {
 }
 
 // IDX is like ID, but panics if an error occurs.
-func (u *BlogContentUpsertOne) IDX(ctx context.Context) int {
+func (u *BlogsContentUpsertOne) IDX(ctx context.Context) int {
 	id, err := u.ID(ctx)
 	if err != nil {
 		panic(err)
@@ -271,27 +271,27 @@ func (u *BlogContentUpsertOne) IDX(ctx context.Context) int {
 	return id
 }
 
-// BlogContentCreateBulk is the builder for creating many BlogContent entities in bulk.
-type BlogContentCreateBulk struct {
+// BlogsContentCreateBulk is the builder for creating many BlogsContent entities in bulk.
+type BlogsContentCreateBulk struct {
 	config
 	err      error
-	builders []*BlogContentCreate
+	builders []*BlogsContentCreate
 	conflict []sql.ConflictOption
 }
 
-// Save creates the BlogContent entities in the database.
-func (bccb *BlogContentCreateBulk) Save(ctx context.Context) ([]*BlogContent, error) {
+// Save creates the BlogsContent entities in the database.
+func (bccb *BlogsContentCreateBulk) Save(ctx context.Context) ([]*BlogsContent, error) {
 	if bccb.err != nil {
 		return nil, bccb.err
 	}
 	specs := make([]*sqlgraph.CreateSpec, len(bccb.builders))
-	nodes := make([]*BlogContent, len(bccb.builders))
+	nodes := make([]*BlogsContent, len(bccb.builders))
 	mutators := make([]Mutator, len(bccb.builders))
 	for i := range bccb.builders {
 		func(i int, root context.Context) {
 			builder := bccb.builders[i]
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-				mutation, ok := m.(*BlogContentMutation)
+				mutation, ok := m.(*BlogsContentMutation)
 				if !ok {
 					return nil, fmt.Errorf("unexpected mutation type %T", m)
 				}
@@ -339,7 +339,7 @@ func (bccb *BlogContentCreateBulk) Save(ctx context.Context) ([]*BlogContent, er
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (bccb *BlogContentCreateBulk) SaveX(ctx context.Context) []*BlogContent {
+func (bccb *BlogsContentCreateBulk) SaveX(ctx context.Context) []*BlogsContent {
 	v, err := bccb.Save(ctx)
 	if err != nil {
 		panic(err)
@@ -348,13 +348,13 @@ func (bccb *BlogContentCreateBulk) SaveX(ctx context.Context) []*BlogContent {
 }
 
 // Exec executes the query.
-func (bccb *BlogContentCreateBulk) Exec(ctx context.Context) error {
+func (bccb *BlogsContentCreateBulk) Exec(ctx context.Context) error {
 	_, err := bccb.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (bccb *BlogContentCreateBulk) ExecX(ctx context.Context) {
+func (bccb *BlogsContentCreateBulk) ExecX(ctx context.Context) {
 	if err := bccb.Exec(ctx); err != nil {
 		panic(err)
 	}
@@ -363,7 +363,7 @@ func (bccb *BlogContentCreateBulk) ExecX(ctx context.Context) {
 // OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
 // of the `INSERT` statement. For example:
 //
-//	client.BlogContent.CreateBulk(builders...).
+//	client.BlogsContent.CreateBulk(builders...).
 //		OnConflict(
 //			// Update the row with the new values
 //			// the was proposed for insertion.
@@ -371,13 +371,13 @@ func (bccb *BlogContentCreateBulk) ExecX(ctx context.Context) {
 //		).
 //		// Override some of the fields with custom
 //		// update values.
-//		Update(func(u *ent.BlogContentUpsert) {
+//		Update(func(u *ent.BlogsContentUpsert) {
 //			SetContent(v+v).
 //		}).
 //		Exec(ctx)
-func (bccb *BlogContentCreateBulk) OnConflict(opts ...sql.ConflictOption) *BlogContentUpsertBulk {
+func (bccb *BlogsContentCreateBulk) OnConflict(opts ...sql.ConflictOption) *BlogsContentUpsertBulk {
 	bccb.conflict = opts
-	return &BlogContentUpsertBulk{
+	return &BlogsContentUpsertBulk{
 		create: bccb,
 	}
 }
@@ -385,39 +385,39 @@ func (bccb *BlogContentCreateBulk) OnConflict(opts ...sql.ConflictOption) *BlogC
 // OnConflictColumns calls `OnConflict` and configures the columns
 // as conflict target. Using this option is equivalent to using:
 //
-//	client.BlogContent.Create().
+//	client.BlogsContent.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-func (bccb *BlogContentCreateBulk) OnConflictColumns(columns ...string) *BlogContentUpsertBulk {
+func (bccb *BlogsContentCreateBulk) OnConflictColumns(columns ...string) *BlogsContentUpsertBulk {
 	bccb.conflict = append(bccb.conflict, sql.ConflictColumns(columns...))
-	return &BlogContentUpsertBulk{
+	return &BlogsContentUpsertBulk{
 		create: bccb,
 	}
 }
 
-// BlogContentUpsertBulk is the builder for "upsert"-ing
-// a bulk of BlogContent nodes.
-type BlogContentUpsertBulk struct {
-	create *BlogContentCreateBulk
+// BlogsContentUpsertBulk is the builder for "upsert"-ing
+// a bulk of BlogsContent nodes.
+type BlogsContentUpsertBulk struct {
+	create *BlogsContentCreateBulk
 }
 
 // UpdateNewValues updates the mutable fields using the new values that
 // were set on create. Using this option is equivalent to using:
 //
-//	client.BlogContent.Create().
+//	client.BlogsContent.Create().
 //		OnConflict(
 //			sql.ResolveWithNewValues(),
 //			sql.ResolveWith(func(u *sql.UpdateSet) {
-//				u.SetIgnore(blogcontent.FieldID)
+//				u.SetIgnore(blogscontent.FieldID)
 //			}),
 //		).
 //		Exec(ctx)
-func (u *BlogContentUpsertBulk) UpdateNewValues() *BlogContentUpsertBulk {
+func (u *BlogsContentUpsertBulk) UpdateNewValues() *BlogsContentUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
 		for _, b := range u.create.builders {
 			if _, exists := b.mutation.ID(); exists {
-				s.SetIgnore(blogcontent.FieldID)
+				s.SetIgnore(blogscontent.FieldID)
 			}
 		}
 	}))
@@ -427,62 +427,62 @@ func (u *BlogContentUpsertBulk) UpdateNewValues() *BlogContentUpsertBulk {
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//	client.BlogContent.Create().
+//	client.BlogsContent.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
-func (u *BlogContentUpsertBulk) Ignore() *BlogContentUpsertBulk {
+func (u *BlogsContentUpsertBulk) Ignore() *BlogsContentUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
 }
 
 // DoNothing configures the conflict_action to `DO NOTHING`.
 // Supported only by SQLite and PostgreSQL.
-func (u *BlogContentUpsertBulk) DoNothing() *BlogContentUpsertBulk {
+func (u *BlogsContentUpsertBulk) DoNothing() *BlogsContentUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.DoNothing())
 	return u
 }
 
-// Update allows overriding fields `UPDATE` values. See the BlogContentCreateBulk.OnConflict
+// Update allows overriding fields `UPDATE` values. See the BlogsContentCreateBulk.OnConflict
 // documentation for more info.
-func (u *BlogContentUpsertBulk) Update(set func(*BlogContentUpsert)) *BlogContentUpsertBulk {
+func (u *BlogsContentUpsertBulk) Update(set func(*BlogsContentUpsert)) *BlogsContentUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
-		set(&BlogContentUpsert{UpdateSet: update})
+		set(&BlogsContentUpsert{UpdateSet: update})
 	}))
 	return u
 }
 
 // SetContent sets the "content" field.
-func (u *BlogContentUpsertBulk) SetContent(v string) *BlogContentUpsertBulk {
-	return u.Update(func(s *BlogContentUpsert) {
+func (u *BlogsContentUpsertBulk) SetContent(v string) *BlogsContentUpsertBulk {
+	return u.Update(func(s *BlogsContentUpsert) {
 		s.SetContent(v)
 	})
 }
 
 // UpdateContent sets the "content" field to the value that was provided on create.
-func (u *BlogContentUpsertBulk) UpdateContent() *BlogContentUpsertBulk {
-	return u.Update(func(s *BlogContentUpsert) {
+func (u *BlogsContentUpsertBulk) UpdateContent() *BlogsContentUpsertBulk {
+	return u.Update(func(s *BlogsContentUpsert) {
 		s.UpdateContent()
 	})
 }
 
 // Exec executes the query.
-func (u *BlogContentUpsertBulk) Exec(ctx context.Context) error {
+func (u *BlogsContentUpsertBulk) Exec(ctx context.Context) error {
 	if u.create.err != nil {
 		return u.create.err
 	}
 	for i, b := range u.create.builders {
 		if len(b.conflict) != 0 {
-			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the BlogContentCreateBulk instead", i)
+			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the BlogsContentCreateBulk instead", i)
 		}
 	}
 	if len(u.create.conflict) == 0 {
-		return errors.New("ent: missing options for BlogContentCreateBulk.OnConflict")
+		return errors.New("ent: missing options for BlogsContentCreateBulk.OnConflict")
 	}
 	return u.create.Exec(ctx)
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (u *BlogContentUpsertBulk) ExecX(ctx context.Context) {
+func (u *BlogsContentUpsertBulk) ExecX(ctx context.Context) {
 	if err := u.create.Exec(ctx); err != nil {
 		panic(err)
 	}

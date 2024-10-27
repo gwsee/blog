@@ -3,7 +3,7 @@
 package ent
 
 import (
-	"blog/internal/ent/blog"
+	"blog/internal/ent/blogs"
 	"context"
 	"errors"
 	"fmt"
@@ -13,22 +13,22 @@ import (
 	"entgo.io/ent/schema/field"
 )
 
-// BlogCreate is the builder for creating a Blog entity.
-type BlogCreate struct {
+// BlogsCreate is the builder for creating a Blogs entity.
+type BlogsCreate struct {
 	config
-	mutation *BlogMutation
+	mutation *BlogsMutation
 	hooks    []Hook
 	conflict []sql.ConflictOption
 }
 
 // SetCreatedAt sets the "created_at" field.
-func (bc *BlogCreate) SetCreatedAt(i int64) *BlogCreate {
+func (bc *BlogsCreate) SetCreatedAt(i int64) *BlogsCreate {
 	bc.mutation.SetCreatedAt(i)
 	return bc
 }
 
 // SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
-func (bc *BlogCreate) SetNillableCreatedAt(i *int64) *BlogCreate {
+func (bc *BlogsCreate) SetNillableCreatedAt(i *int64) *BlogsCreate {
 	if i != nil {
 		bc.SetCreatedAt(*i)
 	}
@@ -36,13 +36,13 @@ func (bc *BlogCreate) SetNillableCreatedAt(i *int64) *BlogCreate {
 }
 
 // SetCreatedBy sets the "created_by" field.
-func (bc *BlogCreate) SetCreatedBy(s string) *BlogCreate {
+func (bc *BlogsCreate) SetCreatedBy(s string) *BlogsCreate {
 	bc.mutation.SetCreatedBy(s)
 	return bc
 }
 
 // SetNillableCreatedBy sets the "created_by" field if the given value is not nil.
-func (bc *BlogCreate) SetNillableCreatedBy(s *string) *BlogCreate {
+func (bc *BlogsCreate) SetNillableCreatedBy(s *string) *BlogsCreate {
 	if s != nil {
 		bc.SetCreatedBy(*s)
 	}
@@ -50,13 +50,13 @@ func (bc *BlogCreate) SetNillableCreatedBy(s *string) *BlogCreate {
 }
 
 // SetUpdatedAt sets the "updated_at" field.
-func (bc *BlogCreate) SetUpdatedAt(i int64) *BlogCreate {
+func (bc *BlogsCreate) SetUpdatedAt(i int64) *BlogsCreate {
 	bc.mutation.SetUpdatedAt(i)
 	return bc
 }
 
 // SetNillableUpdatedAt sets the "updated_at" field if the given value is not nil.
-func (bc *BlogCreate) SetNillableUpdatedAt(i *int64) *BlogCreate {
+func (bc *BlogsCreate) SetNillableUpdatedAt(i *int64) *BlogsCreate {
 	if i != nil {
 		bc.SetUpdatedAt(*i)
 	}
@@ -64,13 +64,13 @@ func (bc *BlogCreate) SetNillableUpdatedAt(i *int64) *BlogCreate {
 }
 
 // SetUpdatedBy sets the "updated_by" field.
-func (bc *BlogCreate) SetUpdatedBy(s string) *BlogCreate {
+func (bc *BlogsCreate) SetUpdatedBy(s string) *BlogsCreate {
 	bc.mutation.SetUpdatedBy(s)
 	return bc
 }
 
 // SetNillableUpdatedBy sets the "updated_by" field if the given value is not nil.
-func (bc *BlogCreate) SetNillableUpdatedBy(s *string) *BlogCreate {
+func (bc *BlogsCreate) SetNillableUpdatedBy(s *string) *BlogsCreate {
 	if s != nil {
 		bc.SetUpdatedBy(*s)
 	}
@@ -78,13 +78,13 @@ func (bc *BlogCreate) SetNillableUpdatedBy(s *string) *BlogCreate {
 }
 
 // SetIsDeleted sets the "is_deleted" field.
-func (bc *BlogCreate) SetIsDeleted(u uint8) *BlogCreate {
+func (bc *BlogsCreate) SetIsDeleted(u uint8) *BlogsCreate {
 	bc.mutation.SetIsDeleted(u)
 	return bc
 }
 
 // SetNillableIsDeleted sets the "is_deleted" field if the given value is not nil.
-func (bc *BlogCreate) SetNillableIsDeleted(u *uint8) *BlogCreate {
+func (bc *BlogsCreate) SetNillableIsDeleted(u *uint8) *BlogsCreate {
 	if u != nil {
 		bc.SetIsDeleted(*u)
 	}
@@ -92,13 +92,13 @@ func (bc *BlogCreate) SetNillableIsDeleted(u *uint8) *BlogCreate {
 }
 
 // SetDeletedAt sets the "deleted_at" field.
-func (bc *BlogCreate) SetDeletedAt(i int64) *BlogCreate {
+func (bc *BlogsCreate) SetDeletedAt(i int64) *BlogsCreate {
 	bc.mutation.SetDeletedAt(i)
 	return bc
 }
 
 // SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
-func (bc *BlogCreate) SetNillableDeletedAt(i *int64) *BlogCreate {
+func (bc *BlogsCreate) SetNillableDeletedAt(i *int64) *BlogsCreate {
 	if i != nil {
 		bc.SetDeletedAt(*i)
 	}
@@ -106,13 +106,13 @@ func (bc *BlogCreate) SetNillableDeletedAt(i *int64) *BlogCreate {
 }
 
 // SetDeletedBy sets the "deleted_by" field.
-func (bc *BlogCreate) SetDeletedBy(s string) *BlogCreate {
+func (bc *BlogsCreate) SetDeletedBy(s string) *BlogsCreate {
 	bc.mutation.SetDeletedBy(s)
 	return bc
 }
 
 // SetNillableDeletedBy sets the "deleted_by" field if the given value is not nil.
-func (bc *BlogCreate) SetNillableDeletedBy(s *string) *BlogCreate {
+func (bc *BlogsCreate) SetNillableDeletedBy(s *string) *BlogsCreate {
 	if s != nil {
 		bc.SetDeletedBy(*s)
 	}
@@ -120,31 +120,31 @@ func (bc *BlogCreate) SetNillableDeletedBy(s *string) *BlogCreate {
 }
 
 // SetAccountID sets the "account_id" field.
-func (bc *BlogCreate) SetAccountID(i int) *BlogCreate {
+func (bc *BlogsCreate) SetAccountID(i int) *BlogsCreate {
 	bc.mutation.SetAccountID(i)
 	return bc
 }
 
 // SetTitle sets the "title" field.
-func (bc *BlogCreate) SetTitle(s string) *BlogCreate {
+func (bc *BlogsCreate) SetTitle(s string) *BlogsCreate {
 	bc.mutation.SetTitle(s)
 	return bc
 }
 
 // SetDescription sets the "description" field.
-func (bc *BlogCreate) SetDescription(s string) *BlogCreate {
+func (bc *BlogsCreate) SetDescription(s string) *BlogsCreate {
 	bc.mutation.SetDescription(s)
 	return bc
 }
 
 // SetIsHidden sets the "is_hidden" field.
-func (bc *BlogCreate) SetIsHidden(i int8) *BlogCreate {
+func (bc *BlogsCreate) SetIsHidden(i int8) *BlogsCreate {
 	bc.mutation.SetIsHidden(i)
 	return bc
 }
 
 // SetNillableIsHidden sets the "is_hidden" field if the given value is not nil.
-func (bc *BlogCreate) SetNillableIsHidden(i *int8) *BlogCreate {
+func (bc *BlogsCreate) SetNillableIsHidden(i *int8) *BlogsCreate {
 	if i != nil {
 		bc.SetIsHidden(*i)
 	}
@@ -152,36 +152,36 @@ func (bc *BlogCreate) SetNillableIsHidden(i *int8) *BlogCreate {
 }
 
 // SetTags sets the "tags" field.
-func (bc *BlogCreate) SetTags(s []string) *BlogCreate {
+func (bc *BlogsCreate) SetTags(s []string) *BlogsCreate {
 	bc.mutation.SetTags(s)
 	return bc
 }
 
 // SetCover sets the "cover" field.
-func (bc *BlogCreate) SetCover(s string) *BlogCreate {
+func (bc *BlogsCreate) SetCover(s string) *BlogsCreate {
 	bc.mutation.SetCover(s)
 	return bc
 }
 
 // SetContent sets the "content" field.
-func (bc *BlogCreate) SetContent(s string) *BlogCreate {
+func (bc *BlogsCreate) SetContent(s string) *BlogsCreate {
 	bc.mutation.SetContent(s)
 	return bc
 }
 
 // SetID sets the "id" field.
-func (bc *BlogCreate) SetID(i int) *BlogCreate {
+func (bc *BlogsCreate) SetID(i int) *BlogsCreate {
 	bc.mutation.SetID(i)
 	return bc
 }
 
-// Mutation returns the BlogMutation object of the builder.
-func (bc *BlogCreate) Mutation() *BlogMutation {
+// Mutation returns the BlogsMutation object of the builder.
+func (bc *BlogsCreate) Mutation() *BlogsMutation {
 	return bc.mutation
 }
 
-// Save creates the Blog in the database.
-func (bc *BlogCreate) Save(ctx context.Context) (*Blog, error) {
+// Save creates the Blogs in the database.
+func (bc *BlogsCreate) Save(ctx context.Context) (*Blogs, error) {
 	if err := bc.defaults(); err != nil {
 		return nil, err
 	}
@@ -189,7 +189,7 @@ func (bc *BlogCreate) Save(ctx context.Context) (*Blog, error) {
 }
 
 // SaveX calls Save and panics if Save returns an error.
-func (bc *BlogCreate) SaveX(ctx context.Context) *Blog {
+func (bc *BlogsCreate) SaveX(ctx context.Context) *Blogs {
 	v, err := bc.Save(ctx)
 	if err != nil {
 		panic(err)
@@ -198,113 +198,113 @@ func (bc *BlogCreate) SaveX(ctx context.Context) *Blog {
 }
 
 // Exec executes the query.
-func (bc *BlogCreate) Exec(ctx context.Context) error {
+func (bc *BlogsCreate) Exec(ctx context.Context) error {
 	_, err := bc.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (bc *BlogCreate) ExecX(ctx context.Context) {
+func (bc *BlogsCreate) ExecX(ctx context.Context) {
 	if err := bc.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // defaults sets the default values of the builder before save.
-func (bc *BlogCreate) defaults() error {
+func (bc *BlogsCreate) defaults() error {
 	if _, ok := bc.mutation.CreatedAt(); !ok {
-		v := blog.DefaultCreatedAt
+		v := blogs.DefaultCreatedAt
 		bc.mutation.SetCreatedAt(v)
 	}
 	if _, ok := bc.mutation.CreatedBy(); !ok {
-		v := blog.DefaultCreatedBy
+		v := blogs.DefaultCreatedBy
 		bc.mutation.SetCreatedBy(v)
 	}
 	if _, ok := bc.mutation.UpdatedAt(); !ok {
-		v := blog.DefaultUpdatedAt
+		v := blogs.DefaultUpdatedAt
 		bc.mutation.SetUpdatedAt(v)
 	}
 	if _, ok := bc.mutation.UpdatedBy(); !ok {
-		v := blog.DefaultUpdatedBy
+		v := blogs.DefaultUpdatedBy
 		bc.mutation.SetUpdatedBy(v)
 	}
 	if _, ok := bc.mutation.IsDeleted(); !ok {
-		v := blog.DefaultIsDeleted
+		v := blogs.DefaultIsDeleted
 		bc.mutation.SetIsDeleted(v)
 	}
 	if _, ok := bc.mutation.DeletedAt(); !ok {
-		v := blog.DefaultDeletedAt
+		v := blogs.DefaultDeletedAt
 		bc.mutation.SetDeletedAt(v)
 	}
 	if _, ok := bc.mutation.DeletedBy(); !ok {
-		v := blog.DefaultDeletedBy
+		v := blogs.DefaultDeletedBy
 		bc.mutation.SetDeletedBy(v)
 	}
 	if _, ok := bc.mutation.IsHidden(); !ok {
-		v := blog.DefaultIsHidden
+		v := blogs.DefaultIsHidden
 		bc.mutation.SetIsHidden(v)
 	}
 	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (bc *BlogCreate) check() error {
+func (bc *BlogsCreate) check() error {
 	if _, ok := bc.mutation.CreatedAt(); !ok {
-		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "Blog.created_at"`)}
+		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "Blogs.created_at"`)}
 	}
 	if _, ok := bc.mutation.CreatedBy(); !ok {
-		return &ValidationError{Name: "created_by", err: errors.New(`ent: missing required field "Blog.created_by"`)}
+		return &ValidationError{Name: "created_by", err: errors.New(`ent: missing required field "Blogs.created_by"`)}
 	}
 	if _, ok := bc.mutation.UpdatedAt(); !ok {
-		return &ValidationError{Name: "updated_at", err: errors.New(`ent: missing required field "Blog.updated_at"`)}
+		return &ValidationError{Name: "updated_at", err: errors.New(`ent: missing required field "Blogs.updated_at"`)}
 	}
 	if _, ok := bc.mutation.UpdatedBy(); !ok {
-		return &ValidationError{Name: "updated_by", err: errors.New(`ent: missing required field "Blog.updated_by"`)}
+		return &ValidationError{Name: "updated_by", err: errors.New(`ent: missing required field "Blogs.updated_by"`)}
 	}
 	if _, ok := bc.mutation.IsDeleted(); !ok {
-		return &ValidationError{Name: "is_deleted", err: errors.New(`ent: missing required field "Blog.is_deleted"`)}
+		return &ValidationError{Name: "is_deleted", err: errors.New(`ent: missing required field "Blogs.is_deleted"`)}
 	}
 	if _, ok := bc.mutation.DeletedAt(); !ok {
-		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "Blog.deleted_at"`)}
+		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "Blogs.deleted_at"`)}
 	}
 	if _, ok := bc.mutation.DeletedBy(); !ok {
-		return &ValidationError{Name: "deleted_by", err: errors.New(`ent: missing required field "Blog.deleted_by"`)}
+		return &ValidationError{Name: "deleted_by", err: errors.New(`ent: missing required field "Blogs.deleted_by"`)}
 	}
 	if _, ok := bc.mutation.AccountID(); !ok {
-		return &ValidationError{Name: "account_id", err: errors.New(`ent: missing required field "Blog.account_id"`)}
+		return &ValidationError{Name: "account_id", err: errors.New(`ent: missing required field "Blogs.account_id"`)}
 	}
 	if _, ok := bc.mutation.Title(); !ok {
-		return &ValidationError{Name: "title", err: errors.New(`ent: missing required field "Blog.title"`)}
+		return &ValidationError{Name: "title", err: errors.New(`ent: missing required field "Blogs.title"`)}
 	}
 	if _, ok := bc.mutation.Description(); !ok {
-		return &ValidationError{Name: "description", err: errors.New(`ent: missing required field "Blog.description"`)}
+		return &ValidationError{Name: "description", err: errors.New(`ent: missing required field "Blogs.description"`)}
 	}
 	if _, ok := bc.mutation.IsHidden(); !ok {
-		return &ValidationError{Name: "is_hidden", err: errors.New(`ent: missing required field "Blog.is_hidden"`)}
+		return &ValidationError{Name: "is_hidden", err: errors.New(`ent: missing required field "Blogs.is_hidden"`)}
 	}
 	if _, ok := bc.mutation.Tags(); !ok {
-		return &ValidationError{Name: "tags", err: errors.New(`ent: missing required field "Blog.tags"`)}
+		return &ValidationError{Name: "tags", err: errors.New(`ent: missing required field "Blogs.tags"`)}
 	}
 	if _, ok := bc.mutation.Cover(); !ok {
-		return &ValidationError{Name: "cover", err: errors.New(`ent: missing required field "Blog.cover"`)}
+		return &ValidationError{Name: "cover", err: errors.New(`ent: missing required field "Blogs.cover"`)}
 	}
 	if _, ok := bc.mutation.Content(); !ok {
-		return &ValidationError{Name: "content", err: errors.New(`ent: missing required field "Blog.content"`)}
+		return &ValidationError{Name: "content", err: errors.New(`ent: missing required field "Blogs.content"`)}
 	}
 	if v, ok := bc.mutation.Content(); ok {
-		if err := blog.ContentValidator(v); err != nil {
-			return &ValidationError{Name: "content", err: fmt.Errorf(`ent: validator failed for field "Blog.content": %w`, err)}
+		if err := blogs.ContentValidator(v); err != nil {
+			return &ValidationError{Name: "content", err: fmt.Errorf(`ent: validator failed for field "Blogs.content": %w`, err)}
 		}
 	}
 	if v, ok := bc.mutation.ID(); ok {
-		if err := blog.IDValidator(v); err != nil {
-			return &ValidationError{Name: "id", err: fmt.Errorf(`ent: validator failed for field "Blog.id": %w`, err)}
+		if err := blogs.IDValidator(v); err != nil {
+			return &ValidationError{Name: "id", err: fmt.Errorf(`ent: validator failed for field "Blogs.id": %w`, err)}
 		}
 	}
 	return nil
 }
 
-func (bc *BlogCreate) sqlSave(ctx context.Context) (*Blog, error) {
+func (bc *BlogsCreate) sqlSave(ctx context.Context) (*Blogs, error) {
 	if err := bc.check(); err != nil {
 		return nil, err
 	}
@@ -324,10 +324,10 @@ func (bc *BlogCreate) sqlSave(ctx context.Context) (*Blog, error) {
 	return _node, nil
 }
 
-func (bc *BlogCreate) createSpec() (*Blog, *sqlgraph.CreateSpec) {
+func (bc *BlogsCreate) createSpec() (*Blogs, *sqlgraph.CreateSpec) {
 	var (
-		_node = &Blog{config: bc.config}
-		_spec = sqlgraph.NewCreateSpec(blog.Table, sqlgraph.NewFieldSpec(blog.FieldID, field.TypeInt))
+		_node = &Blogs{config: bc.config}
+		_spec = sqlgraph.NewCreateSpec(blogs.Table, sqlgraph.NewFieldSpec(blogs.FieldID, field.TypeInt))
 	)
 	_spec.OnConflict = bc.conflict
 	if id, ok := bc.mutation.ID(); ok {
@@ -335,59 +335,59 @@ func (bc *BlogCreate) createSpec() (*Blog, *sqlgraph.CreateSpec) {
 		_spec.ID.Value = id
 	}
 	if value, ok := bc.mutation.CreatedAt(); ok {
-		_spec.SetField(blog.FieldCreatedAt, field.TypeInt64, value)
+		_spec.SetField(blogs.FieldCreatedAt, field.TypeInt64, value)
 		_node.CreatedAt = value
 	}
 	if value, ok := bc.mutation.CreatedBy(); ok {
-		_spec.SetField(blog.FieldCreatedBy, field.TypeString, value)
+		_spec.SetField(blogs.FieldCreatedBy, field.TypeString, value)
 		_node.CreatedBy = value
 	}
 	if value, ok := bc.mutation.UpdatedAt(); ok {
-		_spec.SetField(blog.FieldUpdatedAt, field.TypeInt64, value)
+		_spec.SetField(blogs.FieldUpdatedAt, field.TypeInt64, value)
 		_node.UpdatedAt = value
 	}
 	if value, ok := bc.mutation.UpdatedBy(); ok {
-		_spec.SetField(blog.FieldUpdatedBy, field.TypeString, value)
+		_spec.SetField(blogs.FieldUpdatedBy, field.TypeString, value)
 		_node.UpdatedBy = value
 	}
 	if value, ok := bc.mutation.IsDeleted(); ok {
-		_spec.SetField(blog.FieldIsDeleted, field.TypeUint8, value)
+		_spec.SetField(blogs.FieldIsDeleted, field.TypeUint8, value)
 		_node.IsDeleted = value
 	}
 	if value, ok := bc.mutation.DeletedAt(); ok {
-		_spec.SetField(blog.FieldDeletedAt, field.TypeInt64, value)
+		_spec.SetField(blogs.FieldDeletedAt, field.TypeInt64, value)
 		_node.DeletedAt = value
 	}
 	if value, ok := bc.mutation.DeletedBy(); ok {
-		_spec.SetField(blog.FieldDeletedBy, field.TypeString, value)
+		_spec.SetField(blogs.FieldDeletedBy, field.TypeString, value)
 		_node.DeletedBy = value
 	}
 	if value, ok := bc.mutation.AccountID(); ok {
-		_spec.SetField(blog.FieldAccountID, field.TypeInt, value)
+		_spec.SetField(blogs.FieldAccountID, field.TypeInt, value)
 		_node.AccountID = value
 	}
 	if value, ok := bc.mutation.Title(); ok {
-		_spec.SetField(blog.FieldTitle, field.TypeString, value)
+		_spec.SetField(blogs.FieldTitle, field.TypeString, value)
 		_node.Title = value
 	}
 	if value, ok := bc.mutation.Description(); ok {
-		_spec.SetField(blog.FieldDescription, field.TypeString, value)
+		_spec.SetField(blogs.FieldDescription, field.TypeString, value)
 		_node.Description = value
 	}
 	if value, ok := bc.mutation.IsHidden(); ok {
-		_spec.SetField(blog.FieldIsHidden, field.TypeInt8, value)
+		_spec.SetField(blogs.FieldIsHidden, field.TypeInt8, value)
 		_node.IsHidden = value
 	}
 	if value, ok := bc.mutation.Tags(); ok {
-		_spec.SetField(blog.FieldTags, field.TypeJSON, value)
+		_spec.SetField(blogs.FieldTags, field.TypeJSON, value)
 		_node.Tags = value
 	}
 	if value, ok := bc.mutation.Cover(); ok {
-		_spec.SetField(blog.FieldCover, field.TypeString, value)
+		_spec.SetField(blogs.FieldCover, field.TypeString, value)
 		_node.Cover = value
 	}
 	if value, ok := bc.mutation.Content(); ok {
-		_spec.SetField(blog.FieldContent, field.TypeString, value)
+		_spec.SetField(blogs.FieldContent, field.TypeString, value)
 		_node.Content = value
 	}
 	return _node, _spec
@@ -396,7 +396,7 @@ func (bc *BlogCreate) createSpec() (*Blog, *sqlgraph.CreateSpec) {
 // OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
 // of the `INSERT` statement. For example:
 //
-//	client.Blog.Create().
+//	client.Blogs.Create().
 //		SetCreatedAt(v).
 //		OnConflict(
 //			// Update the row with the new values
@@ -405,13 +405,13 @@ func (bc *BlogCreate) createSpec() (*Blog, *sqlgraph.CreateSpec) {
 //		).
 //		// Override some of the fields with custom
 //		// update values.
-//		Update(func(u *ent.BlogUpsert) {
+//		Update(func(u *ent.BlogsUpsert) {
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
-func (bc *BlogCreate) OnConflict(opts ...sql.ConflictOption) *BlogUpsertOne {
+func (bc *BlogsCreate) OnConflict(opts ...sql.ConflictOption) *BlogsUpsertOne {
 	bc.conflict = opts
-	return &BlogUpsertOne{
+	return &BlogsUpsertOne{
 		create: bc,
 	}
 }
@@ -419,225 +419,225 @@ func (bc *BlogCreate) OnConflict(opts ...sql.ConflictOption) *BlogUpsertOne {
 // OnConflictColumns calls `OnConflict` and configures the columns
 // as conflict target. Using this option is equivalent to using:
 //
-//	client.Blog.Create().
+//	client.Blogs.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-func (bc *BlogCreate) OnConflictColumns(columns ...string) *BlogUpsertOne {
+func (bc *BlogsCreate) OnConflictColumns(columns ...string) *BlogsUpsertOne {
 	bc.conflict = append(bc.conflict, sql.ConflictColumns(columns...))
-	return &BlogUpsertOne{
+	return &BlogsUpsertOne{
 		create: bc,
 	}
 }
 
 type (
-	// BlogUpsertOne is the builder for "upsert"-ing
-	//  one Blog node.
-	BlogUpsertOne struct {
-		create *BlogCreate
+	// BlogsUpsertOne is the builder for "upsert"-ing
+	//  one Blogs node.
+	BlogsUpsertOne struct {
+		create *BlogsCreate
 	}
 
-	// BlogUpsert is the "OnConflict" setter.
-	BlogUpsert struct {
+	// BlogsUpsert is the "OnConflict" setter.
+	BlogsUpsert struct {
 		*sql.UpdateSet
 	}
 )
 
 // SetUpdatedAt sets the "updated_at" field.
-func (u *BlogUpsert) SetUpdatedAt(v int64) *BlogUpsert {
-	u.Set(blog.FieldUpdatedAt, v)
+func (u *BlogsUpsert) SetUpdatedAt(v int64) *BlogsUpsert {
+	u.Set(blogs.FieldUpdatedAt, v)
 	return u
 }
 
 // UpdateUpdatedAt sets the "updated_at" field to the value that was provided on create.
-func (u *BlogUpsert) UpdateUpdatedAt() *BlogUpsert {
-	u.SetExcluded(blog.FieldUpdatedAt)
+func (u *BlogsUpsert) UpdateUpdatedAt() *BlogsUpsert {
+	u.SetExcluded(blogs.FieldUpdatedAt)
 	return u
 }
 
 // AddUpdatedAt adds v to the "updated_at" field.
-func (u *BlogUpsert) AddUpdatedAt(v int64) *BlogUpsert {
-	u.Add(blog.FieldUpdatedAt, v)
+func (u *BlogsUpsert) AddUpdatedAt(v int64) *BlogsUpsert {
+	u.Add(blogs.FieldUpdatedAt, v)
 	return u
 }
 
 // SetUpdatedBy sets the "updated_by" field.
-func (u *BlogUpsert) SetUpdatedBy(v string) *BlogUpsert {
-	u.Set(blog.FieldUpdatedBy, v)
+func (u *BlogsUpsert) SetUpdatedBy(v string) *BlogsUpsert {
+	u.Set(blogs.FieldUpdatedBy, v)
 	return u
 }
 
 // UpdateUpdatedBy sets the "updated_by" field to the value that was provided on create.
-func (u *BlogUpsert) UpdateUpdatedBy() *BlogUpsert {
-	u.SetExcluded(blog.FieldUpdatedBy)
+func (u *BlogsUpsert) UpdateUpdatedBy() *BlogsUpsert {
+	u.SetExcluded(blogs.FieldUpdatedBy)
 	return u
 }
 
 // SetIsDeleted sets the "is_deleted" field.
-func (u *BlogUpsert) SetIsDeleted(v uint8) *BlogUpsert {
-	u.Set(blog.FieldIsDeleted, v)
+func (u *BlogsUpsert) SetIsDeleted(v uint8) *BlogsUpsert {
+	u.Set(blogs.FieldIsDeleted, v)
 	return u
 }
 
 // UpdateIsDeleted sets the "is_deleted" field to the value that was provided on create.
-func (u *BlogUpsert) UpdateIsDeleted() *BlogUpsert {
-	u.SetExcluded(blog.FieldIsDeleted)
+func (u *BlogsUpsert) UpdateIsDeleted() *BlogsUpsert {
+	u.SetExcluded(blogs.FieldIsDeleted)
 	return u
 }
 
 // AddIsDeleted adds v to the "is_deleted" field.
-func (u *BlogUpsert) AddIsDeleted(v uint8) *BlogUpsert {
-	u.Add(blog.FieldIsDeleted, v)
+func (u *BlogsUpsert) AddIsDeleted(v uint8) *BlogsUpsert {
+	u.Add(blogs.FieldIsDeleted, v)
 	return u
 }
 
 // SetDeletedAt sets the "deleted_at" field.
-func (u *BlogUpsert) SetDeletedAt(v int64) *BlogUpsert {
-	u.Set(blog.FieldDeletedAt, v)
+func (u *BlogsUpsert) SetDeletedAt(v int64) *BlogsUpsert {
+	u.Set(blogs.FieldDeletedAt, v)
 	return u
 }
 
 // UpdateDeletedAt sets the "deleted_at" field to the value that was provided on create.
-func (u *BlogUpsert) UpdateDeletedAt() *BlogUpsert {
-	u.SetExcluded(blog.FieldDeletedAt)
+func (u *BlogsUpsert) UpdateDeletedAt() *BlogsUpsert {
+	u.SetExcluded(blogs.FieldDeletedAt)
 	return u
 }
 
 // AddDeletedAt adds v to the "deleted_at" field.
-func (u *BlogUpsert) AddDeletedAt(v int64) *BlogUpsert {
-	u.Add(blog.FieldDeletedAt, v)
+func (u *BlogsUpsert) AddDeletedAt(v int64) *BlogsUpsert {
+	u.Add(blogs.FieldDeletedAt, v)
 	return u
 }
 
 // SetDeletedBy sets the "deleted_by" field.
-func (u *BlogUpsert) SetDeletedBy(v string) *BlogUpsert {
-	u.Set(blog.FieldDeletedBy, v)
+func (u *BlogsUpsert) SetDeletedBy(v string) *BlogsUpsert {
+	u.Set(blogs.FieldDeletedBy, v)
 	return u
 }
 
 // UpdateDeletedBy sets the "deleted_by" field to the value that was provided on create.
-func (u *BlogUpsert) UpdateDeletedBy() *BlogUpsert {
-	u.SetExcluded(blog.FieldDeletedBy)
+func (u *BlogsUpsert) UpdateDeletedBy() *BlogsUpsert {
+	u.SetExcluded(blogs.FieldDeletedBy)
 	return u
 }
 
 // SetAccountID sets the "account_id" field.
-func (u *BlogUpsert) SetAccountID(v int) *BlogUpsert {
-	u.Set(blog.FieldAccountID, v)
+func (u *BlogsUpsert) SetAccountID(v int) *BlogsUpsert {
+	u.Set(blogs.FieldAccountID, v)
 	return u
 }
 
 // UpdateAccountID sets the "account_id" field to the value that was provided on create.
-func (u *BlogUpsert) UpdateAccountID() *BlogUpsert {
-	u.SetExcluded(blog.FieldAccountID)
+func (u *BlogsUpsert) UpdateAccountID() *BlogsUpsert {
+	u.SetExcluded(blogs.FieldAccountID)
 	return u
 }
 
 // AddAccountID adds v to the "account_id" field.
-func (u *BlogUpsert) AddAccountID(v int) *BlogUpsert {
-	u.Add(blog.FieldAccountID, v)
+func (u *BlogsUpsert) AddAccountID(v int) *BlogsUpsert {
+	u.Add(blogs.FieldAccountID, v)
 	return u
 }
 
 // SetTitle sets the "title" field.
-func (u *BlogUpsert) SetTitle(v string) *BlogUpsert {
-	u.Set(blog.FieldTitle, v)
+func (u *BlogsUpsert) SetTitle(v string) *BlogsUpsert {
+	u.Set(blogs.FieldTitle, v)
 	return u
 }
 
 // UpdateTitle sets the "title" field to the value that was provided on create.
-func (u *BlogUpsert) UpdateTitle() *BlogUpsert {
-	u.SetExcluded(blog.FieldTitle)
+func (u *BlogsUpsert) UpdateTitle() *BlogsUpsert {
+	u.SetExcluded(blogs.FieldTitle)
 	return u
 }
 
 // SetDescription sets the "description" field.
-func (u *BlogUpsert) SetDescription(v string) *BlogUpsert {
-	u.Set(blog.FieldDescription, v)
+func (u *BlogsUpsert) SetDescription(v string) *BlogsUpsert {
+	u.Set(blogs.FieldDescription, v)
 	return u
 }
 
 // UpdateDescription sets the "description" field to the value that was provided on create.
-func (u *BlogUpsert) UpdateDescription() *BlogUpsert {
-	u.SetExcluded(blog.FieldDescription)
+func (u *BlogsUpsert) UpdateDescription() *BlogsUpsert {
+	u.SetExcluded(blogs.FieldDescription)
 	return u
 }
 
 // SetIsHidden sets the "is_hidden" field.
-func (u *BlogUpsert) SetIsHidden(v int8) *BlogUpsert {
-	u.Set(blog.FieldIsHidden, v)
+func (u *BlogsUpsert) SetIsHidden(v int8) *BlogsUpsert {
+	u.Set(blogs.FieldIsHidden, v)
 	return u
 }
 
 // UpdateIsHidden sets the "is_hidden" field to the value that was provided on create.
-func (u *BlogUpsert) UpdateIsHidden() *BlogUpsert {
-	u.SetExcluded(blog.FieldIsHidden)
+func (u *BlogsUpsert) UpdateIsHidden() *BlogsUpsert {
+	u.SetExcluded(blogs.FieldIsHidden)
 	return u
 }
 
 // AddIsHidden adds v to the "is_hidden" field.
-func (u *BlogUpsert) AddIsHidden(v int8) *BlogUpsert {
-	u.Add(blog.FieldIsHidden, v)
+func (u *BlogsUpsert) AddIsHidden(v int8) *BlogsUpsert {
+	u.Add(blogs.FieldIsHidden, v)
 	return u
 }
 
 // SetTags sets the "tags" field.
-func (u *BlogUpsert) SetTags(v []string) *BlogUpsert {
-	u.Set(blog.FieldTags, v)
+func (u *BlogsUpsert) SetTags(v []string) *BlogsUpsert {
+	u.Set(blogs.FieldTags, v)
 	return u
 }
 
 // UpdateTags sets the "tags" field to the value that was provided on create.
-func (u *BlogUpsert) UpdateTags() *BlogUpsert {
-	u.SetExcluded(blog.FieldTags)
+func (u *BlogsUpsert) UpdateTags() *BlogsUpsert {
+	u.SetExcluded(blogs.FieldTags)
 	return u
 }
 
 // SetCover sets the "cover" field.
-func (u *BlogUpsert) SetCover(v string) *BlogUpsert {
-	u.Set(blog.FieldCover, v)
+func (u *BlogsUpsert) SetCover(v string) *BlogsUpsert {
+	u.Set(blogs.FieldCover, v)
 	return u
 }
 
 // UpdateCover sets the "cover" field to the value that was provided on create.
-func (u *BlogUpsert) UpdateCover() *BlogUpsert {
-	u.SetExcluded(blog.FieldCover)
+func (u *BlogsUpsert) UpdateCover() *BlogsUpsert {
+	u.SetExcluded(blogs.FieldCover)
 	return u
 }
 
 // SetContent sets the "content" field.
-func (u *BlogUpsert) SetContent(v string) *BlogUpsert {
-	u.Set(blog.FieldContent, v)
+func (u *BlogsUpsert) SetContent(v string) *BlogsUpsert {
+	u.Set(blogs.FieldContent, v)
 	return u
 }
 
 // UpdateContent sets the "content" field to the value that was provided on create.
-func (u *BlogUpsert) UpdateContent() *BlogUpsert {
-	u.SetExcluded(blog.FieldContent)
+func (u *BlogsUpsert) UpdateContent() *BlogsUpsert {
+	u.SetExcluded(blogs.FieldContent)
 	return u
 }
 
 // UpdateNewValues updates the mutable fields using the new values that were set on create except the ID field.
 // Using this option is equivalent to using:
 //
-//	client.Blog.Create().
+//	client.Blogs.Create().
 //		OnConflict(
 //			sql.ResolveWithNewValues(),
 //			sql.ResolveWith(func(u *sql.UpdateSet) {
-//				u.SetIgnore(blog.FieldID)
+//				u.SetIgnore(blogs.FieldID)
 //			}),
 //		).
 //		Exec(ctx)
-func (u *BlogUpsertOne) UpdateNewValues() *BlogUpsertOne {
+func (u *BlogsUpsertOne) UpdateNewValues() *BlogsUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
 		if _, exists := u.create.mutation.ID(); exists {
-			s.SetIgnore(blog.FieldID)
+			s.SetIgnore(blogs.FieldID)
 		}
 		if _, exists := u.create.mutation.CreatedAt(); exists {
-			s.SetIgnore(blog.FieldCreatedAt)
+			s.SetIgnore(blogs.FieldCreatedAt)
 		}
 		if _, exists := u.create.mutation.CreatedBy(); exists {
-			s.SetIgnore(blog.FieldCreatedBy)
+			s.SetIgnore(blogs.FieldCreatedBy)
 		}
 	}))
 	return u
@@ -646,250 +646,250 @@ func (u *BlogUpsertOne) UpdateNewValues() *BlogUpsertOne {
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//	client.Blog.Create().
+//	client.Blogs.Create().
 //	    OnConflict(sql.ResolveWithIgnore()).
 //	    Exec(ctx)
-func (u *BlogUpsertOne) Ignore() *BlogUpsertOne {
+func (u *BlogsUpsertOne) Ignore() *BlogsUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
 }
 
 // DoNothing configures the conflict_action to `DO NOTHING`.
 // Supported only by SQLite and PostgreSQL.
-func (u *BlogUpsertOne) DoNothing() *BlogUpsertOne {
+func (u *BlogsUpsertOne) DoNothing() *BlogsUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.DoNothing())
 	return u
 }
 
-// Update allows overriding fields `UPDATE` values. See the BlogCreate.OnConflict
+// Update allows overriding fields `UPDATE` values. See the BlogsCreate.OnConflict
 // documentation for more info.
-func (u *BlogUpsertOne) Update(set func(*BlogUpsert)) *BlogUpsertOne {
+func (u *BlogsUpsertOne) Update(set func(*BlogsUpsert)) *BlogsUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
-		set(&BlogUpsert{UpdateSet: update})
+		set(&BlogsUpsert{UpdateSet: update})
 	}))
 	return u
 }
 
 // SetUpdatedAt sets the "updated_at" field.
-func (u *BlogUpsertOne) SetUpdatedAt(v int64) *BlogUpsertOne {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertOne) SetUpdatedAt(v int64) *BlogsUpsertOne {
+	return u.Update(func(s *BlogsUpsert) {
 		s.SetUpdatedAt(v)
 	})
 }
 
 // AddUpdatedAt adds v to the "updated_at" field.
-func (u *BlogUpsertOne) AddUpdatedAt(v int64) *BlogUpsertOne {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertOne) AddUpdatedAt(v int64) *BlogsUpsertOne {
+	return u.Update(func(s *BlogsUpsert) {
 		s.AddUpdatedAt(v)
 	})
 }
 
 // UpdateUpdatedAt sets the "updated_at" field to the value that was provided on create.
-func (u *BlogUpsertOne) UpdateUpdatedAt() *BlogUpsertOne {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertOne) UpdateUpdatedAt() *BlogsUpsertOne {
+	return u.Update(func(s *BlogsUpsert) {
 		s.UpdateUpdatedAt()
 	})
 }
 
 // SetUpdatedBy sets the "updated_by" field.
-func (u *BlogUpsertOne) SetUpdatedBy(v string) *BlogUpsertOne {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertOne) SetUpdatedBy(v string) *BlogsUpsertOne {
+	return u.Update(func(s *BlogsUpsert) {
 		s.SetUpdatedBy(v)
 	})
 }
 
 // UpdateUpdatedBy sets the "updated_by" field to the value that was provided on create.
-func (u *BlogUpsertOne) UpdateUpdatedBy() *BlogUpsertOne {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertOne) UpdateUpdatedBy() *BlogsUpsertOne {
+	return u.Update(func(s *BlogsUpsert) {
 		s.UpdateUpdatedBy()
 	})
 }
 
 // SetIsDeleted sets the "is_deleted" field.
-func (u *BlogUpsertOne) SetIsDeleted(v uint8) *BlogUpsertOne {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertOne) SetIsDeleted(v uint8) *BlogsUpsertOne {
+	return u.Update(func(s *BlogsUpsert) {
 		s.SetIsDeleted(v)
 	})
 }
 
 // AddIsDeleted adds v to the "is_deleted" field.
-func (u *BlogUpsertOne) AddIsDeleted(v uint8) *BlogUpsertOne {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertOne) AddIsDeleted(v uint8) *BlogsUpsertOne {
+	return u.Update(func(s *BlogsUpsert) {
 		s.AddIsDeleted(v)
 	})
 }
 
 // UpdateIsDeleted sets the "is_deleted" field to the value that was provided on create.
-func (u *BlogUpsertOne) UpdateIsDeleted() *BlogUpsertOne {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertOne) UpdateIsDeleted() *BlogsUpsertOne {
+	return u.Update(func(s *BlogsUpsert) {
 		s.UpdateIsDeleted()
 	})
 }
 
 // SetDeletedAt sets the "deleted_at" field.
-func (u *BlogUpsertOne) SetDeletedAt(v int64) *BlogUpsertOne {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertOne) SetDeletedAt(v int64) *BlogsUpsertOne {
+	return u.Update(func(s *BlogsUpsert) {
 		s.SetDeletedAt(v)
 	})
 }
 
 // AddDeletedAt adds v to the "deleted_at" field.
-func (u *BlogUpsertOne) AddDeletedAt(v int64) *BlogUpsertOne {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertOne) AddDeletedAt(v int64) *BlogsUpsertOne {
+	return u.Update(func(s *BlogsUpsert) {
 		s.AddDeletedAt(v)
 	})
 }
 
 // UpdateDeletedAt sets the "deleted_at" field to the value that was provided on create.
-func (u *BlogUpsertOne) UpdateDeletedAt() *BlogUpsertOne {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertOne) UpdateDeletedAt() *BlogsUpsertOne {
+	return u.Update(func(s *BlogsUpsert) {
 		s.UpdateDeletedAt()
 	})
 }
 
 // SetDeletedBy sets the "deleted_by" field.
-func (u *BlogUpsertOne) SetDeletedBy(v string) *BlogUpsertOne {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertOne) SetDeletedBy(v string) *BlogsUpsertOne {
+	return u.Update(func(s *BlogsUpsert) {
 		s.SetDeletedBy(v)
 	})
 }
 
 // UpdateDeletedBy sets the "deleted_by" field to the value that was provided on create.
-func (u *BlogUpsertOne) UpdateDeletedBy() *BlogUpsertOne {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertOne) UpdateDeletedBy() *BlogsUpsertOne {
+	return u.Update(func(s *BlogsUpsert) {
 		s.UpdateDeletedBy()
 	})
 }
 
 // SetAccountID sets the "account_id" field.
-func (u *BlogUpsertOne) SetAccountID(v int) *BlogUpsertOne {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertOne) SetAccountID(v int) *BlogsUpsertOne {
+	return u.Update(func(s *BlogsUpsert) {
 		s.SetAccountID(v)
 	})
 }
 
 // AddAccountID adds v to the "account_id" field.
-func (u *BlogUpsertOne) AddAccountID(v int) *BlogUpsertOne {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertOne) AddAccountID(v int) *BlogsUpsertOne {
+	return u.Update(func(s *BlogsUpsert) {
 		s.AddAccountID(v)
 	})
 }
 
 // UpdateAccountID sets the "account_id" field to the value that was provided on create.
-func (u *BlogUpsertOne) UpdateAccountID() *BlogUpsertOne {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertOne) UpdateAccountID() *BlogsUpsertOne {
+	return u.Update(func(s *BlogsUpsert) {
 		s.UpdateAccountID()
 	})
 }
 
 // SetTitle sets the "title" field.
-func (u *BlogUpsertOne) SetTitle(v string) *BlogUpsertOne {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertOne) SetTitle(v string) *BlogsUpsertOne {
+	return u.Update(func(s *BlogsUpsert) {
 		s.SetTitle(v)
 	})
 }
 
 // UpdateTitle sets the "title" field to the value that was provided on create.
-func (u *BlogUpsertOne) UpdateTitle() *BlogUpsertOne {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertOne) UpdateTitle() *BlogsUpsertOne {
+	return u.Update(func(s *BlogsUpsert) {
 		s.UpdateTitle()
 	})
 }
 
 // SetDescription sets the "description" field.
-func (u *BlogUpsertOne) SetDescription(v string) *BlogUpsertOne {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertOne) SetDescription(v string) *BlogsUpsertOne {
+	return u.Update(func(s *BlogsUpsert) {
 		s.SetDescription(v)
 	})
 }
 
 // UpdateDescription sets the "description" field to the value that was provided on create.
-func (u *BlogUpsertOne) UpdateDescription() *BlogUpsertOne {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertOne) UpdateDescription() *BlogsUpsertOne {
+	return u.Update(func(s *BlogsUpsert) {
 		s.UpdateDescription()
 	})
 }
 
 // SetIsHidden sets the "is_hidden" field.
-func (u *BlogUpsertOne) SetIsHidden(v int8) *BlogUpsertOne {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertOne) SetIsHidden(v int8) *BlogsUpsertOne {
+	return u.Update(func(s *BlogsUpsert) {
 		s.SetIsHidden(v)
 	})
 }
 
 // AddIsHidden adds v to the "is_hidden" field.
-func (u *BlogUpsertOne) AddIsHidden(v int8) *BlogUpsertOne {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertOne) AddIsHidden(v int8) *BlogsUpsertOne {
+	return u.Update(func(s *BlogsUpsert) {
 		s.AddIsHidden(v)
 	})
 }
 
 // UpdateIsHidden sets the "is_hidden" field to the value that was provided on create.
-func (u *BlogUpsertOne) UpdateIsHidden() *BlogUpsertOne {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertOne) UpdateIsHidden() *BlogsUpsertOne {
+	return u.Update(func(s *BlogsUpsert) {
 		s.UpdateIsHidden()
 	})
 }
 
 // SetTags sets the "tags" field.
-func (u *BlogUpsertOne) SetTags(v []string) *BlogUpsertOne {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertOne) SetTags(v []string) *BlogsUpsertOne {
+	return u.Update(func(s *BlogsUpsert) {
 		s.SetTags(v)
 	})
 }
 
 // UpdateTags sets the "tags" field to the value that was provided on create.
-func (u *BlogUpsertOne) UpdateTags() *BlogUpsertOne {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertOne) UpdateTags() *BlogsUpsertOne {
+	return u.Update(func(s *BlogsUpsert) {
 		s.UpdateTags()
 	})
 }
 
 // SetCover sets the "cover" field.
-func (u *BlogUpsertOne) SetCover(v string) *BlogUpsertOne {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertOne) SetCover(v string) *BlogsUpsertOne {
+	return u.Update(func(s *BlogsUpsert) {
 		s.SetCover(v)
 	})
 }
 
 // UpdateCover sets the "cover" field to the value that was provided on create.
-func (u *BlogUpsertOne) UpdateCover() *BlogUpsertOne {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertOne) UpdateCover() *BlogsUpsertOne {
+	return u.Update(func(s *BlogsUpsert) {
 		s.UpdateCover()
 	})
 }
 
 // SetContent sets the "content" field.
-func (u *BlogUpsertOne) SetContent(v string) *BlogUpsertOne {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertOne) SetContent(v string) *BlogsUpsertOne {
+	return u.Update(func(s *BlogsUpsert) {
 		s.SetContent(v)
 	})
 }
 
 // UpdateContent sets the "content" field to the value that was provided on create.
-func (u *BlogUpsertOne) UpdateContent() *BlogUpsertOne {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertOne) UpdateContent() *BlogsUpsertOne {
+	return u.Update(func(s *BlogsUpsert) {
 		s.UpdateContent()
 	})
 }
 
 // Exec executes the query.
-func (u *BlogUpsertOne) Exec(ctx context.Context) error {
+func (u *BlogsUpsertOne) Exec(ctx context.Context) error {
 	if len(u.create.conflict) == 0 {
-		return errors.New("ent: missing options for BlogCreate.OnConflict")
+		return errors.New("ent: missing options for BlogsCreate.OnConflict")
 	}
 	return u.create.Exec(ctx)
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (u *BlogUpsertOne) ExecX(ctx context.Context) {
+func (u *BlogsUpsertOne) ExecX(ctx context.Context) {
 	if err := u.create.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // Exec executes the UPSERT query and returns the inserted/updated ID.
-func (u *BlogUpsertOne) ID(ctx context.Context) (id int, err error) {
+func (u *BlogsUpsertOne) ID(ctx context.Context) (id int, err error) {
 	node, err := u.create.Save(ctx)
 	if err != nil {
 		return id, err
@@ -898,7 +898,7 @@ func (u *BlogUpsertOne) ID(ctx context.Context) (id int, err error) {
 }
 
 // IDX is like ID, but panics if an error occurs.
-func (u *BlogUpsertOne) IDX(ctx context.Context) int {
+func (u *BlogsUpsertOne) IDX(ctx context.Context) int {
 	id, err := u.ID(ctx)
 	if err != nil {
 		panic(err)
@@ -906,28 +906,28 @@ func (u *BlogUpsertOne) IDX(ctx context.Context) int {
 	return id
 }
 
-// BlogCreateBulk is the builder for creating many Blog entities in bulk.
-type BlogCreateBulk struct {
+// BlogsCreateBulk is the builder for creating many Blogs entities in bulk.
+type BlogsCreateBulk struct {
 	config
 	err      error
-	builders []*BlogCreate
+	builders []*BlogsCreate
 	conflict []sql.ConflictOption
 }
 
-// Save creates the Blog entities in the database.
-func (bcb *BlogCreateBulk) Save(ctx context.Context) ([]*Blog, error) {
+// Save creates the Blogs entities in the database.
+func (bcb *BlogsCreateBulk) Save(ctx context.Context) ([]*Blogs, error) {
 	if bcb.err != nil {
 		return nil, bcb.err
 	}
 	specs := make([]*sqlgraph.CreateSpec, len(bcb.builders))
-	nodes := make([]*Blog, len(bcb.builders))
+	nodes := make([]*Blogs, len(bcb.builders))
 	mutators := make([]Mutator, len(bcb.builders))
 	for i := range bcb.builders {
 		func(i int, root context.Context) {
 			builder := bcb.builders[i]
 			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-				mutation, ok := m.(*BlogMutation)
+				mutation, ok := m.(*BlogsMutation)
 				if !ok {
 					return nil, fmt.Errorf("unexpected mutation type %T", m)
 				}
@@ -975,7 +975,7 @@ func (bcb *BlogCreateBulk) Save(ctx context.Context) ([]*Blog, error) {
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (bcb *BlogCreateBulk) SaveX(ctx context.Context) []*Blog {
+func (bcb *BlogsCreateBulk) SaveX(ctx context.Context) []*Blogs {
 	v, err := bcb.Save(ctx)
 	if err != nil {
 		panic(err)
@@ -984,13 +984,13 @@ func (bcb *BlogCreateBulk) SaveX(ctx context.Context) []*Blog {
 }
 
 // Exec executes the query.
-func (bcb *BlogCreateBulk) Exec(ctx context.Context) error {
+func (bcb *BlogsCreateBulk) Exec(ctx context.Context) error {
 	_, err := bcb.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (bcb *BlogCreateBulk) ExecX(ctx context.Context) {
+func (bcb *BlogsCreateBulk) ExecX(ctx context.Context) {
 	if err := bcb.Exec(ctx); err != nil {
 		panic(err)
 	}
@@ -999,7 +999,7 @@ func (bcb *BlogCreateBulk) ExecX(ctx context.Context) {
 // OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
 // of the `INSERT` statement. For example:
 //
-//	client.Blog.CreateBulk(builders...).
+//	client.Blogs.CreateBulk(builders...).
 //		OnConflict(
 //			// Update the row with the new values
 //			// the was proposed for insertion.
@@ -1007,13 +1007,13 @@ func (bcb *BlogCreateBulk) ExecX(ctx context.Context) {
 //		).
 //		// Override some of the fields with custom
 //		// update values.
-//		Update(func(u *ent.BlogUpsert) {
+//		Update(func(u *ent.BlogsUpsert) {
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
-func (bcb *BlogCreateBulk) OnConflict(opts ...sql.ConflictOption) *BlogUpsertBulk {
+func (bcb *BlogsCreateBulk) OnConflict(opts ...sql.ConflictOption) *BlogsUpsertBulk {
 	bcb.conflict = opts
-	return &BlogUpsertBulk{
+	return &BlogsUpsertBulk{
 		create: bcb,
 	}
 }
@@ -1021,45 +1021,45 @@ func (bcb *BlogCreateBulk) OnConflict(opts ...sql.ConflictOption) *BlogUpsertBul
 // OnConflictColumns calls `OnConflict` and configures the columns
 // as conflict target. Using this option is equivalent to using:
 //
-//	client.Blog.Create().
+//	client.Blogs.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-func (bcb *BlogCreateBulk) OnConflictColumns(columns ...string) *BlogUpsertBulk {
+func (bcb *BlogsCreateBulk) OnConflictColumns(columns ...string) *BlogsUpsertBulk {
 	bcb.conflict = append(bcb.conflict, sql.ConflictColumns(columns...))
-	return &BlogUpsertBulk{
+	return &BlogsUpsertBulk{
 		create: bcb,
 	}
 }
 
-// BlogUpsertBulk is the builder for "upsert"-ing
-// a bulk of Blog nodes.
-type BlogUpsertBulk struct {
-	create *BlogCreateBulk
+// BlogsUpsertBulk is the builder for "upsert"-ing
+// a bulk of Blogs nodes.
+type BlogsUpsertBulk struct {
+	create *BlogsCreateBulk
 }
 
 // UpdateNewValues updates the mutable fields using the new values that
 // were set on create. Using this option is equivalent to using:
 //
-//	client.Blog.Create().
+//	client.Blogs.Create().
 //		OnConflict(
 //			sql.ResolveWithNewValues(),
 //			sql.ResolveWith(func(u *sql.UpdateSet) {
-//				u.SetIgnore(blog.FieldID)
+//				u.SetIgnore(blogs.FieldID)
 //			}),
 //		).
 //		Exec(ctx)
-func (u *BlogUpsertBulk) UpdateNewValues() *BlogUpsertBulk {
+func (u *BlogsUpsertBulk) UpdateNewValues() *BlogsUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
 		for _, b := range u.create.builders {
 			if _, exists := b.mutation.ID(); exists {
-				s.SetIgnore(blog.FieldID)
+				s.SetIgnore(blogs.FieldID)
 			}
 			if _, exists := b.mutation.CreatedAt(); exists {
-				s.SetIgnore(blog.FieldCreatedAt)
+				s.SetIgnore(blogs.FieldCreatedAt)
 			}
 			if _, exists := b.mutation.CreatedBy(); exists {
-				s.SetIgnore(blog.FieldCreatedBy)
+				s.SetIgnore(blogs.FieldCreatedBy)
 			}
 		}
 	}))
@@ -1069,251 +1069,251 @@ func (u *BlogUpsertBulk) UpdateNewValues() *BlogUpsertBulk {
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//	client.Blog.Create().
+//	client.Blogs.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
-func (u *BlogUpsertBulk) Ignore() *BlogUpsertBulk {
+func (u *BlogsUpsertBulk) Ignore() *BlogsUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
 }
 
 // DoNothing configures the conflict_action to `DO NOTHING`.
 // Supported only by SQLite and PostgreSQL.
-func (u *BlogUpsertBulk) DoNothing() *BlogUpsertBulk {
+func (u *BlogsUpsertBulk) DoNothing() *BlogsUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.DoNothing())
 	return u
 }
 
-// Update allows overriding fields `UPDATE` values. See the BlogCreateBulk.OnConflict
+// Update allows overriding fields `UPDATE` values. See the BlogsCreateBulk.OnConflict
 // documentation for more info.
-func (u *BlogUpsertBulk) Update(set func(*BlogUpsert)) *BlogUpsertBulk {
+func (u *BlogsUpsertBulk) Update(set func(*BlogsUpsert)) *BlogsUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
-		set(&BlogUpsert{UpdateSet: update})
+		set(&BlogsUpsert{UpdateSet: update})
 	}))
 	return u
 }
 
 // SetUpdatedAt sets the "updated_at" field.
-func (u *BlogUpsertBulk) SetUpdatedAt(v int64) *BlogUpsertBulk {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertBulk) SetUpdatedAt(v int64) *BlogsUpsertBulk {
+	return u.Update(func(s *BlogsUpsert) {
 		s.SetUpdatedAt(v)
 	})
 }
 
 // AddUpdatedAt adds v to the "updated_at" field.
-func (u *BlogUpsertBulk) AddUpdatedAt(v int64) *BlogUpsertBulk {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertBulk) AddUpdatedAt(v int64) *BlogsUpsertBulk {
+	return u.Update(func(s *BlogsUpsert) {
 		s.AddUpdatedAt(v)
 	})
 }
 
 // UpdateUpdatedAt sets the "updated_at" field to the value that was provided on create.
-func (u *BlogUpsertBulk) UpdateUpdatedAt() *BlogUpsertBulk {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertBulk) UpdateUpdatedAt() *BlogsUpsertBulk {
+	return u.Update(func(s *BlogsUpsert) {
 		s.UpdateUpdatedAt()
 	})
 }
 
 // SetUpdatedBy sets the "updated_by" field.
-func (u *BlogUpsertBulk) SetUpdatedBy(v string) *BlogUpsertBulk {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertBulk) SetUpdatedBy(v string) *BlogsUpsertBulk {
+	return u.Update(func(s *BlogsUpsert) {
 		s.SetUpdatedBy(v)
 	})
 }
 
 // UpdateUpdatedBy sets the "updated_by" field to the value that was provided on create.
-func (u *BlogUpsertBulk) UpdateUpdatedBy() *BlogUpsertBulk {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertBulk) UpdateUpdatedBy() *BlogsUpsertBulk {
+	return u.Update(func(s *BlogsUpsert) {
 		s.UpdateUpdatedBy()
 	})
 }
 
 // SetIsDeleted sets the "is_deleted" field.
-func (u *BlogUpsertBulk) SetIsDeleted(v uint8) *BlogUpsertBulk {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertBulk) SetIsDeleted(v uint8) *BlogsUpsertBulk {
+	return u.Update(func(s *BlogsUpsert) {
 		s.SetIsDeleted(v)
 	})
 }
 
 // AddIsDeleted adds v to the "is_deleted" field.
-func (u *BlogUpsertBulk) AddIsDeleted(v uint8) *BlogUpsertBulk {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertBulk) AddIsDeleted(v uint8) *BlogsUpsertBulk {
+	return u.Update(func(s *BlogsUpsert) {
 		s.AddIsDeleted(v)
 	})
 }
 
 // UpdateIsDeleted sets the "is_deleted" field to the value that was provided on create.
-func (u *BlogUpsertBulk) UpdateIsDeleted() *BlogUpsertBulk {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertBulk) UpdateIsDeleted() *BlogsUpsertBulk {
+	return u.Update(func(s *BlogsUpsert) {
 		s.UpdateIsDeleted()
 	})
 }
 
 // SetDeletedAt sets the "deleted_at" field.
-func (u *BlogUpsertBulk) SetDeletedAt(v int64) *BlogUpsertBulk {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertBulk) SetDeletedAt(v int64) *BlogsUpsertBulk {
+	return u.Update(func(s *BlogsUpsert) {
 		s.SetDeletedAt(v)
 	})
 }
 
 // AddDeletedAt adds v to the "deleted_at" field.
-func (u *BlogUpsertBulk) AddDeletedAt(v int64) *BlogUpsertBulk {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertBulk) AddDeletedAt(v int64) *BlogsUpsertBulk {
+	return u.Update(func(s *BlogsUpsert) {
 		s.AddDeletedAt(v)
 	})
 }
 
 // UpdateDeletedAt sets the "deleted_at" field to the value that was provided on create.
-func (u *BlogUpsertBulk) UpdateDeletedAt() *BlogUpsertBulk {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertBulk) UpdateDeletedAt() *BlogsUpsertBulk {
+	return u.Update(func(s *BlogsUpsert) {
 		s.UpdateDeletedAt()
 	})
 }
 
 // SetDeletedBy sets the "deleted_by" field.
-func (u *BlogUpsertBulk) SetDeletedBy(v string) *BlogUpsertBulk {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertBulk) SetDeletedBy(v string) *BlogsUpsertBulk {
+	return u.Update(func(s *BlogsUpsert) {
 		s.SetDeletedBy(v)
 	})
 }
 
 // UpdateDeletedBy sets the "deleted_by" field to the value that was provided on create.
-func (u *BlogUpsertBulk) UpdateDeletedBy() *BlogUpsertBulk {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertBulk) UpdateDeletedBy() *BlogsUpsertBulk {
+	return u.Update(func(s *BlogsUpsert) {
 		s.UpdateDeletedBy()
 	})
 }
 
 // SetAccountID sets the "account_id" field.
-func (u *BlogUpsertBulk) SetAccountID(v int) *BlogUpsertBulk {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertBulk) SetAccountID(v int) *BlogsUpsertBulk {
+	return u.Update(func(s *BlogsUpsert) {
 		s.SetAccountID(v)
 	})
 }
 
 // AddAccountID adds v to the "account_id" field.
-func (u *BlogUpsertBulk) AddAccountID(v int) *BlogUpsertBulk {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertBulk) AddAccountID(v int) *BlogsUpsertBulk {
+	return u.Update(func(s *BlogsUpsert) {
 		s.AddAccountID(v)
 	})
 }
 
 // UpdateAccountID sets the "account_id" field to the value that was provided on create.
-func (u *BlogUpsertBulk) UpdateAccountID() *BlogUpsertBulk {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertBulk) UpdateAccountID() *BlogsUpsertBulk {
+	return u.Update(func(s *BlogsUpsert) {
 		s.UpdateAccountID()
 	})
 }
 
 // SetTitle sets the "title" field.
-func (u *BlogUpsertBulk) SetTitle(v string) *BlogUpsertBulk {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertBulk) SetTitle(v string) *BlogsUpsertBulk {
+	return u.Update(func(s *BlogsUpsert) {
 		s.SetTitle(v)
 	})
 }
 
 // UpdateTitle sets the "title" field to the value that was provided on create.
-func (u *BlogUpsertBulk) UpdateTitle() *BlogUpsertBulk {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertBulk) UpdateTitle() *BlogsUpsertBulk {
+	return u.Update(func(s *BlogsUpsert) {
 		s.UpdateTitle()
 	})
 }
 
 // SetDescription sets the "description" field.
-func (u *BlogUpsertBulk) SetDescription(v string) *BlogUpsertBulk {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertBulk) SetDescription(v string) *BlogsUpsertBulk {
+	return u.Update(func(s *BlogsUpsert) {
 		s.SetDescription(v)
 	})
 }
 
 // UpdateDescription sets the "description" field to the value that was provided on create.
-func (u *BlogUpsertBulk) UpdateDescription() *BlogUpsertBulk {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertBulk) UpdateDescription() *BlogsUpsertBulk {
+	return u.Update(func(s *BlogsUpsert) {
 		s.UpdateDescription()
 	})
 }
 
 // SetIsHidden sets the "is_hidden" field.
-func (u *BlogUpsertBulk) SetIsHidden(v int8) *BlogUpsertBulk {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertBulk) SetIsHidden(v int8) *BlogsUpsertBulk {
+	return u.Update(func(s *BlogsUpsert) {
 		s.SetIsHidden(v)
 	})
 }
 
 // AddIsHidden adds v to the "is_hidden" field.
-func (u *BlogUpsertBulk) AddIsHidden(v int8) *BlogUpsertBulk {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertBulk) AddIsHidden(v int8) *BlogsUpsertBulk {
+	return u.Update(func(s *BlogsUpsert) {
 		s.AddIsHidden(v)
 	})
 }
 
 // UpdateIsHidden sets the "is_hidden" field to the value that was provided on create.
-func (u *BlogUpsertBulk) UpdateIsHidden() *BlogUpsertBulk {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertBulk) UpdateIsHidden() *BlogsUpsertBulk {
+	return u.Update(func(s *BlogsUpsert) {
 		s.UpdateIsHidden()
 	})
 }
 
 // SetTags sets the "tags" field.
-func (u *BlogUpsertBulk) SetTags(v []string) *BlogUpsertBulk {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertBulk) SetTags(v []string) *BlogsUpsertBulk {
+	return u.Update(func(s *BlogsUpsert) {
 		s.SetTags(v)
 	})
 }
 
 // UpdateTags sets the "tags" field to the value that was provided on create.
-func (u *BlogUpsertBulk) UpdateTags() *BlogUpsertBulk {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertBulk) UpdateTags() *BlogsUpsertBulk {
+	return u.Update(func(s *BlogsUpsert) {
 		s.UpdateTags()
 	})
 }
 
 // SetCover sets the "cover" field.
-func (u *BlogUpsertBulk) SetCover(v string) *BlogUpsertBulk {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertBulk) SetCover(v string) *BlogsUpsertBulk {
+	return u.Update(func(s *BlogsUpsert) {
 		s.SetCover(v)
 	})
 }
 
 // UpdateCover sets the "cover" field to the value that was provided on create.
-func (u *BlogUpsertBulk) UpdateCover() *BlogUpsertBulk {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertBulk) UpdateCover() *BlogsUpsertBulk {
+	return u.Update(func(s *BlogsUpsert) {
 		s.UpdateCover()
 	})
 }
 
 // SetContent sets the "content" field.
-func (u *BlogUpsertBulk) SetContent(v string) *BlogUpsertBulk {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertBulk) SetContent(v string) *BlogsUpsertBulk {
+	return u.Update(func(s *BlogsUpsert) {
 		s.SetContent(v)
 	})
 }
 
 // UpdateContent sets the "content" field to the value that was provided on create.
-func (u *BlogUpsertBulk) UpdateContent() *BlogUpsertBulk {
-	return u.Update(func(s *BlogUpsert) {
+func (u *BlogsUpsertBulk) UpdateContent() *BlogsUpsertBulk {
+	return u.Update(func(s *BlogsUpsert) {
 		s.UpdateContent()
 	})
 }
 
 // Exec executes the query.
-func (u *BlogUpsertBulk) Exec(ctx context.Context) error {
+func (u *BlogsUpsertBulk) Exec(ctx context.Context) error {
 	if u.create.err != nil {
 		return u.create.err
 	}
 	for i, b := range u.create.builders {
 		if len(b.conflict) != 0 {
-			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the BlogCreateBulk instead", i)
+			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the BlogsCreateBulk instead", i)
 		}
 	}
 	if len(u.create.conflict) == 0 {
-		return errors.New("ent: missing options for BlogCreateBulk.OnConflict")
+		return errors.New("ent: missing options for BlogsCreateBulk.OnConflict")
 	}
 	return u.create.Exec(ctx)
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (u *BlogUpsertBulk) ExecX(ctx context.Context) {
+func (u *BlogsUpsertBulk) ExecX(ctx context.Context) {
 	if err := u.create.Exec(ctx); err != nil {
 		panic(err)
 	}

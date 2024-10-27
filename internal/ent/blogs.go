@@ -3,7 +3,7 @@
 package ent
 
 import (
-	"blog/internal/ent/blog"
+	"blog/internal/ent/blogs"
 	"encoding/json"
 	"fmt"
 	"strings"
@@ -13,7 +13,7 @@ import (
 )
 
 // 博客
-type Blog struct {
+type Blogs struct {
 	config `json:"-"`
 	// ID of the ent.
 	// 博客ID
@@ -50,15 +50,15 @@ type Blog struct {
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
-func (*Blog) scanValues(columns []string) ([]any, error) {
+func (*Blogs) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case blog.FieldTags:
+		case blogs.FieldTags:
 			values[i] = new([]byte)
-		case blog.FieldID, blog.FieldCreatedAt, blog.FieldUpdatedAt, blog.FieldIsDeleted, blog.FieldDeletedAt, blog.FieldAccountID, blog.FieldIsHidden:
+		case blogs.FieldID, blogs.FieldCreatedAt, blogs.FieldUpdatedAt, blogs.FieldIsDeleted, blogs.FieldDeletedAt, blogs.FieldAccountID, blogs.FieldIsHidden:
 			values[i] = new(sql.NullInt64)
-		case blog.FieldCreatedBy, blog.FieldUpdatedBy, blog.FieldDeletedBy, blog.FieldTitle, blog.FieldDescription, blog.FieldCover, blog.FieldContent:
+		case blogs.FieldCreatedBy, blogs.FieldUpdatedBy, blogs.FieldDeletedBy, blogs.FieldTitle, blogs.FieldDescription, blogs.FieldCover, blogs.FieldContent:
 			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -68,86 +68,86 @@ func (*Blog) scanValues(columns []string) ([]any, error) {
 }
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
-// to the Blog fields.
-func (b *Blog) assignValues(columns []string, values []any) error {
+// to the Blogs fields.
+func (b *Blogs) assignValues(columns []string, values []any) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
 	for i := range columns {
 		switch columns[i] {
-		case blog.FieldID:
+		case blogs.FieldID:
 			value, ok := values[i].(*sql.NullInt64)
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
 			b.ID = int(value.Int64)
-		case blog.FieldCreatedAt:
+		case blogs.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field created_at", values[i])
 			} else if value.Valid {
 				b.CreatedAt = value.Int64
 			}
-		case blog.FieldCreatedBy:
+		case blogs.FieldCreatedBy:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field created_by", values[i])
 			} else if value.Valid {
 				b.CreatedBy = value.String
 			}
-		case blog.FieldUpdatedAt:
+		case blogs.FieldUpdatedAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
 			} else if value.Valid {
 				b.UpdatedAt = value.Int64
 			}
-		case blog.FieldUpdatedBy:
+		case blogs.FieldUpdatedBy:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field updated_by", values[i])
 			} else if value.Valid {
 				b.UpdatedBy = value.String
 			}
-		case blog.FieldIsDeleted:
+		case blogs.FieldIsDeleted:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field is_deleted", values[i])
 			} else if value.Valid {
 				b.IsDeleted = uint8(value.Int64)
 			}
-		case blog.FieldDeletedAt:
+		case blogs.FieldDeletedAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field deleted_at", values[i])
 			} else if value.Valid {
 				b.DeletedAt = value.Int64
 			}
-		case blog.FieldDeletedBy:
+		case blogs.FieldDeletedBy:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field deleted_by", values[i])
 			} else if value.Valid {
 				b.DeletedBy = value.String
 			}
-		case blog.FieldAccountID:
+		case blogs.FieldAccountID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field account_id", values[i])
 			} else if value.Valid {
 				b.AccountID = int(value.Int64)
 			}
-		case blog.FieldTitle:
+		case blogs.FieldTitle:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field title", values[i])
 			} else if value.Valid {
 				b.Title = value.String
 			}
-		case blog.FieldDescription:
+		case blogs.FieldDescription:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field description", values[i])
 			} else if value.Valid {
 				b.Description = value.String
 			}
-		case blog.FieldIsHidden:
+		case blogs.FieldIsHidden:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field is_hidden", values[i])
 			} else if value.Valid {
 				b.IsHidden = int8(value.Int64)
 			}
-		case blog.FieldTags:
+		case blogs.FieldTags:
 			if value, ok := values[i].(*[]byte); !ok {
 				return fmt.Errorf("unexpected type %T for field tags", values[i])
 			} else if value != nil && len(*value) > 0 {
@@ -155,13 +155,13 @@ func (b *Blog) assignValues(columns []string, values []any) error {
 					return fmt.Errorf("unmarshal field tags: %w", err)
 				}
 			}
-		case blog.FieldCover:
+		case blogs.FieldCover:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field cover", values[i])
 			} else if value.Valid {
 				b.Cover = value.String
 			}
-		case blog.FieldContent:
+		case blogs.FieldContent:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field content", values[i])
 			} else if value.Valid {
@@ -174,34 +174,34 @@ func (b *Blog) assignValues(columns []string, values []any) error {
 	return nil
 }
 
-// Value returns the ent.Value that was dynamically selected and assigned to the Blog.
+// Value returns the ent.Value that was dynamically selected and assigned to the Blogs.
 // This includes values selected through modifiers, order, etc.
-func (b *Blog) Value(name string) (ent.Value, error) {
+func (b *Blogs) Value(name string) (ent.Value, error) {
 	return b.selectValues.Get(name)
 }
 
-// Update returns a builder for updating this Blog.
-// Note that you need to call Blog.Unwrap() before calling this method if this Blog
+// Update returns a builder for updating this Blogs.
+// Note that you need to call Blogs.Unwrap() before calling this method if this Blogs
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (b *Blog) Update() *BlogUpdateOne {
-	return NewBlogClient(b.config).UpdateOne(b)
+func (b *Blogs) Update() *BlogsUpdateOne {
+	return NewBlogsClient(b.config).UpdateOne(b)
 }
 
-// Unwrap unwraps the Blog entity that was returned from a transaction after it was closed,
+// Unwrap unwraps the Blogs entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
-func (b *Blog) Unwrap() *Blog {
+func (b *Blogs) Unwrap() *Blogs {
 	_tx, ok := b.config.driver.(*txDriver)
 	if !ok {
-		panic("ent: Blog is not a transactional entity")
+		panic("ent: Blogs is not a transactional entity")
 	}
 	b.config.driver = _tx.drv
 	return b
 }
 
 // String implements the fmt.Stringer.
-func (b *Blog) String() string {
+func (b *Blogs) String() string {
 	var builder strings.Builder
-	builder.WriteString("Blog(")
+	builder.WriteString("Blogs(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", b.ID))
 	builder.WriteString("created_at=")
 	builder.WriteString(fmt.Sprintf("%v", b.CreatedAt))
@@ -248,5 +248,5 @@ func (b *Blog) String() string {
 	return builder.String()
 }
 
-// Blogs is a parsable slice of Blog.
-type Blogs []*Blog
+// BlogsSlice is a parsable slice of Blogs.
+type BlogsSlice []*Blogs

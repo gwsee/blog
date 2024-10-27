@@ -60,5 +60,6 @@ kratos proto client api/blog/v1/demo.proto ##不会生成http文件
 kratos proto client api/blog/v1/demo.proto  -- --go-http_opt=omitempty=false ##会生成http文件
 kratos proto server api/blog/v1/demo.proto -t internal/service
 
-protoc --go_out=./ conf.proto
+protoc --go_out=./ conf.proto --go_opt=paths=source_relative
+protoc --go_out=./ page.proto --go_opt=paths=source_relative
 ```

@@ -3,7 +3,7 @@
 package ent
 
 import (
-	"blog/internal/ent/blogcontent"
+	"blog/internal/ent/blogscontent"
 	"blog/internal/ent/predicate"
 	"context"
 
@@ -12,26 +12,26 @@ import (
 	"entgo.io/ent/schema/field"
 )
 
-// BlogContentDelete is the builder for deleting a BlogContent entity.
-type BlogContentDelete struct {
+// BlogsContentDelete is the builder for deleting a BlogsContent entity.
+type BlogsContentDelete struct {
 	config
 	hooks    []Hook
-	mutation *BlogContentMutation
+	mutation *BlogsContentMutation
 }
 
-// Where appends a list predicates to the BlogContentDelete builder.
-func (bcd *BlogContentDelete) Where(ps ...predicate.BlogContent) *BlogContentDelete {
+// Where appends a list predicates to the BlogsContentDelete builder.
+func (bcd *BlogsContentDelete) Where(ps ...predicate.BlogsContent) *BlogsContentDelete {
 	bcd.mutation.Where(ps...)
 	return bcd
 }
 
 // Exec executes the deletion query and returns how many vertices were deleted.
-func (bcd *BlogContentDelete) Exec(ctx context.Context) (int, error) {
+func (bcd *BlogsContentDelete) Exec(ctx context.Context) (int, error) {
 	return withHooks(ctx, bcd.sqlExec, bcd.mutation, bcd.hooks)
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (bcd *BlogContentDelete) ExecX(ctx context.Context) int {
+func (bcd *BlogsContentDelete) ExecX(ctx context.Context) int {
 	n, err := bcd.Exec(ctx)
 	if err != nil {
 		panic(err)
@@ -39,8 +39,8 @@ func (bcd *BlogContentDelete) ExecX(ctx context.Context) int {
 	return n
 }
 
-func (bcd *BlogContentDelete) sqlExec(ctx context.Context) (int, error) {
-	_spec := sqlgraph.NewDeleteSpec(blogcontent.Table, sqlgraph.NewFieldSpec(blogcontent.FieldID, field.TypeInt))
+func (bcd *BlogsContentDelete) sqlExec(ctx context.Context) (int, error) {
+	_spec := sqlgraph.NewDeleteSpec(blogscontent.Table, sqlgraph.NewFieldSpec(blogscontent.FieldID, field.TypeInt))
 	if ps := bcd.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -56,32 +56,32 @@ func (bcd *BlogContentDelete) sqlExec(ctx context.Context) (int, error) {
 	return affected, err
 }
 
-// BlogContentDeleteOne is the builder for deleting a single BlogContent entity.
-type BlogContentDeleteOne struct {
-	bcd *BlogContentDelete
+// BlogsContentDeleteOne is the builder for deleting a single BlogsContent entity.
+type BlogsContentDeleteOne struct {
+	bcd *BlogsContentDelete
 }
 
-// Where appends a list predicates to the BlogContentDelete builder.
-func (bcdo *BlogContentDeleteOne) Where(ps ...predicate.BlogContent) *BlogContentDeleteOne {
+// Where appends a list predicates to the BlogsContentDelete builder.
+func (bcdo *BlogsContentDeleteOne) Where(ps ...predicate.BlogsContent) *BlogsContentDeleteOne {
 	bcdo.bcd.mutation.Where(ps...)
 	return bcdo
 }
 
 // Exec executes the deletion query.
-func (bcdo *BlogContentDeleteOne) Exec(ctx context.Context) error {
+func (bcdo *BlogsContentDeleteOne) Exec(ctx context.Context) error {
 	n, err := bcdo.bcd.Exec(ctx)
 	switch {
 	case err != nil:
 		return err
 	case n == 0:
-		return &NotFoundError{blogcontent.Label}
+		return &NotFoundError{blogscontent.Label}
 	default:
 		return nil
 	}
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (bcdo *BlogContentDeleteOne) ExecX(ctx context.Context) {
+func (bcdo *BlogsContentDeleteOne) ExecX(ctx context.Context) {
 	if err := bcdo.Exec(ctx); err != nil {
 		panic(err)
 	}

@@ -3,7 +3,7 @@
 package ent
 
 import (
-	"blog/internal/ent/blog"
+	"blog/internal/ent/blogs"
 	"blog/internal/ent/predicate"
 	"context"
 	"errors"
@@ -15,40 +15,40 @@ import (
 	"entgo.io/ent/schema/field"
 )
 
-// BlogUpdate is the builder for updating Blog entities.
-type BlogUpdate struct {
+// BlogsUpdate is the builder for updating Blogs entities.
+type BlogsUpdate struct {
 	config
 	hooks    []Hook
-	mutation *BlogMutation
+	mutation *BlogsMutation
 }
 
-// Where appends a list predicates to the BlogUpdate builder.
-func (bu *BlogUpdate) Where(ps ...predicate.Blog) *BlogUpdate {
+// Where appends a list predicates to the BlogsUpdate builder.
+func (bu *BlogsUpdate) Where(ps ...predicate.Blogs) *BlogsUpdate {
 	bu.mutation.Where(ps...)
 	return bu
 }
 
 // SetUpdatedAt sets the "updated_at" field.
-func (bu *BlogUpdate) SetUpdatedAt(i int64) *BlogUpdate {
+func (bu *BlogsUpdate) SetUpdatedAt(i int64) *BlogsUpdate {
 	bu.mutation.ResetUpdatedAt()
 	bu.mutation.SetUpdatedAt(i)
 	return bu
 }
 
 // AddUpdatedAt adds i to the "updated_at" field.
-func (bu *BlogUpdate) AddUpdatedAt(i int64) *BlogUpdate {
+func (bu *BlogsUpdate) AddUpdatedAt(i int64) *BlogsUpdate {
 	bu.mutation.AddUpdatedAt(i)
 	return bu
 }
 
 // SetUpdatedBy sets the "updated_by" field.
-func (bu *BlogUpdate) SetUpdatedBy(s string) *BlogUpdate {
+func (bu *BlogsUpdate) SetUpdatedBy(s string) *BlogsUpdate {
 	bu.mutation.SetUpdatedBy(s)
 	return bu
 }
 
 // SetNillableUpdatedBy sets the "updated_by" field if the given value is not nil.
-func (bu *BlogUpdate) SetNillableUpdatedBy(s *string) *BlogUpdate {
+func (bu *BlogsUpdate) SetNillableUpdatedBy(s *string) *BlogsUpdate {
 	if s != nil {
 		bu.SetUpdatedBy(*s)
 	}
@@ -56,14 +56,14 @@ func (bu *BlogUpdate) SetNillableUpdatedBy(s *string) *BlogUpdate {
 }
 
 // SetIsDeleted sets the "is_deleted" field.
-func (bu *BlogUpdate) SetIsDeleted(u uint8) *BlogUpdate {
+func (bu *BlogsUpdate) SetIsDeleted(u uint8) *BlogsUpdate {
 	bu.mutation.ResetIsDeleted()
 	bu.mutation.SetIsDeleted(u)
 	return bu
 }
 
 // SetNillableIsDeleted sets the "is_deleted" field if the given value is not nil.
-func (bu *BlogUpdate) SetNillableIsDeleted(u *uint8) *BlogUpdate {
+func (bu *BlogsUpdate) SetNillableIsDeleted(u *uint8) *BlogsUpdate {
 	if u != nil {
 		bu.SetIsDeleted(*u)
 	}
@@ -71,20 +71,20 @@ func (bu *BlogUpdate) SetNillableIsDeleted(u *uint8) *BlogUpdate {
 }
 
 // AddIsDeleted adds u to the "is_deleted" field.
-func (bu *BlogUpdate) AddIsDeleted(u int8) *BlogUpdate {
+func (bu *BlogsUpdate) AddIsDeleted(u int8) *BlogsUpdate {
 	bu.mutation.AddIsDeleted(u)
 	return bu
 }
 
 // SetDeletedAt sets the "deleted_at" field.
-func (bu *BlogUpdate) SetDeletedAt(i int64) *BlogUpdate {
+func (bu *BlogsUpdate) SetDeletedAt(i int64) *BlogsUpdate {
 	bu.mutation.ResetDeletedAt()
 	bu.mutation.SetDeletedAt(i)
 	return bu
 }
 
 // SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
-func (bu *BlogUpdate) SetNillableDeletedAt(i *int64) *BlogUpdate {
+func (bu *BlogsUpdate) SetNillableDeletedAt(i *int64) *BlogsUpdate {
 	if i != nil {
 		bu.SetDeletedAt(*i)
 	}
@@ -92,19 +92,19 @@ func (bu *BlogUpdate) SetNillableDeletedAt(i *int64) *BlogUpdate {
 }
 
 // AddDeletedAt adds i to the "deleted_at" field.
-func (bu *BlogUpdate) AddDeletedAt(i int64) *BlogUpdate {
+func (bu *BlogsUpdate) AddDeletedAt(i int64) *BlogsUpdate {
 	bu.mutation.AddDeletedAt(i)
 	return bu
 }
 
 // SetDeletedBy sets the "deleted_by" field.
-func (bu *BlogUpdate) SetDeletedBy(s string) *BlogUpdate {
+func (bu *BlogsUpdate) SetDeletedBy(s string) *BlogsUpdate {
 	bu.mutation.SetDeletedBy(s)
 	return bu
 }
 
 // SetNillableDeletedBy sets the "deleted_by" field if the given value is not nil.
-func (bu *BlogUpdate) SetNillableDeletedBy(s *string) *BlogUpdate {
+func (bu *BlogsUpdate) SetNillableDeletedBy(s *string) *BlogsUpdate {
 	if s != nil {
 		bu.SetDeletedBy(*s)
 	}
@@ -112,14 +112,14 @@ func (bu *BlogUpdate) SetNillableDeletedBy(s *string) *BlogUpdate {
 }
 
 // SetAccountID sets the "account_id" field.
-func (bu *BlogUpdate) SetAccountID(i int) *BlogUpdate {
+func (bu *BlogsUpdate) SetAccountID(i int) *BlogsUpdate {
 	bu.mutation.ResetAccountID()
 	bu.mutation.SetAccountID(i)
 	return bu
 }
 
 // SetNillableAccountID sets the "account_id" field if the given value is not nil.
-func (bu *BlogUpdate) SetNillableAccountID(i *int) *BlogUpdate {
+func (bu *BlogsUpdate) SetNillableAccountID(i *int) *BlogsUpdate {
 	if i != nil {
 		bu.SetAccountID(*i)
 	}
@@ -127,19 +127,19 @@ func (bu *BlogUpdate) SetNillableAccountID(i *int) *BlogUpdate {
 }
 
 // AddAccountID adds i to the "account_id" field.
-func (bu *BlogUpdate) AddAccountID(i int) *BlogUpdate {
+func (bu *BlogsUpdate) AddAccountID(i int) *BlogsUpdate {
 	bu.mutation.AddAccountID(i)
 	return bu
 }
 
 // SetTitle sets the "title" field.
-func (bu *BlogUpdate) SetTitle(s string) *BlogUpdate {
+func (bu *BlogsUpdate) SetTitle(s string) *BlogsUpdate {
 	bu.mutation.SetTitle(s)
 	return bu
 }
 
 // SetNillableTitle sets the "title" field if the given value is not nil.
-func (bu *BlogUpdate) SetNillableTitle(s *string) *BlogUpdate {
+func (bu *BlogsUpdate) SetNillableTitle(s *string) *BlogsUpdate {
 	if s != nil {
 		bu.SetTitle(*s)
 	}
@@ -147,13 +147,13 @@ func (bu *BlogUpdate) SetNillableTitle(s *string) *BlogUpdate {
 }
 
 // SetDescription sets the "description" field.
-func (bu *BlogUpdate) SetDescription(s string) *BlogUpdate {
+func (bu *BlogsUpdate) SetDescription(s string) *BlogsUpdate {
 	bu.mutation.SetDescription(s)
 	return bu
 }
 
 // SetNillableDescription sets the "description" field if the given value is not nil.
-func (bu *BlogUpdate) SetNillableDescription(s *string) *BlogUpdate {
+func (bu *BlogsUpdate) SetNillableDescription(s *string) *BlogsUpdate {
 	if s != nil {
 		bu.SetDescription(*s)
 	}
@@ -161,14 +161,14 @@ func (bu *BlogUpdate) SetNillableDescription(s *string) *BlogUpdate {
 }
 
 // SetIsHidden sets the "is_hidden" field.
-func (bu *BlogUpdate) SetIsHidden(i int8) *BlogUpdate {
+func (bu *BlogsUpdate) SetIsHidden(i int8) *BlogsUpdate {
 	bu.mutation.ResetIsHidden()
 	bu.mutation.SetIsHidden(i)
 	return bu
 }
 
 // SetNillableIsHidden sets the "is_hidden" field if the given value is not nil.
-func (bu *BlogUpdate) SetNillableIsHidden(i *int8) *BlogUpdate {
+func (bu *BlogsUpdate) SetNillableIsHidden(i *int8) *BlogsUpdate {
 	if i != nil {
 		bu.SetIsHidden(*i)
 	}
@@ -176,31 +176,31 @@ func (bu *BlogUpdate) SetNillableIsHidden(i *int8) *BlogUpdate {
 }
 
 // AddIsHidden adds i to the "is_hidden" field.
-func (bu *BlogUpdate) AddIsHidden(i int8) *BlogUpdate {
+func (bu *BlogsUpdate) AddIsHidden(i int8) *BlogsUpdate {
 	bu.mutation.AddIsHidden(i)
 	return bu
 }
 
 // SetTags sets the "tags" field.
-func (bu *BlogUpdate) SetTags(s []string) *BlogUpdate {
+func (bu *BlogsUpdate) SetTags(s []string) *BlogsUpdate {
 	bu.mutation.SetTags(s)
 	return bu
 }
 
 // AppendTags appends s to the "tags" field.
-func (bu *BlogUpdate) AppendTags(s []string) *BlogUpdate {
+func (bu *BlogsUpdate) AppendTags(s []string) *BlogsUpdate {
 	bu.mutation.AppendTags(s)
 	return bu
 }
 
 // SetCover sets the "cover" field.
-func (bu *BlogUpdate) SetCover(s string) *BlogUpdate {
+func (bu *BlogsUpdate) SetCover(s string) *BlogsUpdate {
 	bu.mutation.SetCover(s)
 	return bu
 }
 
 // SetNillableCover sets the "cover" field if the given value is not nil.
-func (bu *BlogUpdate) SetNillableCover(s *string) *BlogUpdate {
+func (bu *BlogsUpdate) SetNillableCover(s *string) *BlogsUpdate {
 	if s != nil {
 		bu.SetCover(*s)
 	}
@@ -208,26 +208,26 @@ func (bu *BlogUpdate) SetNillableCover(s *string) *BlogUpdate {
 }
 
 // SetContent sets the "content" field.
-func (bu *BlogUpdate) SetContent(s string) *BlogUpdate {
+func (bu *BlogsUpdate) SetContent(s string) *BlogsUpdate {
 	bu.mutation.SetContent(s)
 	return bu
 }
 
 // SetNillableContent sets the "content" field if the given value is not nil.
-func (bu *BlogUpdate) SetNillableContent(s *string) *BlogUpdate {
+func (bu *BlogsUpdate) SetNillableContent(s *string) *BlogsUpdate {
 	if s != nil {
 		bu.SetContent(*s)
 	}
 	return bu
 }
 
-// Mutation returns the BlogMutation object of the builder.
-func (bu *BlogUpdate) Mutation() *BlogMutation {
+// Mutation returns the BlogsMutation object of the builder.
+func (bu *BlogsUpdate) Mutation() *BlogsMutation {
 	return bu.mutation
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
-func (bu *BlogUpdate) Save(ctx context.Context) (int, error) {
+func (bu *BlogsUpdate) Save(ctx context.Context) (int, error) {
 	if err := bu.defaults(); err != nil {
 		return 0, err
 	}
@@ -235,7 +235,7 @@ func (bu *BlogUpdate) Save(ctx context.Context) (int, error) {
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (bu *BlogUpdate) SaveX(ctx context.Context) int {
+func (bu *BlogsUpdate) SaveX(ctx context.Context) int {
 	affected, err := bu.Save(ctx)
 	if err != nil {
 		panic(err)
@@ -244,45 +244,45 @@ func (bu *BlogUpdate) SaveX(ctx context.Context) int {
 }
 
 // Exec executes the query.
-func (bu *BlogUpdate) Exec(ctx context.Context) error {
+func (bu *BlogsUpdate) Exec(ctx context.Context) error {
 	_, err := bu.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (bu *BlogUpdate) ExecX(ctx context.Context) {
+func (bu *BlogsUpdate) ExecX(ctx context.Context) {
 	if err := bu.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // defaults sets the default values of the builder before save.
-func (bu *BlogUpdate) defaults() error {
+func (bu *BlogsUpdate) defaults() error {
 	if _, ok := bu.mutation.UpdatedAt(); !ok {
-		if blog.UpdateDefaultUpdatedAt == nil {
-			return fmt.Errorf("ent: uninitialized blog.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
+		if blogs.UpdateDefaultUpdatedAt == nil {
+			return fmt.Errorf("ent: uninitialized blogs.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
 		}
-		v := blog.UpdateDefaultUpdatedAt()
+		v := blogs.UpdateDefaultUpdatedAt()
 		bu.mutation.SetUpdatedAt(v)
 	}
 	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (bu *BlogUpdate) check() error {
+func (bu *BlogsUpdate) check() error {
 	if v, ok := bu.mutation.Content(); ok {
-		if err := blog.ContentValidator(v); err != nil {
-			return &ValidationError{Name: "content", err: fmt.Errorf(`ent: validator failed for field "Blog.content": %w`, err)}
+		if err := blogs.ContentValidator(v); err != nil {
+			return &ValidationError{Name: "content", err: fmt.Errorf(`ent: validator failed for field "Blogs.content": %w`, err)}
 		}
 	}
 	return nil
 }
 
-func (bu *BlogUpdate) sqlSave(ctx context.Context) (n int, err error) {
+func (bu *BlogsUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if err := bu.check(); err != nil {
 		return n, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(blog.Table, blog.Columns, sqlgraph.NewFieldSpec(blog.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewUpdateSpec(blogs.Table, blogs.Columns, sqlgraph.NewFieldSpec(blogs.FieldID, field.TypeInt))
 	if ps := bu.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -291,64 +291,64 @@ func (bu *BlogUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 	}
 	if value, ok := bu.mutation.UpdatedAt(); ok {
-		_spec.SetField(blog.FieldUpdatedAt, field.TypeInt64, value)
+		_spec.SetField(blogs.FieldUpdatedAt, field.TypeInt64, value)
 	}
 	if value, ok := bu.mutation.AddedUpdatedAt(); ok {
-		_spec.AddField(blog.FieldUpdatedAt, field.TypeInt64, value)
+		_spec.AddField(blogs.FieldUpdatedAt, field.TypeInt64, value)
 	}
 	if value, ok := bu.mutation.UpdatedBy(); ok {
-		_spec.SetField(blog.FieldUpdatedBy, field.TypeString, value)
+		_spec.SetField(blogs.FieldUpdatedBy, field.TypeString, value)
 	}
 	if value, ok := bu.mutation.IsDeleted(); ok {
-		_spec.SetField(blog.FieldIsDeleted, field.TypeUint8, value)
+		_spec.SetField(blogs.FieldIsDeleted, field.TypeUint8, value)
 	}
 	if value, ok := bu.mutation.AddedIsDeleted(); ok {
-		_spec.AddField(blog.FieldIsDeleted, field.TypeUint8, value)
+		_spec.AddField(blogs.FieldIsDeleted, field.TypeUint8, value)
 	}
 	if value, ok := bu.mutation.DeletedAt(); ok {
-		_spec.SetField(blog.FieldDeletedAt, field.TypeInt64, value)
+		_spec.SetField(blogs.FieldDeletedAt, field.TypeInt64, value)
 	}
 	if value, ok := bu.mutation.AddedDeletedAt(); ok {
-		_spec.AddField(blog.FieldDeletedAt, field.TypeInt64, value)
+		_spec.AddField(blogs.FieldDeletedAt, field.TypeInt64, value)
 	}
 	if value, ok := bu.mutation.DeletedBy(); ok {
-		_spec.SetField(blog.FieldDeletedBy, field.TypeString, value)
+		_spec.SetField(blogs.FieldDeletedBy, field.TypeString, value)
 	}
 	if value, ok := bu.mutation.AccountID(); ok {
-		_spec.SetField(blog.FieldAccountID, field.TypeInt, value)
+		_spec.SetField(blogs.FieldAccountID, field.TypeInt, value)
 	}
 	if value, ok := bu.mutation.AddedAccountID(); ok {
-		_spec.AddField(blog.FieldAccountID, field.TypeInt, value)
+		_spec.AddField(blogs.FieldAccountID, field.TypeInt, value)
 	}
 	if value, ok := bu.mutation.Title(); ok {
-		_spec.SetField(blog.FieldTitle, field.TypeString, value)
+		_spec.SetField(blogs.FieldTitle, field.TypeString, value)
 	}
 	if value, ok := bu.mutation.Description(); ok {
-		_spec.SetField(blog.FieldDescription, field.TypeString, value)
+		_spec.SetField(blogs.FieldDescription, field.TypeString, value)
 	}
 	if value, ok := bu.mutation.IsHidden(); ok {
-		_spec.SetField(blog.FieldIsHidden, field.TypeInt8, value)
+		_spec.SetField(blogs.FieldIsHidden, field.TypeInt8, value)
 	}
 	if value, ok := bu.mutation.AddedIsHidden(); ok {
-		_spec.AddField(blog.FieldIsHidden, field.TypeInt8, value)
+		_spec.AddField(blogs.FieldIsHidden, field.TypeInt8, value)
 	}
 	if value, ok := bu.mutation.Tags(); ok {
-		_spec.SetField(blog.FieldTags, field.TypeJSON, value)
+		_spec.SetField(blogs.FieldTags, field.TypeJSON, value)
 	}
 	if value, ok := bu.mutation.AppendedTags(); ok {
 		_spec.AddModifier(func(u *sql.UpdateBuilder) {
-			sqljson.Append(u, blog.FieldTags, value)
+			sqljson.Append(u, blogs.FieldTags, value)
 		})
 	}
 	if value, ok := bu.mutation.Cover(); ok {
-		_spec.SetField(blog.FieldCover, field.TypeString, value)
+		_spec.SetField(blogs.FieldCover, field.TypeString, value)
 	}
 	if value, ok := bu.mutation.Content(); ok {
-		_spec.SetField(blog.FieldContent, field.TypeString, value)
+		_spec.SetField(blogs.FieldContent, field.TypeString, value)
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, bu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
-			err = &NotFoundError{blog.Label}
+			err = &NotFoundError{blogs.Label}
 		} else if sqlgraph.IsConstraintError(err) {
 			err = &ConstraintError{msg: err.Error(), wrap: err}
 		}
@@ -358,35 +358,35 @@ func (bu *BlogUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	return n, nil
 }
 
-// BlogUpdateOne is the builder for updating a single Blog entity.
-type BlogUpdateOne struct {
+// BlogsUpdateOne is the builder for updating a single Blogs entity.
+type BlogsUpdateOne struct {
 	config
 	fields   []string
 	hooks    []Hook
-	mutation *BlogMutation
+	mutation *BlogsMutation
 }
 
 // SetUpdatedAt sets the "updated_at" field.
-func (buo *BlogUpdateOne) SetUpdatedAt(i int64) *BlogUpdateOne {
+func (buo *BlogsUpdateOne) SetUpdatedAt(i int64) *BlogsUpdateOne {
 	buo.mutation.ResetUpdatedAt()
 	buo.mutation.SetUpdatedAt(i)
 	return buo
 }
 
 // AddUpdatedAt adds i to the "updated_at" field.
-func (buo *BlogUpdateOne) AddUpdatedAt(i int64) *BlogUpdateOne {
+func (buo *BlogsUpdateOne) AddUpdatedAt(i int64) *BlogsUpdateOne {
 	buo.mutation.AddUpdatedAt(i)
 	return buo
 }
 
 // SetUpdatedBy sets the "updated_by" field.
-func (buo *BlogUpdateOne) SetUpdatedBy(s string) *BlogUpdateOne {
+func (buo *BlogsUpdateOne) SetUpdatedBy(s string) *BlogsUpdateOne {
 	buo.mutation.SetUpdatedBy(s)
 	return buo
 }
 
 // SetNillableUpdatedBy sets the "updated_by" field if the given value is not nil.
-func (buo *BlogUpdateOne) SetNillableUpdatedBy(s *string) *BlogUpdateOne {
+func (buo *BlogsUpdateOne) SetNillableUpdatedBy(s *string) *BlogsUpdateOne {
 	if s != nil {
 		buo.SetUpdatedBy(*s)
 	}
@@ -394,14 +394,14 @@ func (buo *BlogUpdateOne) SetNillableUpdatedBy(s *string) *BlogUpdateOne {
 }
 
 // SetIsDeleted sets the "is_deleted" field.
-func (buo *BlogUpdateOne) SetIsDeleted(u uint8) *BlogUpdateOne {
+func (buo *BlogsUpdateOne) SetIsDeleted(u uint8) *BlogsUpdateOne {
 	buo.mutation.ResetIsDeleted()
 	buo.mutation.SetIsDeleted(u)
 	return buo
 }
 
 // SetNillableIsDeleted sets the "is_deleted" field if the given value is not nil.
-func (buo *BlogUpdateOne) SetNillableIsDeleted(u *uint8) *BlogUpdateOne {
+func (buo *BlogsUpdateOne) SetNillableIsDeleted(u *uint8) *BlogsUpdateOne {
 	if u != nil {
 		buo.SetIsDeleted(*u)
 	}
@@ -409,20 +409,20 @@ func (buo *BlogUpdateOne) SetNillableIsDeleted(u *uint8) *BlogUpdateOne {
 }
 
 // AddIsDeleted adds u to the "is_deleted" field.
-func (buo *BlogUpdateOne) AddIsDeleted(u int8) *BlogUpdateOne {
+func (buo *BlogsUpdateOne) AddIsDeleted(u int8) *BlogsUpdateOne {
 	buo.mutation.AddIsDeleted(u)
 	return buo
 }
 
 // SetDeletedAt sets the "deleted_at" field.
-func (buo *BlogUpdateOne) SetDeletedAt(i int64) *BlogUpdateOne {
+func (buo *BlogsUpdateOne) SetDeletedAt(i int64) *BlogsUpdateOne {
 	buo.mutation.ResetDeletedAt()
 	buo.mutation.SetDeletedAt(i)
 	return buo
 }
 
 // SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
-func (buo *BlogUpdateOne) SetNillableDeletedAt(i *int64) *BlogUpdateOne {
+func (buo *BlogsUpdateOne) SetNillableDeletedAt(i *int64) *BlogsUpdateOne {
 	if i != nil {
 		buo.SetDeletedAt(*i)
 	}
@@ -430,19 +430,19 @@ func (buo *BlogUpdateOne) SetNillableDeletedAt(i *int64) *BlogUpdateOne {
 }
 
 // AddDeletedAt adds i to the "deleted_at" field.
-func (buo *BlogUpdateOne) AddDeletedAt(i int64) *BlogUpdateOne {
+func (buo *BlogsUpdateOne) AddDeletedAt(i int64) *BlogsUpdateOne {
 	buo.mutation.AddDeletedAt(i)
 	return buo
 }
 
 // SetDeletedBy sets the "deleted_by" field.
-func (buo *BlogUpdateOne) SetDeletedBy(s string) *BlogUpdateOne {
+func (buo *BlogsUpdateOne) SetDeletedBy(s string) *BlogsUpdateOne {
 	buo.mutation.SetDeletedBy(s)
 	return buo
 }
 
 // SetNillableDeletedBy sets the "deleted_by" field if the given value is not nil.
-func (buo *BlogUpdateOne) SetNillableDeletedBy(s *string) *BlogUpdateOne {
+func (buo *BlogsUpdateOne) SetNillableDeletedBy(s *string) *BlogsUpdateOne {
 	if s != nil {
 		buo.SetDeletedBy(*s)
 	}
@@ -450,14 +450,14 @@ func (buo *BlogUpdateOne) SetNillableDeletedBy(s *string) *BlogUpdateOne {
 }
 
 // SetAccountID sets the "account_id" field.
-func (buo *BlogUpdateOne) SetAccountID(i int) *BlogUpdateOne {
+func (buo *BlogsUpdateOne) SetAccountID(i int) *BlogsUpdateOne {
 	buo.mutation.ResetAccountID()
 	buo.mutation.SetAccountID(i)
 	return buo
 }
 
 // SetNillableAccountID sets the "account_id" field if the given value is not nil.
-func (buo *BlogUpdateOne) SetNillableAccountID(i *int) *BlogUpdateOne {
+func (buo *BlogsUpdateOne) SetNillableAccountID(i *int) *BlogsUpdateOne {
 	if i != nil {
 		buo.SetAccountID(*i)
 	}
@@ -465,19 +465,19 @@ func (buo *BlogUpdateOne) SetNillableAccountID(i *int) *BlogUpdateOne {
 }
 
 // AddAccountID adds i to the "account_id" field.
-func (buo *BlogUpdateOne) AddAccountID(i int) *BlogUpdateOne {
+func (buo *BlogsUpdateOne) AddAccountID(i int) *BlogsUpdateOne {
 	buo.mutation.AddAccountID(i)
 	return buo
 }
 
 // SetTitle sets the "title" field.
-func (buo *BlogUpdateOne) SetTitle(s string) *BlogUpdateOne {
+func (buo *BlogsUpdateOne) SetTitle(s string) *BlogsUpdateOne {
 	buo.mutation.SetTitle(s)
 	return buo
 }
 
 // SetNillableTitle sets the "title" field if the given value is not nil.
-func (buo *BlogUpdateOne) SetNillableTitle(s *string) *BlogUpdateOne {
+func (buo *BlogsUpdateOne) SetNillableTitle(s *string) *BlogsUpdateOne {
 	if s != nil {
 		buo.SetTitle(*s)
 	}
@@ -485,13 +485,13 @@ func (buo *BlogUpdateOne) SetNillableTitle(s *string) *BlogUpdateOne {
 }
 
 // SetDescription sets the "description" field.
-func (buo *BlogUpdateOne) SetDescription(s string) *BlogUpdateOne {
+func (buo *BlogsUpdateOne) SetDescription(s string) *BlogsUpdateOne {
 	buo.mutation.SetDescription(s)
 	return buo
 }
 
 // SetNillableDescription sets the "description" field if the given value is not nil.
-func (buo *BlogUpdateOne) SetNillableDescription(s *string) *BlogUpdateOne {
+func (buo *BlogsUpdateOne) SetNillableDescription(s *string) *BlogsUpdateOne {
 	if s != nil {
 		buo.SetDescription(*s)
 	}
@@ -499,14 +499,14 @@ func (buo *BlogUpdateOne) SetNillableDescription(s *string) *BlogUpdateOne {
 }
 
 // SetIsHidden sets the "is_hidden" field.
-func (buo *BlogUpdateOne) SetIsHidden(i int8) *BlogUpdateOne {
+func (buo *BlogsUpdateOne) SetIsHidden(i int8) *BlogsUpdateOne {
 	buo.mutation.ResetIsHidden()
 	buo.mutation.SetIsHidden(i)
 	return buo
 }
 
 // SetNillableIsHidden sets the "is_hidden" field if the given value is not nil.
-func (buo *BlogUpdateOne) SetNillableIsHidden(i *int8) *BlogUpdateOne {
+func (buo *BlogsUpdateOne) SetNillableIsHidden(i *int8) *BlogsUpdateOne {
 	if i != nil {
 		buo.SetIsHidden(*i)
 	}
@@ -514,31 +514,31 @@ func (buo *BlogUpdateOne) SetNillableIsHidden(i *int8) *BlogUpdateOne {
 }
 
 // AddIsHidden adds i to the "is_hidden" field.
-func (buo *BlogUpdateOne) AddIsHidden(i int8) *BlogUpdateOne {
+func (buo *BlogsUpdateOne) AddIsHidden(i int8) *BlogsUpdateOne {
 	buo.mutation.AddIsHidden(i)
 	return buo
 }
 
 // SetTags sets the "tags" field.
-func (buo *BlogUpdateOne) SetTags(s []string) *BlogUpdateOne {
+func (buo *BlogsUpdateOne) SetTags(s []string) *BlogsUpdateOne {
 	buo.mutation.SetTags(s)
 	return buo
 }
 
 // AppendTags appends s to the "tags" field.
-func (buo *BlogUpdateOne) AppendTags(s []string) *BlogUpdateOne {
+func (buo *BlogsUpdateOne) AppendTags(s []string) *BlogsUpdateOne {
 	buo.mutation.AppendTags(s)
 	return buo
 }
 
 // SetCover sets the "cover" field.
-func (buo *BlogUpdateOne) SetCover(s string) *BlogUpdateOne {
+func (buo *BlogsUpdateOne) SetCover(s string) *BlogsUpdateOne {
 	buo.mutation.SetCover(s)
 	return buo
 }
 
 // SetNillableCover sets the "cover" field if the given value is not nil.
-func (buo *BlogUpdateOne) SetNillableCover(s *string) *BlogUpdateOne {
+func (buo *BlogsUpdateOne) SetNillableCover(s *string) *BlogsUpdateOne {
 	if s != nil {
 		buo.SetCover(*s)
 	}
@@ -546,39 +546,39 @@ func (buo *BlogUpdateOne) SetNillableCover(s *string) *BlogUpdateOne {
 }
 
 // SetContent sets the "content" field.
-func (buo *BlogUpdateOne) SetContent(s string) *BlogUpdateOne {
+func (buo *BlogsUpdateOne) SetContent(s string) *BlogsUpdateOne {
 	buo.mutation.SetContent(s)
 	return buo
 }
 
 // SetNillableContent sets the "content" field if the given value is not nil.
-func (buo *BlogUpdateOne) SetNillableContent(s *string) *BlogUpdateOne {
+func (buo *BlogsUpdateOne) SetNillableContent(s *string) *BlogsUpdateOne {
 	if s != nil {
 		buo.SetContent(*s)
 	}
 	return buo
 }
 
-// Mutation returns the BlogMutation object of the builder.
-func (buo *BlogUpdateOne) Mutation() *BlogMutation {
+// Mutation returns the BlogsMutation object of the builder.
+func (buo *BlogsUpdateOne) Mutation() *BlogsMutation {
 	return buo.mutation
 }
 
-// Where appends a list predicates to the BlogUpdate builder.
-func (buo *BlogUpdateOne) Where(ps ...predicate.Blog) *BlogUpdateOne {
+// Where appends a list predicates to the BlogsUpdate builder.
+func (buo *BlogsUpdateOne) Where(ps ...predicate.Blogs) *BlogsUpdateOne {
 	buo.mutation.Where(ps...)
 	return buo
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
 // The default is selecting all fields defined in the entity schema.
-func (buo *BlogUpdateOne) Select(field string, fields ...string) *BlogUpdateOne {
+func (buo *BlogsUpdateOne) Select(field string, fields ...string) *BlogsUpdateOne {
 	buo.fields = append([]string{field}, fields...)
 	return buo
 }
 
-// Save executes the query and returns the updated Blog entity.
-func (buo *BlogUpdateOne) Save(ctx context.Context) (*Blog, error) {
+// Save executes the query and returns the updated Blogs entity.
+func (buo *BlogsUpdateOne) Save(ctx context.Context) (*Blogs, error) {
 	if err := buo.defaults(); err != nil {
 		return nil, err
 	}
@@ -586,7 +586,7 @@ func (buo *BlogUpdateOne) Save(ctx context.Context) (*Blog, error) {
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (buo *BlogUpdateOne) SaveX(ctx context.Context) *Blog {
+func (buo *BlogsUpdateOne) SaveX(ctx context.Context) *Blogs {
 	node, err := buo.Save(ctx)
 	if err != nil {
 		panic(err)
@@ -595,58 +595,58 @@ func (buo *BlogUpdateOne) SaveX(ctx context.Context) *Blog {
 }
 
 // Exec executes the query on the entity.
-func (buo *BlogUpdateOne) Exec(ctx context.Context) error {
+func (buo *BlogsUpdateOne) Exec(ctx context.Context) error {
 	_, err := buo.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (buo *BlogUpdateOne) ExecX(ctx context.Context) {
+func (buo *BlogsUpdateOne) ExecX(ctx context.Context) {
 	if err := buo.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // defaults sets the default values of the builder before save.
-func (buo *BlogUpdateOne) defaults() error {
+func (buo *BlogsUpdateOne) defaults() error {
 	if _, ok := buo.mutation.UpdatedAt(); !ok {
-		if blog.UpdateDefaultUpdatedAt == nil {
-			return fmt.Errorf("ent: uninitialized blog.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
+		if blogs.UpdateDefaultUpdatedAt == nil {
+			return fmt.Errorf("ent: uninitialized blogs.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
 		}
-		v := blog.UpdateDefaultUpdatedAt()
+		v := blogs.UpdateDefaultUpdatedAt()
 		buo.mutation.SetUpdatedAt(v)
 	}
 	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (buo *BlogUpdateOne) check() error {
+func (buo *BlogsUpdateOne) check() error {
 	if v, ok := buo.mutation.Content(); ok {
-		if err := blog.ContentValidator(v); err != nil {
-			return &ValidationError{Name: "content", err: fmt.Errorf(`ent: validator failed for field "Blog.content": %w`, err)}
+		if err := blogs.ContentValidator(v); err != nil {
+			return &ValidationError{Name: "content", err: fmt.Errorf(`ent: validator failed for field "Blogs.content": %w`, err)}
 		}
 	}
 	return nil
 }
 
-func (buo *BlogUpdateOne) sqlSave(ctx context.Context) (_node *Blog, err error) {
+func (buo *BlogsUpdateOne) sqlSave(ctx context.Context) (_node *Blogs, err error) {
 	if err := buo.check(); err != nil {
 		return _node, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(blog.Table, blog.Columns, sqlgraph.NewFieldSpec(blog.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewUpdateSpec(blogs.Table, blogs.Columns, sqlgraph.NewFieldSpec(blogs.FieldID, field.TypeInt))
 	id, ok := buo.mutation.ID()
 	if !ok {
-		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "Blog.id" for update`)}
+		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "Blogs.id" for update`)}
 	}
 	_spec.Node.ID.Value = id
 	if fields := buo.fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
-		_spec.Node.Columns = append(_spec.Node.Columns, blog.FieldID)
+		_spec.Node.Columns = append(_spec.Node.Columns, blogs.FieldID)
 		for _, f := range fields {
-			if !blog.ValidColumn(f) {
+			if !blogs.ValidColumn(f) {
 				return nil, &ValidationError{Name: f, err: fmt.Errorf("ent: invalid field %q for query", f)}
 			}
-			if f != blog.FieldID {
+			if f != blogs.FieldID {
 				_spec.Node.Columns = append(_spec.Node.Columns, f)
 			}
 		}
@@ -659,67 +659,67 @@ func (buo *BlogUpdateOne) sqlSave(ctx context.Context) (_node *Blog, err error) 
 		}
 	}
 	if value, ok := buo.mutation.UpdatedAt(); ok {
-		_spec.SetField(blog.FieldUpdatedAt, field.TypeInt64, value)
+		_spec.SetField(blogs.FieldUpdatedAt, field.TypeInt64, value)
 	}
 	if value, ok := buo.mutation.AddedUpdatedAt(); ok {
-		_spec.AddField(blog.FieldUpdatedAt, field.TypeInt64, value)
+		_spec.AddField(blogs.FieldUpdatedAt, field.TypeInt64, value)
 	}
 	if value, ok := buo.mutation.UpdatedBy(); ok {
-		_spec.SetField(blog.FieldUpdatedBy, field.TypeString, value)
+		_spec.SetField(blogs.FieldUpdatedBy, field.TypeString, value)
 	}
 	if value, ok := buo.mutation.IsDeleted(); ok {
-		_spec.SetField(blog.FieldIsDeleted, field.TypeUint8, value)
+		_spec.SetField(blogs.FieldIsDeleted, field.TypeUint8, value)
 	}
 	if value, ok := buo.mutation.AddedIsDeleted(); ok {
-		_spec.AddField(blog.FieldIsDeleted, field.TypeUint8, value)
+		_spec.AddField(blogs.FieldIsDeleted, field.TypeUint8, value)
 	}
 	if value, ok := buo.mutation.DeletedAt(); ok {
-		_spec.SetField(blog.FieldDeletedAt, field.TypeInt64, value)
+		_spec.SetField(blogs.FieldDeletedAt, field.TypeInt64, value)
 	}
 	if value, ok := buo.mutation.AddedDeletedAt(); ok {
-		_spec.AddField(blog.FieldDeletedAt, field.TypeInt64, value)
+		_spec.AddField(blogs.FieldDeletedAt, field.TypeInt64, value)
 	}
 	if value, ok := buo.mutation.DeletedBy(); ok {
-		_spec.SetField(blog.FieldDeletedBy, field.TypeString, value)
+		_spec.SetField(blogs.FieldDeletedBy, field.TypeString, value)
 	}
 	if value, ok := buo.mutation.AccountID(); ok {
-		_spec.SetField(blog.FieldAccountID, field.TypeInt, value)
+		_spec.SetField(blogs.FieldAccountID, field.TypeInt, value)
 	}
 	if value, ok := buo.mutation.AddedAccountID(); ok {
-		_spec.AddField(blog.FieldAccountID, field.TypeInt, value)
+		_spec.AddField(blogs.FieldAccountID, field.TypeInt, value)
 	}
 	if value, ok := buo.mutation.Title(); ok {
-		_spec.SetField(blog.FieldTitle, field.TypeString, value)
+		_spec.SetField(blogs.FieldTitle, field.TypeString, value)
 	}
 	if value, ok := buo.mutation.Description(); ok {
-		_spec.SetField(blog.FieldDescription, field.TypeString, value)
+		_spec.SetField(blogs.FieldDescription, field.TypeString, value)
 	}
 	if value, ok := buo.mutation.IsHidden(); ok {
-		_spec.SetField(blog.FieldIsHidden, field.TypeInt8, value)
+		_spec.SetField(blogs.FieldIsHidden, field.TypeInt8, value)
 	}
 	if value, ok := buo.mutation.AddedIsHidden(); ok {
-		_spec.AddField(blog.FieldIsHidden, field.TypeInt8, value)
+		_spec.AddField(blogs.FieldIsHidden, field.TypeInt8, value)
 	}
 	if value, ok := buo.mutation.Tags(); ok {
-		_spec.SetField(blog.FieldTags, field.TypeJSON, value)
+		_spec.SetField(blogs.FieldTags, field.TypeJSON, value)
 	}
 	if value, ok := buo.mutation.AppendedTags(); ok {
 		_spec.AddModifier(func(u *sql.UpdateBuilder) {
-			sqljson.Append(u, blog.FieldTags, value)
+			sqljson.Append(u, blogs.FieldTags, value)
 		})
 	}
 	if value, ok := buo.mutation.Cover(); ok {
-		_spec.SetField(blog.FieldCover, field.TypeString, value)
+		_spec.SetField(blogs.FieldCover, field.TypeString, value)
 	}
 	if value, ok := buo.mutation.Content(); ok {
-		_spec.SetField(blog.FieldContent, field.TypeString, value)
+		_spec.SetField(blogs.FieldContent, field.TypeString, value)
 	}
-	_node = &Blog{config: buo.config}
+	_node = &Blogs{config: buo.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues
 	if err = sqlgraph.UpdateNode(ctx, buo.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
-			err = &NotFoundError{blog.Label}
+			err = &NotFoundError{blogs.Label}
 		} else if sqlgraph.IsConstraintError(err) {
 			err = &ConstraintError{msg: err.Error(), wrap: err}
 		}

@@ -4,9 +4,9 @@ package runtime
 
 import (
 	"blog/internal/ent/account"
-	"blog/internal/ent/blog"
-	"blog/internal/ent/blogcontent"
-	"blog/internal/ent/comment"
+	"blog/internal/ent/blogs"
+	"blog/internal/ent/blogscomment"
+	"blog/internal/ent/blogscontent"
 	"blog/internal/ent/schema"
 )
 
@@ -78,144 +78,144 @@ func init() {
 	accountDescID := accountFields[0].Descriptor()
 	// account.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	account.IDValidator = accountDescID.Validators[0].(func(int) error)
-	blogMixin := schema.Blog{}.Mixin()
-	blogMixinHooks0 := blogMixin[0].Hooks()
-	blogMixinHooks1 := blogMixin[1].Hooks()
-	blog.Hooks[0] = blogMixinHooks0[0]
-	blog.Hooks[1] = blogMixinHooks0[1]
-	blog.Hooks[2] = blogMixinHooks1[0]
-	blogMixinInters1 := blogMixin[1].Interceptors()
-	blog.Interceptors[0] = blogMixinInters1[0]
-	blogMixinFields0 := blogMixin[0].Fields()
-	_ = blogMixinFields0
-	blogMixinFields1 := blogMixin[1].Fields()
-	_ = blogMixinFields1
-	blogFields := schema.Blog{}.Fields()
-	_ = blogFields
-	// blogDescCreatedAt is the schema descriptor for created_at field.
-	blogDescCreatedAt := blogMixinFields0[0].Descriptor()
-	// blog.DefaultCreatedAt holds the default value on creation for the created_at field.
-	blog.DefaultCreatedAt = blogDescCreatedAt.Default.(int64)
-	// blogDescCreatedBy is the schema descriptor for created_by field.
-	blogDescCreatedBy := blogMixinFields0[1].Descriptor()
-	// blog.DefaultCreatedBy holds the default value on creation for the created_by field.
-	blog.DefaultCreatedBy = blogDescCreatedBy.Default.(string)
-	// blogDescUpdatedAt is the schema descriptor for updated_at field.
-	blogDescUpdatedAt := blogMixinFields0[2].Descriptor()
-	// blog.DefaultUpdatedAt holds the default value on creation for the updated_at field.
-	blog.DefaultUpdatedAt = blogDescUpdatedAt.Default.(int64)
-	// blog.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
-	blog.UpdateDefaultUpdatedAt = blogDescUpdatedAt.UpdateDefault.(func() int64)
-	// blogDescUpdatedBy is the schema descriptor for updated_by field.
-	blogDescUpdatedBy := blogMixinFields0[3].Descriptor()
-	// blog.DefaultUpdatedBy holds the default value on creation for the updated_by field.
-	blog.DefaultUpdatedBy = blogDescUpdatedBy.Default.(string)
-	// blogDescIsDeleted is the schema descriptor for is_deleted field.
-	blogDescIsDeleted := blogMixinFields1[0].Descriptor()
-	// blog.DefaultIsDeleted holds the default value on creation for the is_deleted field.
-	blog.DefaultIsDeleted = blogDescIsDeleted.Default.(uint8)
-	// blogDescDeletedAt is the schema descriptor for deleted_at field.
-	blogDescDeletedAt := blogMixinFields1[1].Descriptor()
-	// blog.DefaultDeletedAt holds the default value on creation for the deleted_at field.
-	blog.DefaultDeletedAt = blogDescDeletedAt.Default.(int64)
-	// blogDescDeletedBy is the schema descriptor for deleted_by field.
-	blogDescDeletedBy := blogMixinFields1[2].Descriptor()
-	// blog.DefaultDeletedBy holds the default value on creation for the deleted_by field.
-	blog.DefaultDeletedBy = blogDescDeletedBy.Default.(string)
-	// blogDescIsHidden is the schema descriptor for is_hidden field.
-	blogDescIsHidden := blogFields[4].Descriptor()
-	// blog.DefaultIsHidden holds the default value on creation for the is_hidden field.
-	blog.DefaultIsHidden = blogDescIsHidden.Default.(int8)
-	// blogDescContent is the schema descriptor for content field.
-	blogDescContent := blogFields[7].Descriptor()
-	// blog.ContentValidator is a validator for the "content" field. It is called by the builders before save.
-	blog.ContentValidator = blogDescContent.Validators[0].(func(string) error)
-	// blogDescID is the schema descriptor for id field.
-	blogDescID := blogFields[0].Descriptor()
-	// blog.IDValidator is a validator for the "id" field. It is called by the builders before save.
-	blog.IDValidator = blogDescID.Validators[0].(func(int) error)
-	blogcontentFields := schema.BlogContent{}.Fields()
-	_ = blogcontentFields
-	// blogcontentDescContent is the schema descriptor for content field.
-	blogcontentDescContent := blogcontentFields[1].Descriptor()
-	// blogcontent.ContentValidator is a validator for the "content" field. It is called by the builders before save.
-	blogcontent.ContentValidator = blogcontentDescContent.Validators[0].(func(string) error)
-	commentMixin := schema.Comment{}.Mixin()
-	commentMixinHooks0 := commentMixin[0].Hooks()
-	commentMixinHooks1 := commentMixin[1].Hooks()
-	comment.Hooks[0] = commentMixinHooks0[0]
-	comment.Hooks[1] = commentMixinHooks0[1]
-	comment.Hooks[2] = commentMixinHooks1[0]
-	commentMixinInters1 := commentMixin[1].Interceptors()
-	comment.Interceptors[0] = commentMixinInters1[0]
-	commentMixinFields0 := commentMixin[0].Fields()
-	_ = commentMixinFields0
-	commentMixinFields1 := commentMixin[1].Fields()
-	_ = commentMixinFields1
-	commentFields := schema.Comment{}.Fields()
-	_ = commentFields
-	// commentDescCreatedAt is the schema descriptor for created_at field.
-	commentDescCreatedAt := commentMixinFields0[0].Descriptor()
-	// comment.DefaultCreatedAt holds the default value on creation for the created_at field.
-	comment.DefaultCreatedAt = commentDescCreatedAt.Default.(int64)
-	// commentDescCreatedBy is the schema descriptor for created_by field.
-	commentDescCreatedBy := commentMixinFields0[1].Descriptor()
-	// comment.DefaultCreatedBy holds the default value on creation for the created_by field.
-	comment.DefaultCreatedBy = commentDescCreatedBy.Default.(string)
-	// commentDescUpdatedAt is the schema descriptor for updated_at field.
-	commentDescUpdatedAt := commentMixinFields0[2].Descriptor()
-	// comment.DefaultUpdatedAt holds the default value on creation for the updated_at field.
-	comment.DefaultUpdatedAt = commentDescUpdatedAt.Default.(int64)
-	// comment.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
-	comment.UpdateDefaultUpdatedAt = commentDescUpdatedAt.UpdateDefault.(func() int64)
-	// commentDescUpdatedBy is the schema descriptor for updated_by field.
-	commentDescUpdatedBy := commentMixinFields0[3].Descriptor()
-	// comment.DefaultUpdatedBy holds the default value on creation for the updated_by field.
-	comment.DefaultUpdatedBy = commentDescUpdatedBy.Default.(string)
-	// commentDescIsDeleted is the schema descriptor for is_deleted field.
-	commentDescIsDeleted := commentMixinFields1[0].Descriptor()
-	// comment.DefaultIsDeleted holds the default value on creation for the is_deleted field.
-	comment.DefaultIsDeleted = commentDescIsDeleted.Default.(uint8)
-	// commentDescDeletedAt is the schema descriptor for deleted_at field.
-	commentDescDeletedAt := commentMixinFields1[1].Descriptor()
-	// comment.DefaultDeletedAt holds the default value on creation for the deleted_at field.
-	comment.DefaultDeletedAt = commentDescDeletedAt.Default.(int64)
-	// commentDescDeletedBy is the schema descriptor for deleted_by field.
-	commentDescDeletedBy := commentMixinFields1[2].Descriptor()
-	// comment.DefaultDeletedBy holds the default value on creation for the deleted_by field.
-	comment.DefaultDeletedBy = commentDescDeletedBy.Default.(string)
-	// commentDescAccountID is the schema descriptor for account_id field.
-	commentDescAccountID := commentFields[0].Descriptor()
-	// comment.AccountIDValidator is a validator for the "account_id" field. It is called by the builders before save.
-	comment.AccountIDValidator = commentDescAccountID.Validators[0].(func(int) error)
-	// commentDescBlogID is the schema descriptor for blog_id field.
-	commentDescBlogID := commentFields[1].Descriptor()
-	// comment.BlogIDValidator is a validator for the "blog_id" field. It is called by the builders before save.
-	comment.BlogIDValidator = commentDescBlogID.Validators[0].(func(int) error)
-	// commentDescTopID is the schema descriptor for top_id field.
-	commentDescTopID := commentFields[3].Descriptor()
-	// comment.DefaultTopID holds the default value on creation for the top_id field.
-	comment.DefaultTopID = commentDescTopID.Default.(int)
-	// commentDescParentID is the schema descriptor for parent_id field.
-	commentDescParentID := commentFields[4].Descriptor()
-	// comment.DefaultParentID holds the default value on creation for the parent_id field.
-	comment.DefaultParentID = commentDescParentID.Default.(int)
-	// commentDescLevel is the schema descriptor for level field.
-	commentDescLevel := commentFields[5].Descriptor()
-	// comment.DefaultLevel holds the default value on creation for the level field.
-	comment.DefaultLevel = commentDescLevel.Default.(int)
-	// commentDescTotal is the schema descriptor for total field.
-	commentDescTotal := commentFields[6].Descriptor()
-	// comment.DefaultTotal holds the default value on creation for the total field.
-	comment.DefaultTotal = commentDescTotal.Default.(int)
-	// commentDescStatus is the schema descriptor for status field.
-	commentDescStatus := commentFields[7].Descriptor()
-	// comment.DefaultStatus holds the default value on creation for the status field.
-	comment.DefaultStatus = commentDescStatus.Default.(int8)
-	// commentDescID is the schema descriptor for id field.
-	commentDescID := commentFields[2].Descriptor()
-	// comment.IDValidator is a validator for the "id" field. It is called by the builders before save.
-	comment.IDValidator = commentDescID.Validators[0].(func(int) error)
+	blogsMixin := schema.Blogs{}.Mixin()
+	blogsMixinHooks0 := blogsMixin[0].Hooks()
+	blogsMixinHooks1 := blogsMixin[1].Hooks()
+	blogs.Hooks[0] = blogsMixinHooks0[0]
+	blogs.Hooks[1] = blogsMixinHooks0[1]
+	blogs.Hooks[2] = blogsMixinHooks1[0]
+	blogsMixinInters1 := blogsMixin[1].Interceptors()
+	blogs.Interceptors[0] = blogsMixinInters1[0]
+	blogsMixinFields0 := blogsMixin[0].Fields()
+	_ = blogsMixinFields0
+	blogsMixinFields1 := blogsMixin[1].Fields()
+	_ = blogsMixinFields1
+	blogsFields := schema.Blogs{}.Fields()
+	_ = blogsFields
+	// blogsDescCreatedAt is the schema descriptor for created_at field.
+	blogsDescCreatedAt := blogsMixinFields0[0].Descriptor()
+	// blogs.DefaultCreatedAt holds the default value on creation for the created_at field.
+	blogs.DefaultCreatedAt = blogsDescCreatedAt.Default.(int64)
+	// blogsDescCreatedBy is the schema descriptor for created_by field.
+	blogsDescCreatedBy := blogsMixinFields0[1].Descriptor()
+	// blogs.DefaultCreatedBy holds the default value on creation for the created_by field.
+	blogs.DefaultCreatedBy = blogsDescCreatedBy.Default.(string)
+	// blogsDescUpdatedAt is the schema descriptor for updated_at field.
+	blogsDescUpdatedAt := blogsMixinFields0[2].Descriptor()
+	// blogs.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	blogs.DefaultUpdatedAt = blogsDescUpdatedAt.Default.(int64)
+	// blogs.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	blogs.UpdateDefaultUpdatedAt = blogsDescUpdatedAt.UpdateDefault.(func() int64)
+	// blogsDescUpdatedBy is the schema descriptor for updated_by field.
+	blogsDescUpdatedBy := blogsMixinFields0[3].Descriptor()
+	// blogs.DefaultUpdatedBy holds the default value on creation for the updated_by field.
+	blogs.DefaultUpdatedBy = blogsDescUpdatedBy.Default.(string)
+	// blogsDescIsDeleted is the schema descriptor for is_deleted field.
+	blogsDescIsDeleted := blogsMixinFields1[0].Descriptor()
+	// blogs.DefaultIsDeleted holds the default value on creation for the is_deleted field.
+	blogs.DefaultIsDeleted = blogsDescIsDeleted.Default.(uint8)
+	// blogsDescDeletedAt is the schema descriptor for deleted_at field.
+	blogsDescDeletedAt := blogsMixinFields1[1].Descriptor()
+	// blogs.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	blogs.DefaultDeletedAt = blogsDescDeletedAt.Default.(int64)
+	// blogsDescDeletedBy is the schema descriptor for deleted_by field.
+	blogsDescDeletedBy := blogsMixinFields1[2].Descriptor()
+	// blogs.DefaultDeletedBy holds the default value on creation for the deleted_by field.
+	blogs.DefaultDeletedBy = blogsDescDeletedBy.Default.(string)
+	// blogsDescIsHidden is the schema descriptor for is_hidden field.
+	blogsDescIsHidden := blogsFields[4].Descriptor()
+	// blogs.DefaultIsHidden holds the default value on creation for the is_hidden field.
+	blogs.DefaultIsHidden = blogsDescIsHidden.Default.(int8)
+	// blogsDescContent is the schema descriptor for content field.
+	blogsDescContent := blogsFields[7].Descriptor()
+	// blogs.ContentValidator is a validator for the "content" field. It is called by the builders before save.
+	blogs.ContentValidator = blogsDescContent.Validators[0].(func(string) error)
+	// blogsDescID is the schema descriptor for id field.
+	blogsDescID := blogsFields[0].Descriptor()
+	// blogs.IDValidator is a validator for the "id" field. It is called by the builders before save.
+	blogs.IDValidator = blogsDescID.Validators[0].(func(int) error)
+	blogscommentMixin := schema.BlogsComment{}.Mixin()
+	blogscommentMixinHooks0 := blogscommentMixin[0].Hooks()
+	blogscommentMixinHooks1 := blogscommentMixin[1].Hooks()
+	blogscomment.Hooks[0] = blogscommentMixinHooks0[0]
+	blogscomment.Hooks[1] = blogscommentMixinHooks0[1]
+	blogscomment.Hooks[2] = blogscommentMixinHooks1[0]
+	blogscommentMixinInters1 := blogscommentMixin[1].Interceptors()
+	blogscomment.Interceptors[0] = blogscommentMixinInters1[0]
+	blogscommentMixinFields0 := blogscommentMixin[0].Fields()
+	_ = blogscommentMixinFields0
+	blogscommentMixinFields1 := blogscommentMixin[1].Fields()
+	_ = blogscommentMixinFields1
+	blogscommentFields := schema.BlogsComment{}.Fields()
+	_ = blogscommentFields
+	// blogscommentDescCreatedAt is the schema descriptor for created_at field.
+	blogscommentDescCreatedAt := blogscommentMixinFields0[0].Descriptor()
+	// blogscomment.DefaultCreatedAt holds the default value on creation for the created_at field.
+	blogscomment.DefaultCreatedAt = blogscommentDescCreatedAt.Default.(int64)
+	// blogscommentDescCreatedBy is the schema descriptor for created_by field.
+	blogscommentDescCreatedBy := blogscommentMixinFields0[1].Descriptor()
+	// blogscomment.DefaultCreatedBy holds the default value on creation for the created_by field.
+	blogscomment.DefaultCreatedBy = blogscommentDescCreatedBy.Default.(string)
+	// blogscommentDescUpdatedAt is the schema descriptor for updated_at field.
+	blogscommentDescUpdatedAt := blogscommentMixinFields0[2].Descriptor()
+	// blogscomment.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	blogscomment.DefaultUpdatedAt = blogscommentDescUpdatedAt.Default.(int64)
+	// blogscomment.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	blogscomment.UpdateDefaultUpdatedAt = blogscommentDescUpdatedAt.UpdateDefault.(func() int64)
+	// blogscommentDescUpdatedBy is the schema descriptor for updated_by field.
+	blogscommentDescUpdatedBy := blogscommentMixinFields0[3].Descriptor()
+	// blogscomment.DefaultUpdatedBy holds the default value on creation for the updated_by field.
+	blogscomment.DefaultUpdatedBy = blogscommentDescUpdatedBy.Default.(string)
+	// blogscommentDescIsDeleted is the schema descriptor for is_deleted field.
+	blogscommentDescIsDeleted := blogscommentMixinFields1[0].Descriptor()
+	// blogscomment.DefaultIsDeleted holds the default value on creation for the is_deleted field.
+	blogscomment.DefaultIsDeleted = blogscommentDescIsDeleted.Default.(uint8)
+	// blogscommentDescDeletedAt is the schema descriptor for deleted_at field.
+	blogscommentDescDeletedAt := blogscommentMixinFields1[1].Descriptor()
+	// blogscomment.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	blogscomment.DefaultDeletedAt = blogscommentDescDeletedAt.Default.(int64)
+	// blogscommentDescDeletedBy is the schema descriptor for deleted_by field.
+	blogscommentDescDeletedBy := blogscommentMixinFields1[2].Descriptor()
+	// blogscomment.DefaultDeletedBy holds the default value on creation for the deleted_by field.
+	blogscomment.DefaultDeletedBy = blogscommentDescDeletedBy.Default.(string)
+	// blogscommentDescAccountID is the schema descriptor for account_id field.
+	blogscommentDescAccountID := blogscommentFields[0].Descriptor()
+	// blogscomment.AccountIDValidator is a validator for the "account_id" field. It is called by the builders before save.
+	blogscomment.AccountIDValidator = blogscommentDescAccountID.Validators[0].(func(int) error)
+	// blogscommentDescBlogID is the schema descriptor for blog_id field.
+	blogscommentDescBlogID := blogscommentFields[1].Descriptor()
+	// blogscomment.BlogIDValidator is a validator for the "blog_id" field. It is called by the builders before save.
+	blogscomment.BlogIDValidator = blogscommentDescBlogID.Validators[0].(func(int) error)
+	// blogscommentDescTopID is the schema descriptor for top_id field.
+	blogscommentDescTopID := blogscommentFields[3].Descriptor()
+	// blogscomment.DefaultTopID holds the default value on creation for the top_id field.
+	blogscomment.DefaultTopID = blogscommentDescTopID.Default.(int)
+	// blogscommentDescParentID is the schema descriptor for parent_id field.
+	blogscommentDescParentID := blogscommentFields[4].Descriptor()
+	// blogscomment.DefaultParentID holds the default value on creation for the parent_id field.
+	blogscomment.DefaultParentID = blogscommentDescParentID.Default.(int)
+	// blogscommentDescLevel is the schema descriptor for level field.
+	blogscommentDescLevel := blogscommentFields[5].Descriptor()
+	// blogscomment.DefaultLevel holds the default value on creation for the level field.
+	blogscomment.DefaultLevel = blogscommentDescLevel.Default.(int)
+	// blogscommentDescTotal is the schema descriptor for total field.
+	blogscommentDescTotal := blogscommentFields[6].Descriptor()
+	// blogscomment.DefaultTotal holds the default value on creation for the total field.
+	blogscomment.DefaultTotal = blogscommentDescTotal.Default.(int)
+	// blogscommentDescStatus is the schema descriptor for status field.
+	blogscommentDescStatus := blogscommentFields[7].Descriptor()
+	// blogscomment.DefaultStatus holds the default value on creation for the status field.
+	blogscomment.DefaultStatus = blogscommentDescStatus.Default.(int8)
+	// blogscommentDescID is the schema descriptor for id field.
+	blogscommentDescID := blogscommentFields[2].Descriptor()
+	// blogscomment.IDValidator is a validator for the "id" field. It is called by the builders before save.
+	blogscomment.IDValidator = blogscommentDescID.Validators[0].(func(int) error)
+	blogscontentFields := schema.BlogsContent{}.Fields()
+	_ = blogscontentFields
+	// blogscontentDescContent is the schema descriptor for content field.
+	blogscontentDescContent := blogscontentFields[1].Descriptor()
+	// blogscontent.ContentValidator is a validator for the "content" field. It is called by the builders before save.
+	blogscontent.ContentValidator = blogscontentDescContent.Validators[0].(func(string) error)
 }
 
 const (

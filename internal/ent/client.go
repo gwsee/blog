@@ -12,9 +12,9 @@ import (
 	"blog/internal/ent/migrate"
 
 	"blog/internal/ent/account"
-	"blog/internal/ent/blog"
-	"blog/internal/ent/blogcontent"
-	"blog/internal/ent/comment"
+	"blog/internal/ent/blogs"
+	"blog/internal/ent/blogscomment"
+	"blog/internal/ent/blogscontent"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
@@ -30,12 +30,12 @@ type Client struct {
 	Schema *migrate.Schema
 	// Account is the client for interacting with the Account builders.
 	Account *AccountClient
-	// Blog is the client for interacting with the Blog builders.
-	Blog *BlogClient
-	// BlogContent is the client for interacting with the BlogContent builders.
-	BlogContent *BlogContentClient
-	// Comment is the client for interacting with the Comment builders.
-	Comment *CommentClient
+	// Blogs is the client for interacting with the Blogs builders.
+	Blogs *BlogsClient
+	// BlogsComment is the client for interacting with the BlogsComment builders.
+	BlogsComment *BlogsCommentClient
+	// BlogsContent is the client for interacting with the BlogsContent builders.
+	BlogsContent *BlogsContentClient
 }
 
 // NewClient creates a new client configured with the given options.
@@ -48,9 +48,9 @@ func NewClient(opts ...Option) *Client {
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.Account = NewAccountClient(c.config)
-	c.Blog = NewBlogClient(c.config)
-	c.BlogContent = NewBlogContentClient(c.config)
-	c.Comment = NewCommentClient(c.config)
+	c.Blogs = NewBlogsClient(c.config)
+	c.BlogsComment = NewBlogsCommentClient(c.config)
+	c.BlogsContent = NewBlogsContentClient(c.config)
 }
 
 type (
@@ -141,12 +141,12 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	cfg := c.config
 	cfg.driver = tx
 	return &Tx{
-		ctx:         ctx,
-		config:      cfg,
-		Account:     NewAccountClient(cfg),
-		Blog:        NewBlogClient(cfg),
-		BlogContent: NewBlogContentClient(cfg),
-		Comment:     NewCommentClient(cfg),
+		ctx:          ctx,
+		config:       cfg,
+		Account:      NewAccountClient(cfg),
+		Blogs:        NewBlogsClient(cfg),
+		BlogsComment: NewBlogsCommentClient(cfg),
+		BlogsContent: NewBlogsContentClient(cfg),
 	}, nil
 }
 
@@ -164,12 +164,12 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	cfg := c.config
 	cfg.driver = &txDriver{tx: tx, drv: c.driver}
 	return &Tx{
-		ctx:         ctx,
-		config:      cfg,
-		Account:     NewAccountClient(cfg),
-		Blog:        NewBlogClient(cfg),
-		BlogContent: NewBlogContentClient(cfg),
-		Comment:     NewCommentClient(cfg),
+		ctx:          ctx,
+		config:       cfg,
+		Account:      NewAccountClient(cfg),
+		Blogs:        NewBlogsClient(cfg),
+		BlogsComment: NewBlogsCommentClient(cfg),
+		BlogsContent: NewBlogsContentClient(cfg),
 	}, nil
 }
 
@@ -199,18 +199,18 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	c.Account.Use(hooks...)
-	c.Blog.Use(hooks...)
-	c.BlogContent.Use(hooks...)
-	c.Comment.Use(hooks...)
+	c.Blogs.Use(hooks...)
+	c.BlogsComment.Use(hooks...)
+	c.BlogsContent.Use(hooks...)
 }
 
 // Intercept adds the query interceptors to all the entity clients.
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
 	c.Account.Intercept(interceptors...)
-	c.Blog.Intercept(interceptors...)
-	c.BlogContent.Intercept(interceptors...)
-	c.Comment.Intercept(interceptors...)
+	c.Blogs.Intercept(interceptors...)
+	c.BlogsComment.Intercept(interceptors...)
+	c.BlogsContent.Intercept(interceptors...)
 }
 
 // Mutate implements the ent.Mutator interface.
@@ -218,12 +218,12 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 	switch m := m.(type) {
 	case *AccountMutation:
 		return c.Account.mutate(ctx, m)
-	case *BlogMutation:
-		return c.Blog.mutate(ctx, m)
-	case *BlogContentMutation:
-		return c.BlogContent.mutate(ctx, m)
-	case *CommentMutation:
-		return c.Comment.mutate(ctx, m)
+	case *BlogsMutation:
+		return c.Blogs.mutate(ctx, m)
+	case *BlogsCommentMutation:
+		return c.BlogsComment.mutate(ctx, m)
+	case *BlogsContentMutation:
+		return c.BlogsContent.mutate(ctx, m)
 	default:
 		return nil, fmt.Errorf("ent: unknown mutation type %T", m)
 	}
@@ -364,107 +364,107 @@ func (c *AccountClient) mutate(ctx context.Context, m *AccountMutation) (Value, 
 	}
 }
 
-// BlogClient is a client for the Blog schema.
-type BlogClient struct {
+// BlogsClient is a client for the Blogs schema.
+type BlogsClient struct {
 	config
 }
 
-// NewBlogClient returns a client for the Blog from the given config.
-func NewBlogClient(c config) *BlogClient {
-	return &BlogClient{config: c}
+// NewBlogsClient returns a client for the Blogs from the given config.
+func NewBlogsClient(c config) *BlogsClient {
+	return &BlogsClient{config: c}
 }
 
 // Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `blog.Hooks(f(g(h())))`.
-func (c *BlogClient) Use(hooks ...Hook) {
-	c.hooks.Blog = append(c.hooks.Blog, hooks...)
+// A call to `Use(f, g, h)` equals to `blogs.Hooks(f(g(h())))`.
+func (c *BlogsClient) Use(hooks ...Hook) {
+	c.hooks.Blogs = append(c.hooks.Blogs, hooks...)
 }
 
 // Intercept adds a list of query interceptors to the interceptors stack.
-// A call to `Intercept(f, g, h)` equals to `blog.Intercept(f(g(h())))`.
-func (c *BlogClient) Intercept(interceptors ...Interceptor) {
-	c.inters.Blog = append(c.inters.Blog, interceptors...)
+// A call to `Intercept(f, g, h)` equals to `blogs.Intercept(f(g(h())))`.
+func (c *BlogsClient) Intercept(interceptors ...Interceptor) {
+	c.inters.Blogs = append(c.inters.Blogs, interceptors...)
 }
 
-// Create returns a builder for creating a Blog entity.
-func (c *BlogClient) Create() *BlogCreate {
-	mutation := newBlogMutation(c.config, OpCreate)
-	return &BlogCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Create returns a builder for creating a Blogs entity.
+func (c *BlogsClient) Create() *BlogsCreate {
+	mutation := newBlogsMutation(c.config, OpCreate)
+	return &BlogsCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// CreateBulk returns a builder for creating a bulk of Blog entities.
-func (c *BlogClient) CreateBulk(builders ...*BlogCreate) *BlogCreateBulk {
-	return &BlogCreateBulk{config: c.config, builders: builders}
+// CreateBulk returns a builder for creating a bulk of Blogs entities.
+func (c *BlogsClient) CreateBulk(builders ...*BlogsCreate) *BlogsCreateBulk {
+	return &BlogsCreateBulk{config: c.config, builders: builders}
 }
 
 // MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
 // a builder and applies setFunc on it.
-func (c *BlogClient) MapCreateBulk(slice any, setFunc func(*BlogCreate, int)) *BlogCreateBulk {
+func (c *BlogsClient) MapCreateBulk(slice any, setFunc func(*BlogsCreate, int)) *BlogsCreateBulk {
 	rv := reflect.ValueOf(slice)
 	if rv.Kind() != reflect.Slice {
-		return &BlogCreateBulk{err: fmt.Errorf("calling to BlogClient.MapCreateBulk with wrong type %T, need slice", slice)}
+		return &BlogsCreateBulk{err: fmt.Errorf("calling to BlogsClient.MapCreateBulk with wrong type %T, need slice", slice)}
 	}
-	builders := make([]*BlogCreate, rv.Len())
+	builders := make([]*BlogsCreate, rv.Len())
 	for i := 0; i < rv.Len(); i++ {
 		builders[i] = c.Create()
 		setFunc(builders[i], i)
 	}
-	return &BlogCreateBulk{config: c.config, builders: builders}
+	return &BlogsCreateBulk{config: c.config, builders: builders}
 }
 
-// Update returns an update builder for Blog.
-func (c *BlogClient) Update() *BlogUpdate {
-	mutation := newBlogMutation(c.config, OpUpdate)
-	return &BlogUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Update returns an update builder for Blogs.
+func (c *BlogsClient) Update() *BlogsUpdate {
+	mutation := newBlogsMutation(c.config, OpUpdate)
+	return &BlogsUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *BlogClient) UpdateOne(b *Blog) *BlogUpdateOne {
-	mutation := newBlogMutation(c.config, OpUpdateOne, withBlog(b))
-	return &BlogUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *BlogsClient) UpdateOne(b *Blogs) *BlogsUpdateOne {
+	mutation := newBlogsMutation(c.config, OpUpdateOne, withBlogs(b))
+	return &BlogsUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOneID returns an update builder for the given id.
-func (c *BlogClient) UpdateOneID(id int) *BlogUpdateOne {
-	mutation := newBlogMutation(c.config, OpUpdateOne, withBlogID(id))
-	return &BlogUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *BlogsClient) UpdateOneID(id int) *BlogsUpdateOne {
+	mutation := newBlogsMutation(c.config, OpUpdateOne, withBlogsID(id))
+	return &BlogsUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// Delete returns a delete builder for Blog.
-func (c *BlogClient) Delete() *BlogDelete {
-	mutation := newBlogMutation(c.config, OpDelete)
-	return &BlogDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Delete returns a delete builder for Blogs.
+func (c *BlogsClient) Delete() *BlogsDelete {
+	mutation := newBlogsMutation(c.config, OpDelete)
+	return &BlogsDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // DeleteOne returns a builder for deleting the given entity.
-func (c *BlogClient) DeleteOne(b *Blog) *BlogDeleteOne {
+func (c *BlogsClient) DeleteOne(b *Blogs) *BlogsDeleteOne {
 	return c.DeleteOneID(b.ID)
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
-func (c *BlogClient) DeleteOneID(id int) *BlogDeleteOne {
-	builder := c.Delete().Where(blog.ID(id))
+func (c *BlogsClient) DeleteOneID(id int) *BlogsDeleteOne {
+	builder := c.Delete().Where(blogs.ID(id))
 	builder.mutation.id = &id
 	builder.mutation.op = OpDeleteOne
-	return &BlogDeleteOne{builder}
+	return &BlogsDeleteOne{builder}
 }
 
-// Query returns a query builder for Blog.
-func (c *BlogClient) Query() *BlogQuery {
-	return &BlogQuery{
+// Query returns a query builder for Blogs.
+func (c *BlogsClient) Query() *BlogsQuery {
+	return &BlogsQuery{
 		config: c.config,
-		ctx:    &QueryContext{Type: TypeBlog},
+		ctx:    &QueryContext{Type: TypeBlogs},
 		inters: c.Interceptors(),
 	}
 }
 
-// Get returns a Blog entity by its id.
-func (c *BlogClient) Get(ctx context.Context, id int) (*Blog, error) {
-	return c.Query().Where(blog.ID(id)).Only(ctx)
+// Get returns a Blogs entity by its id.
+func (c *BlogsClient) Get(ctx context.Context, id int) (*Blogs, error) {
+	return c.Query().Where(blogs.ID(id)).Only(ctx)
 }
 
 // GetX is like Get, but panics if an error occurs.
-func (c *BlogClient) GetX(ctx context.Context, id int) *Blog {
+func (c *BlogsClient) GetX(ctx context.Context, id int) *Blogs {
 	obj, err := c.Get(ctx, id)
 	if err != nil {
 		panic(err)
@@ -473,133 +473,133 @@ func (c *BlogClient) GetX(ctx context.Context, id int) *Blog {
 }
 
 // Hooks returns the client hooks.
-func (c *BlogClient) Hooks() []Hook {
-	hooks := c.hooks.Blog
-	return append(hooks[:len(hooks):len(hooks)], blog.Hooks[:]...)
+func (c *BlogsClient) Hooks() []Hook {
+	hooks := c.hooks.Blogs
+	return append(hooks[:len(hooks):len(hooks)], blogs.Hooks[:]...)
 }
 
 // Interceptors returns the client interceptors.
-func (c *BlogClient) Interceptors() []Interceptor {
-	inters := c.inters.Blog
-	return append(inters[:len(inters):len(inters)], blog.Interceptors[:]...)
+func (c *BlogsClient) Interceptors() []Interceptor {
+	inters := c.inters.Blogs
+	return append(inters[:len(inters):len(inters)], blogs.Interceptors[:]...)
 }
 
-func (c *BlogClient) mutate(ctx context.Context, m *BlogMutation) (Value, error) {
+func (c *BlogsClient) mutate(ctx context.Context, m *BlogsMutation) (Value, error) {
 	switch m.Op() {
 	case OpCreate:
-		return (&BlogCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+		return (&BlogsCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
 	case OpUpdate:
-		return (&BlogUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+		return (&BlogsUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
 	case OpUpdateOne:
-		return (&BlogUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+		return (&BlogsUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
 	case OpDelete, OpDeleteOne:
-		return (&BlogDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+		return (&BlogsDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
 	default:
-		return nil, fmt.Errorf("ent: unknown Blog mutation op: %q", m.Op())
+		return nil, fmt.Errorf("ent: unknown Blogs mutation op: %q", m.Op())
 	}
 }
 
-// BlogContentClient is a client for the BlogContent schema.
-type BlogContentClient struct {
+// BlogsCommentClient is a client for the BlogsComment schema.
+type BlogsCommentClient struct {
 	config
 }
 
-// NewBlogContentClient returns a client for the BlogContent from the given config.
-func NewBlogContentClient(c config) *BlogContentClient {
-	return &BlogContentClient{config: c}
+// NewBlogsCommentClient returns a client for the BlogsComment from the given config.
+func NewBlogsCommentClient(c config) *BlogsCommentClient {
+	return &BlogsCommentClient{config: c}
 }
 
 // Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `blogcontent.Hooks(f(g(h())))`.
-func (c *BlogContentClient) Use(hooks ...Hook) {
-	c.hooks.BlogContent = append(c.hooks.BlogContent, hooks...)
+// A call to `Use(f, g, h)` equals to `blogscomment.Hooks(f(g(h())))`.
+func (c *BlogsCommentClient) Use(hooks ...Hook) {
+	c.hooks.BlogsComment = append(c.hooks.BlogsComment, hooks...)
 }
 
 // Intercept adds a list of query interceptors to the interceptors stack.
-// A call to `Intercept(f, g, h)` equals to `blogcontent.Intercept(f(g(h())))`.
-func (c *BlogContentClient) Intercept(interceptors ...Interceptor) {
-	c.inters.BlogContent = append(c.inters.BlogContent, interceptors...)
+// A call to `Intercept(f, g, h)` equals to `blogscomment.Intercept(f(g(h())))`.
+func (c *BlogsCommentClient) Intercept(interceptors ...Interceptor) {
+	c.inters.BlogsComment = append(c.inters.BlogsComment, interceptors...)
 }
 
-// Create returns a builder for creating a BlogContent entity.
-func (c *BlogContentClient) Create() *BlogContentCreate {
-	mutation := newBlogContentMutation(c.config, OpCreate)
-	return &BlogContentCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Create returns a builder for creating a BlogsComment entity.
+func (c *BlogsCommentClient) Create() *BlogsCommentCreate {
+	mutation := newBlogsCommentMutation(c.config, OpCreate)
+	return &BlogsCommentCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// CreateBulk returns a builder for creating a bulk of BlogContent entities.
-func (c *BlogContentClient) CreateBulk(builders ...*BlogContentCreate) *BlogContentCreateBulk {
-	return &BlogContentCreateBulk{config: c.config, builders: builders}
+// CreateBulk returns a builder for creating a bulk of BlogsComment entities.
+func (c *BlogsCommentClient) CreateBulk(builders ...*BlogsCommentCreate) *BlogsCommentCreateBulk {
+	return &BlogsCommentCreateBulk{config: c.config, builders: builders}
 }
 
 // MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
 // a builder and applies setFunc on it.
-func (c *BlogContentClient) MapCreateBulk(slice any, setFunc func(*BlogContentCreate, int)) *BlogContentCreateBulk {
+func (c *BlogsCommentClient) MapCreateBulk(slice any, setFunc func(*BlogsCommentCreate, int)) *BlogsCommentCreateBulk {
 	rv := reflect.ValueOf(slice)
 	if rv.Kind() != reflect.Slice {
-		return &BlogContentCreateBulk{err: fmt.Errorf("calling to BlogContentClient.MapCreateBulk with wrong type %T, need slice", slice)}
+		return &BlogsCommentCreateBulk{err: fmt.Errorf("calling to BlogsCommentClient.MapCreateBulk with wrong type %T, need slice", slice)}
 	}
-	builders := make([]*BlogContentCreate, rv.Len())
+	builders := make([]*BlogsCommentCreate, rv.Len())
 	for i := 0; i < rv.Len(); i++ {
 		builders[i] = c.Create()
 		setFunc(builders[i], i)
 	}
-	return &BlogContentCreateBulk{config: c.config, builders: builders}
+	return &BlogsCommentCreateBulk{config: c.config, builders: builders}
 }
 
-// Update returns an update builder for BlogContent.
-func (c *BlogContentClient) Update() *BlogContentUpdate {
-	mutation := newBlogContentMutation(c.config, OpUpdate)
-	return &BlogContentUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Update returns an update builder for BlogsComment.
+func (c *BlogsCommentClient) Update() *BlogsCommentUpdate {
+	mutation := newBlogsCommentMutation(c.config, OpUpdate)
+	return &BlogsCommentUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *BlogContentClient) UpdateOne(bc *BlogContent) *BlogContentUpdateOne {
-	mutation := newBlogContentMutation(c.config, OpUpdateOne, withBlogContent(bc))
-	return &BlogContentUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *BlogsCommentClient) UpdateOne(bc *BlogsComment) *BlogsCommentUpdateOne {
+	mutation := newBlogsCommentMutation(c.config, OpUpdateOne, withBlogsComment(bc))
+	return &BlogsCommentUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOneID returns an update builder for the given id.
-func (c *BlogContentClient) UpdateOneID(id int) *BlogContentUpdateOne {
-	mutation := newBlogContentMutation(c.config, OpUpdateOne, withBlogContentID(id))
-	return &BlogContentUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *BlogsCommentClient) UpdateOneID(id int) *BlogsCommentUpdateOne {
+	mutation := newBlogsCommentMutation(c.config, OpUpdateOne, withBlogsCommentID(id))
+	return &BlogsCommentUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// Delete returns a delete builder for BlogContent.
-func (c *BlogContentClient) Delete() *BlogContentDelete {
-	mutation := newBlogContentMutation(c.config, OpDelete)
-	return &BlogContentDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Delete returns a delete builder for BlogsComment.
+func (c *BlogsCommentClient) Delete() *BlogsCommentDelete {
+	mutation := newBlogsCommentMutation(c.config, OpDelete)
+	return &BlogsCommentDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // DeleteOne returns a builder for deleting the given entity.
-func (c *BlogContentClient) DeleteOne(bc *BlogContent) *BlogContentDeleteOne {
+func (c *BlogsCommentClient) DeleteOne(bc *BlogsComment) *BlogsCommentDeleteOne {
 	return c.DeleteOneID(bc.ID)
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
-func (c *BlogContentClient) DeleteOneID(id int) *BlogContentDeleteOne {
-	builder := c.Delete().Where(blogcontent.ID(id))
+func (c *BlogsCommentClient) DeleteOneID(id int) *BlogsCommentDeleteOne {
+	builder := c.Delete().Where(blogscomment.ID(id))
 	builder.mutation.id = &id
 	builder.mutation.op = OpDeleteOne
-	return &BlogContentDeleteOne{builder}
+	return &BlogsCommentDeleteOne{builder}
 }
 
-// Query returns a query builder for BlogContent.
-func (c *BlogContentClient) Query() *BlogContentQuery {
-	return &BlogContentQuery{
+// Query returns a query builder for BlogsComment.
+func (c *BlogsCommentClient) Query() *BlogsCommentQuery {
+	return &BlogsCommentQuery{
 		config: c.config,
-		ctx:    &QueryContext{Type: TypeBlogContent},
+		ctx:    &QueryContext{Type: TypeBlogsComment},
 		inters: c.Interceptors(),
 	}
 }
 
-// Get returns a BlogContent entity by its id.
-func (c *BlogContentClient) Get(ctx context.Context, id int) (*BlogContent, error) {
-	return c.Query().Where(blogcontent.ID(id)).Only(ctx)
+// Get returns a BlogsComment entity by its id.
+func (c *BlogsCommentClient) Get(ctx context.Context, id int) (*BlogsComment, error) {
+	return c.Query().Where(blogscomment.ID(id)).Only(ctx)
 }
 
 // GetX is like Get, but panics if an error occurs.
-func (c *BlogContentClient) GetX(ctx context.Context, id int) *BlogContent {
+func (c *BlogsCommentClient) GetX(ctx context.Context, id int) *BlogsComment {
 	obj, err := c.Get(ctx, id)
 	if err != nil {
 		panic(err)
@@ -608,131 +608,133 @@ func (c *BlogContentClient) GetX(ctx context.Context, id int) *BlogContent {
 }
 
 // Hooks returns the client hooks.
-func (c *BlogContentClient) Hooks() []Hook {
-	return c.hooks.BlogContent
+func (c *BlogsCommentClient) Hooks() []Hook {
+	hooks := c.hooks.BlogsComment
+	return append(hooks[:len(hooks):len(hooks)], blogscomment.Hooks[:]...)
 }
 
 // Interceptors returns the client interceptors.
-func (c *BlogContentClient) Interceptors() []Interceptor {
-	return c.inters.BlogContent
+func (c *BlogsCommentClient) Interceptors() []Interceptor {
+	inters := c.inters.BlogsComment
+	return append(inters[:len(inters):len(inters)], blogscomment.Interceptors[:]...)
 }
 
-func (c *BlogContentClient) mutate(ctx context.Context, m *BlogContentMutation) (Value, error) {
+func (c *BlogsCommentClient) mutate(ctx context.Context, m *BlogsCommentMutation) (Value, error) {
 	switch m.Op() {
 	case OpCreate:
-		return (&BlogContentCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+		return (&BlogsCommentCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
 	case OpUpdate:
-		return (&BlogContentUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+		return (&BlogsCommentUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
 	case OpUpdateOne:
-		return (&BlogContentUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+		return (&BlogsCommentUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
 	case OpDelete, OpDeleteOne:
-		return (&BlogContentDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+		return (&BlogsCommentDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
 	default:
-		return nil, fmt.Errorf("ent: unknown BlogContent mutation op: %q", m.Op())
+		return nil, fmt.Errorf("ent: unknown BlogsComment mutation op: %q", m.Op())
 	}
 }
 
-// CommentClient is a client for the Comment schema.
-type CommentClient struct {
+// BlogsContentClient is a client for the BlogsContent schema.
+type BlogsContentClient struct {
 	config
 }
 
-// NewCommentClient returns a client for the Comment from the given config.
-func NewCommentClient(c config) *CommentClient {
-	return &CommentClient{config: c}
+// NewBlogsContentClient returns a client for the BlogsContent from the given config.
+func NewBlogsContentClient(c config) *BlogsContentClient {
+	return &BlogsContentClient{config: c}
 }
 
 // Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `comment.Hooks(f(g(h())))`.
-func (c *CommentClient) Use(hooks ...Hook) {
-	c.hooks.Comment = append(c.hooks.Comment, hooks...)
+// A call to `Use(f, g, h)` equals to `blogscontent.Hooks(f(g(h())))`.
+func (c *BlogsContentClient) Use(hooks ...Hook) {
+	c.hooks.BlogsContent = append(c.hooks.BlogsContent, hooks...)
 }
 
 // Intercept adds a list of query interceptors to the interceptors stack.
-// A call to `Intercept(f, g, h)` equals to `comment.Intercept(f(g(h())))`.
-func (c *CommentClient) Intercept(interceptors ...Interceptor) {
-	c.inters.Comment = append(c.inters.Comment, interceptors...)
+// A call to `Intercept(f, g, h)` equals to `blogscontent.Intercept(f(g(h())))`.
+func (c *BlogsContentClient) Intercept(interceptors ...Interceptor) {
+	c.inters.BlogsContent = append(c.inters.BlogsContent, interceptors...)
 }
 
-// Create returns a builder for creating a Comment entity.
-func (c *CommentClient) Create() *CommentCreate {
-	mutation := newCommentMutation(c.config, OpCreate)
-	return &CommentCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Create returns a builder for creating a BlogsContent entity.
+func (c *BlogsContentClient) Create() *BlogsContentCreate {
+	mutation := newBlogsContentMutation(c.config, OpCreate)
+	return &BlogsContentCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// CreateBulk returns a builder for creating a bulk of Comment entities.
-func (c *CommentClient) CreateBulk(builders ...*CommentCreate) *CommentCreateBulk {
-	return &CommentCreateBulk{config: c.config, builders: builders}
+// CreateBulk returns a builder for creating a bulk of BlogsContent entities.
+func (c *BlogsContentClient) CreateBulk(builders ...*BlogsContentCreate) *BlogsContentCreateBulk {
+	return &BlogsContentCreateBulk{config: c.config, builders: builders}
 }
 
 // MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
 // a builder and applies setFunc on it.
-func (c *CommentClient) MapCreateBulk(slice any, setFunc func(*CommentCreate, int)) *CommentCreateBulk {
+func (c *BlogsContentClient) MapCreateBulk(slice any, setFunc func(*BlogsContentCreate, int)) *BlogsContentCreateBulk {
 	rv := reflect.ValueOf(slice)
 	if rv.Kind() != reflect.Slice {
-		return &CommentCreateBulk{err: fmt.Errorf("calling to CommentClient.MapCreateBulk with wrong type %T, need slice", slice)}
+		return &BlogsContentCreateBulk{err: fmt.Errorf("calling to BlogsContentClient.MapCreateBulk with wrong type %T, need slice", slice)}
 	}
-	builders := make([]*CommentCreate, rv.Len())
+	builders := make([]*BlogsContentCreate, rv.Len())
 	for i := 0; i < rv.Len(); i++ {
 		builders[i] = c.Create()
 		setFunc(builders[i], i)
 	}
-	return &CommentCreateBulk{config: c.config, builders: builders}
+	return &BlogsContentCreateBulk{config: c.config, builders: builders}
 }
 
-// Update returns an update builder for Comment.
-func (c *CommentClient) Update() *CommentUpdate {
-	mutation := newCommentMutation(c.config, OpUpdate)
-	return &CommentUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Update returns an update builder for BlogsContent.
+func (c *BlogsContentClient) Update() *BlogsContentUpdate {
+	mutation := newBlogsContentMutation(c.config, OpUpdate)
+	return &BlogsContentUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *CommentClient) UpdateOne(co *Comment) *CommentUpdateOne {
-	mutation := newCommentMutation(c.config, OpUpdateOne, withComment(co))
-	return &CommentUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *BlogsContentClient) UpdateOne(bc *BlogsContent) *BlogsContentUpdateOne {
+	mutation := newBlogsContentMutation(c.config, OpUpdateOne, withBlogsContent(bc))
+	return &BlogsContentUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOneID returns an update builder for the given id.
-func (c *CommentClient) UpdateOneID(id int) *CommentUpdateOne {
-	mutation := newCommentMutation(c.config, OpUpdateOne, withCommentID(id))
-	return &CommentUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *BlogsContentClient) UpdateOneID(id int) *BlogsContentUpdateOne {
+	mutation := newBlogsContentMutation(c.config, OpUpdateOne, withBlogsContentID(id))
+	return &BlogsContentUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// Delete returns a delete builder for Comment.
-func (c *CommentClient) Delete() *CommentDelete {
-	mutation := newCommentMutation(c.config, OpDelete)
-	return &CommentDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Delete returns a delete builder for BlogsContent.
+func (c *BlogsContentClient) Delete() *BlogsContentDelete {
+	mutation := newBlogsContentMutation(c.config, OpDelete)
+	return &BlogsContentDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // DeleteOne returns a builder for deleting the given entity.
-func (c *CommentClient) DeleteOne(co *Comment) *CommentDeleteOne {
-	return c.DeleteOneID(co.ID)
+func (c *BlogsContentClient) DeleteOne(bc *BlogsContent) *BlogsContentDeleteOne {
+	return c.DeleteOneID(bc.ID)
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
-func (c *CommentClient) DeleteOneID(id int) *CommentDeleteOne {
-	builder := c.Delete().Where(comment.ID(id))
+func (c *BlogsContentClient) DeleteOneID(id int) *BlogsContentDeleteOne {
+	builder := c.Delete().Where(blogscontent.ID(id))
 	builder.mutation.id = &id
 	builder.mutation.op = OpDeleteOne
-	return &CommentDeleteOne{builder}
+	return &BlogsContentDeleteOne{builder}
 }
 
-// Query returns a query builder for Comment.
-func (c *CommentClient) Query() *CommentQuery {
-	return &CommentQuery{
+// Query returns a query builder for BlogsContent.
+func (c *BlogsContentClient) Query() *BlogsContentQuery {
+	return &BlogsContentQuery{
 		config: c.config,
-		ctx:    &QueryContext{Type: TypeComment},
+		ctx:    &QueryContext{Type: TypeBlogsContent},
 		inters: c.Interceptors(),
 	}
 }
 
-// Get returns a Comment entity by its id.
-func (c *CommentClient) Get(ctx context.Context, id int) (*Comment, error) {
-	return c.Query().Where(comment.ID(id)).Only(ctx)
+// Get returns a BlogsContent entity by its id.
+func (c *BlogsContentClient) Get(ctx context.Context, id int) (*BlogsContent, error) {
+	return c.Query().Where(blogscontent.ID(id)).Only(ctx)
 }
 
 // GetX is like Get, but panics if an error occurs.
-func (c *CommentClient) GetX(ctx context.Context, id int) *Comment {
+func (c *BlogsContentClient) GetX(ctx context.Context, id int) *BlogsContent {
 	obj, err := c.Get(ctx, id)
 	if err != nil {
 		panic(err)
@@ -741,39 +743,37 @@ func (c *CommentClient) GetX(ctx context.Context, id int) *Comment {
 }
 
 // Hooks returns the client hooks.
-func (c *CommentClient) Hooks() []Hook {
-	hooks := c.hooks.Comment
-	return append(hooks[:len(hooks):len(hooks)], comment.Hooks[:]...)
+func (c *BlogsContentClient) Hooks() []Hook {
+	return c.hooks.BlogsContent
 }
 
 // Interceptors returns the client interceptors.
-func (c *CommentClient) Interceptors() []Interceptor {
-	inters := c.inters.Comment
-	return append(inters[:len(inters):len(inters)], comment.Interceptors[:]...)
+func (c *BlogsContentClient) Interceptors() []Interceptor {
+	return c.inters.BlogsContent
 }
 
-func (c *CommentClient) mutate(ctx context.Context, m *CommentMutation) (Value, error) {
+func (c *BlogsContentClient) mutate(ctx context.Context, m *BlogsContentMutation) (Value, error) {
 	switch m.Op() {
 	case OpCreate:
-		return (&CommentCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+		return (&BlogsContentCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
 	case OpUpdate:
-		return (&CommentUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+		return (&BlogsContentUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
 	case OpUpdateOne:
-		return (&CommentUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+		return (&BlogsContentUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
 	case OpDelete, OpDeleteOne:
-		return (&CommentDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+		return (&BlogsContentDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
 	default:
-		return nil, fmt.Errorf("ent: unknown Comment mutation op: %q", m.Op())
+		return nil, fmt.Errorf("ent: unknown BlogsContent mutation op: %q", m.Op())
 	}
 }
 
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		Account, Blog, BlogContent, Comment []ent.Hook
+		Account, Blogs, BlogsComment, BlogsContent []ent.Hook
 	}
 	inters struct {
-		Account, Blog, BlogContent, Comment []ent.Interceptor
+		Account, Blogs, BlogsComment, BlogsContent []ent.Interceptor
 	}
 )
 

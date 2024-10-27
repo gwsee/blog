@@ -9,14 +9,14 @@ import (
 	"entgo.io/ent/schema/field"
 )
 
-type Comment struct {
+type BlogsComment struct {
 	ent.Schema
 }
 
-func (Comment) Fields() []ent.Field {
+func (BlogsComment) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int("account_id").Positive().Comment("账户ID"),
-		field.Int("blog_id").Positive().Comment("对应类型的ID"),
+		field.Int("blog_id").Positive().Comment("博客ID"),
 		field.Int("id").Positive().Unique().Comment("评论ID"),
 		field.Int("top_id").Default(0).Comment("顶级ID"),
 		field.Int("parent_id").Default(0).Comment("父评论"),
@@ -29,15 +29,15 @@ func (Comment) Fields() []ent.Field {
 		field.String("content").Comment("评论内容"),
 	}
 }
-func (Comment) Mixin() []ent.Mixin {
+func (BlogsComment) Mixin() []ent.Mixin {
 	return []ent.Mixin{
 		mixin.Time{},
 		mixin.SoftDelete{},
 	}
 }
-func (Comment) Annotations() []schema.Annotation {
+func (BlogsComment) Annotations() []schema.Annotation {
 	return []schema.Annotation{
-		entsql.Annotation{Table: "comments"},
+		entsql.Annotation{Table: "blogs_comments"},
 		entsql.WithComments(true),
 		schema.Comment("博客评论"),
 	}

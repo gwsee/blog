@@ -20,40 +20,40 @@ func (f AccountFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, err
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AccountMutation", m)
 }
 
-// The BlogFunc type is an adapter to allow the use of ordinary
-// function as Blog mutator.
-type BlogFunc func(context.Context, *ent.BlogMutation) (ent.Value, error)
+// The BlogsFunc type is an adapter to allow the use of ordinary
+// function as Blogs mutator.
+type BlogsFunc func(context.Context, *ent.BlogsMutation) (ent.Value, error)
 
 // Mutate calls f(ctx, m).
-func (f BlogFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	if mv, ok := m.(*ent.BlogMutation); ok {
+func (f BlogsFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.BlogsMutation); ok {
 		return f(ctx, mv)
 	}
-	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.BlogMutation", m)
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.BlogsMutation", m)
 }
 
-// The BlogContentFunc type is an adapter to allow the use of ordinary
-// function as BlogContent mutator.
-type BlogContentFunc func(context.Context, *ent.BlogContentMutation) (ent.Value, error)
+// The BlogsCommentFunc type is an adapter to allow the use of ordinary
+// function as BlogsComment mutator.
+type BlogsCommentFunc func(context.Context, *ent.BlogsCommentMutation) (ent.Value, error)
 
 // Mutate calls f(ctx, m).
-func (f BlogContentFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	if mv, ok := m.(*ent.BlogContentMutation); ok {
+func (f BlogsCommentFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.BlogsCommentMutation); ok {
 		return f(ctx, mv)
 	}
-	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.BlogContentMutation", m)
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.BlogsCommentMutation", m)
 }
 
-// The CommentFunc type is an adapter to allow the use of ordinary
-// function as Comment mutator.
-type CommentFunc func(context.Context, *ent.CommentMutation) (ent.Value, error)
+// The BlogsContentFunc type is an adapter to allow the use of ordinary
+// function as BlogsContent mutator.
+type BlogsContentFunc func(context.Context, *ent.BlogsContentMutation) (ent.Value, error)
 
 // Mutate calls f(ctx, m).
-func (f CommentFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	if mv, ok := m.(*ent.CommentMutation); ok {
+func (f BlogsContentFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.BlogsContentMutation); ok {
 		return f(ctx, mv)
 	}
-	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.CommentMutation", m)
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.BlogsContentMutation", m)
 }
 
 // Condition is a hook condition function.

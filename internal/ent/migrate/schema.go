@@ -12,9 +12,9 @@ var (
 	// AccountColumns holds the columns for the "account" table.
 	AccountColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true, Comment: "账户ID"},
-		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1730003847},
+		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1730031650},
 		{Name: "created_by", Type: field.TypeString, Comment: "创建人", Default: ""},
-		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1730003847},
+		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1730031650},
 		{Name: "updated_by", Type: field.TypeString, Comment: "更新人", Default: ""},
 		{Name: "is_deleted", Type: field.TypeUint8, Comment: "是否删除;0：正常，1：删除", Default: 0},
 		{Name: "deleted_at", Type: field.TypeInt64, Comment: "软删除时间", Default: 0},
@@ -34,9 +34,9 @@ var (
 	// BlogsColumns holds the columns for the "blogs" table.
 	BlogsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true, Comment: "博客ID"},
-		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1730003847},
+		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1730031650},
 		{Name: "created_by", Type: field.TypeString, Comment: "创建人", Default: ""},
-		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1730003847},
+		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1730031650},
 		{Name: "updated_by", Type: field.TypeString, Comment: "更新人", Default: ""},
 		{Name: "is_deleted", Type: field.TypeUint8, Comment: "是否删除;0：正常，1：删除", Default: 0},
 		{Name: "deleted_at", Type: field.TypeInt64, Comment: "软删除时间", Default: 0},
@@ -56,24 +56,12 @@ var (
 		Columns:    BlogsColumns,
 		PrimaryKey: []*schema.Column{BlogsColumns[0]},
 	}
-	// BlogContentColumns holds the columns for the "blog_content" table.
-	BlogContentColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true, Comment: "博客ID"},
-		{Name: "content", Type: field.TypeString, Comment: "内容", SchemaType: map[string]string{"mysql": "text"}},
-	}
-	// BlogContentTable holds the schema information for the "blog_content" table.
-	BlogContentTable = &schema.Table{
-		Name:       "blog_content",
-		Comment:    "博客内容",
-		Columns:    BlogContentColumns,
-		PrimaryKey: []*schema.Column{BlogContentColumns[0]},
-	}
-	// CommentsColumns holds the columns for the "comments" table.
-	CommentsColumns = []*schema.Column{
+	// BlogsCommentsColumns holds the columns for the "blogs_comments" table.
+	BlogsCommentsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true, Comment: "评论ID"},
-		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1730003847},
+		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1730031650},
 		{Name: "created_by", Type: field.TypeString, Comment: "创建人", Default: ""},
-		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1730003847},
+		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1730031650},
 		{Name: "updated_by", Type: field.TypeString, Comment: "更新人", Default: ""},
 		{Name: "is_deleted", Type: field.TypeUint8, Comment: "是否删除;0：正常，1：删除", Default: 0},
 		{Name: "deleted_at", Type: field.TypeInt64, Comment: "软删除时间", Default: 0},
@@ -87,19 +75,31 @@ var (
 		{Name: "status", Type: field.TypeInt8, Comment: "0显示,1隐藏", Default: 0, SchemaType: map[string]string{"mysql": "tinyint"}},
 		{Name: "content", Type: field.TypeString, Comment: "评论内容"},
 	}
-	// CommentsTable holds the schema information for the "comments" table.
-	CommentsTable = &schema.Table{
-		Name:       "comments",
+	// BlogsCommentsTable holds the schema information for the "blogs_comments" table.
+	BlogsCommentsTable = &schema.Table{
+		Name:       "blogs_comments",
 		Comment:    "博客评论",
-		Columns:    CommentsColumns,
-		PrimaryKey: []*schema.Column{CommentsColumns[0]},
+		Columns:    BlogsCommentsColumns,
+		PrimaryKey: []*schema.Column{BlogsCommentsColumns[0]},
+	}
+	// BlogsContentColumns holds the columns for the "blogs_content" table.
+	BlogsContentColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true, Comment: "博客ID"},
+		{Name: "content", Type: field.TypeString, Comment: "内容", SchemaType: map[string]string{"mysql": "text"}},
+	}
+	// BlogsContentTable holds the schema information for the "blogs_content" table.
+	BlogsContentTable = &schema.Table{
+		Name:       "blogs_content",
+		Comment:    "博客内容",
+		Columns:    BlogsContentColumns,
+		PrimaryKey: []*schema.Column{BlogsContentColumns[0]},
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		AccountTable,
 		BlogsTable,
-		BlogContentTable,
-		CommentsTable,
+		BlogsCommentsTable,
+		BlogsContentTable,
 	}
 )
 
@@ -110,10 +110,10 @@ func init() {
 	BlogsTable.Annotation = &entsql.Annotation{
 		Table: "blogs",
 	}
-	BlogContentTable.Annotation = &entsql.Annotation{
-		Table: "blog_content",
+	BlogsCommentsTable.Annotation = &entsql.Annotation{
+		Table: "blogs_comments",
 	}
-	CommentsTable.Annotation = &entsql.Annotation{
-		Table: "comments",
+	BlogsContentTable.Annotation = &entsql.Annotation{
+		Table: "blogs_content",
 	}
 }

@@ -8,11 +8,11 @@ import (
 	"entgo.io/ent/schema/field"
 )
 
-type BlogContent struct {
+type BlogsContent struct {
 	ent.Schema
 }
 
-func (BlogContent) Fields() []ent.Field {
+func (BlogsContent) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int("id").Unique().Comment("博客ID"),
 		field.String("content").NotEmpty().Comment("内容").
@@ -22,9 +22,9 @@ func (BlogContent) Fields() []ent.Field {
 	}
 }
 
-func (BlogContent) Annotations() []schema.Annotation {
+func (BlogsContent) Annotations() []schema.Annotation {
 	return []schema.Annotation{
-		entsql.Annotation{Table: "blog_content"},
+		entsql.Annotation{Table: "blogs_content"},
 		entsql.WithComments(true),
 		schema.Comment("博客内容"),
 	}

@@ -4,9 +4,9 @@ package ent
 
 import (
 	"blog/internal/ent/account"
-	"blog/internal/ent/blog"
-	"blog/internal/ent/blogcontent"
-	"blog/internal/ent/comment"
+	"blog/internal/ent/blogs"
+	"blog/internal/ent/blogscomment"
+	"blog/internal/ent/blogscontent"
 	"blog/internal/ent/predicate"
 	"context"
 	"errors"
@@ -26,10 +26,10 @@ const (
 	OpUpdateOne = ent.OpUpdateOne
 
 	// Node types.
-	TypeAccount     = "Account"
-	TypeBlog        = "Blog"
-	TypeBlogContent = "BlogContent"
-	TypeComment     = "Comment"
+	TypeAccount      = "Account"
+	TypeBlogs        = "Blogs"
+	TypeBlogsComment = "BlogsComment"
+	TypeBlogsContent = "BlogsContent"
 )
 
 // AccountMutation represents an operation that mutates the Account nodes in the graph.
@@ -1072,8 +1072,8 @@ func (m *AccountMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown Account edge %s", name)
 }
 
-// BlogMutation represents an operation that mutates the Blog nodes in the graph.
-type BlogMutation struct {
+// BlogsMutation represents an operation that mutates the Blogs nodes in the graph.
+type BlogsMutation struct {
 	config
 	op            Op
 	typ           string
@@ -1101,21 +1101,21 @@ type BlogMutation struct {
 	content       *string
 	clearedFields map[string]struct{}
 	done          bool
-	oldValue      func(context.Context) (*Blog, error)
-	predicates    []predicate.Blog
+	oldValue      func(context.Context) (*Blogs, error)
+	predicates    []predicate.Blogs
 }
 
-var _ ent.Mutation = (*BlogMutation)(nil)
+var _ ent.Mutation = (*BlogsMutation)(nil)
 
-// blogOption allows management of the mutation configuration using functional options.
-type blogOption func(*BlogMutation)
+// blogsOption allows management of the mutation configuration using functional options.
+type blogsOption func(*BlogsMutation)
 
-// newBlogMutation creates new mutation for the Blog entity.
-func newBlogMutation(c config, op Op, opts ...blogOption) *BlogMutation {
-	m := &BlogMutation{
+// newBlogsMutation creates new mutation for the Blogs entity.
+func newBlogsMutation(c config, op Op, opts ...blogsOption) *BlogsMutation {
+	m := &BlogsMutation{
 		config:        c,
 		op:            op,
-		typ:           TypeBlog,
+		typ:           TypeBlogs,
 		clearedFields: make(map[string]struct{}),
 	}
 	for _, opt := range opts {
@@ -1124,20 +1124,20 @@ func newBlogMutation(c config, op Op, opts ...blogOption) *BlogMutation {
 	return m
 }
 
-// withBlogID sets the ID field of the mutation.
-func withBlogID(id int) blogOption {
-	return func(m *BlogMutation) {
+// withBlogsID sets the ID field of the mutation.
+func withBlogsID(id int) blogsOption {
+	return func(m *BlogsMutation) {
 		var (
 			err   error
 			once  sync.Once
-			value *Blog
+			value *Blogs
 		)
-		m.oldValue = func(ctx context.Context) (*Blog, error) {
+		m.oldValue = func(ctx context.Context) (*Blogs, error) {
 			once.Do(func() {
 				if m.done {
 					err = errors.New("querying old values post mutation is not allowed")
 				} else {
-					value, err = m.Client().Blog.Get(ctx, id)
+					value, err = m.Client().Blogs.Get(ctx, id)
 				}
 			})
 			return value, err
@@ -1146,10 +1146,10 @@ func withBlogID(id int) blogOption {
 	}
 }
 
-// withBlog sets the old Blog of the mutation.
-func withBlog(node *Blog) blogOption {
-	return func(m *BlogMutation) {
-		m.oldValue = func(context.Context) (*Blog, error) {
+// withBlogs sets the old Blogs of the mutation.
+func withBlogs(node *Blogs) blogsOption {
+	return func(m *BlogsMutation) {
+		m.oldValue = func(context.Context) (*Blogs, error) {
 			return node, nil
 		}
 		m.id = &node.ID
@@ -1158,7 +1158,7 @@ func withBlog(node *Blog) blogOption {
 
 // Client returns a new `ent.Client` from the mutation. If the mutation was
 // executed in a transaction (ent.Tx), a transactional client is returned.
-func (m BlogMutation) Client() *Client {
+func (m BlogsMutation) Client() *Client {
 	client := &Client{config: m.config}
 	client.init()
 	return client
@@ -1166,7 +1166,7 @@ func (m BlogMutation) Client() *Client {
 
 // Tx returns an `ent.Tx` for mutations that were executed in transactions;
 // it returns an error otherwise.
-func (m BlogMutation) Tx() (*Tx, error) {
+func (m BlogsMutation) Tx() (*Tx, error) {
 	if _, ok := m.driver.(*txDriver); !ok {
 		return nil, errors.New("ent: mutation is not running in a transaction")
 	}
@@ -1176,14 +1176,14 @@ func (m BlogMutation) Tx() (*Tx, error) {
 }
 
 // SetID sets the value of the id field. Note that this
-// operation is only accepted on creation of Blog entities.
-func (m *BlogMutation) SetID(id int) {
+// operation is only accepted on creation of Blogs entities.
+func (m *BlogsMutation) SetID(id int) {
 	m.id = &id
 }
 
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *BlogMutation) ID() (id int, exists bool) {
+func (m *BlogsMutation) ID() (id int, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -1194,7 +1194,7 @@ func (m *BlogMutation) ID() (id int, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *BlogMutation) IDs(ctx context.Context) ([]int, error) {
+func (m *BlogsMutation) IDs(ctx context.Context) ([]int, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
@@ -1203,20 +1203,20 @@ func (m *BlogMutation) IDs(ctx context.Context) ([]int, error) {
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
-		return m.Client().Blog.Query().Where(m.predicates...).IDs(ctx)
+		return m.Client().Blogs.Query().Where(m.predicates...).IDs(ctx)
 	default:
 		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
 	}
 }
 
 // SetCreatedAt sets the "created_at" field.
-func (m *BlogMutation) SetCreatedAt(i int64) {
+func (m *BlogsMutation) SetCreatedAt(i int64) {
 	m.created_at = &i
 	m.addcreated_at = nil
 }
 
 // CreatedAt returns the value of the "created_at" field in the mutation.
-func (m *BlogMutation) CreatedAt() (r int64, exists bool) {
+func (m *BlogsMutation) CreatedAt() (r int64, exists bool) {
 	v := m.created_at
 	if v == nil {
 		return
@@ -1224,10 +1224,10 @@ func (m *BlogMutation) CreatedAt() (r int64, exists bool) {
 	return *v, true
 }
 
-// OldCreatedAt returns the old "created_at" field's value of the Blog entity.
-// If the Blog object wasn't provided to the builder, the object is fetched from the database.
+// OldCreatedAt returns the old "created_at" field's value of the Blogs entity.
+// If the Blogs object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *BlogMutation) OldCreatedAt(ctx context.Context) (v int64, err error) {
+func (m *BlogsMutation) OldCreatedAt(ctx context.Context) (v int64, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
 	}
@@ -1242,7 +1242,7 @@ func (m *BlogMutation) OldCreatedAt(ctx context.Context) (v int64, err error) {
 }
 
 // AddCreatedAt adds i to the "created_at" field.
-func (m *BlogMutation) AddCreatedAt(i int64) {
+func (m *BlogsMutation) AddCreatedAt(i int64) {
 	if m.addcreated_at != nil {
 		*m.addcreated_at += i
 	} else {
@@ -1251,7 +1251,7 @@ func (m *BlogMutation) AddCreatedAt(i int64) {
 }
 
 // AddedCreatedAt returns the value that was added to the "created_at" field in this mutation.
-func (m *BlogMutation) AddedCreatedAt() (r int64, exists bool) {
+func (m *BlogsMutation) AddedCreatedAt() (r int64, exists bool) {
 	v := m.addcreated_at
 	if v == nil {
 		return
@@ -1260,18 +1260,18 @@ func (m *BlogMutation) AddedCreatedAt() (r int64, exists bool) {
 }
 
 // ResetCreatedAt resets all changes to the "created_at" field.
-func (m *BlogMutation) ResetCreatedAt() {
+func (m *BlogsMutation) ResetCreatedAt() {
 	m.created_at = nil
 	m.addcreated_at = nil
 }
 
 // SetCreatedBy sets the "created_by" field.
-func (m *BlogMutation) SetCreatedBy(s string) {
+func (m *BlogsMutation) SetCreatedBy(s string) {
 	m.created_by = &s
 }
 
 // CreatedBy returns the value of the "created_by" field in the mutation.
-func (m *BlogMutation) CreatedBy() (r string, exists bool) {
+func (m *BlogsMutation) CreatedBy() (r string, exists bool) {
 	v := m.created_by
 	if v == nil {
 		return
@@ -1279,10 +1279,10 @@ func (m *BlogMutation) CreatedBy() (r string, exists bool) {
 	return *v, true
 }
 
-// OldCreatedBy returns the old "created_by" field's value of the Blog entity.
-// If the Blog object wasn't provided to the builder, the object is fetched from the database.
+// OldCreatedBy returns the old "created_by" field's value of the Blogs entity.
+// If the Blogs object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *BlogMutation) OldCreatedBy(ctx context.Context) (v string, err error) {
+func (m *BlogsMutation) OldCreatedBy(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldCreatedBy is only allowed on UpdateOne operations")
 	}
@@ -1297,18 +1297,18 @@ func (m *BlogMutation) OldCreatedBy(ctx context.Context) (v string, err error) {
 }
 
 // ResetCreatedBy resets all changes to the "created_by" field.
-func (m *BlogMutation) ResetCreatedBy() {
+func (m *BlogsMutation) ResetCreatedBy() {
 	m.created_by = nil
 }
 
 // SetUpdatedAt sets the "updated_at" field.
-func (m *BlogMutation) SetUpdatedAt(i int64) {
+func (m *BlogsMutation) SetUpdatedAt(i int64) {
 	m.updated_at = &i
 	m.addupdated_at = nil
 }
 
 // UpdatedAt returns the value of the "updated_at" field in the mutation.
-func (m *BlogMutation) UpdatedAt() (r int64, exists bool) {
+func (m *BlogsMutation) UpdatedAt() (r int64, exists bool) {
 	v := m.updated_at
 	if v == nil {
 		return
@@ -1316,10 +1316,10 @@ func (m *BlogMutation) UpdatedAt() (r int64, exists bool) {
 	return *v, true
 }
 
-// OldUpdatedAt returns the old "updated_at" field's value of the Blog entity.
-// If the Blog object wasn't provided to the builder, the object is fetched from the database.
+// OldUpdatedAt returns the old "updated_at" field's value of the Blogs entity.
+// If the Blogs object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *BlogMutation) OldUpdatedAt(ctx context.Context) (v int64, err error) {
+func (m *BlogsMutation) OldUpdatedAt(ctx context.Context) (v int64, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
 	}
@@ -1334,7 +1334,7 @@ func (m *BlogMutation) OldUpdatedAt(ctx context.Context) (v int64, err error) {
 }
 
 // AddUpdatedAt adds i to the "updated_at" field.
-func (m *BlogMutation) AddUpdatedAt(i int64) {
+func (m *BlogsMutation) AddUpdatedAt(i int64) {
 	if m.addupdated_at != nil {
 		*m.addupdated_at += i
 	} else {
@@ -1343,7 +1343,7 @@ func (m *BlogMutation) AddUpdatedAt(i int64) {
 }
 
 // AddedUpdatedAt returns the value that was added to the "updated_at" field in this mutation.
-func (m *BlogMutation) AddedUpdatedAt() (r int64, exists bool) {
+func (m *BlogsMutation) AddedUpdatedAt() (r int64, exists bool) {
 	v := m.addupdated_at
 	if v == nil {
 		return
@@ -1352,18 +1352,18 @@ func (m *BlogMutation) AddedUpdatedAt() (r int64, exists bool) {
 }
 
 // ResetUpdatedAt resets all changes to the "updated_at" field.
-func (m *BlogMutation) ResetUpdatedAt() {
+func (m *BlogsMutation) ResetUpdatedAt() {
 	m.updated_at = nil
 	m.addupdated_at = nil
 }
 
 // SetUpdatedBy sets the "updated_by" field.
-func (m *BlogMutation) SetUpdatedBy(s string) {
+func (m *BlogsMutation) SetUpdatedBy(s string) {
 	m.updated_by = &s
 }
 
 // UpdatedBy returns the value of the "updated_by" field in the mutation.
-func (m *BlogMutation) UpdatedBy() (r string, exists bool) {
+func (m *BlogsMutation) UpdatedBy() (r string, exists bool) {
 	v := m.updated_by
 	if v == nil {
 		return
@@ -1371,10 +1371,10 @@ func (m *BlogMutation) UpdatedBy() (r string, exists bool) {
 	return *v, true
 }
 
-// OldUpdatedBy returns the old "updated_by" field's value of the Blog entity.
-// If the Blog object wasn't provided to the builder, the object is fetched from the database.
+// OldUpdatedBy returns the old "updated_by" field's value of the Blogs entity.
+// If the Blogs object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *BlogMutation) OldUpdatedBy(ctx context.Context) (v string, err error) {
+func (m *BlogsMutation) OldUpdatedBy(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldUpdatedBy is only allowed on UpdateOne operations")
 	}
@@ -1389,18 +1389,18 @@ func (m *BlogMutation) OldUpdatedBy(ctx context.Context) (v string, err error) {
 }
 
 // ResetUpdatedBy resets all changes to the "updated_by" field.
-func (m *BlogMutation) ResetUpdatedBy() {
+func (m *BlogsMutation) ResetUpdatedBy() {
 	m.updated_by = nil
 }
 
 // SetIsDeleted sets the "is_deleted" field.
-func (m *BlogMutation) SetIsDeleted(u uint8) {
+func (m *BlogsMutation) SetIsDeleted(u uint8) {
 	m.is_deleted = &u
 	m.addis_deleted = nil
 }
 
 // IsDeleted returns the value of the "is_deleted" field in the mutation.
-func (m *BlogMutation) IsDeleted() (r uint8, exists bool) {
+func (m *BlogsMutation) IsDeleted() (r uint8, exists bool) {
 	v := m.is_deleted
 	if v == nil {
 		return
@@ -1408,10 +1408,10 @@ func (m *BlogMutation) IsDeleted() (r uint8, exists bool) {
 	return *v, true
 }
 
-// OldIsDeleted returns the old "is_deleted" field's value of the Blog entity.
-// If the Blog object wasn't provided to the builder, the object is fetched from the database.
+// OldIsDeleted returns the old "is_deleted" field's value of the Blogs entity.
+// If the Blogs object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *BlogMutation) OldIsDeleted(ctx context.Context) (v uint8, err error) {
+func (m *BlogsMutation) OldIsDeleted(ctx context.Context) (v uint8, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldIsDeleted is only allowed on UpdateOne operations")
 	}
@@ -1426,7 +1426,7 @@ func (m *BlogMutation) OldIsDeleted(ctx context.Context) (v uint8, err error) {
 }
 
 // AddIsDeleted adds u to the "is_deleted" field.
-func (m *BlogMutation) AddIsDeleted(u int8) {
+func (m *BlogsMutation) AddIsDeleted(u int8) {
 	if m.addis_deleted != nil {
 		*m.addis_deleted += u
 	} else {
@@ -1435,7 +1435,7 @@ func (m *BlogMutation) AddIsDeleted(u int8) {
 }
 
 // AddedIsDeleted returns the value that was added to the "is_deleted" field in this mutation.
-func (m *BlogMutation) AddedIsDeleted() (r int8, exists bool) {
+func (m *BlogsMutation) AddedIsDeleted() (r int8, exists bool) {
 	v := m.addis_deleted
 	if v == nil {
 		return
@@ -1444,19 +1444,19 @@ func (m *BlogMutation) AddedIsDeleted() (r int8, exists bool) {
 }
 
 // ResetIsDeleted resets all changes to the "is_deleted" field.
-func (m *BlogMutation) ResetIsDeleted() {
+func (m *BlogsMutation) ResetIsDeleted() {
 	m.is_deleted = nil
 	m.addis_deleted = nil
 }
 
 // SetDeletedAt sets the "deleted_at" field.
-func (m *BlogMutation) SetDeletedAt(i int64) {
+func (m *BlogsMutation) SetDeletedAt(i int64) {
 	m.deleted_at = &i
 	m.adddeleted_at = nil
 }
 
 // DeletedAt returns the value of the "deleted_at" field in the mutation.
-func (m *BlogMutation) DeletedAt() (r int64, exists bool) {
+func (m *BlogsMutation) DeletedAt() (r int64, exists bool) {
 	v := m.deleted_at
 	if v == nil {
 		return
@@ -1464,10 +1464,10 @@ func (m *BlogMutation) DeletedAt() (r int64, exists bool) {
 	return *v, true
 }
 
-// OldDeletedAt returns the old "deleted_at" field's value of the Blog entity.
-// If the Blog object wasn't provided to the builder, the object is fetched from the database.
+// OldDeletedAt returns the old "deleted_at" field's value of the Blogs entity.
+// If the Blogs object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *BlogMutation) OldDeletedAt(ctx context.Context) (v int64, err error) {
+func (m *BlogsMutation) OldDeletedAt(ctx context.Context) (v int64, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldDeletedAt is only allowed on UpdateOne operations")
 	}
@@ -1482,7 +1482,7 @@ func (m *BlogMutation) OldDeletedAt(ctx context.Context) (v int64, err error) {
 }
 
 // AddDeletedAt adds i to the "deleted_at" field.
-func (m *BlogMutation) AddDeletedAt(i int64) {
+func (m *BlogsMutation) AddDeletedAt(i int64) {
 	if m.adddeleted_at != nil {
 		*m.adddeleted_at += i
 	} else {
@@ -1491,7 +1491,7 @@ func (m *BlogMutation) AddDeletedAt(i int64) {
 }
 
 // AddedDeletedAt returns the value that was added to the "deleted_at" field in this mutation.
-func (m *BlogMutation) AddedDeletedAt() (r int64, exists bool) {
+func (m *BlogsMutation) AddedDeletedAt() (r int64, exists bool) {
 	v := m.adddeleted_at
 	if v == nil {
 		return
@@ -1500,18 +1500,18 @@ func (m *BlogMutation) AddedDeletedAt() (r int64, exists bool) {
 }
 
 // ResetDeletedAt resets all changes to the "deleted_at" field.
-func (m *BlogMutation) ResetDeletedAt() {
+func (m *BlogsMutation) ResetDeletedAt() {
 	m.deleted_at = nil
 	m.adddeleted_at = nil
 }
 
 // SetDeletedBy sets the "deleted_by" field.
-func (m *BlogMutation) SetDeletedBy(s string) {
+func (m *BlogsMutation) SetDeletedBy(s string) {
 	m.deleted_by = &s
 }
 
 // DeletedBy returns the value of the "deleted_by" field in the mutation.
-func (m *BlogMutation) DeletedBy() (r string, exists bool) {
+func (m *BlogsMutation) DeletedBy() (r string, exists bool) {
 	v := m.deleted_by
 	if v == nil {
 		return
@@ -1519,10 +1519,10 @@ func (m *BlogMutation) DeletedBy() (r string, exists bool) {
 	return *v, true
 }
 
-// OldDeletedBy returns the old "deleted_by" field's value of the Blog entity.
-// If the Blog object wasn't provided to the builder, the object is fetched from the database.
+// OldDeletedBy returns the old "deleted_by" field's value of the Blogs entity.
+// If the Blogs object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *BlogMutation) OldDeletedBy(ctx context.Context) (v string, err error) {
+func (m *BlogsMutation) OldDeletedBy(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldDeletedBy is only allowed on UpdateOne operations")
 	}
@@ -1537,18 +1537,18 @@ func (m *BlogMutation) OldDeletedBy(ctx context.Context) (v string, err error) {
 }
 
 // ResetDeletedBy resets all changes to the "deleted_by" field.
-func (m *BlogMutation) ResetDeletedBy() {
+func (m *BlogsMutation) ResetDeletedBy() {
 	m.deleted_by = nil
 }
 
 // SetAccountID sets the "account_id" field.
-func (m *BlogMutation) SetAccountID(i int) {
+func (m *BlogsMutation) SetAccountID(i int) {
 	m.account_id = &i
 	m.addaccount_id = nil
 }
 
 // AccountID returns the value of the "account_id" field in the mutation.
-func (m *BlogMutation) AccountID() (r int, exists bool) {
+func (m *BlogsMutation) AccountID() (r int, exists bool) {
 	v := m.account_id
 	if v == nil {
 		return
@@ -1556,10 +1556,10 @@ func (m *BlogMutation) AccountID() (r int, exists bool) {
 	return *v, true
 }
 
-// OldAccountID returns the old "account_id" field's value of the Blog entity.
-// If the Blog object wasn't provided to the builder, the object is fetched from the database.
+// OldAccountID returns the old "account_id" field's value of the Blogs entity.
+// If the Blogs object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *BlogMutation) OldAccountID(ctx context.Context) (v int, err error) {
+func (m *BlogsMutation) OldAccountID(ctx context.Context) (v int, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldAccountID is only allowed on UpdateOne operations")
 	}
@@ -1574,7 +1574,7 @@ func (m *BlogMutation) OldAccountID(ctx context.Context) (v int, err error) {
 }
 
 // AddAccountID adds i to the "account_id" field.
-func (m *BlogMutation) AddAccountID(i int) {
+func (m *BlogsMutation) AddAccountID(i int) {
 	if m.addaccount_id != nil {
 		*m.addaccount_id += i
 	} else {
@@ -1583,7 +1583,7 @@ func (m *BlogMutation) AddAccountID(i int) {
 }
 
 // AddedAccountID returns the value that was added to the "account_id" field in this mutation.
-func (m *BlogMutation) AddedAccountID() (r int, exists bool) {
+func (m *BlogsMutation) AddedAccountID() (r int, exists bool) {
 	v := m.addaccount_id
 	if v == nil {
 		return
@@ -1592,18 +1592,18 @@ func (m *BlogMutation) AddedAccountID() (r int, exists bool) {
 }
 
 // ResetAccountID resets all changes to the "account_id" field.
-func (m *BlogMutation) ResetAccountID() {
+func (m *BlogsMutation) ResetAccountID() {
 	m.account_id = nil
 	m.addaccount_id = nil
 }
 
 // SetTitle sets the "title" field.
-func (m *BlogMutation) SetTitle(s string) {
+func (m *BlogsMutation) SetTitle(s string) {
 	m.title = &s
 }
 
 // Title returns the value of the "title" field in the mutation.
-func (m *BlogMutation) Title() (r string, exists bool) {
+func (m *BlogsMutation) Title() (r string, exists bool) {
 	v := m.title
 	if v == nil {
 		return
@@ -1611,10 +1611,10 @@ func (m *BlogMutation) Title() (r string, exists bool) {
 	return *v, true
 }
 
-// OldTitle returns the old "title" field's value of the Blog entity.
-// If the Blog object wasn't provided to the builder, the object is fetched from the database.
+// OldTitle returns the old "title" field's value of the Blogs entity.
+// If the Blogs object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *BlogMutation) OldTitle(ctx context.Context) (v string, err error) {
+func (m *BlogsMutation) OldTitle(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldTitle is only allowed on UpdateOne operations")
 	}
@@ -1629,17 +1629,17 @@ func (m *BlogMutation) OldTitle(ctx context.Context) (v string, err error) {
 }
 
 // ResetTitle resets all changes to the "title" field.
-func (m *BlogMutation) ResetTitle() {
+func (m *BlogsMutation) ResetTitle() {
 	m.title = nil
 }
 
 // SetDescription sets the "description" field.
-func (m *BlogMutation) SetDescription(s string) {
+func (m *BlogsMutation) SetDescription(s string) {
 	m.description = &s
 }
 
 // Description returns the value of the "description" field in the mutation.
-func (m *BlogMutation) Description() (r string, exists bool) {
+func (m *BlogsMutation) Description() (r string, exists bool) {
 	v := m.description
 	if v == nil {
 		return
@@ -1647,10 +1647,10 @@ func (m *BlogMutation) Description() (r string, exists bool) {
 	return *v, true
 }
 
-// OldDescription returns the old "description" field's value of the Blog entity.
-// If the Blog object wasn't provided to the builder, the object is fetched from the database.
+// OldDescription returns the old "description" field's value of the Blogs entity.
+// If the Blogs object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *BlogMutation) OldDescription(ctx context.Context) (v string, err error) {
+func (m *BlogsMutation) OldDescription(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldDescription is only allowed on UpdateOne operations")
 	}
@@ -1665,18 +1665,18 @@ func (m *BlogMutation) OldDescription(ctx context.Context) (v string, err error)
 }
 
 // ResetDescription resets all changes to the "description" field.
-func (m *BlogMutation) ResetDescription() {
+func (m *BlogsMutation) ResetDescription() {
 	m.description = nil
 }
 
 // SetIsHidden sets the "is_hidden" field.
-func (m *BlogMutation) SetIsHidden(i int8) {
+func (m *BlogsMutation) SetIsHidden(i int8) {
 	m.is_hidden = &i
 	m.addis_hidden = nil
 }
 
 // IsHidden returns the value of the "is_hidden" field in the mutation.
-func (m *BlogMutation) IsHidden() (r int8, exists bool) {
+func (m *BlogsMutation) IsHidden() (r int8, exists bool) {
 	v := m.is_hidden
 	if v == nil {
 		return
@@ -1684,10 +1684,10 @@ func (m *BlogMutation) IsHidden() (r int8, exists bool) {
 	return *v, true
 }
 
-// OldIsHidden returns the old "is_hidden" field's value of the Blog entity.
-// If the Blog object wasn't provided to the builder, the object is fetched from the database.
+// OldIsHidden returns the old "is_hidden" field's value of the Blogs entity.
+// If the Blogs object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *BlogMutation) OldIsHidden(ctx context.Context) (v int8, err error) {
+func (m *BlogsMutation) OldIsHidden(ctx context.Context) (v int8, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldIsHidden is only allowed on UpdateOne operations")
 	}
@@ -1702,7 +1702,7 @@ func (m *BlogMutation) OldIsHidden(ctx context.Context) (v int8, err error) {
 }
 
 // AddIsHidden adds i to the "is_hidden" field.
-func (m *BlogMutation) AddIsHidden(i int8) {
+func (m *BlogsMutation) AddIsHidden(i int8) {
 	if m.addis_hidden != nil {
 		*m.addis_hidden += i
 	} else {
@@ -1711,7 +1711,7 @@ func (m *BlogMutation) AddIsHidden(i int8) {
 }
 
 // AddedIsHidden returns the value that was added to the "is_hidden" field in this mutation.
-func (m *BlogMutation) AddedIsHidden() (r int8, exists bool) {
+func (m *BlogsMutation) AddedIsHidden() (r int8, exists bool) {
 	v := m.addis_hidden
 	if v == nil {
 		return
@@ -1720,19 +1720,19 @@ func (m *BlogMutation) AddedIsHidden() (r int8, exists bool) {
 }
 
 // ResetIsHidden resets all changes to the "is_hidden" field.
-func (m *BlogMutation) ResetIsHidden() {
+func (m *BlogsMutation) ResetIsHidden() {
 	m.is_hidden = nil
 	m.addis_hidden = nil
 }
 
 // SetTags sets the "tags" field.
-func (m *BlogMutation) SetTags(s []string) {
+func (m *BlogsMutation) SetTags(s []string) {
 	m.tags = &s
 	m.appendtags = nil
 }
 
 // Tags returns the value of the "tags" field in the mutation.
-func (m *BlogMutation) Tags() (r []string, exists bool) {
+func (m *BlogsMutation) Tags() (r []string, exists bool) {
 	v := m.tags
 	if v == nil {
 		return
@@ -1740,10 +1740,10 @@ func (m *BlogMutation) Tags() (r []string, exists bool) {
 	return *v, true
 }
 
-// OldTags returns the old "tags" field's value of the Blog entity.
-// If the Blog object wasn't provided to the builder, the object is fetched from the database.
+// OldTags returns the old "tags" field's value of the Blogs entity.
+// If the Blogs object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *BlogMutation) OldTags(ctx context.Context) (v []string, err error) {
+func (m *BlogsMutation) OldTags(ctx context.Context) (v []string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldTags is only allowed on UpdateOne operations")
 	}
@@ -1758,12 +1758,12 @@ func (m *BlogMutation) OldTags(ctx context.Context) (v []string, err error) {
 }
 
 // AppendTags adds s to the "tags" field.
-func (m *BlogMutation) AppendTags(s []string) {
+func (m *BlogsMutation) AppendTags(s []string) {
 	m.appendtags = append(m.appendtags, s...)
 }
 
 // AppendedTags returns the list of values that were appended to the "tags" field in this mutation.
-func (m *BlogMutation) AppendedTags() ([]string, bool) {
+func (m *BlogsMutation) AppendedTags() ([]string, bool) {
 	if len(m.appendtags) == 0 {
 		return nil, false
 	}
@@ -1771,18 +1771,18 @@ func (m *BlogMutation) AppendedTags() ([]string, bool) {
 }
 
 // ResetTags resets all changes to the "tags" field.
-func (m *BlogMutation) ResetTags() {
+func (m *BlogsMutation) ResetTags() {
 	m.tags = nil
 	m.appendtags = nil
 }
 
 // SetCover sets the "cover" field.
-func (m *BlogMutation) SetCover(s string) {
+func (m *BlogsMutation) SetCover(s string) {
 	m.cover = &s
 }
 
 // Cover returns the value of the "cover" field in the mutation.
-func (m *BlogMutation) Cover() (r string, exists bool) {
+func (m *BlogsMutation) Cover() (r string, exists bool) {
 	v := m.cover
 	if v == nil {
 		return
@@ -1790,10 +1790,10 @@ func (m *BlogMutation) Cover() (r string, exists bool) {
 	return *v, true
 }
 
-// OldCover returns the old "cover" field's value of the Blog entity.
-// If the Blog object wasn't provided to the builder, the object is fetched from the database.
+// OldCover returns the old "cover" field's value of the Blogs entity.
+// If the Blogs object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *BlogMutation) OldCover(ctx context.Context) (v string, err error) {
+func (m *BlogsMutation) OldCover(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldCover is only allowed on UpdateOne operations")
 	}
@@ -1808,17 +1808,17 @@ func (m *BlogMutation) OldCover(ctx context.Context) (v string, err error) {
 }
 
 // ResetCover resets all changes to the "cover" field.
-func (m *BlogMutation) ResetCover() {
+func (m *BlogsMutation) ResetCover() {
 	m.cover = nil
 }
 
 // SetContent sets the "content" field.
-func (m *BlogMutation) SetContent(s string) {
+func (m *BlogsMutation) SetContent(s string) {
 	m.content = &s
 }
 
 // Content returns the value of the "content" field in the mutation.
-func (m *BlogMutation) Content() (r string, exists bool) {
+func (m *BlogsMutation) Content() (r string, exists bool) {
 	v := m.content
 	if v == nil {
 		return
@@ -1826,10 +1826,10 @@ func (m *BlogMutation) Content() (r string, exists bool) {
 	return *v, true
 }
 
-// OldContent returns the old "content" field's value of the Blog entity.
-// If the Blog object wasn't provided to the builder, the object is fetched from the database.
+// OldContent returns the old "content" field's value of the Blogs entity.
+// If the Blogs object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *BlogMutation) OldContent(ctx context.Context) (v string, err error) {
+func (m *BlogsMutation) OldContent(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldContent is only allowed on UpdateOne operations")
 	}
@@ -1844,19 +1844,19 @@ func (m *BlogMutation) OldContent(ctx context.Context) (v string, err error) {
 }
 
 // ResetContent resets all changes to the "content" field.
-func (m *BlogMutation) ResetContent() {
+func (m *BlogsMutation) ResetContent() {
 	m.content = nil
 }
 
-// Where appends a list predicates to the BlogMutation builder.
-func (m *BlogMutation) Where(ps ...predicate.Blog) {
+// Where appends a list predicates to the BlogsMutation builder.
+func (m *BlogsMutation) Where(ps ...predicate.Blogs) {
 	m.predicates = append(m.predicates, ps...)
 }
 
-// WhereP appends storage-level predicates to the BlogMutation builder. Using this method,
+// WhereP appends storage-level predicates to the BlogsMutation builder. Using this method,
 // users can use type-assertion to append predicates that do not depend on any generated package.
-func (m *BlogMutation) WhereP(ps ...func(*sql.Selector)) {
-	p := make([]predicate.Blog, len(ps))
+func (m *BlogsMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.Blogs, len(ps))
 	for i := range ps {
 		p[i] = ps[i]
 	}
@@ -1864,66 +1864,66 @@ func (m *BlogMutation) WhereP(ps ...func(*sql.Selector)) {
 }
 
 // Op returns the operation name.
-func (m *BlogMutation) Op() Op {
+func (m *BlogsMutation) Op() Op {
 	return m.op
 }
 
 // SetOp allows setting the mutation operation.
-func (m *BlogMutation) SetOp(op Op) {
+func (m *BlogsMutation) SetOp(op Op) {
 	m.op = op
 }
 
-// Type returns the node type of this mutation (Blog).
-func (m *BlogMutation) Type() string {
+// Type returns the node type of this mutation (Blogs).
+func (m *BlogsMutation) Type() string {
 	return m.typ
 }
 
 // Fields returns all fields that were changed during this mutation. Note that in
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
-func (m *BlogMutation) Fields() []string {
+func (m *BlogsMutation) Fields() []string {
 	fields := make([]string, 0, 14)
 	if m.created_at != nil {
-		fields = append(fields, blog.FieldCreatedAt)
+		fields = append(fields, blogs.FieldCreatedAt)
 	}
 	if m.created_by != nil {
-		fields = append(fields, blog.FieldCreatedBy)
+		fields = append(fields, blogs.FieldCreatedBy)
 	}
 	if m.updated_at != nil {
-		fields = append(fields, blog.FieldUpdatedAt)
+		fields = append(fields, blogs.FieldUpdatedAt)
 	}
 	if m.updated_by != nil {
-		fields = append(fields, blog.FieldUpdatedBy)
+		fields = append(fields, blogs.FieldUpdatedBy)
 	}
 	if m.is_deleted != nil {
-		fields = append(fields, blog.FieldIsDeleted)
+		fields = append(fields, blogs.FieldIsDeleted)
 	}
 	if m.deleted_at != nil {
-		fields = append(fields, blog.FieldDeletedAt)
+		fields = append(fields, blogs.FieldDeletedAt)
 	}
 	if m.deleted_by != nil {
-		fields = append(fields, blog.FieldDeletedBy)
+		fields = append(fields, blogs.FieldDeletedBy)
 	}
 	if m.account_id != nil {
-		fields = append(fields, blog.FieldAccountID)
+		fields = append(fields, blogs.FieldAccountID)
 	}
 	if m.title != nil {
-		fields = append(fields, blog.FieldTitle)
+		fields = append(fields, blogs.FieldTitle)
 	}
 	if m.description != nil {
-		fields = append(fields, blog.FieldDescription)
+		fields = append(fields, blogs.FieldDescription)
 	}
 	if m.is_hidden != nil {
-		fields = append(fields, blog.FieldIsHidden)
+		fields = append(fields, blogs.FieldIsHidden)
 	}
 	if m.tags != nil {
-		fields = append(fields, blog.FieldTags)
+		fields = append(fields, blogs.FieldTags)
 	}
 	if m.cover != nil {
-		fields = append(fields, blog.FieldCover)
+		fields = append(fields, blogs.FieldCover)
 	}
 	if m.content != nil {
-		fields = append(fields, blog.FieldContent)
+		fields = append(fields, blogs.FieldContent)
 	}
 	return fields
 }
@@ -1931,35 +1931,35 @@ func (m *BlogMutation) Fields() []string {
 // Field returns the value of a field with the given name. The second boolean
 // return value indicates that this field was not set, or was not defined in the
 // schema.
-func (m *BlogMutation) Field(name string) (ent.Value, bool) {
+func (m *BlogsMutation) Field(name string) (ent.Value, bool) {
 	switch name {
-	case blog.FieldCreatedAt:
+	case blogs.FieldCreatedAt:
 		return m.CreatedAt()
-	case blog.FieldCreatedBy:
+	case blogs.FieldCreatedBy:
 		return m.CreatedBy()
-	case blog.FieldUpdatedAt:
+	case blogs.FieldUpdatedAt:
 		return m.UpdatedAt()
-	case blog.FieldUpdatedBy:
+	case blogs.FieldUpdatedBy:
 		return m.UpdatedBy()
-	case blog.FieldIsDeleted:
+	case blogs.FieldIsDeleted:
 		return m.IsDeleted()
-	case blog.FieldDeletedAt:
+	case blogs.FieldDeletedAt:
 		return m.DeletedAt()
-	case blog.FieldDeletedBy:
+	case blogs.FieldDeletedBy:
 		return m.DeletedBy()
-	case blog.FieldAccountID:
+	case blogs.FieldAccountID:
 		return m.AccountID()
-	case blog.FieldTitle:
+	case blogs.FieldTitle:
 		return m.Title()
-	case blog.FieldDescription:
+	case blogs.FieldDescription:
 		return m.Description()
-	case blog.FieldIsHidden:
+	case blogs.FieldIsHidden:
 		return m.IsHidden()
-	case blog.FieldTags:
+	case blogs.FieldTags:
 		return m.Tags()
-	case blog.FieldCover:
+	case blogs.FieldCover:
 		return m.Cover()
-	case blog.FieldContent:
+	case blogs.FieldContent:
 		return m.Content()
 	}
 	return nil, false
@@ -1968,137 +1968,137 @@ func (m *BlogMutation) Field(name string) (ent.Value, bool) {
 // OldField returns the old value of the field from the database. An error is
 // returned if the mutation operation is not UpdateOne, or the query to the
 // database failed.
-func (m *BlogMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+func (m *BlogsMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
-	case blog.FieldCreatedAt:
+	case blogs.FieldCreatedAt:
 		return m.OldCreatedAt(ctx)
-	case blog.FieldCreatedBy:
+	case blogs.FieldCreatedBy:
 		return m.OldCreatedBy(ctx)
-	case blog.FieldUpdatedAt:
+	case blogs.FieldUpdatedAt:
 		return m.OldUpdatedAt(ctx)
-	case blog.FieldUpdatedBy:
+	case blogs.FieldUpdatedBy:
 		return m.OldUpdatedBy(ctx)
-	case blog.FieldIsDeleted:
+	case blogs.FieldIsDeleted:
 		return m.OldIsDeleted(ctx)
-	case blog.FieldDeletedAt:
+	case blogs.FieldDeletedAt:
 		return m.OldDeletedAt(ctx)
-	case blog.FieldDeletedBy:
+	case blogs.FieldDeletedBy:
 		return m.OldDeletedBy(ctx)
-	case blog.FieldAccountID:
+	case blogs.FieldAccountID:
 		return m.OldAccountID(ctx)
-	case blog.FieldTitle:
+	case blogs.FieldTitle:
 		return m.OldTitle(ctx)
-	case blog.FieldDescription:
+	case blogs.FieldDescription:
 		return m.OldDescription(ctx)
-	case blog.FieldIsHidden:
+	case blogs.FieldIsHidden:
 		return m.OldIsHidden(ctx)
-	case blog.FieldTags:
+	case blogs.FieldTags:
 		return m.OldTags(ctx)
-	case blog.FieldCover:
+	case blogs.FieldCover:
 		return m.OldCover(ctx)
-	case blog.FieldContent:
+	case blogs.FieldContent:
 		return m.OldContent(ctx)
 	}
-	return nil, fmt.Errorf("unknown Blog field %s", name)
+	return nil, fmt.Errorf("unknown Blogs field %s", name)
 }
 
 // SetField sets the value of a field with the given name. It returns an error if
 // the field is not defined in the schema, or if the type mismatched the field
 // type.
-func (m *BlogMutation) SetField(name string, value ent.Value) error {
+func (m *BlogsMutation) SetField(name string, value ent.Value) error {
 	switch name {
-	case blog.FieldCreatedAt:
+	case blogs.FieldCreatedAt:
 		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetCreatedAt(v)
 		return nil
-	case blog.FieldCreatedBy:
+	case blogs.FieldCreatedBy:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetCreatedBy(v)
 		return nil
-	case blog.FieldUpdatedAt:
+	case blogs.FieldUpdatedAt:
 		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetUpdatedAt(v)
 		return nil
-	case blog.FieldUpdatedBy:
+	case blogs.FieldUpdatedBy:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetUpdatedBy(v)
 		return nil
-	case blog.FieldIsDeleted:
+	case blogs.FieldIsDeleted:
 		v, ok := value.(uint8)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetIsDeleted(v)
 		return nil
-	case blog.FieldDeletedAt:
+	case blogs.FieldDeletedAt:
 		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetDeletedAt(v)
 		return nil
-	case blog.FieldDeletedBy:
+	case blogs.FieldDeletedBy:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetDeletedBy(v)
 		return nil
-	case blog.FieldAccountID:
+	case blogs.FieldAccountID:
 		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetAccountID(v)
 		return nil
-	case blog.FieldTitle:
+	case blogs.FieldTitle:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetTitle(v)
 		return nil
-	case blog.FieldDescription:
+	case blogs.FieldDescription:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetDescription(v)
 		return nil
-	case blog.FieldIsHidden:
+	case blogs.FieldIsHidden:
 		v, ok := value.(int8)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetIsHidden(v)
 		return nil
-	case blog.FieldTags:
+	case blogs.FieldTags:
 		v, ok := value.([]string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetTags(v)
 		return nil
-	case blog.FieldCover:
+	case blogs.FieldCover:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetCover(v)
 		return nil
-	case blog.FieldContent:
+	case blogs.FieldContent:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
@@ -2106,30 +2106,30 @@ func (m *BlogMutation) SetField(name string, value ent.Value) error {
 		m.SetContent(v)
 		return nil
 	}
-	return fmt.Errorf("unknown Blog field %s", name)
+	return fmt.Errorf("unknown Blogs field %s", name)
 }
 
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
-func (m *BlogMutation) AddedFields() []string {
+func (m *BlogsMutation) AddedFields() []string {
 	var fields []string
 	if m.addcreated_at != nil {
-		fields = append(fields, blog.FieldCreatedAt)
+		fields = append(fields, blogs.FieldCreatedAt)
 	}
 	if m.addupdated_at != nil {
-		fields = append(fields, blog.FieldUpdatedAt)
+		fields = append(fields, blogs.FieldUpdatedAt)
 	}
 	if m.addis_deleted != nil {
-		fields = append(fields, blog.FieldIsDeleted)
+		fields = append(fields, blogs.FieldIsDeleted)
 	}
 	if m.adddeleted_at != nil {
-		fields = append(fields, blog.FieldDeletedAt)
+		fields = append(fields, blogs.FieldDeletedAt)
 	}
 	if m.addaccount_id != nil {
-		fields = append(fields, blog.FieldAccountID)
+		fields = append(fields, blogs.FieldAccountID)
 	}
 	if m.addis_hidden != nil {
-		fields = append(fields, blog.FieldIsHidden)
+		fields = append(fields, blogs.FieldIsHidden)
 	}
 	return fields
 }
@@ -2137,19 +2137,19 @@ func (m *BlogMutation) AddedFields() []string {
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
-func (m *BlogMutation) AddedField(name string) (ent.Value, bool) {
+func (m *BlogsMutation) AddedField(name string) (ent.Value, bool) {
 	switch name {
-	case blog.FieldCreatedAt:
+	case blogs.FieldCreatedAt:
 		return m.AddedCreatedAt()
-	case blog.FieldUpdatedAt:
+	case blogs.FieldUpdatedAt:
 		return m.AddedUpdatedAt()
-	case blog.FieldIsDeleted:
+	case blogs.FieldIsDeleted:
 		return m.AddedIsDeleted()
-	case blog.FieldDeletedAt:
+	case blogs.FieldDeletedAt:
 		return m.AddedDeletedAt()
-	case blog.FieldAccountID:
+	case blogs.FieldAccountID:
 		return m.AddedAccountID()
-	case blog.FieldIsHidden:
+	case blogs.FieldIsHidden:
 		return m.AddedIsHidden()
 	}
 	return nil, false
@@ -2158,44 +2158,44 @@ func (m *BlogMutation) AddedField(name string) (ent.Value, bool) {
 // AddField adds the value to the field with the given name. It returns an error if
 // the field is not defined in the schema, or if the type mismatched the field
 // type.
-func (m *BlogMutation) AddField(name string, value ent.Value) error {
+func (m *BlogsMutation) AddField(name string, value ent.Value) error {
 	switch name {
-	case blog.FieldCreatedAt:
+	case blogs.FieldCreatedAt:
 		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddCreatedAt(v)
 		return nil
-	case blog.FieldUpdatedAt:
+	case blogs.FieldUpdatedAt:
 		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddUpdatedAt(v)
 		return nil
-	case blog.FieldIsDeleted:
+	case blogs.FieldIsDeleted:
 		v, ok := value.(int8)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddIsDeleted(v)
 		return nil
-	case blog.FieldDeletedAt:
+	case blogs.FieldDeletedAt:
 		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddDeletedAt(v)
 		return nil
-	case blog.FieldAccountID:
+	case blogs.FieldAccountID:
 		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddAccountID(v)
 		return nil
-	case blog.FieldIsHidden:
+	case blogs.FieldIsHidden:
 		v, ok := value.(int8)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
@@ -2203,460 +2203,128 @@ func (m *BlogMutation) AddField(name string, value ent.Value) error {
 		m.AddIsHidden(v)
 		return nil
 	}
-	return fmt.Errorf("unknown Blog numeric field %s", name)
+	return fmt.Errorf("unknown Blogs numeric field %s", name)
 }
 
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
-func (m *BlogMutation) ClearedFields() []string {
+func (m *BlogsMutation) ClearedFields() []string {
 	return nil
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
 // cleared in this mutation.
-func (m *BlogMutation) FieldCleared(name string) bool {
+func (m *BlogsMutation) FieldCleared(name string) bool {
 	_, ok := m.clearedFields[name]
 	return ok
 }
 
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
-func (m *BlogMutation) ClearField(name string) error {
-	return fmt.Errorf("unknown Blog nullable field %s", name)
+func (m *BlogsMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown Blogs nullable field %s", name)
 }
 
 // ResetField resets all changes in the mutation for the field with the given name.
 // It returns an error if the field is not defined in the schema.
-func (m *BlogMutation) ResetField(name string) error {
+func (m *BlogsMutation) ResetField(name string) error {
 	switch name {
-	case blog.FieldCreatedAt:
+	case blogs.FieldCreatedAt:
 		m.ResetCreatedAt()
 		return nil
-	case blog.FieldCreatedBy:
+	case blogs.FieldCreatedBy:
 		m.ResetCreatedBy()
 		return nil
-	case blog.FieldUpdatedAt:
+	case blogs.FieldUpdatedAt:
 		m.ResetUpdatedAt()
 		return nil
-	case blog.FieldUpdatedBy:
+	case blogs.FieldUpdatedBy:
 		m.ResetUpdatedBy()
 		return nil
-	case blog.FieldIsDeleted:
+	case blogs.FieldIsDeleted:
 		m.ResetIsDeleted()
 		return nil
-	case blog.FieldDeletedAt:
+	case blogs.FieldDeletedAt:
 		m.ResetDeletedAt()
 		return nil
-	case blog.FieldDeletedBy:
+	case blogs.FieldDeletedBy:
 		m.ResetDeletedBy()
 		return nil
-	case blog.FieldAccountID:
+	case blogs.FieldAccountID:
 		m.ResetAccountID()
 		return nil
-	case blog.FieldTitle:
+	case blogs.FieldTitle:
 		m.ResetTitle()
 		return nil
-	case blog.FieldDescription:
+	case blogs.FieldDescription:
 		m.ResetDescription()
 		return nil
-	case blog.FieldIsHidden:
+	case blogs.FieldIsHidden:
 		m.ResetIsHidden()
 		return nil
-	case blog.FieldTags:
+	case blogs.FieldTags:
 		m.ResetTags()
 		return nil
-	case blog.FieldCover:
+	case blogs.FieldCover:
 		m.ResetCover()
 		return nil
-	case blog.FieldContent:
+	case blogs.FieldContent:
 		m.ResetContent()
 		return nil
 	}
-	return fmt.Errorf("unknown Blog field %s", name)
+	return fmt.Errorf("unknown Blogs field %s", name)
 }
 
 // AddedEdges returns all edge names that were set/added in this mutation.
-func (m *BlogMutation) AddedEdges() []string {
+func (m *BlogsMutation) AddedEdges() []string {
 	edges := make([]string, 0, 0)
 	return edges
 }
 
 // AddedIDs returns all IDs (to other nodes) that were added for the given edge
 // name in this mutation.
-func (m *BlogMutation) AddedIDs(name string) []ent.Value {
+func (m *BlogsMutation) AddedIDs(name string) []ent.Value {
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
-func (m *BlogMutation) RemovedEdges() []string {
+func (m *BlogsMutation) RemovedEdges() []string {
 	edges := make([]string, 0, 0)
 	return edges
 }
 
 // RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
 // the given name in this mutation.
-func (m *BlogMutation) RemovedIDs(name string) []ent.Value {
+func (m *BlogsMutation) RemovedIDs(name string) []ent.Value {
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
-func (m *BlogMutation) ClearedEdges() []string {
+func (m *BlogsMutation) ClearedEdges() []string {
 	edges := make([]string, 0, 0)
 	return edges
 }
 
 // EdgeCleared returns a boolean which indicates if the edge with the given name
 // was cleared in this mutation.
-func (m *BlogMutation) EdgeCleared(name string) bool {
+func (m *BlogsMutation) EdgeCleared(name string) bool {
 	return false
 }
 
 // ClearEdge clears the value of the edge with the given name. It returns an error
 // if that edge is not defined in the schema.
-func (m *BlogMutation) ClearEdge(name string) error {
-	return fmt.Errorf("unknown Blog unique edge %s", name)
+func (m *BlogsMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown Blogs unique edge %s", name)
 }
 
 // ResetEdge resets all changes to the edge with the given name in this mutation.
 // It returns an error if the edge is not defined in the schema.
-func (m *BlogMutation) ResetEdge(name string) error {
-	return fmt.Errorf("unknown Blog edge %s", name)
+func (m *BlogsMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown Blogs edge %s", name)
 }
 
-// BlogContentMutation represents an operation that mutates the BlogContent nodes in the graph.
-type BlogContentMutation struct {
-	config
-	op            Op
-	typ           string
-	id            *int
-	content       *string
-	clearedFields map[string]struct{}
-	done          bool
-	oldValue      func(context.Context) (*BlogContent, error)
-	predicates    []predicate.BlogContent
-}
-
-var _ ent.Mutation = (*BlogContentMutation)(nil)
-
-// blogcontentOption allows management of the mutation configuration using functional options.
-type blogcontentOption func(*BlogContentMutation)
-
-// newBlogContentMutation creates new mutation for the BlogContent entity.
-func newBlogContentMutation(c config, op Op, opts ...blogcontentOption) *BlogContentMutation {
-	m := &BlogContentMutation{
-		config:        c,
-		op:            op,
-		typ:           TypeBlogContent,
-		clearedFields: make(map[string]struct{}),
-	}
-	for _, opt := range opts {
-		opt(m)
-	}
-	return m
-}
-
-// withBlogContentID sets the ID field of the mutation.
-func withBlogContentID(id int) blogcontentOption {
-	return func(m *BlogContentMutation) {
-		var (
-			err   error
-			once  sync.Once
-			value *BlogContent
-		)
-		m.oldValue = func(ctx context.Context) (*BlogContent, error) {
-			once.Do(func() {
-				if m.done {
-					err = errors.New("querying old values post mutation is not allowed")
-				} else {
-					value, err = m.Client().BlogContent.Get(ctx, id)
-				}
-			})
-			return value, err
-		}
-		m.id = &id
-	}
-}
-
-// withBlogContent sets the old BlogContent of the mutation.
-func withBlogContent(node *BlogContent) blogcontentOption {
-	return func(m *BlogContentMutation) {
-		m.oldValue = func(context.Context) (*BlogContent, error) {
-			return node, nil
-		}
-		m.id = &node.ID
-	}
-}
-
-// Client returns a new `ent.Client` from the mutation. If the mutation was
-// executed in a transaction (ent.Tx), a transactional client is returned.
-func (m BlogContentMutation) Client() *Client {
-	client := &Client{config: m.config}
-	client.init()
-	return client
-}
-
-// Tx returns an `ent.Tx` for mutations that were executed in transactions;
-// it returns an error otherwise.
-func (m BlogContentMutation) Tx() (*Tx, error) {
-	if _, ok := m.driver.(*txDriver); !ok {
-		return nil, errors.New("ent: mutation is not running in a transaction")
-	}
-	tx := &Tx{config: m.config}
-	tx.init()
-	return tx, nil
-}
-
-// SetID sets the value of the id field. Note that this
-// operation is only accepted on creation of BlogContent entities.
-func (m *BlogContentMutation) SetID(id int) {
-	m.id = &id
-}
-
-// ID returns the ID value in the mutation. Note that the ID is only available
-// if it was provided to the builder or after it was returned from the database.
-func (m *BlogContentMutation) ID() (id int, exists bool) {
-	if m.id == nil {
-		return
-	}
-	return *m.id, true
-}
-
-// IDs queries the database and returns the entity ids that match the mutation's predicate.
-// That means, if the mutation is applied within a transaction with an isolation level such
-// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
-// or updated by the mutation.
-func (m *BlogContentMutation) IDs(ctx context.Context) ([]int, error) {
-	switch {
-	case m.op.Is(OpUpdateOne | OpDeleteOne):
-		id, exists := m.ID()
-		if exists {
-			return []int{id}, nil
-		}
-		fallthrough
-	case m.op.Is(OpUpdate | OpDelete):
-		return m.Client().BlogContent.Query().Where(m.predicates...).IDs(ctx)
-	default:
-		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
-	}
-}
-
-// SetContent sets the "content" field.
-func (m *BlogContentMutation) SetContent(s string) {
-	m.content = &s
-}
-
-// Content returns the value of the "content" field in the mutation.
-func (m *BlogContentMutation) Content() (r string, exists bool) {
-	v := m.content
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldContent returns the old "content" field's value of the BlogContent entity.
-// If the BlogContent object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *BlogContentMutation) OldContent(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldContent is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldContent requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldContent: %w", err)
-	}
-	return oldValue.Content, nil
-}
-
-// ResetContent resets all changes to the "content" field.
-func (m *BlogContentMutation) ResetContent() {
-	m.content = nil
-}
-
-// Where appends a list predicates to the BlogContentMutation builder.
-func (m *BlogContentMutation) Where(ps ...predicate.BlogContent) {
-	m.predicates = append(m.predicates, ps...)
-}
-
-// WhereP appends storage-level predicates to the BlogContentMutation builder. Using this method,
-// users can use type-assertion to append predicates that do not depend on any generated package.
-func (m *BlogContentMutation) WhereP(ps ...func(*sql.Selector)) {
-	p := make([]predicate.BlogContent, len(ps))
-	for i := range ps {
-		p[i] = ps[i]
-	}
-	m.Where(p...)
-}
-
-// Op returns the operation name.
-func (m *BlogContentMutation) Op() Op {
-	return m.op
-}
-
-// SetOp allows setting the mutation operation.
-func (m *BlogContentMutation) SetOp(op Op) {
-	m.op = op
-}
-
-// Type returns the node type of this mutation (BlogContent).
-func (m *BlogContentMutation) Type() string {
-	return m.typ
-}
-
-// Fields returns all fields that were changed during this mutation. Note that in
-// order to get all numeric fields that were incremented/decremented, call
-// AddedFields().
-func (m *BlogContentMutation) Fields() []string {
-	fields := make([]string, 0, 1)
-	if m.content != nil {
-		fields = append(fields, blogcontent.FieldContent)
-	}
-	return fields
-}
-
-// Field returns the value of a field with the given name. The second boolean
-// return value indicates that this field was not set, or was not defined in the
-// schema.
-func (m *BlogContentMutation) Field(name string) (ent.Value, bool) {
-	switch name {
-	case blogcontent.FieldContent:
-		return m.Content()
-	}
-	return nil, false
-}
-
-// OldField returns the old value of the field from the database. An error is
-// returned if the mutation operation is not UpdateOne, or the query to the
-// database failed.
-func (m *BlogContentMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
-	switch name {
-	case blogcontent.FieldContent:
-		return m.OldContent(ctx)
-	}
-	return nil, fmt.Errorf("unknown BlogContent field %s", name)
-}
-
-// SetField sets the value of a field with the given name. It returns an error if
-// the field is not defined in the schema, or if the type mismatched the field
-// type.
-func (m *BlogContentMutation) SetField(name string, value ent.Value) error {
-	switch name {
-	case blogcontent.FieldContent:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetContent(v)
-		return nil
-	}
-	return fmt.Errorf("unknown BlogContent field %s", name)
-}
-
-// AddedFields returns all numeric fields that were incremented/decremented during
-// this mutation.
-func (m *BlogContentMutation) AddedFields() []string {
-	return nil
-}
-
-// AddedField returns the numeric value that was incremented/decremented on a field
-// with the given name. The second boolean return value indicates that this field
-// was not set, or was not defined in the schema.
-func (m *BlogContentMutation) AddedField(name string) (ent.Value, bool) {
-	return nil, false
-}
-
-// AddField adds the value to the field with the given name. It returns an error if
-// the field is not defined in the schema, or if the type mismatched the field
-// type.
-func (m *BlogContentMutation) AddField(name string, value ent.Value) error {
-	switch name {
-	}
-	return fmt.Errorf("unknown BlogContent numeric field %s", name)
-}
-
-// ClearedFields returns all nullable fields that were cleared during this
-// mutation.
-func (m *BlogContentMutation) ClearedFields() []string {
-	return nil
-}
-
-// FieldCleared returns a boolean indicating if a field with the given name was
-// cleared in this mutation.
-func (m *BlogContentMutation) FieldCleared(name string) bool {
-	_, ok := m.clearedFields[name]
-	return ok
-}
-
-// ClearField clears the value of the field with the given name. It returns an
-// error if the field is not defined in the schema.
-func (m *BlogContentMutation) ClearField(name string) error {
-	return fmt.Errorf("unknown BlogContent nullable field %s", name)
-}
-
-// ResetField resets all changes in the mutation for the field with the given name.
-// It returns an error if the field is not defined in the schema.
-func (m *BlogContentMutation) ResetField(name string) error {
-	switch name {
-	case blogcontent.FieldContent:
-		m.ResetContent()
-		return nil
-	}
-	return fmt.Errorf("unknown BlogContent field %s", name)
-}
-
-// AddedEdges returns all edge names that were set/added in this mutation.
-func (m *BlogContentMutation) AddedEdges() []string {
-	edges := make([]string, 0, 0)
-	return edges
-}
-
-// AddedIDs returns all IDs (to other nodes) that were added for the given edge
-// name in this mutation.
-func (m *BlogContentMutation) AddedIDs(name string) []ent.Value {
-	return nil
-}
-
-// RemovedEdges returns all edge names that were removed in this mutation.
-func (m *BlogContentMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 0)
-	return edges
-}
-
-// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
-// the given name in this mutation.
-func (m *BlogContentMutation) RemovedIDs(name string) []ent.Value {
-	return nil
-}
-
-// ClearedEdges returns all edge names that were cleared in this mutation.
-func (m *BlogContentMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 0)
-	return edges
-}
-
-// EdgeCleared returns a boolean which indicates if the edge with the given name
-// was cleared in this mutation.
-func (m *BlogContentMutation) EdgeCleared(name string) bool {
-	return false
-}
-
-// ClearEdge clears the value of the edge with the given name. It returns an error
-// if that edge is not defined in the schema.
-func (m *BlogContentMutation) ClearEdge(name string) error {
-	return fmt.Errorf("unknown BlogContent unique edge %s", name)
-}
-
-// ResetEdge resets all changes to the edge with the given name in this mutation.
-// It returns an error if the edge is not defined in the schema.
-func (m *BlogContentMutation) ResetEdge(name string) error {
-	return fmt.Errorf("unknown BlogContent edge %s", name)
-}
-
-// CommentMutation represents an operation that mutates the Comment nodes in the graph.
-type CommentMutation struct {
+// BlogsCommentMutation represents an operation that mutates the BlogsComment nodes in the graph.
+type BlogsCommentMutation struct {
 	config
 	op            Op
 	typ           string
@@ -2689,21 +2357,21 @@ type CommentMutation struct {
 	content       *string
 	clearedFields map[string]struct{}
 	done          bool
-	oldValue      func(context.Context) (*Comment, error)
-	predicates    []predicate.Comment
+	oldValue      func(context.Context) (*BlogsComment, error)
+	predicates    []predicate.BlogsComment
 }
 
-var _ ent.Mutation = (*CommentMutation)(nil)
+var _ ent.Mutation = (*BlogsCommentMutation)(nil)
 
-// commentOption allows management of the mutation configuration using functional options.
-type commentOption func(*CommentMutation)
+// blogscommentOption allows management of the mutation configuration using functional options.
+type blogscommentOption func(*BlogsCommentMutation)
 
-// newCommentMutation creates new mutation for the Comment entity.
-func newCommentMutation(c config, op Op, opts ...commentOption) *CommentMutation {
-	m := &CommentMutation{
+// newBlogsCommentMutation creates new mutation for the BlogsComment entity.
+func newBlogsCommentMutation(c config, op Op, opts ...blogscommentOption) *BlogsCommentMutation {
+	m := &BlogsCommentMutation{
 		config:        c,
 		op:            op,
-		typ:           TypeComment,
+		typ:           TypeBlogsComment,
 		clearedFields: make(map[string]struct{}),
 	}
 	for _, opt := range opts {
@@ -2712,20 +2380,20 @@ func newCommentMutation(c config, op Op, opts ...commentOption) *CommentMutation
 	return m
 }
 
-// withCommentID sets the ID field of the mutation.
-func withCommentID(id int) commentOption {
-	return func(m *CommentMutation) {
+// withBlogsCommentID sets the ID field of the mutation.
+func withBlogsCommentID(id int) blogscommentOption {
+	return func(m *BlogsCommentMutation) {
 		var (
 			err   error
 			once  sync.Once
-			value *Comment
+			value *BlogsComment
 		)
-		m.oldValue = func(ctx context.Context) (*Comment, error) {
+		m.oldValue = func(ctx context.Context) (*BlogsComment, error) {
 			once.Do(func() {
 				if m.done {
 					err = errors.New("querying old values post mutation is not allowed")
 				} else {
-					value, err = m.Client().Comment.Get(ctx, id)
+					value, err = m.Client().BlogsComment.Get(ctx, id)
 				}
 			})
 			return value, err
@@ -2734,10 +2402,10 @@ func withCommentID(id int) commentOption {
 	}
 }
 
-// withComment sets the old Comment of the mutation.
-func withComment(node *Comment) commentOption {
-	return func(m *CommentMutation) {
-		m.oldValue = func(context.Context) (*Comment, error) {
+// withBlogsComment sets the old BlogsComment of the mutation.
+func withBlogsComment(node *BlogsComment) blogscommentOption {
+	return func(m *BlogsCommentMutation) {
+		m.oldValue = func(context.Context) (*BlogsComment, error) {
 			return node, nil
 		}
 		m.id = &node.ID
@@ -2746,7 +2414,7 @@ func withComment(node *Comment) commentOption {
 
 // Client returns a new `ent.Client` from the mutation. If the mutation was
 // executed in a transaction (ent.Tx), a transactional client is returned.
-func (m CommentMutation) Client() *Client {
+func (m BlogsCommentMutation) Client() *Client {
 	client := &Client{config: m.config}
 	client.init()
 	return client
@@ -2754,7 +2422,7 @@ func (m CommentMutation) Client() *Client {
 
 // Tx returns an `ent.Tx` for mutations that were executed in transactions;
 // it returns an error otherwise.
-func (m CommentMutation) Tx() (*Tx, error) {
+func (m BlogsCommentMutation) Tx() (*Tx, error) {
 	if _, ok := m.driver.(*txDriver); !ok {
 		return nil, errors.New("ent: mutation is not running in a transaction")
 	}
@@ -2764,14 +2432,14 @@ func (m CommentMutation) Tx() (*Tx, error) {
 }
 
 // SetID sets the value of the id field. Note that this
-// operation is only accepted on creation of Comment entities.
-func (m *CommentMutation) SetID(id int) {
+// operation is only accepted on creation of BlogsComment entities.
+func (m *BlogsCommentMutation) SetID(id int) {
 	m.id = &id
 }
 
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *CommentMutation) ID() (id int, exists bool) {
+func (m *BlogsCommentMutation) ID() (id int, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -2782,7 +2450,7 @@ func (m *CommentMutation) ID() (id int, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *CommentMutation) IDs(ctx context.Context) ([]int, error) {
+func (m *BlogsCommentMutation) IDs(ctx context.Context) ([]int, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
@@ -2791,20 +2459,20 @@ func (m *CommentMutation) IDs(ctx context.Context) ([]int, error) {
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
-		return m.Client().Comment.Query().Where(m.predicates...).IDs(ctx)
+		return m.Client().BlogsComment.Query().Where(m.predicates...).IDs(ctx)
 	default:
 		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
 	}
 }
 
 // SetCreatedAt sets the "created_at" field.
-func (m *CommentMutation) SetCreatedAt(i int64) {
+func (m *BlogsCommentMutation) SetCreatedAt(i int64) {
 	m.created_at = &i
 	m.addcreated_at = nil
 }
 
 // CreatedAt returns the value of the "created_at" field in the mutation.
-func (m *CommentMutation) CreatedAt() (r int64, exists bool) {
+func (m *BlogsCommentMutation) CreatedAt() (r int64, exists bool) {
 	v := m.created_at
 	if v == nil {
 		return
@@ -2812,10 +2480,10 @@ func (m *CommentMutation) CreatedAt() (r int64, exists bool) {
 	return *v, true
 }
 
-// OldCreatedAt returns the old "created_at" field's value of the Comment entity.
-// If the Comment object wasn't provided to the builder, the object is fetched from the database.
+// OldCreatedAt returns the old "created_at" field's value of the BlogsComment entity.
+// If the BlogsComment object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *CommentMutation) OldCreatedAt(ctx context.Context) (v int64, err error) {
+func (m *BlogsCommentMutation) OldCreatedAt(ctx context.Context) (v int64, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
 	}
@@ -2830,7 +2498,7 @@ func (m *CommentMutation) OldCreatedAt(ctx context.Context) (v int64, err error)
 }
 
 // AddCreatedAt adds i to the "created_at" field.
-func (m *CommentMutation) AddCreatedAt(i int64) {
+func (m *BlogsCommentMutation) AddCreatedAt(i int64) {
 	if m.addcreated_at != nil {
 		*m.addcreated_at += i
 	} else {
@@ -2839,7 +2507,7 @@ func (m *CommentMutation) AddCreatedAt(i int64) {
 }
 
 // AddedCreatedAt returns the value that was added to the "created_at" field in this mutation.
-func (m *CommentMutation) AddedCreatedAt() (r int64, exists bool) {
+func (m *BlogsCommentMutation) AddedCreatedAt() (r int64, exists bool) {
 	v := m.addcreated_at
 	if v == nil {
 		return
@@ -2848,18 +2516,18 @@ func (m *CommentMutation) AddedCreatedAt() (r int64, exists bool) {
 }
 
 // ResetCreatedAt resets all changes to the "created_at" field.
-func (m *CommentMutation) ResetCreatedAt() {
+func (m *BlogsCommentMutation) ResetCreatedAt() {
 	m.created_at = nil
 	m.addcreated_at = nil
 }
 
 // SetCreatedBy sets the "created_by" field.
-func (m *CommentMutation) SetCreatedBy(s string) {
+func (m *BlogsCommentMutation) SetCreatedBy(s string) {
 	m.created_by = &s
 }
 
 // CreatedBy returns the value of the "created_by" field in the mutation.
-func (m *CommentMutation) CreatedBy() (r string, exists bool) {
+func (m *BlogsCommentMutation) CreatedBy() (r string, exists bool) {
 	v := m.created_by
 	if v == nil {
 		return
@@ -2867,10 +2535,10 @@ func (m *CommentMutation) CreatedBy() (r string, exists bool) {
 	return *v, true
 }
 
-// OldCreatedBy returns the old "created_by" field's value of the Comment entity.
-// If the Comment object wasn't provided to the builder, the object is fetched from the database.
+// OldCreatedBy returns the old "created_by" field's value of the BlogsComment entity.
+// If the BlogsComment object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *CommentMutation) OldCreatedBy(ctx context.Context) (v string, err error) {
+func (m *BlogsCommentMutation) OldCreatedBy(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldCreatedBy is only allowed on UpdateOne operations")
 	}
@@ -2885,18 +2553,18 @@ func (m *CommentMutation) OldCreatedBy(ctx context.Context) (v string, err error
 }
 
 // ResetCreatedBy resets all changes to the "created_by" field.
-func (m *CommentMutation) ResetCreatedBy() {
+func (m *BlogsCommentMutation) ResetCreatedBy() {
 	m.created_by = nil
 }
 
 // SetUpdatedAt sets the "updated_at" field.
-func (m *CommentMutation) SetUpdatedAt(i int64) {
+func (m *BlogsCommentMutation) SetUpdatedAt(i int64) {
 	m.updated_at = &i
 	m.addupdated_at = nil
 }
 
 // UpdatedAt returns the value of the "updated_at" field in the mutation.
-func (m *CommentMutation) UpdatedAt() (r int64, exists bool) {
+func (m *BlogsCommentMutation) UpdatedAt() (r int64, exists bool) {
 	v := m.updated_at
 	if v == nil {
 		return
@@ -2904,10 +2572,10 @@ func (m *CommentMutation) UpdatedAt() (r int64, exists bool) {
 	return *v, true
 }
 
-// OldUpdatedAt returns the old "updated_at" field's value of the Comment entity.
-// If the Comment object wasn't provided to the builder, the object is fetched from the database.
+// OldUpdatedAt returns the old "updated_at" field's value of the BlogsComment entity.
+// If the BlogsComment object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *CommentMutation) OldUpdatedAt(ctx context.Context) (v int64, err error) {
+func (m *BlogsCommentMutation) OldUpdatedAt(ctx context.Context) (v int64, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
 	}
@@ -2922,7 +2590,7 @@ func (m *CommentMutation) OldUpdatedAt(ctx context.Context) (v int64, err error)
 }
 
 // AddUpdatedAt adds i to the "updated_at" field.
-func (m *CommentMutation) AddUpdatedAt(i int64) {
+func (m *BlogsCommentMutation) AddUpdatedAt(i int64) {
 	if m.addupdated_at != nil {
 		*m.addupdated_at += i
 	} else {
@@ -2931,7 +2599,7 @@ func (m *CommentMutation) AddUpdatedAt(i int64) {
 }
 
 // AddedUpdatedAt returns the value that was added to the "updated_at" field in this mutation.
-func (m *CommentMutation) AddedUpdatedAt() (r int64, exists bool) {
+func (m *BlogsCommentMutation) AddedUpdatedAt() (r int64, exists bool) {
 	v := m.addupdated_at
 	if v == nil {
 		return
@@ -2940,18 +2608,18 @@ func (m *CommentMutation) AddedUpdatedAt() (r int64, exists bool) {
 }
 
 // ResetUpdatedAt resets all changes to the "updated_at" field.
-func (m *CommentMutation) ResetUpdatedAt() {
+func (m *BlogsCommentMutation) ResetUpdatedAt() {
 	m.updated_at = nil
 	m.addupdated_at = nil
 }
 
 // SetUpdatedBy sets the "updated_by" field.
-func (m *CommentMutation) SetUpdatedBy(s string) {
+func (m *BlogsCommentMutation) SetUpdatedBy(s string) {
 	m.updated_by = &s
 }
 
 // UpdatedBy returns the value of the "updated_by" field in the mutation.
-func (m *CommentMutation) UpdatedBy() (r string, exists bool) {
+func (m *BlogsCommentMutation) UpdatedBy() (r string, exists bool) {
 	v := m.updated_by
 	if v == nil {
 		return
@@ -2959,10 +2627,10 @@ func (m *CommentMutation) UpdatedBy() (r string, exists bool) {
 	return *v, true
 }
 
-// OldUpdatedBy returns the old "updated_by" field's value of the Comment entity.
-// If the Comment object wasn't provided to the builder, the object is fetched from the database.
+// OldUpdatedBy returns the old "updated_by" field's value of the BlogsComment entity.
+// If the BlogsComment object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *CommentMutation) OldUpdatedBy(ctx context.Context) (v string, err error) {
+func (m *BlogsCommentMutation) OldUpdatedBy(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldUpdatedBy is only allowed on UpdateOne operations")
 	}
@@ -2977,18 +2645,18 @@ func (m *CommentMutation) OldUpdatedBy(ctx context.Context) (v string, err error
 }
 
 // ResetUpdatedBy resets all changes to the "updated_by" field.
-func (m *CommentMutation) ResetUpdatedBy() {
+func (m *BlogsCommentMutation) ResetUpdatedBy() {
 	m.updated_by = nil
 }
 
 // SetIsDeleted sets the "is_deleted" field.
-func (m *CommentMutation) SetIsDeleted(u uint8) {
+func (m *BlogsCommentMutation) SetIsDeleted(u uint8) {
 	m.is_deleted = &u
 	m.addis_deleted = nil
 }
 
 // IsDeleted returns the value of the "is_deleted" field in the mutation.
-func (m *CommentMutation) IsDeleted() (r uint8, exists bool) {
+func (m *BlogsCommentMutation) IsDeleted() (r uint8, exists bool) {
 	v := m.is_deleted
 	if v == nil {
 		return
@@ -2996,10 +2664,10 @@ func (m *CommentMutation) IsDeleted() (r uint8, exists bool) {
 	return *v, true
 }
 
-// OldIsDeleted returns the old "is_deleted" field's value of the Comment entity.
-// If the Comment object wasn't provided to the builder, the object is fetched from the database.
+// OldIsDeleted returns the old "is_deleted" field's value of the BlogsComment entity.
+// If the BlogsComment object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *CommentMutation) OldIsDeleted(ctx context.Context) (v uint8, err error) {
+func (m *BlogsCommentMutation) OldIsDeleted(ctx context.Context) (v uint8, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldIsDeleted is only allowed on UpdateOne operations")
 	}
@@ -3014,7 +2682,7 @@ func (m *CommentMutation) OldIsDeleted(ctx context.Context) (v uint8, err error)
 }
 
 // AddIsDeleted adds u to the "is_deleted" field.
-func (m *CommentMutation) AddIsDeleted(u int8) {
+func (m *BlogsCommentMutation) AddIsDeleted(u int8) {
 	if m.addis_deleted != nil {
 		*m.addis_deleted += u
 	} else {
@@ -3023,7 +2691,7 @@ func (m *CommentMutation) AddIsDeleted(u int8) {
 }
 
 // AddedIsDeleted returns the value that was added to the "is_deleted" field in this mutation.
-func (m *CommentMutation) AddedIsDeleted() (r int8, exists bool) {
+func (m *BlogsCommentMutation) AddedIsDeleted() (r int8, exists bool) {
 	v := m.addis_deleted
 	if v == nil {
 		return
@@ -3032,19 +2700,19 @@ func (m *CommentMutation) AddedIsDeleted() (r int8, exists bool) {
 }
 
 // ResetIsDeleted resets all changes to the "is_deleted" field.
-func (m *CommentMutation) ResetIsDeleted() {
+func (m *BlogsCommentMutation) ResetIsDeleted() {
 	m.is_deleted = nil
 	m.addis_deleted = nil
 }
 
 // SetDeletedAt sets the "deleted_at" field.
-func (m *CommentMutation) SetDeletedAt(i int64) {
+func (m *BlogsCommentMutation) SetDeletedAt(i int64) {
 	m.deleted_at = &i
 	m.adddeleted_at = nil
 }
 
 // DeletedAt returns the value of the "deleted_at" field in the mutation.
-func (m *CommentMutation) DeletedAt() (r int64, exists bool) {
+func (m *BlogsCommentMutation) DeletedAt() (r int64, exists bool) {
 	v := m.deleted_at
 	if v == nil {
 		return
@@ -3052,10 +2720,10 @@ func (m *CommentMutation) DeletedAt() (r int64, exists bool) {
 	return *v, true
 }
 
-// OldDeletedAt returns the old "deleted_at" field's value of the Comment entity.
-// If the Comment object wasn't provided to the builder, the object is fetched from the database.
+// OldDeletedAt returns the old "deleted_at" field's value of the BlogsComment entity.
+// If the BlogsComment object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *CommentMutation) OldDeletedAt(ctx context.Context) (v int64, err error) {
+func (m *BlogsCommentMutation) OldDeletedAt(ctx context.Context) (v int64, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldDeletedAt is only allowed on UpdateOne operations")
 	}
@@ -3070,7 +2738,7 @@ func (m *CommentMutation) OldDeletedAt(ctx context.Context) (v int64, err error)
 }
 
 // AddDeletedAt adds i to the "deleted_at" field.
-func (m *CommentMutation) AddDeletedAt(i int64) {
+func (m *BlogsCommentMutation) AddDeletedAt(i int64) {
 	if m.adddeleted_at != nil {
 		*m.adddeleted_at += i
 	} else {
@@ -3079,7 +2747,7 @@ func (m *CommentMutation) AddDeletedAt(i int64) {
 }
 
 // AddedDeletedAt returns the value that was added to the "deleted_at" field in this mutation.
-func (m *CommentMutation) AddedDeletedAt() (r int64, exists bool) {
+func (m *BlogsCommentMutation) AddedDeletedAt() (r int64, exists bool) {
 	v := m.adddeleted_at
 	if v == nil {
 		return
@@ -3088,18 +2756,18 @@ func (m *CommentMutation) AddedDeletedAt() (r int64, exists bool) {
 }
 
 // ResetDeletedAt resets all changes to the "deleted_at" field.
-func (m *CommentMutation) ResetDeletedAt() {
+func (m *BlogsCommentMutation) ResetDeletedAt() {
 	m.deleted_at = nil
 	m.adddeleted_at = nil
 }
 
 // SetDeletedBy sets the "deleted_by" field.
-func (m *CommentMutation) SetDeletedBy(s string) {
+func (m *BlogsCommentMutation) SetDeletedBy(s string) {
 	m.deleted_by = &s
 }
 
 // DeletedBy returns the value of the "deleted_by" field in the mutation.
-func (m *CommentMutation) DeletedBy() (r string, exists bool) {
+func (m *BlogsCommentMutation) DeletedBy() (r string, exists bool) {
 	v := m.deleted_by
 	if v == nil {
 		return
@@ -3107,10 +2775,10 @@ func (m *CommentMutation) DeletedBy() (r string, exists bool) {
 	return *v, true
 }
 
-// OldDeletedBy returns the old "deleted_by" field's value of the Comment entity.
-// If the Comment object wasn't provided to the builder, the object is fetched from the database.
+// OldDeletedBy returns the old "deleted_by" field's value of the BlogsComment entity.
+// If the BlogsComment object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *CommentMutation) OldDeletedBy(ctx context.Context) (v string, err error) {
+func (m *BlogsCommentMutation) OldDeletedBy(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldDeletedBy is only allowed on UpdateOne operations")
 	}
@@ -3125,18 +2793,18 @@ func (m *CommentMutation) OldDeletedBy(ctx context.Context) (v string, err error
 }
 
 // ResetDeletedBy resets all changes to the "deleted_by" field.
-func (m *CommentMutation) ResetDeletedBy() {
+func (m *BlogsCommentMutation) ResetDeletedBy() {
 	m.deleted_by = nil
 }
 
 // SetAccountID sets the "account_id" field.
-func (m *CommentMutation) SetAccountID(i int) {
+func (m *BlogsCommentMutation) SetAccountID(i int) {
 	m.account_id = &i
 	m.addaccount_id = nil
 }
 
 // AccountID returns the value of the "account_id" field in the mutation.
-func (m *CommentMutation) AccountID() (r int, exists bool) {
+func (m *BlogsCommentMutation) AccountID() (r int, exists bool) {
 	v := m.account_id
 	if v == nil {
 		return
@@ -3144,10 +2812,10 @@ func (m *CommentMutation) AccountID() (r int, exists bool) {
 	return *v, true
 }
 
-// OldAccountID returns the old "account_id" field's value of the Comment entity.
-// If the Comment object wasn't provided to the builder, the object is fetched from the database.
+// OldAccountID returns the old "account_id" field's value of the BlogsComment entity.
+// If the BlogsComment object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *CommentMutation) OldAccountID(ctx context.Context) (v int, err error) {
+func (m *BlogsCommentMutation) OldAccountID(ctx context.Context) (v int, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldAccountID is only allowed on UpdateOne operations")
 	}
@@ -3162,7 +2830,7 @@ func (m *CommentMutation) OldAccountID(ctx context.Context) (v int, err error) {
 }
 
 // AddAccountID adds i to the "account_id" field.
-func (m *CommentMutation) AddAccountID(i int) {
+func (m *BlogsCommentMutation) AddAccountID(i int) {
 	if m.addaccount_id != nil {
 		*m.addaccount_id += i
 	} else {
@@ -3171,7 +2839,7 @@ func (m *CommentMutation) AddAccountID(i int) {
 }
 
 // AddedAccountID returns the value that was added to the "account_id" field in this mutation.
-func (m *CommentMutation) AddedAccountID() (r int, exists bool) {
+func (m *BlogsCommentMutation) AddedAccountID() (r int, exists bool) {
 	v := m.addaccount_id
 	if v == nil {
 		return
@@ -3180,19 +2848,19 @@ func (m *CommentMutation) AddedAccountID() (r int, exists bool) {
 }
 
 // ResetAccountID resets all changes to the "account_id" field.
-func (m *CommentMutation) ResetAccountID() {
+func (m *BlogsCommentMutation) ResetAccountID() {
 	m.account_id = nil
 	m.addaccount_id = nil
 }
 
 // SetBlogID sets the "blog_id" field.
-func (m *CommentMutation) SetBlogID(i int) {
+func (m *BlogsCommentMutation) SetBlogID(i int) {
 	m.blog_id = &i
 	m.addblog_id = nil
 }
 
 // BlogID returns the value of the "blog_id" field in the mutation.
-func (m *CommentMutation) BlogID() (r int, exists bool) {
+func (m *BlogsCommentMutation) BlogID() (r int, exists bool) {
 	v := m.blog_id
 	if v == nil {
 		return
@@ -3200,10 +2868,10 @@ func (m *CommentMutation) BlogID() (r int, exists bool) {
 	return *v, true
 }
 
-// OldBlogID returns the old "blog_id" field's value of the Comment entity.
-// If the Comment object wasn't provided to the builder, the object is fetched from the database.
+// OldBlogID returns the old "blog_id" field's value of the BlogsComment entity.
+// If the BlogsComment object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *CommentMutation) OldBlogID(ctx context.Context) (v int, err error) {
+func (m *BlogsCommentMutation) OldBlogID(ctx context.Context) (v int, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldBlogID is only allowed on UpdateOne operations")
 	}
@@ -3218,7 +2886,7 @@ func (m *CommentMutation) OldBlogID(ctx context.Context) (v int, err error) {
 }
 
 // AddBlogID adds i to the "blog_id" field.
-func (m *CommentMutation) AddBlogID(i int) {
+func (m *BlogsCommentMutation) AddBlogID(i int) {
 	if m.addblog_id != nil {
 		*m.addblog_id += i
 	} else {
@@ -3227,7 +2895,7 @@ func (m *CommentMutation) AddBlogID(i int) {
 }
 
 // AddedBlogID returns the value that was added to the "blog_id" field in this mutation.
-func (m *CommentMutation) AddedBlogID() (r int, exists bool) {
+func (m *BlogsCommentMutation) AddedBlogID() (r int, exists bool) {
 	v := m.addblog_id
 	if v == nil {
 		return
@@ -3236,19 +2904,19 @@ func (m *CommentMutation) AddedBlogID() (r int, exists bool) {
 }
 
 // ResetBlogID resets all changes to the "blog_id" field.
-func (m *CommentMutation) ResetBlogID() {
+func (m *BlogsCommentMutation) ResetBlogID() {
 	m.blog_id = nil
 	m.addblog_id = nil
 }
 
 // SetTopID sets the "top_id" field.
-func (m *CommentMutation) SetTopID(i int) {
+func (m *BlogsCommentMutation) SetTopID(i int) {
 	m.top_id = &i
 	m.addtop_id = nil
 }
 
 // TopID returns the value of the "top_id" field in the mutation.
-func (m *CommentMutation) TopID() (r int, exists bool) {
+func (m *BlogsCommentMutation) TopID() (r int, exists bool) {
 	v := m.top_id
 	if v == nil {
 		return
@@ -3256,10 +2924,10 @@ func (m *CommentMutation) TopID() (r int, exists bool) {
 	return *v, true
 }
 
-// OldTopID returns the old "top_id" field's value of the Comment entity.
-// If the Comment object wasn't provided to the builder, the object is fetched from the database.
+// OldTopID returns the old "top_id" field's value of the BlogsComment entity.
+// If the BlogsComment object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *CommentMutation) OldTopID(ctx context.Context) (v int, err error) {
+func (m *BlogsCommentMutation) OldTopID(ctx context.Context) (v int, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldTopID is only allowed on UpdateOne operations")
 	}
@@ -3274,7 +2942,7 @@ func (m *CommentMutation) OldTopID(ctx context.Context) (v int, err error) {
 }
 
 // AddTopID adds i to the "top_id" field.
-func (m *CommentMutation) AddTopID(i int) {
+func (m *BlogsCommentMutation) AddTopID(i int) {
 	if m.addtop_id != nil {
 		*m.addtop_id += i
 	} else {
@@ -3283,7 +2951,7 @@ func (m *CommentMutation) AddTopID(i int) {
 }
 
 // AddedTopID returns the value that was added to the "top_id" field in this mutation.
-func (m *CommentMutation) AddedTopID() (r int, exists bool) {
+func (m *BlogsCommentMutation) AddedTopID() (r int, exists bool) {
 	v := m.addtop_id
 	if v == nil {
 		return
@@ -3292,19 +2960,19 @@ func (m *CommentMutation) AddedTopID() (r int, exists bool) {
 }
 
 // ResetTopID resets all changes to the "top_id" field.
-func (m *CommentMutation) ResetTopID() {
+func (m *BlogsCommentMutation) ResetTopID() {
 	m.top_id = nil
 	m.addtop_id = nil
 }
 
 // SetParentID sets the "parent_id" field.
-func (m *CommentMutation) SetParentID(i int) {
+func (m *BlogsCommentMutation) SetParentID(i int) {
 	m.parent_id = &i
 	m.addparent_id = nil
 }
 
 // ParentID returns the value of the "parent_id" field in the mutation.
-func (m *CommentMutation) ParentID() (r int, exists bool) {
+func (m *BlogsCommentMutation) ParentID() (r int, exists bool) {
 	v := m.parent_id
 	if v == nil {
 		return
@@ -3312,10 +2980,10 @@ func (m *CommentMutation) ParentID() (r int, exists bool) {
 	return *v, true
 }
 
-// OldParentID returns the old "parent_id" field's value of the Comment entity.
-// If the Comment object wasn't provided to the builder, the object is fetched from the database.
+// OldParentID returns the old "parent_id" field's value of the BlogsComment entity.
+// If the BlogsComment object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *CommentMutation) OldParentID(ctx context.Context) (v int, err error) {
+func (m *BlogsCommentMutation) OldParentID(ctx context.Context) (v int, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldParentID is only allowed on UpdateOne operations")
 	}
@@ -3330,7 +2998,7 @@ func (m *CommentMutation) OldParentID(ctx context.Context) (v int, err error) {
 }
 
 // AddParentID adds i to the "parent_id" field.
-func (m *CommentMutation) AddParentID(i int) {
+func (m *BlogsCommentMutation) AddParentID(i int) {
 	if m.addparent_id != nil {
 		*m.addparent_id += i
 	} else {
@@ -3339,7 +3007,7 @@ func (m *CommentMutation) AddParentID(i int) {
 }
 
 // AddedParentID returns the value that was added to the "parent_id" field in this mutation.
-func (m *CommentMutation) AddedParentID() (r int, exists bool) {
+func (m *BlogsCommentMutation) AddedParentID() (r int, exists bool) {
 	v := m.addparent_id
 	if v == nil {
 		return
@@ -3348,19 +3016,19 @@ func (m *CommentMutation) AddedParentID() (r int, exists bool) {
 }
 
 // ResetParentID resets all changes to the "parent_id" field.
-func (m *CommentMutation) ResetParentID() {
+func (m *BlogsCommentMutation) ResetParentID() {
 	m.parent_id = nil
 	m.addparent_id = nil
 }
 
 // SetLevel sets the "level" field.
-func (m *CommentMutation) SetLevel(i int) {
+func (m *BlogsCommentMutation) SetLevel(i int) {
 	m.level = &i
 	m.addlevel = nil
 }
 
 // Level returns the value of the "level" field in the mutation.
-func (m *CommentMutation) Level() (r int, exists bool) {
+func (m *BlogsCommentMutation) Level() (r int, exists bool) {
 	v := m.level
 	if v == nil {
 		return
@@ -3368,10 +3036,10 @@ func (m *CommentMutation) Level() (r int, exists bool) {
 	return *v, true
 }
 
-// OldLevel returns the old "level" field's value of the Comment entity.
-// If the Comment object wasn't provided to the builder, the object is fetched from the database.
+// OldLevel returns the old "level" field's value of the BlogsComment entity.
+// If the BlogsComment object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *CommentMutation) OldLevel(ctx context.Context) (v int, err error) {
+func (m *BlogsCommentMutation) OldLevel(ctx context.Context) (v int, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldLevel is only allowed on UpdateOne operations")
 	}
@@ -3386,7 +3054,7 @@ func (m *CommentMutation) OldLevel(ctx context.Context) (v int, err error) {
 }
 
 // AddLevel adds i to the "level" field.
-func (m *CommentMutation) AddLevel(i int) {
+func (m *BlogsCommentMutation) AddLevel(i int) {
 	if m.addlevel != nil {
 		*m.addlevel += i
 	} else {
@@ -3395,7 +3063,7 @@ func (m *CommentMutation) AddLevel(i int) {
 }
 
 // AddedLevel returns the value that was added to the "level" field in this mutation.
-func (m *CommentMutation) AddedLevel() (r int, exists bool) {
+func (m *BlogsCommentMutation) AddedLevel() (r int, exists bool) {
 	v := m.addlevel
 	if v == nil {
 		return
@@ -3404,19 +3072,19 @@ func (m *CommentMutation) AddedLevel() (r int, exists bool) {
 }
 
 // ResetLevel resets all changes to the "level" field.
-func (m *CommentMutation) ResetLevel() {
+func (m *BlogsCommentMutation) ResetLevel() {
 	m.level = nil
 	m.addlevel = nil
 }
 
 // SetTotal sets the "total" field.
-func (m *CommentMutation) SetTotal(i int) {
+func (m *BlogsCommentMutation) SetTotal(i int) {
 	m.total = &i
 	m.addtotal = nil
 }
 
 // Total returns the value of the "total" field in the mutation.
-func (m *CommentMutation) Total() (r int, exists bool) {
+func (m *BlogsCommentMutation) Total() (r int, exists bool) {
 	v := m.total
 	if v == nil {
 		return
@@ -3424,10 +3092,10 @@ func (m *CommentMutation) Total() (r int, exists bool) {
 	return *v, true
 }
 
-// OldTotal returns the old "total" field's value of the Comment entity.
-// If the Comment object wasn't provided to the builder, the object is fetched from the database.
+// OldTotal returns the old "total" field's value of the BlogsComment entity.
+// If the BlogsComment object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *CommentMutation) OldTotal(ctx context.Context) (v int, err error) {
+func (m *BlogsCommentMutation) OldTotal(ctx context.Context) (v int, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldTotal is only allowed on UpdateOne operations")
 	}
@@ -3442,7 +3110,7 @@ func (m *CommentMutation) OldTotal(ctx context.Context) (v int, err error) {
 }
 
 // AddTotal adds i to the "total" field.
-func (m *CommentMutation) AddTotal(i int) {
+func (m *BlogsCommentMutation) AddTotal(i int) {
 	if m.addtotal != nil {
 		*m.addtotal += i
 	} else {
@@ -3451,7 +3119,7 @@ func (m *CommentMutation) AddTotal(i int) {
 }
 
 // AddedTotal returns the value that was added to the "total" field in this mutation.
-func (m *CommentMutation) AddedTotal() (r int, exists bool) {
+func (m *BlogsCommentMutation) AddedTotal() (r int, exists bool) {
 	v := m.addtotal
 	if v == nil {
 		return
@@ -3460,19 +3128,19 @@ func (m *CommentMutation) AddedTotal() (r int, exists bool) {
 }
 
 // ResetTotal resets all changes to the "total" field.
-func (m *CommentMutation) ResetTotal() {
+func (m *BlogsCommentMutation) ResetTotal() {
 	m.total = nil
 	m.addtotal = nil
 }
 
 // SetStatus sets the "status" field.
-func (m *CommentMutation) SetStatus(i int8) {
+func (m *BlogsCommentMutation) SetStatus(i int8) {
 	m.status = &i
 	m.addstatus = nil
 }
 
 // Status returns the value of the "status" field in the mutation.
-func (m *CommentMutation) Status() (r int8, exists bool) {
+func (m *BlogsCommentMutation) Status() (r int8, exists bool) {
 	v := m.status
 	if v == nil {
 		return
@@ -3480,10 +3148,10 @@ func (m *CommentMutation) Status() (r int8, exists bool) {
 	return *v, true
 }
 
-// OldStatus returns the old "status" field's value of the Comment entity.
-// If the Comment object wasn't provided to the builder, the object is fetched from the database.
+// OldStatus returns the old "status" field's value of the BlogsComment entity.
+// If the BlogsComment object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *CommentMutation) OldStatus(ctx context.Context) (v int8, err error) {
+func (m *BlogsCommentMutation) OldStatus(ctx context.Context) (v int8, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldStatus is only allowed on UpdateOne operations")
 	}
@@ -3498,7 +3166,7 @@ func (m *CommentMutation) OldStatus(ctx context.Context) (v int8, err error) {
 }
 
 // AddStatus adds i to the "status" field.
-func (m *CommentMutation) AddStatus(i int8) {
+func (m *BlogsCommentMutation) AddStatus(i int8) {
 	if m.addstatus != nil {
 		*m.addstatus += i
 	} else {
@@ -3507,7 +3175,7 @@ func (m *CommentMutation) AddStatus(i int8) {
 }
 
 // AddedStatus returns the value that was added to the "status" field in this mutation.
-func (m *CommentMutation) AddedStatus() (r int8, exists bool) {
+func (m *BlogsCommentMutation) AddedStatus() (r int8, exists bool) {
 	v := m.addstatus
 	if v == nil {
 		return
@@ -3516,18 +3184,18 @@ func (m *CommentMutation) AddedStatus() (r int8, exists bool) {
 }
 
 // ResetStatus resets all changes to the "status" field.
-func (m *CommentMutation) ResetStatus() {
+func (m *BlogsCommentMutation) ResetStatus() {
 	m.status = nil
 	m.addstatus = nil
 }
 
 // SetContent sets the "content" field.
-func (m *CommentMutation) SetContent(s string) {
+func (m *BlogsCommentMutation) SetContent(s string) {
 	m.content = &s
 }
 
 // Content returns the value of the "content" field in the mutation.
-func (m *CommentMutation) Content() (r string, exists bool) {
+func (m *BlogsCommentMutation) Content() (r string, exists bool) {
 	v := m.content
 	if v == nil {
 		return
@@ -3535,10 +3203,10 @@ func (m *CommentMutation) Content() (r string, exists bool) {
 	return *v, true
 }
 
-// OldContent returns the old "content" field's value of the Comment entity.
-// If the Comment object wasn't provided to the builder, the object is fetched from the database.
+// OldContent returns the old "content" field's value of the BlogsComment entity.
+// If the BlogsComment object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *CommentMutation) OldContent(ctx context.Context) (v string, err error) {
+func (m *BlogsCommentMutation) OldContent(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldContent is only allowed on UpdateOne operations")
 	}
@@ -3553,19 +3221,19 @@ func (m *CommentMutation) OldContent(ctx context.Context) (v string, err error) 
 }
 
 // ResetContent resets all changes to the "content" field.
-func (m *CommentMutation) ResetContent() {
+func (m *BlogsCommentMutation) ResetContent() {
 	m.content = nil
 }
 
-// Where appends a list predicates to the CommentMutation builder.
-func (m *CommentMutation) Where(ps ...predicate.Comment) {
+// Where appends a list predicates to the BlogsCommentMutation builder.
+func (m *BlogsCommentMutation) Where(ps ...predicate.BlogsComment) {
 	m.predicates = append(m.predicates, ps...)
 }
 
-// WhereP appends storage-level predicates to the CommentMutation builder. Using this method,
+// WhereP appends storage-level predicates to the BlogsCommentMutation builder. Using this method,
 // users can use type-assertion to append predicates that do not depend on any generated package.
-func (m *CommentMutation) WhereP(ps ...func(*sql.Selector)) {
-	p := make([]predicate.Comment, len(ps))
+func (m *BlogsCommentMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.BlogsComment, len(ps))
 	for i := range ps {
 		p[i] = ps[i]
 	}
@@ -3573,69 +3241,69 @@ func (m *CommentMutation) WhereP(ps ...func(*sql.Selector)) {
 }
 
 // Op returns the operation name.
-func (m *CommentMutation) Op() Op {
+func (m *BlogsCommentMutation) Op() Op {
 	return m.op
 }
 
 // SetOp allows setting the mutation operation.
-func (m *CommentMutation) SetOp(op Op) {
+func (m *BlogsCommentMutation) SetOp(op Op) {
 	m.op = op
 }
 
-// Type returns the node type of this mutation (Comment).
-func (m *CommentMutation) Type() string {
+// Type returns the node type of this mutation (BlogsComment).
+func (m *BlogsCommentMutation) Type() string {
 	return m.typ
 }
 
 // Fields returns all fields that were changed during this mutation. Note that in
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
-func (m *CommentMutation) Fields() []string {
+func (m *BlogsCommentMutation) Fields() []string {
 	fields := make([]string, 0, 15)
 	if m.created_at != nil {
-		fields = append(fields, comment.FieldCreatedAt)
+		fields = append(fields, blogscomment.FieldCreatedAt)
 	}
 	if m.created_by != nil {
-		fields = append(fields, comment.FieldCreatedBy)
+		fields = append(fields, blogscomment.FieldCreatedBy)
 	}
 	if m.updated_at != nil {
-		fields = append(fields, comment.FieldUpdatedAt)
+		fields = append(fields, blogscomment.FieldUpdatedAt)
 	}
 	if m.updated_by != nil {
-		fields = append(fields, comment.FieldUpdatedBy)
+		fields = append(fields, blogscomment.FieldUpdatedBy)
 	}
 	if m.is_deleted != nil {
-		fields = append(fields, comment.FieldIsDeleted)
+		fields = append(fields, blogscomment.FieldIsDeleted)
 	}
 	if m.deleted_at != nil {
-		fields = append(fields, comment.FieldDeletedAt)
+		fields = append(fields, blogscomment.FieldDeletedAt)
 	}
 	if m.deleted_by != nil {
-		fields = append(fields, comment.FieldDeletedBy)
+		fields = append(fields, blogscomment.FieldDeletedBy)
 	}
 	if m.account_id != nil {
-		fields = append(fields, comment.FieldAccountID)
+		fields = append(fields, blogscomment.FieldAccountID)
 	}
 	if m.blog_id != nil {
-		fields = append(fields, comment.FieldBlogID)
+		fields = append(fields, blogscomment.FieldBlogID)
 	}
 	if m.top_id != nil {
-		fields = append(fields, comment.FieldTopID)
+		fields = append(fields, blogscomment.FieldTopID)
 	}
 	if m.parent_id != nil {
-		fields = append(fields, comment.FieldParentID)
+		fields = append(fields, blogscomment.FieldParentID)
 	}
 	if m.level != nil {
-		fields = append(fields, comment.FieldLevel)
+		fields = append(fields, blogscomment.FieldLevel)
 	}
 	if m.total != nil {
-		fields = append(fields, comment.FieldTotal)
+		fields = append(fields, blogscomment.FieldTotal)
 	}
 	if m.status != nil {
-		fields = append(fields, comment.FieldStatus)
+		fields = append(fields, blogscomment.FieldStatus)
 	}
 	if m.content != nil {
-		fields = append(fields, comment.FieldContent)
+		fields = append(fields, blogscomment.FieldContent)
 	}
 	return fields
 }
@@ -3643,37 +3311,37 @@ func (m *CommentMutation) Fields() []string {
 // Field returns the value of a field with the given name. The second boolean
 // return value indicates that this field was not set, or was not defined in the
 // schema.
-func (m *CommentMutation) Field(name string) (ent.Value, bool) {
+func (m *BlogsCommentMutation) Field(name string) (ent.Value, bool) {
 	switch name {
-	case comment.FieldCreatedAt:
+	case blogscomment.FieldCreatedAt:
 		return m.CreatedAt()
-	case comment.FieldCreatedBy:
+	case blogscomment.FieldCreatedBy:
 		return m.CreatedBy()
-	case comment.FieldUpdatedAt:
+	case blogscomment.FieldUpdatedAt:
 		return m.UpdatedAt()
-	case comment.FieldUpdatedBy:
+	case blogscomment.FieldUpdatedBy:
 		return m.UpdatedBy()
-	case comment.FieldIsDeleted:
+	case blogscomment.FieldIsDeleted:
 		return m.IsDeleted()
-	case comment.FieldDeletedAt:
+	case blogscomment.FieldDeletedAt:
 		return m.DeletedAt()
-	case comment.FieldDeletedBy:
+	case blogscomment.FieldDeletedBy:
 		return m.DeletedBy()
-	case comment.FieldAccountID:
+	case blogscomment.FieldAccountID:
 		return m.AccountID()
-	case comment.FieldBlogID:
+	case blogscomment.FieldBlogID:
 		return m.BlogID()
-	case comment.FieldTopID:
+	case blogscomment.FieldTopID:
 		return m.TopID()
-	case comment.FieldParentID:
+	case blogscomment.FieldParentID:
 		return m.ParentID()
-	case comment.FieldLevel:
+	case blogscomment.FieldLevel:
 		return m.Level()
-	case comment.FieldTotal:
+	case blogscomment.FieldTotal:
 		return m.Total()
-	case comment.FieldStatus:
+	case blogscomment.FieldStatus:
 		return m.Status()
-	case comment.FieldContent:
+	case blogscomment.FieldContent:
 		return m.Content()
 	}
 	return nil, false
@@ -3682,146 +3350,146 @@ func (m *CommentMutation) Field(name string) (ent.Value, bool) {
 // OldField returns the old value of the field from the database. An error is
 // returned if the mutation operation is not UpdateOne, or the query to the
 // database failed.
-func (m *CommentMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+func (m *BlogsCommentMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
-	case comment.FieldCreatedAt:
+	case blogscomment.FieldCreatedAt:
 		return m.OldCreatedAt(ctx)
-	case comment.FieldCreatedBy:
+	case blogscomment.FieldCreatedBy:
 		return m.OldCreatedBy(ctx)
-	case comment.FieldUpdatedAt:
+	case blogscomment.FieldUpdatedAt:
 		return m.OldUpdatedAt(ctx)
-	case comment.FieldUpdatedBy:
+	case blogscomment.FieldUpdatedBy:
 		return m.OldUpdatedBy(ctx)
-	case comment.FieldIsDeleted:
+	case blogscomment.FieldIsDeleted:
 		return m.OldIsDeleted(ctx)
-	case comment.FieldDeletedAt:
+	case blogscomment.FieldDeletedAt:
 		return m.OldDeletedAt(ctx)
-	case comment.FieldDeletedBy:
+	case blogscomment.FieldDeletedBy:
 		return m.OldDeletedBy(ctx)
-	case comment.FieldAccountID:
+	case blogscomment.FieldAccountID:
 		return m.OldAccountID(ctx)
-	case comment.FieldBlogID:
+	case blogscomment.FieldBlogID:
 		return m.OldBlogID(ctx)
-	case comment.FieldTopID:
+	case blogscomment.FieldTopID:
 		return m.OldTopID(ctx)
-	case comment.FieldParentID:
+	case blogscomment.FieldParentID:
 		return m.OldParentID(ctx)
-	case comment.FieldLevel:
+	case blogscomment.FieldLevel:
 		return m.OldLevel(ctx)
-	case comment.FieldTotal:
+	case blogscomment.FieldTotal:
 		return m.OldTotal(ctx)
-	case comment.FieldStatus:
+	case blogscomment.FieldStatus:
 		return m.OldStatus(ctx)
-	case comment.FieldContent:
+	case blogscomment.FieldContent:
 		return m.OldContent(ctx)
 	}
-	return nil, fmt.Errorf("unknown Comment field %s", name)
+	return nil, fmt.Errorf("unknown BlogsComment field %s", name)
 }
 
 // SetField sets the value of a field with the given name. It returns an error if
 // the field is not defined in the schema, or if the type mismatched the field
 // type.
-func (m *CommentMutation) SetField(name string, value ent.Value) error {
+func (m *BlogsCommentMutation) SetField(name string, value ent.Value) error {
 	switch name {
-	case comment.FieldCreatedAt:
+	case blogscomment.FieldCreatedAt:
 		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetCreatedAt(v)
 		return nil
-	case comment.FieldCreatedBy:
+	case blogscomment.FieldCreatedBy:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetCreatedBy(v)
 		return nil
-	case comment.FieldUpdatedAt:
+	case blogscomment.FieldUpdatedAt:
 		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetUpdatedAt(v)
 		return nil
-	case comment.FieldUpdatedBy:
+	case blogscomment.FieldUpdatedBy:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetUpdatedBy(v)
 		return nil
-	case comment.FieldIsDeleted:
+	case blogscomment.FieldIsDeleted:
 		v, ok := value.(uint8)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetIsDeleted(v)
 		return nil
-	case comment.FieldDeletedAt:
+	case blogscomment.FieldDeletedAt:
 		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetDeletedAt(v)
 		return nil
-	case comment.FieldDeletedBy:
+	case blogscomment.FieldDeletedBy:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetDeletedBy(v)
 		return nil
-	case comment.FieldAccountID:
+	case blogscomment.FieldAccountID:
 		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetAccountID(v)
 		return nil
-	case comment.FieldBlogID:
+	case blogscomment.FieldBlogID:
 		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetBlogID(v)
 		return nil
-	case comment.FieldTopID:
+	case blogscomment.FieldTopID:
 		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetTopID(v)
 		return nil
-	case comment.FieldParentID:
+	case blogscomment.FieldParentID:
 		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetParentID(v)
 		return nil
-	case comment.FieldLevel:
+	case blogscomment.FieldLevel:
 		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetLevel(v)
 		return nil
-	case comment.FieldTotal:
+	case blogscomment.FieldTotal:
 		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetTotal(v)
 		return nil
-	case comment.FieldStatus:
+	case blogscomment.FieldStatus:
 		v, ok := value.(int8)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetStatus(v)
 		return nil
-	case comment.FieldContent:
+	case blogscomment.FieldContent:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
@@ -3829,45 +3497,45 @@ func (m *CommentMutation) SetField(name string, value ent.Value) error {
 		m.SetContent(v)
 		return nil
 	}
-	return fmt.Errorf("unknown Comment field %s", name)
+	return fmt.Errorf("unknown BlogsComment field %s", name)
 }
 
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
-func (m *CommentMutation) AddedFields() []string {
+func (m *BlogsCommentMutation) AddedFields() []string {
 	var fields []string
 	if m.addcreated_at != nil {
-		fields = append(fields, comment.FieldCreatedAt)
+		fields = append(fields, blogscomment.FieldCreatedAt)
 	}
 	if m.addupdated_at != nil {
-		fields = append(fields, comment.FieldUpdatedAt)
+		fields = append(fields, blogscomment.FieldUpdatedAt)
 	}
 	if m.addis_deleted != nil {
-		fields = append(fields, comment.FieldIsDeleted)
+		fields = append(fields, blogscomment.FieldIsDeleted)
 	}
 	if m.adddeleted_at != nil {
-		fields = append(fields, comment.FieldDeletedAt)
+		fields = append(fields, blogscomment.FieldDeletedAt)
 	}
 	if m.addaccount_id != nil {
-		fields = append(fields, comment.FieldAccountID)
+		fields = append(fields, blogscomment.FieldAccountID)
 	}
 	if m.addblog_id != nil {
-		fields = append(fields, comment.FieldBlogID)
+		fields = append(fields, blogscomment.FieldBlogID)
 	}
 	if m.addtop_id != nil {
-		fields = append(fields, comment.FieldTopID)
+		fields = append(fields, blogscomment.FieldTopID)
 	}
 	if m.addparent_id != nil {
-		fields = append(fields, comment.FieldParentID)
+		fields = append(fields, blogscomment.FieldParentID)
 	}
 	if m.addlevel != nil {
-		fields = append(fields, comment.FieldLevel)
+		fields = append(fields, blogscomment.FieldLevel)
 	}
 	if m.addtotal != nil {
-		fields = append(fields, comment.FieldTotal)
+		fields = append(fields, blogscomment.FieldTotal)
 	}
 	if m.addstatus != nil {
-		fields = append(fields, comment.FieldStatus)
+		fields = append(fields, blogscomment.FieldStatus)
 	}
 	return fields
 }
@@ -3875,29 +3543,29 @@ func (m *CommentMutation) AddedFields() []string {
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
-func (m *CommentMutation) AddedField(name string) (ent.Value, bool) {
+func (m *BlogsCommentMutation) AddedField(name string) (ent.Value, bool) {
 	switch name {
-	case comment.FieldCreatedAt:
+	case blogscomment.FieldCreatedAt:
 		return m.AddedCreatedAt()
-	case comment.FieldUpdatedAt:
+	case blogscomment.FieldUpdatedAt:
 		return m.AddedUpdatedAt()
-	case comment.FieldIsDeleted:
+	case blogscomment.FieldIsDeleted:
 		return m.AddedIsDeleted()
-	case comment.FieldDeletedAt:
+	case blogscomment.FieldDeletedAt:
 		return m.AddedDeletedAt()
-	case comment.FieldAccountID:
+	case blogscomment.FieldAccountID:
 		return m.AddedAccountID()
-	case comment.FieldBlogID:
+	case blogscomment.FieldBlogID:
 		return m.AddedBlogID()
-	case comment.FieldTopID:
+	case blogscomment.FieldTopID:
 		return m.AddedTopID()
-	case comment.FieldParentID:
+	case blogscomment.FieldParentID:
 		return m.AddedParentID()
-	case comment.FieldLevel:
+	case blogscomment.FieldLevel:
 		return m.AddedLevel()
-	case comment.FieldTotal:
+	case blogscomment.FieldTotal:
 		return m.AddedTotal()
-	case comment.FieldStatus:
+	case blogscomment.FieldStatus:
 		return m.AddedStatus()
 	}
 	return nil, false
@@ -3906,79 +3574,79 @@ func (m *CommentMutation) AddedField(name string) (ent.Value, bool) {
 // AddField adds the value to the field with the given name. It returns an error if
 // the field is not defined in the schema, or if the type mismatched the field
 // type.
-func (m *CommentMutation) AddField(name string, value ent.Value) error {
+func (m *BlogsCommentMutation) AddField(name string, value ent.Value) error {
 	switch name {
-	case comment.FieldCreatedAt:
+	case blogscomment.FieldCreatedAt:
 		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddCreatedAt(v)
 		return nil
-	case comment.FieldUpdatedAt:
+	case blogscomment.FieldUpdatedAt:
 		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddUpdatedAt(v)
 		return nil
-	case comment.FieldIsDeleted:
+	case blogscomment.FieldIsDeleted:
 		v, ok := value.(int8)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddIsDeleted(v)
 		return nil
-	case comment.FieldDeletedAt:
+	case blogscomment.FieldDeletedAt:
 		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddDeletedAt(v)
 		return nil
-	case comment.FieldAccountID:
+	case blogscomment.FieldAccountID:
 		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddAccountID(v)
 		return nil
-	case comment.FieldBlogID:
+	case blogscomment.FieldBlogID:
 		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddBlogID(v)
 		return nil
-	case comment.FieldTopID:
+	case blogscomment.FieldTopID:
 		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddTopID(v)
 		return nil
-	case comment.FieldParentID:
+	case blogscomment.FieldParentID:
 		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddParentID(v)
 		return nil
-	case comment.FieldLevel:
+	case blogscomment.FieldLevel:
 		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddLevel(v)
 		return nil
-	case comment.FieldTotal:
+	case blogscomment.FieldTotal:
 		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddTotal(v)
 		return nil
-	case comment.FieldStatus:
+	case blogscomment.FieldStatus:
 		v, ok := value.(int8)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
@@ -3986,125 +3654,457 @@ func (m *CommentMutation) AddField(name string, value ent.Value) error {
 		m.AddStatus(v)
 		return nil
 	}
-	return fmt.Errorf("unknown Comment numeric field %s", name)
+	return fmt.Errorf("unknown BlogsComment numeric field %s", name)
 }
 
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
-func (m *CommentMutation) ClearedFields() []string {
+func (m *BlogsCommentMutation) ClearedFields() []string {
 	return nil
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
 // cleared in this mutation.
-func (m *CommentMutation) FieldCleared(name string) bool {
+func (m *BlogsCommentMutation) FieldCleared(name string) bool {
 	_, ok := m.clearedFields[name]
 	return ok
 }
 
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
-func (m *CommentMutation) ClearField(name string) error {
-	return fmt.Errorf("unknown Comment nullable field %s", name)
+func (m *BlogsCommentMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown BlogsComment nullable field %s", name)
 }
 
 // ResetField resets all changes in the mutation for the field with the given name.
 // It returns an error if the field is not defined in the schema.
-func (m *CommentMutation) ResetField(name string) error {
+func (m *BlogsCommentMutation) ResetField(name string) error {
 	switch name {
-	case comment.FieldCreatedAt:
+	case blogscomment.FieldCreatedAt:
 		m.ResetCreatedAt()
 		return nil
-	case comment.FieldCreatedBy:
+	case blogscomment.FieldCreatedBy:
 		m.ResetCreatedBy()
 		return nil
-	case comment.FieldUpdatedAt:
+	case blogscomment.FieldUpdatedAt:
 		m.ResetUpdatedAt()
 		return nil
-	case comment.FieldUpdatedBy:
+	case blogscomment.FieldUpdatedBy:
 		m.ResetUpdatedBy()
 		return nil
-	case comment.FieldIsDeleted:
+	case blogscomment.FieldIsDeleted:
 		m.ResetIsDeleted()
 		return nil
-	case comment.FieldDeletedAt:
+	case blogscomment.FieldDeletedAt:
 		m.ResetDeletedAt()
 		return nil
-	case comment.FieldDeletedBy:
+	case blogscomment.FieldDeletedBy:
 		m.ResetDeletedBy()
 		return nil
-	case comment.FieldAccountID:
+	case blogscomment.FieldAccountID:
 		m.ResetAccountID()
 		return nil
-	case comment.FieldBlogID:
+	case blogscomment.FieldBlogID:
 		m.ResetBlogID()
 		return nil
-	case comment.FieldTopID:
+	case blogscomment.FieldTopID:
 		m.ResetTopID()
 		return nil
-	case comment.FieldParentID:
+	case blogscomment.FieldParentID:
 		m.ResetParentID()
 		return nil
-	case comment.FieldLevel:
+	case blogscomment.FieldLevel:
 		m.ResetLevel()
 		return nil
-	case comment.FieldTotal:
+	case blogscomment.FieldTotal:
 		m.ResetTotal()
 		return nil
-	case comment.FieldStatus:
+	case blogscomment.FieldStatus:
 		m.ResetStatus()
 		return nil
-	case comment.FieldContent:
+	case blogscomment.FieldContent:
 		m.ResetContent()
 		return nil
 	}
-	return fmt.Errorf("unknown Comment field %s", name)
+	return fmt.Errorf("unknown BlogsComment field %s", name)
 }
 
 // AddedEdges returns all edge names that were set/added in this mutation.
-func (m *CommentMutation) AddedEdges() []string {
+func (m *BlogsCommentMutation) AddedEdges() []string {
 	edges := make([]string, 0, 0)
 	return edges
 }
 
 // AddedIDs returns all IDs (to other nodes) that were added for the given edge
 // name in this mutation.
-func (m *CommentMutation) AddedIDs(name string) []ent.Value {
+func (m *BlogsCommentMutation) AddedIDs(name string) []ent.Value {
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
-func (m *CommentMutation) RemovedEdges() []string {
+func (m *BlogsCommentMutation) RemovedEdges() []string {
 	edges := make([]string, 0, 0)
 	return edges
 }
 
 // RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
 // the given name in this mutation.
-func (m *CommentMutation) RemovedIDs(name string) []ent.Value {
+func (m *BlogsCommentMutation) RemovedIDs(name string) []ent.Value {
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
-func (m *CommentMutation) ClearedEdges() []string {
+func (m *BlogsCommentMutation) ClearedEdges() []string {
 	edges := make([]string, 0, 0)
 	return edges
 }
 
 // EdgeCleared returns a boolean which indicates if the edge with the given name
 // was cleared in this mutation.
-func (m *CommentMutation) EdgeCleared(name string) bool {
+func (m *BlogsCommentMutation) EdgeCleared(name string) bool {
 	return false
 }
 
 // ClearEdge clears the value of the edge with the given name. It returns an error
 // if that edge is not defined in the schema.
-func (m *CommentMutation) ClearEdge(name string) error {
-	return fmt.Errorf("unknown Comment unique edge %s", name)
+func (m *BlogsCommentMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown BlogsComment unique edge %s", name)
 }
 
 // ResetEdge resets all changes to the edge with the given name in this mutation.
 // It returns an error if the edge is not defined in the schema.
-func (m *CommentMutation) ResetEdge(name string) error {
-	return fmt.Errorf("unknown Comment edge %s", name)
+func (m *BlogsCommentMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown BlogsComment edge %s", name)
+}
+
+// BlogsContentMutation represents an operation that mutates the BlogsContent nodes in the graph.
+type BlogsContentMutation struct {
+	config
+	op            Op
+	typ           string
+	id            *int
+	content       *string
+	clearedFields map[string]struct{}
+	done          bool
+	oldValue      func(context.Context) (*BlogsContent, error)
+	predicates    []predicate.BlogsContent
+}
+
+var _ ent.Mutation = (*BlogsContentMutation)(nil)
+
+// blogscontentOption allows management of the mutation configuration using functional options.
+type blogscontentOption func(*BlogsContentMutation)
+
+// newBlogsContentMutation creates new mutation for the BlogsContent entity.
+func newBlogsContentMutation(c config, op Op, opts ...blogscontentOption) *BlogsContentMutation {
+	m := &BlogsContentMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeBlogsContent,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withBlogsContentID sets the ID field of the mutation.
+func withBlogsContentID(id int) blogscontentOption {
+	return func(m *BlogsContentMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *BlogsContent
+		)
+		m.oldValue = func(ctx context.Context) (*BlogsContent, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().BlogsContent.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withBlogsContent sets the old BlogsContent of the mutation.
+func withBlogsContent(node *BlogsContent) blogscontentOption {
+	return func(m *BlogsContentMutation) {
+		m.oldValue = func(context.Context) (*BlogsContent, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m BlogsContentMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m BlogsContentMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of BlogsContent entities.
+func (m *BlogsContentMutation) SetID(id int) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *BlogsContentMutation) ID() (id int, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *BlogsContentMutation) IDs(ctx context.Context) ([]int, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []int{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().BlogsContent.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetContent sets the "content" field.
+func (m *BlogsContentMutation) SetContent(s string) {
+	m.content = &s
+}
+
+// Content returns the value of the "content" field in the mutation.
+func (m *BlogsContentMutation) Content() (r string, exists bool) {
+	v := m.content
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldContent returns the old "content" field's value of the BlogsContent entity.
+// If the BlogsContent object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *BlogsContentMutation) OldContent(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldContent is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldContent requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldContent: %w", err)
+	}
+	return oldValue.Content, nil
+}
+
+// ResetContent resets all changes to the "content" field.
+func (m *BlogsContentMutation) ResetContent() {
+	m.content = nil
+}
+
+// Where appends a list predicates to the BlogsContentMutation builder.
+func (m *BlogsContentMutation) Where(ps ...predicate.BlogsContent) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// WhereP appends storage-level predicates to the BlogsContentMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *BlogsContentMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.BlogsContent, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
+// Op returns the operation name.
+func (m *BlogsContentMutation) Op() Op {
+	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *BlogsContentMutation) SetOp(op Op) {
+	m.op = op
+}
+
+// Type returns the node type of this mutation (BlogsContent).
+func (m *BlogsContentMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *BlogsContentMutation) Fields() []string {
+	fields := make([]string, 0, 1)
+	if m.content != nil {
+		fields = append(fields, blogscontent.FieldContent)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *BlogsContentMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case blogscontent.FieldContent:
+		return m.Content()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *BlogsContentMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case blogscontent.FieldContent:
+		return m.OldContent(ctx)
+	}
+	return nil, fmt.Errorf("unknown BlogsContent field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *BlogsContentMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case blogscontent.FieldContent:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetContent(v)
+		return nil
+	}
+	return fmt.Errorf("unknown BlogsContent field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *BlogsContentMutation) AddedFields() []string {
+	return nil
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *BlogsContentMutation) AddedField(name string) (ent.Value, bool) {
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *BlogsContentMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown BlogsContent numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *BlogsContentMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *BlogsContentMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *BlogsContentMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown BlogsContent nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *BlogsContentMutation) ResetField(name string) error {
+	switch name {
+	case blogscontent.FieldContent:
+		m.ResetContent()
+		return nil
+	}
+	return fmt.Errorf("unknown BlogsContent field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *BlogsContentMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *BlogsContentMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *BlogsContentMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *BlogsContentMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *BlogsContentMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *BlogsContentMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *BlogsContentMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown BlogsContent unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *BlogsContentMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown BlogsContent edge %s", name)
 }

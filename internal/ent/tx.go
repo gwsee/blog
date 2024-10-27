@@ -16,12 +16,12 @@ type Tx struct {
 	config
 	// Account is the client for interacting with the Account builders.
 	Account *AccountClient
-	// Blog is the client for interacting with the Blog builders.
-	Blog *BlogClient
-	// BlogContent is the client for interacting with the BlogContent builders.
-	BlogContent *BlogContentClient
-	// Comment is the client for interacting with the Comment builders.
-	Comment *CommentClient
+	// Blogs is the client for interacting with the Blogs builders.
+	Blogs *BlogsClient
+	// BlogsComment is the client for interacting with the BlogsComment builders.
+	BlogsComment *BlogsCommentClient
+	// BlogsContent is the client for interacting with the BlogsContent builders.
+	BlogsContent *BlogsContentClient
 
 	// lazily loaded.
 	client     *Client
@@ -154,9 +154,9 @@ func (tx *Tx) Client() *Client {
 
 func (tx *Tx) init() {
 	tx.Account = NewAccountClient(tx.config)
-	tx.Blog = NewBlogClient(tx.config)
-	tx.BlogContent = NewBlogContentClient(tx.config)
-	tx.Comment = NewCommentClient(tx.config)
+	tx.Blogs = NewBlogsClient(tx.config)
+	tx.BlogsComment = NewBlogsCommentClient(tx.config)
+	tx.BlogsContent = NewBlogsContentClient(tx.config)
 }
 
 // txDriver wraps the given dialect.Tx with a nop dialect.Driver implementation.

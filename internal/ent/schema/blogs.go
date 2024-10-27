@@ -9,11 +9,11 @@ import (
 	"entgo.io/ent/schema/field"
 )
 
-type Blog struct {
+type Blogs struct {
 	ent.Schema
 }
 
-func (Blog) Fields() []ent.Field {
+func (Blogs) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int("id").Unique().Positive().Comment("博客ID"),
 		field.Int("account_id").Comment("账户ID"),
@@ -34,23 +34,19 @@ func (Blog) Fields() []ent.Field {
 			SchemaType(map[string]string{
 				dialect.MySQL: "varchar(200)",
 			}),
-		field.String("content").NotEmpty().Comment("内容").
-			SchemaType(map[string]string{
-				dialect.MySQL: "text",
-			}),
 	}
 }
 
-func (Blog) Edges() []ent.Edge {
+func (Blogs) Edges() []ent.Edge {
 	return []ent.Edge{}
 }
-func (Blog) Mixin() []ent.Mixin {
+func (Blogs) Mixin() []ent.Mixin {
 	return []ent.Mixin{
 		mixin.Time{},
 		mixin.SoftDelete{},
 	}
 }
-func (Blog) Annotations() []schema.Annotation {
+func (Blogs) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entsql.Annotation{Table: "blogs"},
 		entsql.WithComments(true),

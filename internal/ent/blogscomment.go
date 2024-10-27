@@ -3,7 +3,7 @@
 package ent
 
 import (
-	"blog/internal/ent/comment"
+	"blog/internal/ent/blogscomment"
 	"fmt"
 	"strings"
 
@@ -12,7 +12,7 @@ import (
 )
 
 // 博客评论
-type Comment struct {
+type BlogsComment struct {
 	config `json:"-"`
 	// ID of the ent.
 	// 评论ID
@@ -51,13 +51,13 @@ type Comment struct {
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
-func (*Comment) scanValues(columns []string) ([]any, error) {
+func (*BlogsComment) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case comment.FieldID, comment.FieldCreatedAt, comment.FieldUpdatedAt, comment.FieldIsDeleted, comment.FieldDeletedAt, comment.FieldAccountID, comment.FieldBlogID, comment.FieldTopID, comment.FieldParentID, comment.FieldLevel, comment.FieldTotal, comment.FieldStatus:
+		case blogscomment.FieldID, blogscomment.FieldCreatedAt, blogscomment.FieldUpdatedAt, blogscomment.FieldIsDeleted, blogscomment.FieldDeletedAt, blogscomment.FieldAccountID, blogscomment.FieldBlogID, blogscomment.FieldTopID, blogscomment.FieldParentID, blogscomment.FieldLevel, blogscomment.FieldTotal, blogscomment.FieldStatus:
 			values[i] = new(sql.NullInt64)
-		case comment.FieldCreatedBy, comment.FieldUpdatedBy, comment.FieldDeletedBy, comment.FieldContent:
+		case blogscomment.FieldCreatedBy, blogscomment.FieldUpdatedBy, blogscomment.FieldDeletedBy, blogscomment.FieldContent:
 			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -67,192 +67,192 @@ func (*Comment) scanValues(columns []string) ([]any, error) {
 }
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
-// to the Comment fields.
-func (c *Comment) assignValues(columns []string, values []any) error {
+// to the BlogsComment fields.
+func (bc *BlogsComment) assignValues(columns []string, values []any) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
 	for i := range columns {
 		switch columns[i] {
-		case comment.FieldID:
+		case blogscomment.FieldID:
 			value, ok := values[i].(*sql.NullInt64)
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			c.ID = int(value.Int64)
-		case comment.FieldCreatedAt:
+			bc.ID = int(value.Int64)
+		case blogscomment.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field created_at", values[i])
 			} else if value.Valid {
-				c.CreatedAt = value.Int64
+				bc.CreatedAt = value.Int64
 			}
-		case comment.FieldCreatedBy:
+		case blogscomment.FieldCreatedBy:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field created_by", values[i])
 			} else if value.Valid {
-				c.CreatedBy = value.String
+				bc.CreatedBy = value.String
 			}
-		case comment.FieldUpdatedAt:
+		case blogscomment.FieldUpdatedAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
 			} else if value.Valid {
-				c.UpdatedAt = value.Int64
+				bc.UpdatedAt = value.Int64
 			}
-		case comment.FieldUpdatedBy:
+		case blogscomment.FieldUpdatedBy:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field updated_by", values[i])
 			} else if value.Valid {
-				c.UpdatedBy = value.String
+				bc.UpdatedBy = value.String
 			}
-		case comment.FieldIsDeleted:
+		case blogscomment.FieldIsDeleted:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field is_deleted", values[i])
 			} else if value.Valid {
-				c.IsDeleted = uint8(value.Int64)
+				bc.IsDeleted = uint8(value.Int64)
 			}
-		case comment.FieldDeletedAt:
+		case blogscomment.FieldDeletedAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field deleted_at", values[i])
 			} else if value.Valid {
-				c.DeletedAt = value.Int64
+				bc.DeletedAt = value.Int64
 			}
-		case comment.FieldDeletedBy:
+		case blogscomment.FieldDeletedBy:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field deleted_by", values[i])
 			} else if value.Valid {
-				c.DeletedBy = value.String
+				bc.DeletedBy = value.String
 			}
-		case comment.FieldAccountID:
+		case blogscomment.FieldAccountID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field account_id", values[i])
 			} else if value.Valid {
-				c.AccountID = int(value.Int64)
+				bc.AccountID = int(value.Int64)
 			}
-		case comment.FieldBlogID:
+		case blogscomment.FieldBlogID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field blog_id", values[i])
 			} else if value.Valid {
-				c.BlogID = int(value.Int64)
+				bc.BlogID = int(value.Int64)
 			}
-		case comment.FieldTopID:
+		case blogscomment.FieldTopID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field top_id", values[i])
 			} else if value.Valid {
-				c.TopID = int(value.Int64)
+				bc.TopID = int(value.Int64)
 			}
-		case comment.FieldParentID:
+		case blogscomment.FieldParentID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field parent_id", values[i])
 			} else if value.Valid {
-				c.ParentID = int(value.Int64)
+				bc.ParentID = int(value.Int64)
 			}
-		case comment.FieldLevel:
+		case blogscomment.FieldLevel:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field level", values[i])
 			} else if value.Valid {
-				c.Level = int(value.Int64)
+				bc.Level = int(value.Int64)
 			}
-		case comment.FieldTotal:
+		case blogscomment.FieldTotal:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field total", values[i])
 			} else if value.Valid {
-				c.Total = int(value.Int64)
+				bc.Total = int(value.Int64)
 			}
-		case comment.FieldStatus:
+		case blogscomment.FieldStatus:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field status", values[i])
 			} else if value.Valid {
-				c.Status = int8(value.Int64)
+				bc.Status = int8(value.Int64)
 			}
-		case comment.FieldContent:
+		case blogscomment.FieldContent:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field content", values[i])
 			} else if value.Valid {
-				c.Content = value.String
+				bc.Content = value.String
 			}
 		default:
-			c.selectValues.Set(columns[i], values[i])
+			bc.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
 }
 
-// Value returns the ent.Value that was dynamically selected and assigned to the Comment.
+// Value returns the ent.Value that was dynamically selected and assigned to the BlogsComment.
 // This includes values selected through modifiers, order, etc.
-func (c *Comment) Value(name string) (ent.Value, error) {
-	return c.selectValues.Get(name)
+func (bc *BlogsComment) Value(name string) (ent.Value, error) {
+	return bc.selectValues.Get(name)
 }
 
-// Update returns a builder for updating this Comment.
-// Note that you need to call Comment.Unwrap() before calling this method if this Comment
+// Update returns a builder for updating this BlogsComment.
+// Note that you need to call BlogsComment.Unwrap() before calling this method if this BlogsComment
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (c *Comment) Update() *CommentUpdateOne {
-	return NewCommentClient(c.config).UpdateOne(c)
+func (bc *BlogsComment) Update() *BlogsCommentUpdateOne {
+	return NewBlogsCommentClient(bc.config).UpdateOne(bc)
 }
 
-// Unwrap unwraps the Comment entity that was returned from a transaction after it was closed,
+// Unwrap unwraps the BlogsComment entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
-func (c *Comment) Unwrap() *Comment {
-	_tx, ok := c.config.driver.(*txDriver)
+func (bc *BlogsComment) Unwrap() *BlogsComment {
+	_tx, ok := bc.config.driver.(*txDriver)
 	if !ok {
-		panic("ent: Comment is not a transactional entity")
+		panic("ent: BlogsComment is not a transactional entity")
 	}
-	c.config.driver = _tx.drv
-	return c
+	bc.config.driver = _tx.drv
+	return bc
 }
 
 // String implements the fmt.Stringer.
-func (c *Comment) String() string {
+func (bc *BlogsComment) String() string {
 	var builder strings.Builder
-	builder.WriteString("Comment(")
-	builder.WriteString(fmt.Sprintf("id=%v, ", c.ID))
+	builder.WriteString("BlogsComment(")
+	builder.WriteString(fmt.Sprintf("id=%v, ", bc.ID))
 	builder.WriteString("created_at=")
-	builder.WriteString(fmt.Sprintf("%v", c.CreatedAt))
+	builder.WriteString(fmt.Sprintf("%v", bc.CreatedAt))
 	builder.WriteString(", ")
 	builder.WriteString("created_by=")
-	builder.WriteString(c.CreatedBy)
+	builder.WriteString(bc.CreatedBy)
 	builder.WriteString(", ")
 	builder.WriteString("updated_at=")
-	builder.WriteString(fmt.Sprintf("%v", c.UpdatedAt))
+	builder.WriteString(fmt.Sprintf("%v", bc.UpdatedAt))
 	builder.WriteString(", ")
 	builder.WriteString("updated_by=")
-	builder.WriteString(c.UpdatedBy)
+	builder.WriteString(bc.UpdatedBy)
 	builder.WriteString(", ")
 	builder.WriteString("is_deleted=")
-	builder.WriteString(fmt.Sprintf("%v", c.IsDeleted))
+	builder.WriteString(fmt.Sprintf("%v", bc.IsDeleted))
 	builder.WriteString(", ")
 	builder.WriteString("deleted_at=")
-	builder.WriteString(fmt.Sprintf("%v", c.DeletedAt))
+	builder.WriteString(fmt.Sprintf("%v", bc.DeletedAt))
 	builder.WriteString(", ")
 	builder.WriteString("deleted_by=")
-	builder.WriteString(c.DeletedBy)
+	builder.WriteString(bc.DeletedBy)
 	builder.WriteString(", ")
 	builder.WriteString("account_id=")
-	builder.WriteString(fmt.Sprintf("%v", c.AccountID))
+	builder.WriteString(fmt.Sprintf("%v", bc.AccountID))
 	builder.WriteString(", ")
 	builder.WriteString("blog_id=")
-	builder.WriteString(fmt.Sprintf("%v", c.BlogID))
+	builder.WriteString(fmt.Sprintf("%v", bc.BlogID))
 	builder.WriteString(", ")
 	builder.WriteString("top_id=")
-	builder.WriteString(fmt.Sprintf("%v", c.TopID))
+	builder.WriteString(fmt.Sprintf("%v", bc.TopID))
 	builder.WriteString(", ")
 	builder.WriteString("parent_id=")
-	builder.WriteString(fmt.Sprintf("%v", c.ParentID))
+	builder.WriteString(fmt.Sprintf("%v", bc.ParentID))
 	builder.WriteString(", ")
 	builder.WriteString("level=")
-	builder.WriteString(fmt.Sprintf("%v", c.Level))
+	builder.WriteString(fmt.Sprintf("%v", bc.Level))
 	builder.WriteString(", ")
 	builder.WriteString("total=")
-	builder.WriteString(fmt.Sprintf("%v", c.Total))
+	builder.WriteString(fmt.Sprintf("%v", bc.Total))
 	builder.WriteString(", ")
 	builder.WriteString("status=")
-	builder.WriteString(fmt.Sprintf("%v", c.Status))
+	builder.WriteString(fmt.Sprintf("%v", bc.Status))
 	builder.WriteString(", ")
 	builder.WriteString("content=")
-	builder.WriteString(c.Content)
+	builder.WriteString(bc.Content)
 	builder.WriteByte(')')
 	return builder.String()
 }
 
-// Comments is a parsable slice of Comment.
-type Comments []*Comment
+// BlogsComments is a parsable slice of BlogsComment.
+type BlogsComments []*BlogsComment

@@ -3,7 +3,7 @@
 package ent
 
 import (
-	"blog/internal/ent/blog"
+	"blog/internal/ent/blogs"
 	"blog/internal/ent/predicate"
 	"context"
 
@@ -12,26 +12,26 @@ import (
 	"entgo.io/ent/schema/field"
 )
 
-// BlogDelete is the builder for deleting a Blog entity.
-type BlogDelete struct {
+// BlogsDelete is the builder for deleting a Blogs entity.
+type BlogsDelete struct {
 	config
 	hooks    []Hook
-	mutation *BlogMutation
+	mutation *BlogsMutation
 }
 
-// Where appends a list predicates to the BlogDelete builder.
-func (bd *BlogDelete) Where(ps ...predicate.Blog) *BlogDelete {
+// Where appends a list predicates to the BlogsDelete builder.
+func (bd *BlogsDelete) Where(ps ...predicate.Blogs) *BlogsDelete {
 	bd.mutation.Where(ps...)
 	return bd
 }
 
 // Exec executes the deletion query and returns how many vertices were deleted.
-func (bd *BlogDelete) Exec(ctx context.Context) (int, error) {
+func (bd *BlogsDelete) Exec(ctx context.Context) (int, error) {
 	return withHooks(ctx, bd.sqlExec, bd.mutation, bd.hooks)
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (bd *BlogDelete) ExecX(ctx context.Context) int {
+func (bd *BlogsDelete) ExecX(ctx context.Context) int {
 	n, err := bd.Exec(ctx)
 	if err != nil {
 		panic(err)
@@ -39,8 +39,8 @@ func (bd *BlogDelete) ExecX(ctx context.Context) int {
 	return n
 }
 
-func (bd *BlogDelete) sqlExec(ctx context.Context) (int, error) {
-	_spec := sqlgraph.NewDeleteSpec(blog.Table, sqlgraph.NewFieldSpec(blog.FieldID, field.TypeInt))
+func (bd *BlogsDelete) sqlExec(ctx context.Context) (int, error) {
+	_spec := sqlgraph.NewDeleteSpec(blogs.Table, sqlgraph.NewFieldSpec(blogs.FieldID, field.TypeInt))
 	if ps := bd.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -56,32 +56,32 @@ func (bd *BlogDelete) sqlExec(ctx context.Context) (int, error) {
 	return affected, err
 }
 
-// BlogDeleteOne is the builder for deleting a single Blog entity.
-type BlogDeleteOne struct {
-	bd *BlogDelete
+// BlogsDeleteOne is the builder for deleting a single Blogs entity.
+type BlogsDeleteOne struct {
+	bd *BlogsDelete
 }
 
-// Where appends a list predicates to the BlogDelete builder.
-func (bdo *BlogDeleteOne) Where(ps ...predicate.Blog) *BlogDeleteOne {
+// Where appends a list predicates to the BlogsDelete builder.
+func (bdo *BlogsDeleteOne) Where(ps ...predicate.Blogs) *BlogsDeleteOne {
 	bdo.bd.mutation.Where(ps...)
 	return bdo
 }
 
 // Exec executes the deletion query.
-func (bdo *BlogDeleteOne) Exec(ctx context.Context) error {
+func (bdo *BlogsDeleteOne) Exec(ctx context.Context) error {
 	n, err := bdo.bd.Exec(ctx)
 	switch {
 	case err != nil:
 		return err
 	case n == 0:
-		return &NotFoundError{blog.Label}
+		return &NotFoundError{blogs.Label}
 	default:
 		return nil
 	}
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (bdo *BlogDeleteOne) ExecX(ctx context.Context) {
+func (bdo *BlogsDeleteOne) ExecX(ctx context.Context) {
 	if err := bdo.Exec(ctx); err != nil {
 		panic(err)
 	}

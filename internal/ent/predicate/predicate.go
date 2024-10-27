@@ -9,11 +9,11 @@ import (
 // Account is the predicate function for account builders.
 type Account func(*sql.Selector)
 
-// Blog is the predicate function for blog builders.
-type Blog func(*sql.Selector)
+// Blogs is the predicate function for blogs builders.
+type Blogs func(*sql.Selector)
 
-// BlogContent is the predicate function for blogcontent builders.
-type BlogContent func(*sql.Selector)
+// BlogsComment is the predicate function for blogscomment builders.
+type BlogsComment func(*sql.Selector)
 
-// Comment is the predicate function for comment builders.
-type Comment func(*sql.Selector)
+// BlogsContent is the predicate function for blogscontent builders.
+type BlogsContent func(*sql.Selector)

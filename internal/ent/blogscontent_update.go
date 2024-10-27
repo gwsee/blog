@@ -3,7 +3,7 @@
 package ent
 
 import (
-	"blog/internal/ent/blogcontent"
+	"blog/internal/ent/blogscontent"
 	"blog/internal/ent/predicate"
 	"context"
 	"errors"
@@ -14,45 +14,45 @@ import (
 	"entgo.io/ent/schema/field"
 )
 
-// BlogContentUpdate is the builder for updating BlogContent entities.
-type BlogContentUpdate struct {
+// BlogsContentUpdate is the builder for updating BlogsContent entities.
+type BlogsContentUpdate struct {
 	config
 	hooks    []Hook
-	mutation *BlogContentMutation
+	mutation *BlogsContentMutation
 }
 
-// Where appends a list predicates to the BlogContentUpdate builder.
-func (bcu *BlogContentUpdate) Where(ps ...predicate.BlogContent) *BlogContentUpdate {
+// Where appends a list predicates to the BlogsContentUpdate builder.
+func (bcu *BlogsContentUpdate) Where(ps ...predicate.BlogsContent) *BlogsContentUpdate {
 	bcu.mutation.Where(ps...)
 	return bcu
 }
 
 // SetContent sets the "content" field.
-func (bcu *BlogContentUpdate) SetContent(s string) *BlogContentUpdate {
+func (bcu *BlogsContentUpdate) SetContent(s string) *BlogsContentUpdate {
 	bcu.mutation.SetContent(s)
 	return bcu
 }
 
 // SetNillableContent sets the "content" field if the given value is not nil.
-func (bcu *BlogContentUpdate) SetNillableContent(s *string) *BlogContentUpdate {
+func (bcu *BlogsContentUpdate) SetNillableContent(s *string) *BlogsContentUpdate {
 	if s != nil {
 		bcu.SetContent(*s)
 	}
 	return bcu
 }
 
-// Mutation returns the BlogContentMutation object of the builder.
-func (bcu *BlogContentUpdate) Mutation() *BlogContentMutation {
+// Mutation returns the BlogsContentMutation object of the builder.
+func (bcu *BlogsContentUpdate) Mutation() *BlogsContentMutation {
 	return bcu.mutation
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
-func (bcu *BlogContentUpdate) Save(ctx context.Context) (int, error) {
+func (bcu *BlogsContentUpdate) Save(ctx context.Context) (int, error) {
 	return withHooks(ctx, bcu.sqlSave, bcu.mutation, bcu.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (bcu *BlogContentUpdate) SaveX(ctx context.Context) int {
+func (bcu *BlogsContentUpdate) SaveX(ctx context.Context) int {
 	affected, err := bcu.Save(ctx)
 	if err != nil {
 		panic(err)
@@ -61,33 +61,33 @@ func (bcu *BlogContentUpdate) SaveX(ctx context.Context) int {
 }
 
 // Exec executes the query.
-func (bcu *BlogContentUpdate) Exec(ctx context.Context) error {
+func (bcu *BlogsContentUpdate) Exec(ctx context.Context) error {
 	_, err := bcu.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (bcu *BlogContentUpdate) ExecX(ctx context.Context) {
+func (bcu *BlogsContentUpdate) ExecX(ctx context.Context) {
 	if err := bcu.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (bcu *BlogContentUpdate) check() error {
+func (bcu *BlogsContentUpdate) check() error {
 	if v, ok := bcu.mutation.Content(); ok {
-		if err := blogcontent.ContentValidator(v); err != nil {
-			return &ValidationError{Name: "content", err: fmt.Errorf(`ent: validator failed for field "BlogContent.content": %w`, err)}
+		if err := blogscontent.ContentValidator(v); err != nil {
+			return &ValidationError{Name: "content", err: fmt.Errorf(`ent: validator failed for field "BlogsContent.content": %w`, err)}
 		}
 	}
 	return nil
 }
 
-func (bcu *BlogContentUpdate) sqlSave(ctx context.Context) (n int, err error) {
+func (bcu *BlogsContentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if err := bcu.check(); err != nil {
 		return n, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(blogcontent.Table, blogcontent.Columns, sqlgraph.NewFieldSpec(blogcontent.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewUpdateSpec(blogscontent.Table, blogscontent.Columns, sqlgraph.NewFieldSpec(blogscontent.FieldID, field.TypeInt))
 	if ps := bcu.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -96,11 +96,11 @@ func (bcu *BlogContentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 	}
 	if value, ok := bcu.mutation.Content(); ok {
-		_spec.SetField(blogcontent.FieldContent, field.TypeString, value)
+		_spec.SetField(blogscontent.FieldContent, field.TypeString, value)
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, bcu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
-			err = &NotFoundError{blogcontent.Label}
+			err = &NotFoundError{blogscontent.Label}
 		} else if sqlgraph.IsConstraintError(err) {
 			err = &ConstraintError{msg: err.Error(), wrap: err}
 		}
@@ -110,53 +110,53 @@ func (bcu *BlogContentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	return n, nil
 }
 
-// BlogContentUpdateOne is the builder for updating a single BlogContent entity.
-type BlogContentUpdateOne struct {
+// BlogsContentUpdateOne is the builder for updating a single BlogsContent entity.
+type BlogsContentUpdateOne struct {
 	config
 	fields   []string
 	hooks    []Hook
-	mutation *BlogContentMutation
+	mutation *BlogsContentMutation
 }
 
 // SetContent sets the "content" field.
-func (bcuo *BlogContentUpdateOne) SetContent(s string) *BlogContentUpdateOne {
+func (bcuo *BlogsContentUpdateOne) SetContent(s string) *BlogsContentUpdateOne {
 	bcuo.mutation.SetContent(s)
 	return bcuo
 }
 
 // SetNillableContent sets the "content" field if the given value is not nil.
-func (bcuo *BlogContentUpdateOne) SetNillableContent(s *string) *BlogContentUpdateOne {
+func (bcuo *BlogsContentUpdateOne) SetNillableContent(s *string) *BlogsContentUpdateOne {
 	if s != nil {
 		bcuo.SetContent(*s)
 	}
 	return bcuo
 }
 
-// Mutation returns the BlogContentMutation object of the builder.
-func (bcuo *BlogContentUpdateOne) Mutation() *BlogContentMutation {
+// Mutation returns the BlogsContentMutation object of the builder.
+func (bcuo *BlogsContentUpdateOne) Mutation() *BlogsContentMutation {
 	return bcuo.mutation
 }
 
-// Where appends a list predicates to the BlogContentUpdate builder.
-func (bcuo *BlogContentUpdateOne) Where(ps ...predicate.BlogContent) *BlogContentUpdateOne {
+// Where appends a list predicates to the BlogsContentUpdate builder.
+func (bcuo *BlogsContentUpdateOne) Where(ps ...predicate.BlogsContent) *BlogsContentUpdateOne {
 	bcuo.mutation.Where(ps...)
 	return bcuo
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
 // The default is selecting all fields defined in the entity schema.
-func (bcuo *BlogContentUpdateOne) Select(field string, fields ...string) *BlogContentUpdateOne {
+func (bcuo *BlogsContentUpdateOne) Select(field string, fields ...string) *BlogsContentUpdateOne {
 	bcuo.fields = append([]string{field}, fields...)
 	return bcuo
 }
 
-// Save executes the query and returns the updated BlogContent entity.
-func (bcuo *BlogContentUpdateOne) Save(ctx context.Context) (*BlogContent, error) {
+// Save executes the query and returns the updated BlogsContent entity.
+func (bcuo *BlogsContentUpdateOne) Save(ctx context.Context) (*BlogsContent, error) {
 	return withHooks(ctx, bcuo.sqlSave, bcuo.mutation, bcuo.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (bcuo *BlogContentUpdateOne) SaveX(ctx context.Context) *BlogContent {
+func (bcuo *BlogsContentUpdateOne) SaveX(ctx context.Context) *BlogsContent {
 	node, err := bcuo.Save(ctx)
 	if err != nil {
 		panic(err)
@@ -165,46 +165,46 @@ func (bcuo *BlogContentUpdateOne) SaveX(ctx context.Context) *BlogContent {
 }
 
 // Exec executes the query on the entity.
-func (bcuo *BlogContentUpdateOne) Exec(ctx context.Context) error {
+func (bcuo *BlogsContentUpdateOne) Exec(ctx context.Context) error {
 	_, err := bcuo.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (bcuo *BlogContentUpdateOne) ExecX(ctx context.Context) {
+func (bcuo *BlogsContentUpdateOne) ExecX(ctx context.Context) {
 	if err := bcuo.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (bcuo *BlogContentUpdateOne) check() error {
+func (bcuo *BlogsContentUpdateOne) check() error {
 	if v, ok := bcuo.mutation.Content(); ok {
-		if err := blogcontent.ContentValidator(v); err != nil {
-			return &ValidationError{Name: "content", err: fmt.Errorf(`ent: validator failed for field "BlogContent.content": %w`, err)}
+		if err := blogscontent.ContentValidator(v); err != nil {
+			return &ValidationError{Name: "content", err: fmt.Errorf(`ent: validator failed for field "BlogsContent.content": %w`, err)}
 		}
 	}
 	return nil
 }
 
-func (bcuo *BlogContentUpdateOne) sqlSave(ctx context.Context) (_node *BlogContent, err error) {
+func (bcuo *BlogsContentUpdateOne) sqlSave(ctx context.Context) (_node *BlogsContent, err error) {
 	if err := bcuo.check(); err != nil {
 		return _node, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(blogcontent.Table, blogcontent.Columns, sqlgraph.NewFieldSpec(blogcontent.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewUpdateSpec(blogscontent.Table, blogscontent.Columns, sqlgraph.NewFieldSpec(blogscontent.FieldID, field.TypeInt))
 	id, ok := bcuo.mutation.ID()
 	if !ok {
-		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "BlogContent.id" for update`)}
+		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "BlogsContent.id" for update`)}
 	}
 	_spec.Node.ID.Value = id
 	if fields := bcuo.fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
-		_spec.Node.Columns = append(_spec.Node.Columns, blogcontent.FieldID)
+		_spec.Node.Columns = append(_spec.Node.Columns, blogscontent.FieldID)
 		for _, f := range fields {
-			if !blogcontent.ValidColumn(f) {
+			if !blogscontent.ValidColumn(f) {
 				return nil, &ValidationError{Name: f, err: fmt.Errorf("ent: invalid field %q for query", f)}
 			}
-			if f != blogcontent.FieldID {
+			if f != blogscontent.FieldID {
 				_spec.Node.Columns = append(_spec.Node.Columns, f)
 			}
 		}
@@ -217,14 +217,14 @@ func (bcuo *BlogContentUpdateOne) sqlSave(ctx context.Context) (_node *BlogConte
 		}
 	}
 	if value, ok := bcuo.mutation.Content(); ok {
-		_spec.SetField(blogcontent.FieldContent, field.TypeString, value)
+		_spec.SetField(blogscontent.FieldContent, field.TypeString, value)
 	}
-	_node = &BlogContent{config: bcuo.config}
+	_node = &BlogsContent{config: bcuo.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues
 	if err = sqlgraph.UpdateNode(ctx, bcuo.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
-			err = &NotFoundError{blogcontent.Label}
+			err = &NotFoundError{blogscontent.Label}
 		} else if sqlgraph.IsConstraintError(err) {
 			err = &ConstraintError{msg: err.Error(), wrap: err}
 		}
