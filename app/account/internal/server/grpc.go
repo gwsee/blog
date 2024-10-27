@@ -1,7 +1,7 @@
 package server
 
 import (
-	"blog/app/account/api"
+	"blog/app/account/api/v1"
 	"blog/app/account/internal/conf"
 	"blog/app/account/internal/service"
 
@@ -27,6 +27,6 @@ func NewGRPCServer(c *conf.Server, account *service.AccountService, logger log.L
 		opts = append(opts, grpc.Timeout(c.Grpc.Timeout.AsDuration()))
 	}
 	srv := grpc.NewServer(opts...)
-	api.RegisterAccountServer(srv, account)
+	v1.RegisterAccountServer(srv, account)
 	return srv
 }

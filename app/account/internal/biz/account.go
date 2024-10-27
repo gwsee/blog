@@ -1,8 +1,9 @@
 package biz
 
 import (
-	"blog/app/account/api"
+	"blog/app/account/api/v1"
 	"blog/app/account/internal/conf"
+	"blog/internal/common"
 	"context"
 	"errors"
 	"github.com/go-kratos/kratos/v2/log"
@@ -36,10 +37,12 @@ func NewAccountUseCase(conf *conf.Auth, repo AccountRepo, logger log.Logger) *Ac
 	}
 }
 
-func (uc *AccountUseCase) CreateAccount(ctx context.Context, req *api.CreateAccountRequest) (reply *api.CreateAccountReply, err error) {
+func (uc *AccountUseCase) CreateAccount(ctx context.Context, req *v1.CreateAccountRequest) (reply *v1.CreateAccountReply, err error) {
 	if req.Account == "" || req.Password == "" {
 		return nil, errors.New("account or password is empty")
 	}
+	//两次MD5 //前端传过来应该已经MD5了  然后我们再次MD5才行
+	req.Password = common.MD5(req.Password)
 	err = uc.repo.CreateAccount(ctx, &Account{
 		Account:  req.Account,
 		Password: req.Password,
@@ -48,12 +51,12 @@ func (uc *AccountUseCase) CreateAccount(ctx context.Context, req *api.CreateAcco
 	if err != nil {
 		return
 	}
-	return &api.CreateAccountReply{}, err
+	return &v1.CreateAccountReply{}, err
 }
-func (uc *AccountUseCase) ResetPassword(ctx context.Context, req *api.ResetPasswordRequest) (reply *api.ResetPasswordReply, err error) {
+func (uc *AccountUseCase) ResetPassword(ctx context.Context, req *v1.ResetPasswordRequest) (reply *v1.ResetPasswordReply, err error) {
 	return nil, nil
 }
-func (uc *AccountUseCase) LoginByAccount(ctx context.Context, req *api.LoginByAccountRequest) (reply *api.LoginByAccountReply, err error) {
+func (uc *AccountUseCase) LoginByAccount(ctx context.Context, req *v1.LoginByAccountRequest) (reply *v1.LoginByAccountReply, err error) {
 	account, err := uc.repo.FindByValidAccount(ctx, req.Account)
 	if err != nil {
 		return
@@ -70,7 +73,7 @@ func (uc *AccountUseCase) LoginByAccount(ctx context.Context, req *api.LoginByAc
 	if err != nil {
 		return nil, err
 	}
-	return &api.LoginByAccountReply{
+	return &v1.LoginByAccountReply{
 		Token: signedStr,
 	}, nil
 }

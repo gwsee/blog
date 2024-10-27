@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             v5.28.2
-// source: app/account/api/account.proto
+// source: app/account/api/v1/account.proto
 
-package api
+package v1
 
 import (
 	context "context"
@@ -19,9 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Account_CreateAccount_FullMethodName  = "/app.account.api.Account/CreateAccount"
-	Account_ResetPassword_FullMethodName  = "/app.account.api.Account/ResetPassword"
-	Account_LoginByAccount_FullMethodName = "/app.account.api.Account/LoginByAccount"
+	Account_CreateAccount_FullMethodName  = "/api.account.v1.Account/CreateAccount"
+	Account_ResetPassword_FullMethodName  = "/api.account.v1.Account/ResetPassword"
+	Account_LoginByAccount_FullMethodName = "/api.account.v1.Account/LoginByAccount"
 )
 
 // AccountClient is the client API for Account service.
@@ -176,7 +176,7 @@ func _Account_LoginByAccount_Handler(srv interface{}, ctx context.Context, dec f
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Account_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "app.account.api.Account",
+	ServiceName: "api.account.v1.Account",
 	HandlerType: (*AccountServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -193,5 +193,5 @@ var Account_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "app/account/api/account.proto",
+	Metadata: "app/account/api/v1/account.proto",
 }

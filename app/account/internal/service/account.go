@@ -4,7 +4,7 @@ import (
 	"blog/app/account/internal/biz"
 	"context"
 
-	pb "blog/app/account/api"
+	pb "blog/app/account/api/v1"
 )
 
 type AccountService struct {

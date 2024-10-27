@@ -1,7 +1,7 @@
 package server
 
 import (
-	"blog/app/account/api"
+	"blog/app/account/api/v1"
 	"blog/app/account/internal/conf"
 	"blog/app/account/internal/service"
 
@@ -27,6 +27,6 @@ func NewHTTPServer(c *conf.Server, account *service.AccountService, logger log.L
 		opts = append(opts, http.Timeout(c.Http.Timeout.AsDuration()))
 	}
 	srv := http.NewServer(opts...)
-	api.RegisterAccountHTTPServer(srv, account)
+	v1.RegisterAccountHTTPServer(srv, account)
 	return srv
 }

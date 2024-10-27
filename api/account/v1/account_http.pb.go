@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-http v2.8.0
 // - protoc             v5.28.2
-// source: app/account/api/account.proto
+// source: api/account/v1/account.proto
 
-package api
+package v1
 
 import (
 	context "context"
@@ -19,9 +19,9 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const OperationAccountCreateAccount = "/app.account.api.Account/CreateAccount"
-const OperationAccountLoginByAccount = "/app.account.api.Account/LoginByAccount"
-const OperationAccountResetPassword = "/app.account.api.Account/ResetPassword"
+const OperationAccountCreateAccount = "/api.account.v1.Account/CreateAccount"
+const OperationAccountLoginByAccount = "/api.account.v1.Account/LoginByAccount"
+const OperationAccountResetPassword = "/api.account.v1.Account/ResetPassword"
 
 type AccountHTTPServer interface {
 	CreateAccount(context.Context, *CreateAccountRequest) (*CreateAccountReply, error)
@@ -31,15 +31,15 @@ type AccountHTTPServer interface {
 
 func RegisterAccountHTTPServer(s *http.Server, srv AccountHTTPServer) {
 	r := s.Route("/")
-	r.POST("/app.account.api.Account/CreateAccount", _Account_CreateAccount0_HTTP_Handler(srv))
-	r.POST("/app.account.api.Account/ResetPassword", _Account_ResetPassword0_HTTP_Handler(srv))
-	r.POST("/app.account.api.Account/LoginByAccount", _Account_LoginByAccount0_HTTP_Handler(srv))
+	r.POST("/api.account.v1.Account/CreateAccount", _Account_CreateAccount0_HTTP_Handler(srv))
+	r.POST("/api.account.v1.Account/ResetPassword", _Account_ResetPassword0_HTTP_Handler(srv))
+	r.POST("/api.account.v1.Account/LoginByAccount", _Account_LoginByAccount0_HTTP_Handler(srv))
 }
 
 func _Account_CreateAccount0_HTTP_Handler(srv AccountHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in CreateAccountRequest
-		if err := ctx.Bind(&in); err != nil {
+		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationAccountCreateAccount)
@@ -58,7 +58,7 @@ func _Account_CreateAccount0_HTTP_Handler(srv AccountHTTPServer) func(ctx http.C
 func _Account_ResetPassword0_HTTP_Handler(srv AccountHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in ResetPasswordRequest
-		if err := ctx.Bind(&in); err != nil {
+		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationAccountResetPassword)
@@ -77,7 +77,7 @@ func _Account_ResetPassword0_HTTP_Handler(srv AccountHTTPServer) func(ctx http.C
 func _Account_LoginByAccount0_HTTP_Handler(srv AccountHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in LoginByAccountRequest
-		if err := ctx.Bind(&in); err != nil {
+		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationAccountLoginByAccount)
@@ -109,7 +109,7 @@ func NewAccountHTTPClient(client *http.Client) AccountHTTPClient {
 
 func (c *AccountHTTPClientImpl) CreateAccount(ctx context.Context, in *CreateAccountRequest, opts ...http.CallOption) (*CreateAccountReply, error) {
 	var out CreateAccountReply
-	pattern := "/app.account.api.Account/CreateAccount"
+	pattern := "/api.account.v1.Account/CreateAccount"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationAccountCreateAccount))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -122,7 +122,7 @@ func (c *AccountHTTPClientImpl) CreateAccount(ctx context.Context, in *CreateAcc
 
 func (c *AccountHTTPClientImpl) LoginByAccount(ctx context.Context, in *LoginByAccountRequest, opts ...http.CallOption) (*LoginByAccountReply, error) {
 	var out LoginByAccountReply
-	pattern := "/app.account.api.Account/LoginByAccount"
+	pattern := "/api.account.v1.Account/LoginByAccount"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationAccountLoginByAccount))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -135,7 +135,7 @@ func (c *AccountHTTPClientImpl) LoginByAccount(ctx context.Context, in *LoginByA
 
 func (c *AccountHTTPClientImpl) ResetPassword(ctx context.Context, in *ResetPasswordRequest, opts ...http.CallOption) (*ResetPasswordReply, error) {
 	var out ResetPasswordReply
-	pattern := "/app.account.api.Account/ResetPassword"
+	pattern := "/api.account.v1.Account/ResetPassword"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationAccountResetPassword))
 	opts = append(opts, http.PathTemplate(pattern))
