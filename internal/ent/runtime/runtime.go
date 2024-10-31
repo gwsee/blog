@@ -35,7 +35,7 @@ func init() {
 	// accountDescCreatedBy is the schema descriptor for created_by field.
 	accountDescCreatedBy := accountMixinFields0[1].Descriptor()
 	// account.DefaultCreatedBy holds the default value on creation for the created_by field.
-	account.DefaultCreatedBy = accountDescCreatedBy.Default.(string)
+	account.DefaultCreatedBy = accountDescCreatedBy.Default.(int64)
 	// accountDescUpdatedAt is the schema descriptor for updated_at field.
 	accountDescUpdatedAt := accountMixinFields0[2].Descriptor()
 	// account.DefaultUpdatedAt holds the default value on creation for the updated_at field.
@@ -45,19 +45,15 @@ func init() {
 	// accountDescUpdatedBy is the schema descriptor for updated_by field.
 	accountDescUpdatedBy := accountMixinFields0[3].Descriptor()
 	// account.DefaultUpdatedBy holds the default value on creation for the updated_by field.
-	account.DefaultUpdatedBy = accountDescUpdatedBy.Default.(string)
-	// accountDescIsDeleted is the schema descriptor for is_deleted field.
-	accountDescIsDeleted := accountMixinFields1[0].Descriptor()
-	// account.DefaultIsDeleted holds the default value on creation for the is_deleted field.
-	account.DefaultIsDeleted = accountDescIsDeleted.Default.(uint8)
+	account.DefaultUpdatedBy = accountDescUpdatedBy.Default.(int64)
 	// accountDescDeletedAt is the schema descriptor for deleted_at field.
-	accountDescDeletedAt := accountMixinFields1[1].Descriptor()
+	accountDescDeletedAt := accountMixinFields1[0].Descriptor()
 	// account.DefaultDeletedAt holds the default value on creation for the deleted_at field.
 	account.DefaultDeletedAt = accountDescDeletedAt.Default.(int64)
 	// accountDescDeletedBy is the schema descriptor for deleted_by field.
-	accountDescDeletedBy := accountMixinFields1[2].Descriptor()
+	accountDescDeletedBy := accountMixinFields1[1].Descriptor()
 	// account.DefaultDeletedBy holds the default value on creation for the deleted_by field.
-	account.DefaultDeletedBy = accountDescDeletedBy.Default.(string)
+	account.DefaultDeletedBy = accountDescDeletedBy.Default.(int64)
 	// accountDescAccount is the schema descriptor for account field.
 	accountDescAccount := accountFields[1].Descriptor()
 	// account.AccountValidator is a validator for the "account" field. It is called by the builders before save.
@@ -99,7 +95,7 @@ func init() {
 	// blogsDescCreatedBy is the schema descriptor for created_by field.
 	blogsDescCreatedBy := blogsMixinFields0[1].Descriptor()
 	// blogs.DefaultCreatedBy holds the default value on creation for the created_by field.
-	blogs.DefaultCreatedBy = blogsDescCreatedBy.Default.(string)
+	blogs.DefaultCreatedBy = blogsDescCreatedBy.Default.(int64)
 	// blogsDescUpdatedAt is the schema descriptor for updated_at field.
 	blogsDescUpdatedAt := blogsMixinFields0[2].Descriptor()
 	// blogs.DefaultUpdatedAt holds the default value on creation for the updated_at field.
@@ -109,27 +105,19 @@ func init() {
 	// blogsDescUpdatedBy is the schema descriptor for updated_by field.
 	blogsDescUpdatedBy := blogsMixinFields0[3].Descriptor()
 	// blogs.DefaultUpdatedBy holds the default value on creation for the updated_by field.
-	blogs.DefaultUpdatedBy = blogsDescUpdatedBy.Default.(string)
-	// blogsDescIsDeleted is the schema descriptor for is_deleted field.
-	blogsDescIsDeleted := blogsMixinFields1[0].Descriptor()
-	// blogs.DefaultIsDeleted holds the default value on creation for the is_deleted field.
-	blogs.DefaultIsDeleted = blogsDescIsDeleted.Default.(uint8)
+	blogs.DefaultUpdatedBy = blogsDescUpdatedBy.Default.(int64)
 	// blogsDescDeletedAt is the schema descriptor for deleted_at field.
-	blogsDescDeletedAt := blogsMixinFields1[1].Descriptor()
+	blogsDescDeletedAt := blogsMixinFields1[0].Descriptor()
 	// blogs.DefaultDeletedAt holds the default value on creation for the deleted_at field.
 	blogs.DefaultDeletedAt = blogsDescDeletedAt.Default.(int64)
 	// blogsDescDeletedBy is the schema descriptor for deleted_by field.
-	blogsDescDeletedBy := blogsMixinFields1[2].Descriptor()
+	blogsDescDeletedBy := blogsMixinFields1[1].Descriptor()
 	// blogs.DefaultDeletedBy holds the default value on creation for the deleted_by field.
-	blogs.DefaultDeletedBy = blogsDescDeletedBy.Default.(string)
+	blogs.DefaultDeletedBy = blogsDescDeletedBy.Default.(int64)
 	// blogsDescIsHidden is the schema descriptor for is_hidden field.
 	blogsDescIsHidden := blogsFields[4].Descriptor()
 	// blogs.DefaultIsHidden holds the default value on creation for the is_hidden field.
 	blogs.DefaultIsHidden = blogsDescIsHidden.Default.(int8)
-	// blogsDescContent is the schema descriptor for content field.
-	blogsDescContent := blogsFields[7].Descriptor()
-	// blogs.ContentValidator is a validator for the "content" field. It is called by the builders before save.
-	blogs.ContentValidator = blogsDescContent.Validators[0].(func(string) error)
 	// blogsDescID is the schema descriptor for id field.
 	blogsDescID := blogsFields[0].Descriptor()
 	// blogs.IDValidator is a validator for the "id" field. It is called by the builders before save.
@@ -155,7 +143,7 @@ func init() {
 	// blogscommentDescCreatedBy is the schema descriptor for created_by field.
 	blogscommentDescCreatedBy := blogscommentMixinFields0[1].Descriptor()
 	// blogscomment.DefaultCreatedBy holds the default value on creation for the created_by field.
-	blogscomment.DefaultCreatedBy = blogscommentDescCreatedBy.Default.(string)
+	blogscomment.DefaultCreatedBy = blogscommentDescCreatedBy.Default.(int64)
 	// blogscommentDescUpdatedAt is the schema descriptor for updated_at field.
 	blogscommentDescUpdatedAt := blogscommentMixinFields0[2].Descriptor()
 	// blogscomment.DefaultUpdatedAt holds the default value on creation for the updated_at field.
@@ -165,19 +153,15 @@ func init() {
 	// blogscommentDescUpdatedBy is the schema descriptor for updated_by field.
 	blogscommentDescUpdatedBy := blogscommentMixinFields0[3].Descriptor()
 	// blogscomment.DefaultUpdatedBy holds the default value on creation for the updated_by field.
-	blogscomment.DefaultUpdatedBy = blogscommentDescUpdatedBy.Default.(string)
-	// blogscommentDescIsDeleted is the schema descriptor for is_deleted field.
-	blogscommentDescIsDeleted := blogscommentMixinFields1[0].Descriptor()
-	// blogscomment.DefaultIsDeleted holds the default value on creation for the is_deleted field.
-	blogscomment.DefaultIsDeleted = blogscommentDescIsDeleted.Default.(uint8)
+	blogscomment.DefaultUpdatedBy = blogscommentDescUpdatedBy.Default.(int64)
 	// blogscommentDescDeletedAt is the schema descriptor for deleted_at field.
-	blogscommentDescDeletedAt := blogscommentMixinFields1[1].Descriptor()
+	blogscommentDescDeletedAt := blogscommentMixinFields1[0].Descriptor()
 	// blogscomment.DefaultDeletedAt holds the default value on creation for the deleted_at field.
 	blogscomment.DefaultDeletedAt = blogscommentDescDeletedAt.Default.(int64)
 	// blogscommentDescDeletedBy is the schema descriptor for deleted_by field.
-	blogscommentDescDeletedBy := blogscommentMixinFields1[2].Descriptor()
+	blogscommentDescDeletedBy := blogscommentMixinFields1[1].Descriptor()
 	// blogscomment.DefaultDeletedBy holds the default value on creation for the deleted_by field.
-	blogscomment.DefaultDeletedBy = blogscommentDescDeletedBy.Default.(string)
+	blogscomment.DefaultDeletedBy = blogscommentDescDeletedBy.Default.(int64)
 	// blogscommentDescAccountID is the schema descriptor for account_id field.
 	blogscommentDescAccountID := blogscommentFields[0].Descriptor()
 	// blogscomment.AccountIDValidator is a validator for the "account_id" field. It is called by the builders before save.

@@ -20,20 +20,18 @@ type BlogsComment struct {
 	// 创建时间
 	CreatedAt int64 `json:"created_at,omitempty"`
 	// 创建人
-	CreatedBy string `json:"created_by,omitempty"`
+	CreatedBy int64 `json:"created_by,omitempty"`
 	// 更新时间
 	UpdatedAt int64 `json:"updated_at,omitempty"`
 	// 更新人
-	UpdatedBy string `json:"updated_by,omitempty"`
-	// 是否删除;0：正常，1：删除
-	IsDeleted uint8 `json:"is_deleted,omitempty"`
+	UpdatedBy int64 `json:"updated_by,omitempty"`
 	// 软删除时间
 	DeletedAt int64 `json:"deleted_at,omitempty"`
 	// 删除人
-	DeletedBy string `json:"deleted_by,omitempty"`
+	DeletedBy int64 `json:"deleted_by,omitempty"`
 	// 账户ID
 	AccountID int `json:"account_id,omitempty"`
-	// 对应类型的ID
+	// 博客ID
 	BlogID int `json:"blog_id,omitempty"`
 	// 顶级ID
 	TopID int `json:"top_id,omitempty"`
@@ -55,9 +53,9 @@ func (*BlogsComment) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case blogscomment.FieldID, blogscomment.FieldCreatedAt, blogscomment.FieldUpdatedAt, blogscomment.FieldIsDeleted, blogscomment.FieldDeletedAt, blogscomment.FieldAccountID, blogscomment.FieldBlogID, blogscomment.FieldTopID, blogscomment.FieldParentID, blogscomment.FieldLevel, blogscomment.FieldTotal, blogscomment.FieldStatus:
+		case blogscomment.FieldID, blogscomment.FieldCreatedAt, blogscomment.FieldCreatedBy, blogscomment.FieldUpdatedAt, blogscomment.FieldUpdatedBy, blogscomment.FieldDeletedAt, blogscomment.FieldDeletedBy, blogscomment.FieldAccountID, blogscomment.FieldBlogID, blogscomment.FieldTopID, blogscomment.FieldParentID, blogscomment.FieldLevel, blogscomment.FieldTotal, blogscomment.FieldStatus:
 			values[i] = new(sql.NullInt64)
-		case blogscomment.FieldCreatedBy, blogscomment.FieldUpdatedBy, blogscomment.FieldDeletedBy, blogscomment.FieldContent:
+		case blogscomment.FieldContent:
 			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -87,10 +85,10 @@ func (bc *BlogsComment) assignValues(columns []string, values []any) error {
 				bc.CreatedAt = value.Int64
 			}
 		case blogscomment.FieldCreatedBy:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field created_by", values[i])
 			} else if value.Valid {
-				bc.CreatedBy = value.String
+				bc.CreatedBy = value.Int64
 			}
 		case blogscomment.FieldUpdatedAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -99,16 +97,10 @@ func (bc *BlogsComment) assignValues(columns []string, values []any) error {
 				bc.UpdatedAt = value.Int64
 			}
 		case blogscomment.FieldUpdatedBy:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field updated_by", values[i])
 			} else if value.Valid {
-				bc.UpdatedBy = value.String
-			}
-		case blogscomment.FieldIsDeleted:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field is_deleted", values[i])
-			} else if value.Valid {
-				bc.IsDeleted = uint8(value.Int64)
+				bc.UpdatedBy = value.Int64
 			}
 		case blogscomment.FieldDeletedAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -117,10 +109,10 @@ func (bc *BlogsComment) assignValues(columns []string, values []any) error {
 				bc.DeletedAt = value.Int64
 			}
 		case blogscomment.FieldDeletedBy:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field deleted_by", values[i])
 			} else if value.Valid {
-				bc.DeletedBy = value.String
+				bc.DeletedBy = value.Int64
 			}
 		case blogscomment.FieldAccountID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -210,22 +202,19 @@ func (bc *BlogsComment) String() string {
 	builder.WriteString(fmt.Sprintf("%v", bc.CreatedAt))
 	builder.WriteString(", ")
 	builder.WriteString("created_by=")
-	builder.WriteString(bc.CreatedBy)
+	builder.WriteString(fmt.Sprintf("%v", bc.CreatedBy))
 	builder.WriteString(", ")
 	builder.WriteString("updated_at=")
 	builder.WriteString(fmt.Sprintf("%v", bc.UpdatedAt))
 	builder.WriteString(", ")
 	builder.WriteString("updated_by=")
-	builder.WriteString(bc.UpdatedBy)
-	builder.WriteString(", ")
-	builder.WriteString("is_deleted=")
-	builder.WriteString(fmt.Sprintf("%v", bc.IsDeleted))
+	builder.WriteString(fmt.Sprintf("%v", bc.UpdatedBy))
 	builder.WriteString(", ")
 	builder.WriteString("deleted_at=")
 	builder.WriteString(fmt.Sprintf("%v", bc.DeletedAt))
 	builder.WriteString(", ")
 	builder.WriteString("deleted_by=")
-	builder.WriteString(bc.DeletedBy)
+	builder.WriteString(fmt.Sprintf("%v", bc.DeletedBy))
 	builder.WriteString(", ")
 	builder.WriteString("account_id=")
 	builder.WriteString(fmt.Sprintf("%v", bc.AccountID))

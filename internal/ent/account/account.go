@@ -20,8 +20,6 @@ const (
 	FieldUpdatedAt = "updated_at"
 	// FieldUpdatedBy holds the string denoting the updated_by field in the database.
 	FieldUpdatedBy = "updated_by"
-	// FieldIsDeleted holds the string denoting the is_deleted field in the database.
-	FieldIsDeleted = "is_deleted"
 	// FieldDeletedAt holds the string denoting the deleted_at field in the database.
 	FieldDeletedAt = "deleted_at"
 	// FieldDeletedBy holds the string denoting the deleted_by field in the database.
@@ -45,7 +43,6 @@ var Columns = []string{
 	FieldCreatedBy,
 	FieldUpdatedAt,
 	FieldUpdatedBy,
-	FieldIsDeleted,
 	FieldDeletedAt,
 	FieldDeletedBy,
 	FieldAccount,
@@ -75,19 +72,17 @@ var (
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
 	DefaultCreatedAt int64
 	// DefaultCreatedBy holds the default value on creation for the "created_by" field.
-	DefaultCreatedBy string
+	DefaultCreatedBy int64
 	// DefaultUpdatedAt holds the default value on creation for the "updated_at" field.
 	DefaultUpdatedAt int64
 	// UpdateDefaultUpdatedAt holds the default value on update for the "updated_at" field.
 	UpdateDefaultUpdatedAt func() int64
 	// DefaultUpdatedBy holds the default value on creation for the "updated_by" field.
-	DefaultUpdatedBy string
-	// DefaultIsDeleted holds the default value on creation for the "is_deleted" field.
-	DefaultIsDeleted uint8
+	DefaultUpdatedBy int64
 	// DefaultDeletedAt holds the default value on creation for the "deleted_at" field.
 	DefaultDeletedAt int64
 	// DefaultDeletedBy holds the default value on creation for the "deleted_by" field.
-	DefaultDeletedBy string
+	DefaultDeletedBy int64
 	// AccountValidator is a validator for the "account" field. It is called by the builders before save.
 	AccountValidator func(string) error
 	// PasswordValidator is a validator for the "password" field. It is called by the builders before save.
@@ -126,11 +121,6 @@ func ByUpdatedAt(opts ...sql.OrderTermOption) OrderOption {
 // ByUpdatedBy orders the results by the updated_by field.
 func ByUpdatedBy(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldUpdatedBy, opts...).ToFunc()
-}
-
-// ByIsDeleted orders the results by the is_deleted field.
-func ByIsDeleted(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldIsDeleted, opts...).ToFunc()
 }
 
 // ByDeletedAt orders the results by the deleted_at field.

@@ -42,37 +42,23 @@ func (bu *BlogsUpdate) AddUpdatedAt(i int64) *BlogsUpdate {
 }
 
 // SetUpdatedBy sets the "updated_by" field.
-func (bu *BlogsUpdate) SetUpdatedBy(s string) *BlogsUpdate {
-	bu.mutation.SetUpdatedBy(s)
+func (bu *BlogsUpdate) SetUpdatedBy(i int64) *BlogsUpdate {
+	bu.mutation.ResetUpdatedBy()
+	bu.mutation.SetUpdatedBy(i)
 	return bu
 }
 
 // SetNillableUpdatedBy sets the "updated_by" field if the given value is not nil.
-func (bu *BlogsUpdate) SetNillableUpdatedBy(s *string) *BlogsUpdate {
-	if s != nil {
-		bu.SetUpdatedBy(*s)
+func (bu *BlogsUpdate) SetNillableUpdatedBy(i *int64) *BlogsUpdate {
+	if i != nil {
+		bu.SetUpdatedBy(*i)
 	}
 	return bu
 }
 
-// SetIsDeleted sets the "is_deleted" field.
-func (bu *BlogsUpdate) SetIsDeleted(u uint8) *BlogsUpdate {
-	bu.mutation.ResetIsDeleted()
-	bu.mutation.SetIsDeleted(u)
-	return bu
-}
-
-// SetNillableIsDeleted sets the "is_deleted" field if the given value is not nil.
-func (bu *BlogsUpdate) SetNillableIsDeleted(u *uint8) *BlogsUpdate {
-	if u != nil {
-		bu.SetIsDeleted(*u)
-	}
-	return bu
-}
-
-// AddIsDeleted adds u to the "is_deleted" field.
-func (bu *BlogsUpdate) AddIsDeleted(u int8) *BlogsUpdate {
-	bu.mutation.AddIsDeleted(u)
+// AddUpdatedBy adds i to the "updated_by" field.
+func (bu *BlogsUpdate) AddUpdatedBy(i int64) *BlogsUpdate {
+	bu.mutation.AddUpdatedBy(i)
 	return bu
 }
 
@@ -98,16 +84,23 @@ func (bu *BlogsUpdate) AddDeletedAt(i int64) *BlogsUpdate {
 }
 
 // SetDeletedBy sets the "deleted_by" field.
-func (bu *BlogsUpdate) SetDeletedBy(s string) *BlogsUpdate {
-	bu.mutation.SetDeletedBy(s)
+func (bu *BlogsUpdate) SetDeletedBy(i int64) *BlogsUpdate {
+	bu.mutation.ResetDeletedBy()
+	bu.mutation.SetDeletedBy(i)
 	return bu
 }
 
 // SetNillableDeletedBy sets the "deleted_by" field if the given value is not nil.
-func (bu *BlogsUpdate) SetNillableDeletedBy(s *string) *BlogsUpdate {
-	if s != nil {
-		bu.SetDeletedBy(*s)
+func (bu *BlogsUpdate) SetNillableDeletedBy(i *int64) *BlogsUpdate {
+	if i != nil {
+		bu.SetDeletedBy(*i)
 	}
+	return bu
+}
+
+// AddDeletedBy adds i to the "deleted_by" field.
+func (bu *BlogsUpdate) AddDeletedBy(i int64) *BlogsUpdate {
+	bu.mutation.AddDeletedBy(i)
 	return bu
 }
 
@@ -207,20 +200,6 @@ func (bu *BlogsUpdate) SetNillableCover(s *string) *BlogsUpdate {
 	return bu
 }
 
-// SetContent sets the "content" field.
-func (bu *BlogsUpdate) SetContent(s string) *BlogsUpdate {
-	bu.mutation.SetContent(s)
-	return bu
-}
-
-// SetNillableContent sets the "content" field if the given value is not nil.
-func (bu *BlogsUpdate) SetNillableContent(s *string) *BlogsUpdate {
-	if s != nil {
-		bu.SetContent(*s)
-	}
-	return bu
-}
-
 // Mutation returns the BlogsMutation object of the builder.
 func (bu *BlogsUpdate) Mutation() *BlogsMutation {
 	return bu.mutation
@@ -268,20 +247,7 @@ func (bu *BlogsUpdate) defaults() error {
 	return nil
 }
 
-// check runs all checks and user-defined validators on the builder.
-func (bu *BlogsUpdate) check() error {
-	if v, ok := bu.mutation.Content(); ok {
-		if err := blogs.ContentValidator(v); err != nil {
-			return &ValidationError{Name: "content", err: fmt.Errorf(`ent: validator failed for field "Blogs.content": %w`, err)}
-		}
-	}
-	return nil
-}
-
 func (bu *BlogsUpdate) sqlSave(ctx context.Context) (n int, err error) {
-	if err := bu.check(); err != nil {
-		return n, err
-	}
 	_spec := sqlgraph.NewUpdateSpec(blogs.Table, blogs.Columns, sqlgraph.NewFieldSpec(blogs.FieldID, field.TypeInt))
 	if ps := bu.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
@@ -297,13 +263,10 @@ func (bu *BlogsUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.AddField(blogs.FieldUpdatedAt, field.TypeInt64, value)
 	}
 	if value, ok := bu.mutation.UpdatedBy(); ok {
-		_spec.SetField(blogs.FieldUpdatedBy, field.TypeString, value)
+		_spec.SetField(blogs.FieldUpdatedBy, field.TypeInt64, value)
 	}
-	if value, ok := bu.mutation.IsDeleted(); ok {
-		_spec.SetField(blogs.FieldIsDeleted, field.TypeUint8, value)
-	}
-	if value, ok := bu.mutation.AddedIsDeleted(); ok {
-		_spec.AddField(blogs.FieldIsDeleted, field.TypeUint8, value)
+	if value, ok := bu.mutation.AddedUpdatedBy(); ok {
+		_spec.AddField(blogs.FieldUpdatedBy, field.TypeInt64, value)
 	}
 	if value, ok := bu.mutation.DeletedAt(); ok {
 		_spec.SetField(blogs.FieldDeletedAt, field.TypeInt64, value)
@@ -312,7 +275,10 @@ func (bu *BlogsUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.AddField(blogs.FieldDeletedAt, field.TypeInt64, value)
 	}
 	if value, ok := bu.mutation.DeletedBy(); ok {
-		_spec.SetField(blogs.FieldDeletedBy, field.TypeString, value)
+		_spec.SetField(blogs.FieldDeletedBy, field.TypeInt64, value)
+	}
+	if value, ok := bu.mutation.AddedDeletedBy(); ok {
+		_spec.AddField(blogs.FieldDeletedBy, field.TypeInt64, value)
 	}
 	if value, ok := bu.mutation.AccountID(); ok {
 		_spec.SetField(blogs.FieldAccountID, field.TypeInt, value)
@@ -342,9 +308,6 @@ func (bu *BlogsUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := bu.mutation.Cover(); ok {
 		_spec.SetField(blogs.FieldCover, field.TypeString, value)
-	}
-	if value, ok := bu.mutation.Content(); ok {
-		_spec.SetField(blogs.FieldContent, field.TypeString, value)
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, bu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -380,37 +343,23 @@ func (buo *BlogsUpdateOne) AddUpdatedAt(i int64) *BlogsUpdateOne {
 }
 
 // SetUpdatedBy sets the "updated_by" field.
-func (buo *BlogsUpdateOne) SetUpdatedBy(s string) *BlogsUpdateOne {
-	buo.mutation.SetUpdatedBy(s)
+func (buo *BlogsUpdateOne) SetUpdatedBy(i int64) *BlogsUpdateOne {
+	buo.mutation.ResetUpdatedBy()
+	buo.mutation.SetUpdatedBy(i)
 	return buo
 }
 
 // SetNillableUpdatedBy sets the "updated_by" field if the given value is not nil.
-func (buo *BlogsUpdateOne) SetNillableUpdatedBy(s *string) *BlogsUpdateOne {
-	if s != nil {
-		buo.SetUpdatedBy(*s)
+func (buo *BlogsUpdateOne) SetNillableUpdatedBy(i *int64) *BlogsUpdateOne {
+	if i != nil {
+		buo.SetUpdatedBy(*i)
 	}
 	return buo
 }
 
-// SetIsDeleted sets the "is_deleted" field.
-func (buo *BlogsUpdateOne) SetIsDeleted(u uint8) *BlogsUpdateOne {
-	buo.mutation.ResetIsDeleted()
-	buo.mutation.SetIsDeleted(u)
-	return buo
-}
-
-// SetNillableIsDeleted sets the "is_deleted" field if the given value is not nil.
-func (buo *BlogsUpdateOne) SetNillableIsDeleted(u *uint8) *BlogsUpdateOne {
-	if u != nil {
-		buo.SetIsDeleted(*u)
-	}
-	return buo
-}
-
-// AddIsDeleted adds u to the "is_deleted" field.
-func (buo *BlogsUpdateOne) AddIsDeleted(u int8) *BlogsUpdateOne {
-	buo.mutation.AddIsDeleted(u)
+// AddUpdatedBy adds i to the "updated_by" field.
+func (buo *BlogsUpdateOne) AddUpdatedBy(i int64) *BlogsUpdateOne {
+	buo.mutation.AddUpdatedBy(i)
 	return buo
 }
 
@@ -436,16 +385,23 @@ func (buo *BlogsUpdateOne) AddDeletedAt(i int64) *BlogsUpdateOne {
 }
 
 // SetDeletedBy sets the "deleted_by" field.
-func (buo *BlogsUpdateOne) SetDeletedBy(s string) *BlogsUpdateOne {
-	buo.mutation.SetDeletedBy(s)
+func (buo *BlogsUpdateOne) SetDeletedBy(i int64) *BlogsUpdateOne {
+	buo.mutation.ResetDeletedBy()
+	buo.mutation.SetDeletedBy(i)
 	return buo
 }
 
 // SetNillableDeletedBy sets the "deleted_by" field if the given value is not nil.
-func (buo *BlogsUpdateOne) SetNillableDeletedBy(s *string) *BlogsUpdateOne {
-	if s != nil {
-		buo.SetDeletedBy(*s)
+func (buo *BlogsUpdateOne) SetNillableDeletedBy(i *int64) *BlogsUpdateOne {
+	if i != nil {
+		buo.SetDeletedBy(*i)
 	}
+	return buo
+}
+
+// AddDeletedBy adds i to the "deleted_by" field.
+func (buo *BlogsUpdateOne) AddDeletedBy(i int64) *BlogsUpdateOne {
+	buo.mutation.AddDeletedBy(i)
 	return buo
 }
 
@@ -545,20 +501,6 @@ func (buo *BlogsUpdateOne) SetNillableCover(s *string) *BlogsUpdateOne {
 	return buo
 }
 
-// SetContent sets the "content" field.
-func (buo *BlogsUpdateOne) SetContent(s string) *BlogsUpdateOne {
-	buo.mutation.SetContent(s)
-	return buo
-}
-
-// SetNillableContent sets the "content" field if the given value is not nil.
-func (buo *BlogsUpdateOne) SetNillableContent(s *string) *BlogsUpdateOne {
-	if s != nil {
-		buo.SetContent(*s)
-	}
-	return buo
-}
-
 // Mutation returns the BlogsMutation object of the builder.
 func (buo *BlogsUpdateOne) Mutation() *BlogsMutation {
 	return buo.mutation
@@ -619,20 +561,7 @@ func (buo *BlogsUpdateOne) defaults() error {
 	return nil
 }
 
-// check runs all checks and user-defined validators on the builder.
-func (buo *BlogsUpdateOne) check() error {
-	if v, ok := buo.mutation.Content(); ok {
-		if err := blogs.ContentValidator(v); err != nil {
-			return &ValidationError{Name: "content", err: fmt.Errorf(`ent: validator failed for field "Blogs.content": %w`, err)}
-		}
-	}
-	return nil
-}
-
 func (buo *BlogsUpdateOne) sqlSave(ctx context.Context) (_node *Blogs, err error) {
-	if err := buo.check(); err != nil {
-		return _node, err
-	}
 	_spec := sqlgraph.NewUpdateSpec(blogs.Table, blogs.Columns, sqlgraph.NewFieldSpec(blogs.FieldID, field.TypeInt))
 	id, ok := buo.mutation.ID()
 	if !ok {
@@ -665,13 +594,10 @@ func (buo *BlogsUpdateOne) sqlSave(ctx context.Context) (_node *Blogs, err error
 		_spec.AddField(blogs.FieldUpdatedAt, field.TypeInt64, value)
 	}
 	if value, ok := buo.mutation.UpdatedBy(); ok {
-		_spec.SetField(blogs.FieldUpdatedBy, field.TypeString, value)
+		_spec.SetField(blogs.FieldUpdatedBy, field.TypeInt64, value)
 	}
-	if value, ok := buo.mutation.IsDeleted(); ok {
-		_spec.SetField(blogs.FieldIsDeleted, field.TypeUint8, value)
-	}
-	if value, ok := buo.mutation.AddedIsDeleted(); ok {
-		_spec.AddField(blogs.FieldIsDeleted, field.TypeUint8, value)
+	if value, ok := buo.mutation.AddedUpdatedBy(); ok {
+		_spec.AddField(blogs.FieldUpdatedBy, field.TypeInt64, value)
 	}
 	if value, ok := buo.mutation.DeletedAt(); ok {
 		_spec.SetField(blogs.FieldDeletedAt, field.TypeInt64, value)
@@ -680,7 +606,10 @@ func (buo *BlogsUpdateOne) sqlSave(ctx context.Context) (_node *Blogs, err error
 		_spec.AddField(blogs.FieldDeletedAt, field.TypeInt64, value)
 	}
 	if value, ok := buo.mutation.DeletedBy(); ok {
-		_spec.SetField(blogs.FieldDeletedBy, field.TypeString, value)
+		_spec.SetField(blogs.FieldDeletedBy, field.TypeInt64, value)
+	}
+	if value, ok := buo.mutation.AddedDeletedBy(); ok {
+		_spec.AddField(blogs.FieldDeletedBy, field.TypeInt64, value)
 	}
 	if value, ok := buo.mutation.AccountID(); ok {
 		_spec.SetField(blogs.FieldAccountID, field.TypeInt, value)
@@ -710,9 +639,6 @@ func (buo *BlogsUpdateOne) sqlSave(ctx context.Context) (_node *Blogs, err error
 	}
 	if value, ok := buo.mutation.Cover(); ok {
 		_spec.SetField(blogs.FieldCover, field.TypeString, value)
-	}
-	if value, ok := buo.mutation.Content(); ok {
-		_spec.SetField(blogs.FieldContent, field.TypeString, value)
 	}
 	_node = &Blogs{config: buo.config}
 	_spec.Assign = _node.assignValues

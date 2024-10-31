@@ -20,17 +20,15 @@ type Account struct {
 	// 创建时间
 	CreatedAt int64 `json:"created_at,omitempty"`
 	// 创建人
-	CreatedBy string `json:"created_by,omitempty"`
+	CreatedBy int64 `json:"created_by,omitempty"`
 	// 更新时间
 	UpdatedAt int64 `json:"updated_at,omitempty"`
 	// 更新人
-	UpdatedBy string `json:"updated_by,omitempty"`
-	// 是否删除;0：正常，1：删除
-	IsDeleted uint8 `json:"is_deleted,omitempty"`
+	UpdatedBy int64 `json:"updated_by,omitempty"`
 	// 软删除时间
 	DeletedAt int64 `json:"deleted_at,omitempty"`
 	// 删除人
-	DeletedBy string `json:"deleted_by,omitempty"`
+	DeletedBy int64 `json:"deleted_by,omitempty"`
 	// 账户
 	Account string `json:"account,omitempty"`
 	// 密码
@@ -47,9 +45,9 @@ func (*Account) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case account.FieldID, account.FieldCreatedAt, account.FieldUpdatedAt, account.FieldIsDeleted, account.FieldDeletedAt, account.FieldStatus:
+		case account.FieldID, account.FieldCreatedAt, account.FieldCreatedBy, account.FieldUpdatedAt, account.FieldUpdatedBy, account.FieldDeletedAt, account.FieldDeletedBy, account.FieldStatus:
 			values[i] = new(sql.NullInt64)
-		case account.FieldCreatedBy, account.FieldUpdatedBy, account.FieldDeletedBy, account.FieldAccount, account.FieldPassword, account.FieldEmail:
+		case account.FieldAccount, account.FieldPassword, account.FieldEmail:
 			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -79,10 +77,10 @@ func (a *Account) assignValues(columns []string, values []any) error {
 				a.CreatedAt = value.Int64
 			}
 		case account.FieldCreatedBy:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field created_by", values[i])
 			} else if value.Valid {
-				a.CreatedBy = value.String
+				a.CreatedBy = value.Int64
 			}
 		case account.FieldUpdatedAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -91,16 +89,10 @@ func (a *Account) assignValues(columns []string, values []any) error {
 				a.UpdatedAt = value.Int64
 			}
 		case account.FieldUpdatedBy:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field updated_by", values[i])
 			} else if value.Valid {
-				a.UpdatedBy = value.String
-			}
-		case account.FieldIsDeleted:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field is_deleted", values[i])
-			} else if value.Valid {
-				a.IsDeleted = uint8(value.Int64)
+				a.UpdatedBy = value.Int64
 			}
 		case account.FieldDeletedAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -109,10 +101,10 @@ func (a *Account) assignValues(columns []string, values []any) error {
 				a.DeletedAt = value.Int64
 			}
 		case account.FieldDeletedBy:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field deleted_by", values[i])
 			} else if value.Valid {
-				a.DeletedBy = value.String
+				a.DeletedBy = value.Int64
 			}
 		case account.FieldAccount:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -178,22 +170,19 @@ func (a *Account) String() string {
 	builder.WriteString(fmt.Sprintf("%v", a.CreatedAt))
 	builder.WriteString(", ")
 	builder.WriteString("created_by=")
-	builder.WriteString(a.CreatedBy)
+	builder.WriteString(fmt.Sprintf("%v", a.CreatedBy))
 	builder.WriteString(", ")
 	builder.WriteString("updated_at=")
 	builder.WriteString(fmt.Sprintf("%v", a.UpdatedAt))
 	builder.WriteString(", ")
 	builder.WriteString("updated_by=")
-	builder.WriteString(a.UpdatedBy)
-	builder.WriteString(", ")
-	builder.WriteString("is_deleted=")
-	builder.WriteString(fmt.Sprintf("%v", a.IsDeleted))
+	builder.WriteString(fmt.Sprintf("%v", a.UpdatedBy))
 	builder.WriteString(", ")
 	builder.WriteString("deleted_at=")
 	builder.WriteString(fmt.Sprintf("%v", a.DeletedAt))
 	builder.WriteString(", ")
 	builder.WriteString("deleted_by=")
-	builder.WriteString(a.DeletedBy)
+	builder.WriteString(fmt.Sprintf("%v", a.DeletedBy))
 	builder.WriteString(", ")
 	builder.WriteString("account=")
 	builder.WriteString(a.Account)

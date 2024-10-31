@@ -45,7 +45,7 @@ func RegisterBlogsCommentHTTPServer(s *http.Server, srv BlogsCommentHTTPServer) 
 func _BlogsComment_CreateBlogsComment0_HTTP_Handler(srv BlogsCommentHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in CreateBlogsCommentRequest
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationBlogsCommentCreateBlogsComment)
@@ -64,7 +64,7 @@ func _BlogsComment_CreateBlogsComment0_HTTP_Handler(srv BlogsCommentHTTPServer) 
 func _BlogsComment_UpdateBlogsComment0_HTTP_Handler(srv BlogsCommentHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in UpdateBlogsCommentRequest
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationBlogsCommentUpdateBlogsComment)
@@ -83,7 +83,7 @@ func _BlogsComment_UpdateBlogsComment0_HTTP_Handler(srv BlogsCommentHTTPServer) 
 func _BlogsComment_DeleteBlogsComment0_HTTP_Handler(srv BlogsCommentHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in DeleteBlogsCommentRequest
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationBlogsCommentDeleteBlogsComment)
@@ -102,7 +102,7 @@ func _BlogsComment_DeleteBlogsComment0_HTTP_Handler(srv BlogsCommentHTTPServer) 
 func _BlogsComment_GetBlogsComment0_HTTP_Handler(srv BlogsCommentHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in GetBlogsCommentRequest
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationBlogsCommentGetBlogsComment)
@@ -121,7 +121,7 @@ func _BlogsComment_GetBlogsComment0_HTTP_Handler(srv BlogsCommentHTTPServer) fun
 func _BlogsComment_ListBlogsComment0_HTTP_Handler(srv BlogsCommentHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in ListBlogsCommentRequest
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationBlogsCommentListBlogsComment)

@@ -21,17 +21,15 @@ type Blogs struct {
 	// 创建时间
 	CreatedAt int64 `json:"created_at,omitempty"`
 	// 创建人
-	CreatedBy string `json:"created_by,omitempty"`
+	CreatedBy int64 `json:"created_by,omitempty"`
 	// 更新时间
 	UpdatedAt int64 `json:"updated_at,omitempty"`
 	// 更新人
-	UpdatedBy string `json:"updated_by,omitempty"`
-	// 是否删除;0：正常，1：删除
-	IsDeleted uint8 `json:"is_deleted,omitempty"`
+	UpdatedBy int64 `json:"updated_by,omitempty"`
 	// 软删除时间
 	DeletedAt int64 `json:"deleted_at,omitempty"`
 	// 删除人
-	DeletedBy string `json:"deleted_by,omitempty"`
+	DeletedBy int64 `json:"deleted_by,omitempty"`
 	// 账户ID
 	AccountID int `json:"account_id,omitempty"`
 	// 标题
@@ -43,9 +41,7 @@ type Blogs struct {
 	// 标签
 	Tags []string `json:"tags,omitempty"`
 	// 封面
-	Cover string `json:"cover,omitempty"`
-	// 内容
-	Content      string `json:"content,omitempty"`
+	Cover        string `json:"cover,omitempty"`
 	selectValues sql.SelectValues
 }
 
@@ -56,9 +52,9 @@ func (*Blogs) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case blogs.FieldTags:
 			values[i] = new([]byte)
-		case blogs.FieldID, blogs.FieldCreatedAt, blogs.FieldUpdatedAt, blogs.FieldIsDeleted, blogs.FieldDeletedAt, blogs.FieldAccountID, blogs.FieldIsHidden:
+		case blogs.FieldID, blogs.FieldCreatedAt, blogs.FieldCreatedBy, blogs.FieldUpdatedAt, blogs.FieldUpdatedBy, blogs.FieldDeletedAt, blogs.FieldDeletedBy, blogs.FieldAccountID, blogs.FieldIsHidden:
 			values[i] = new(sql.NullInt64)
-		case blogs.FieldCreatedBy, blogs.FieldUpdatedBy, blogs.FieldDeletedBy, blogs.FieldTitle, blogs.FieldDescription, blogs.FieldCover, blogs.FieldContent:
+		case blogs.FieldTitle, blogs.FieldDescription, blogs.FieldCover:
 			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -88,10 +84,10 @@ func (b *Blogs) assignValues(columns []string, values []any) error {
 				b.CreatedAt = value.Int64
 			}
 		case blogs.FieldCreatedBy:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field created_by", values[i])
 			} else if value.Valid {
-				b.CreatedBy = value.String
+				b.CreatedBy = value.Int64
 			}
 		case blogs.FieldUpdatedAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -100,16 +96,10 @@ func (b *Blogs) assignValues(columns []string, values []any) error {
 				b.UpdatedAt = value.Int64
 			}
 		case blogs.FieldUpdatedBy:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field updated_by", values[i])
 			} else if value.Valid {
-				b.UpdatedBy = value.String
-			}
-		case blogs.FieldIsDeleted:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field is_deleted", values[i])
-			} else if value.Valid {
-				b.IsDeleted = uint8(value.Int64)
+				b.UpdatedBy = value.Int64
 			}
 		case blogs.FieldDeletedAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -118,10 +108,10 @@ func (b *Blogs) assignValues(columns []string, values []any) error {
 				b.DeletedAt = value.Int64
 			}
 		case blogs.FieldDeletedBy:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field deleted_by", values[i])
 			} else if value.Valid {
-				b.DeletedBy = value.String
+				b.DeletedBy = value.Int64
 			}
 		case blogs.FieldAccountID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -160,12 +150,6 @@ func (b *Blogs) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field cover", values[i])
 			} else if value.Valid {
 				b.Cover = value.String
-			}
-		case blogs.FieldContent:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field content", values[i])
-			} else if value.Valid {
-				b.Content = value.String
 			}
 		default:
 			b.selectValues.Set(columns[i], values[i])
@@ -207,22 +191,19 @@ func (b *Blogs) String() string {
 	builder.WriteString(fmt.Sprintf("%v", b.CreatedAt))
 	builder.WriteString(", ")
 	builder.WriteString("created_by=")
-	builder.WriteString(b.CreatedBy)
+	builder.WriteString(fmt.Sprintf("%v", b.CreatedBy))
 	builder.WriteString(", ")
 	builder.WriteString("updated_at=")
 	builder.WriteString(fmt.Sprintf("%v", b.UpdatedAt))
 	builder.WriteString(", ")
 	builder.WriteString("updated_by=")
-	builder.WriteString(b.UpdatedBy)
-	builder.WriteString(", ")
-	builder.WriteString("is_deleted=")
-	builder.WriteString(fmt.Sprintf("%v", b.IsDeleted))
+	builder.WriteString(fmt.Sprintf("%v", b.UpdatedBy))
 	builder.WriteString(", ")
 	builder.WriteString("deleted_at=")
 	builder.WriteString(fmt.Sprintf("%v", b.DeletedAt))
 	builder.WriteString(", ")
 	builder.WriteString("deleted_by=")
-	builder.WriteString(b.DeletedBy)
+	builder.WriteString(fmt.Sprintf("%v", b.DeletedBy))
 	builder.WriteString(", ")
 	builder.WriteString("account_id=")
 	builder.WriteString(fmt.Sprintf("%v", b.AccountID))
@@ -241,9 +222,6 @@ func (b *Blogs) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("cover=")
 	builder.WriteString(b.Cover)
-	builder.WriteString(", ")
-	builder.WriteString("content=")
-	builder.WriteString(b.Content)
 	builder.WriteByte(')')
 	return builder.String()
 }

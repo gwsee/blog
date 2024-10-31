@@ -59,7 +59,7 @@ func CreatedAt(v int64) predicate.Account {
 }
 
 // CreatedBy applies equality check predicate on the "created_by" field. It's identical to CreatedByEQ.
-func CreatedBy(v string) predicate.Account {
+func CreatedBy(v int64) predicate.Account {
 	return predicate.Account(sql.FieldEQ(FieldCreatedBy, v))
 }
 
@@ -69,13 +69,8 @@ func UpdatedAt(v int64) predicate.Account {
 }
 
 // UpdatedBy applies equality check predicate on the "updated_by" field. It's identical to UpdatedByEQ.
-func UpdatedBy(v string) predicate.Account {
+func UpdatedBy(v int64) predicate.Account {
 	return predicate.Account(sql.FieldEQ(FieldUpdatedBy, v))
-}
-
-// IsDeleted applies equality check predicate on the "is_deleted" field. It's identical to IsDeletedEQ.
-func IsDeleted(v uint8) predicate.Account {
-	return predicate.Account(sql.FieldEQ(FieldIsDeleted, v))
 }
 
 // DeletedAt applies equality check predicate on the "deleted_at" field. It's identical to DeletedAtEQ.
@@ -84,7 +79,7 @@ func DeletedAt(v int64) predicate.Account {
 }
 
 // DeletedBy applies equality check predicate on the "deleted_by" field. It's identical to DeletedByEQ.
-func DeletedBy(v string) predicate.Account {
+func DeletedBy(v int64) predicate.Account {
 	return predicate.Account(sql.FieldEQ(FieldDeletedBy, v))
 }
 
@@ -149,68 +144,43 @@ func CreatedAtLTE(v int64) predicate.Account {
 }
 
 // CreatedByEQ applies the EQ predicate on the "created_by" field.
-func CreatedByEQ(v string) predicate.Account {
+func CreatedByEQ(v int64) predicate.Account {
 	return predicate.Account(sql.FieldEQ(FieldCreatedBy, v))
 }
 
 // CreatedByNEQ applies the NEQ predicate on the "created_by" field.
-func CreatedByNEQ(v string) predicate.Account {
+func CreatedByNEQ(v int64) predicate.Account {
 	return predicate.Account(sql.FieldNEQ(FieldCreatedBy, v))
 }
 
 // CreatedByIn applies the In predicate on the "created_by" field.
-func CreatedByIn(vs ...string) predicate.Account {
+func CreatedByIn(vs ...int64) predicate.Account {
 	return predicate.Account(sql.FieldIn(FieldCreatedBy, vs...))
 }
 
 // CreatedByNotIn applies the NotIn predicate on the "created_by" field.
-func CreatedByNotIn(vs ...string) predicate.Account {
+func CreatedByNotIn(vs ...int64) predicate.Account {
 	return predicate.Account(sql.FieldNotIn(FieldCreatedBy, vs...))
 }
 
 // CreatedByGT applies the GT predicate on the "created_by" field.
-func CreatedByGT(v string) predicate.Account {
+func CreatedByGT(v int64) predicate.Account {
 	return predicate.Account(sql.FieldGT(FieldCreatedBy, v))
 }
 
 // CreatedByGTE applies the GTE predicate on the "created_by" field.
-func CreatedByGTE(v string) predicate.Account {
+func CreatedByGTE(v int64) predicate.Account {
 	return predicate.Account(sql.FieldGTE(FieldCreatedBy, v))
 }
 
 // CreatedByLT applies the LT predicate on the "created_by" field.
-func CreatedByLT(v string) predicate.Account {
+func CreatedByLT(v int64) predicate.Account {
 	return predicate.Account(sql.FieldLT(FieldCreatedBy, v))
 }
 
 // CreatedByLTE applies the LTE predicate on the "created_by" field.
-func CreatedByLTE(v string) predicate.Account {
+func CreatedByLTE(v int64) predicate.Account {
 	return predicate.Account(sql.FieldLTE(FieldCreatedBy, v))
-}
-
-// CreatedByContains applies the Contains predicate on the "created_by" field.
-func CreatedByContains(v string) predicate.Account {
-	return predicate.Account(sql.FieldContains(FieldCreatedBy, v))
-}
-
-// CreatedByHasPrefix applies the HasPrefix predicate on the "created_by" field.
-func CreatedByHasPrefix(v string) predicate.Account {
-	return predicate.Account(sql.FieldHasPrefix(FieldCreatedBy, v))
-}
-
-// CreatedByHasSuffix applies the HasSuffix predicate on the "created_by" field.
-func CreatedByHasSuffix(v string) predicate.Account {
-	return predicate.Account(sql.FieldHasSuffix(FieldCreatedBy, v))
-}
-
-// CreatedByEqualFold applies the EqualFold predicate on the "created_by" field.
-func CreatedByEqualFold(v string) predicate.Account {
-	return predicate.Account(sql.FieldEqualFold(FieldCreatedBy, v))
-}
-
-// CreatedByContainsFold applies the ContainsFold predicate on the "created_by" field.
-func CreatedByContainsFold(v string) predicate.Account {
-	return predicate.Account(sql.FieldContainsFold(FieldCreatedBy, v))
 }
 
 // UpdatedAtEQ applies the EQ predicate on the "updated_at" field.
@@ -254,108 +224,43 @@ func UpdatedAtLTE(v int64) predicate.Account {
 }
 
 // UpdatedByEQ applies the EQ predicate on the "updated_by" field.
-func UpdatedByEQ(v string) predicate.Account {
+func UpdatedByEQ(v int64) predicate.Account {
 	return predicate.Account(sql.FieldEQ(FieldUpdatedBy, v))
 }
 
 // UpdatedByNEQ applies the NEQ predicate on the "updated_by" field.
-func UpdatedByNEQ(v string) predicate.Account {
+func UpdatedByNEQ(v int64) predicate.Account {
 	return predicate.Account(sql.FieldNEQ(FieldUpdatedBy, v))
 }
 
 // UpdatedByIn applies the In predicate on the "updated_by" field.
-func UpdatedByIn(vs ...string) predicate.Account {
+func UpdatedByIn(vs ...int64) predicate.Account {
 	return predicate.Account(sql.FieldIn(FieldUpdatedBy, vs...))
 }
 
 // UpdatedByNotIn applies the NotIn predicate on the "updated_by" field.
-func UpdatedByNotIn(vs ...string) predicate.Account {
+func UpdatedByNotIn(vs ...int64) predicate.Account {
 	return predicate.Account(sql.FieldNotIn(FieldUpdatedBy, vs...))
 }
 
 // UpdatedByGT applies the GT predicate on the "updated_by" field.
-func UpdatedByGT(v string) predicate.Account {
+func UpdatedByGT(v int64) predicate.Account {
 	return predicate.Account(sql.FieldGT(FieldUpdatedBy, v))
 }
 
 // UpdatedByGTE applies the GTE predicate on the "updated_by" field.
-func UpdatedByGTE(v string) predicate.Account {
+func UpdatedByGTE(v int64) predicate.Account {
 	return predicate.Account(sql.FieldGTE(FieldUpdatedBy, v))
 }
 
 // UpdatedByLT applies the LT predicate on the "updated_by" field.
-func UpdatedByLT(v string) predicate.Account {
+func UpdatedByLT(v int64) predicate.Account {
 	return predicate.Account(sql.FieldLT(FieldUpdatedBy, v))
 }
 
 // UpdatedByLTE applies the LTE predicate on the "updated_by" field.
-func UpdatedByLTE(v string) predicate.Account {
+func UpdatedByLTE(v int64) predicate.Account {
 	return predicate.Account(sql.FieldLTE(FieldUpdatedBy, v))
-}
-
-// UpdatedByContains applies the Contains predicate on the "updated_by" field.
-func UpdatedByContains(v string) predicate.Account {
-	return predicate.Account(sql.FieldContains(FieldUpdatedBy, v))
-}
-
-// UpdatedByHasPrefix applies the HasPrefix predicate on the "updated_by" field.
-func UpdatedByHasPrefix(v string) predicate.Account {
-	return predicate.Account(sql.FieldHasPrefix(FieldUpdatedBy, v))
-}
-
-// UpdatedByHasSuffix applies the HasSuffix predicate on the "updated_by" field.
-func UpdatedByHasSuffix(v string) predicate.Account {
-	return predicate.Account(sql.FieldHasSuffix(FieldUpdatedBy, v))
-}
-
-// UpdatedByEqualFold applies the EqualFold predicate on the "updated_by" field.
-func UpdatedByEqualFold(v string) predicate.Account {
-	return predicate.Account(sql.FieldEqualFold(FieldUpdatedBy, v))
-}
-
-// UpdatedByContainsFold applies the ContainsFold predicate on the "updated_by" field.
-func UpdatedByContainsFold(v string) predicate.Account {
-	return predicate.Account(sql.FieldContainsFold(FieldUpdatedBy, v))
-}
-
-// IsDeletedEQ applies the EQ predicate on the "is_deleted" field.
-func IsDeletedEQ(v uint8) predicate.Account {
-	return predicate.Account(sql.FieldEQ(FieldIsDeleted, v))
-}
-
-// IsDeletedNEQ applies the NEQ predicate on the "is_deleted" field.
-func IsDeletedNEQ(v uint8) predicate.Account {
-	return predicate.Account(sql.FieldNEQ(FieldIsDeleted, v))
-}
-
-// IsDeletedIn applies the In predicate on the "is_deleted" field.
-func IsDeletedIn(vs ...uint8) predicate.Account {
-	return predicate.Account(sql.FieldIn(FieldIsDeleted, vs...))
-}
-
-// IsDeletedNotIn applies the NotIn predicate on the "is_deleted" field.
-func IsDeletedNotIn(vs ...uint8) predicate.Account {
-	return predicate.Account(sql.FieldNotIn(FieldIsDeleted, vs...))
-}
-
-// IsDeletedGT applies the GT predicate on the "is_deleted" field.
-func IsDeletedGT(v uint8) predicate.Account {
-	return predicate.Account(sql.FieldGT(FieldIsDeleted, v))
-}
-
-// IsDeletedGTE applies the GTE predicate on the "is_deleted" field.
-func IsDeletedGTE(v uint8) predicate.Account {
-	return predicate.Account(sql.FieldGTE(FieldIsDeleted, v))
-}
-
-// IsDeletedLT applies the LT predicate on the "is_deleted" field.
-func IsDeletedLT(v uint8) predicate.Account {
-	return predicate.Account(sql.FieldLT(FieldIsDeleted, v))
-}
-
-// IsDeletedLTE applies the LTE predicate on the "is_deleted" field.
-func IsDeletedLTE(v uint8) predicate.Account {
-	return predicate.Account(sql.FieldLTE(FieldIsDeleted, v))
 }
 
 // DeletedAtEQ applies the EQ predicate on the "deleted_at" field.
@@ -399,68 +304,43 @@ func DeletedAtLTE(v int64) predicate.Account {
 }
 
 // DeletedByEQ applies the EQ predicate on the "deleted_by" field.
-func DeletedByEQ(v string) predicate.Account {
+func DeletedByEQ(v int64) predicate.Account {
 	return predicate.Account(sql.FieldEQ(FieldDeletedBy, v))
 }
 
 // DeletedByNEQ applies the NEQ predicate on the "deleted_by" field.
-func DeletedByNEQ(v string) predicate.Account {
+func DeletedByNEQ(v int64) predicate.Account {
 	return predicate.Account(sql.FieldNEQ(FieldDeletedBy, v))
 }
 
 // DeletedByIn applies the In predicate on the "deleted_by" field.
-func DeletedByIn(vs ...string) predicate.Account {
+func DeletedByIn(vs ...int64) predicate.Account {
 	return predicate.Account(sql.FieldIn(FieldDeletedBy, vs...))
 }
 
 // DeletedByNotIn applies the NotIn predicate on the "deleted_by" field.
-func DeletedByNotIn(vs ...string) predicate.Account {
+func DeletedByNotIn(vs ...int64) predicate.Account {
 	return predicate.Account(sql.FieldNotIn(FieldDeletedBy, vs...))
 }
 
 // DeletedByGT applies the GT predicate on the "deleted_by" field.
-func DeletedByGT(v string) predicate.Account {
+func DeletedByGT(v int64) predicate.Account {
 	return predicate.Account(sql.FieldGT(FieldDeletedBy, v))
 }
 
 // DeletedByGTE applies the GTE predicate on the "deleted_by" field.
-func DeletedByGTE(v string) predicate.Account {
+func DeletedByGTE(v int64) predicate.Account {
 	return predicate.Account(sql.FieldGTE(FieldDeletedBy, v))
 }
 
 // DeletedByLT applies the LT predicate on the "deleted_by" field.
-func DeletedByLT(v string) predicate.Account {
+func DeletedByLT(v int64) predicate.Account {
 	return predicate.Account(sql.FieldLT(FieldDeletedBy, v))
 }
 
 // DeletedByLTE applies the LTE predicate on the "deleted_by" field.
-func DeletedByLTE(v string) predicate.Account {
+func DeletedByLTE(v int64) predicate.Account {
 	return predicate.Account(sql.FieldLTE(FieldDeletedBy, v))
-}
-
-// DeletedByContains applies the Contains predicate on the "deleted_by" field.
-func DeletedByContains(v string) predicate.Account {
-	return predicate.Account(sql.FieldContains(FieldDeletedBy, v))
-}
-
-// DeletedByHasPrefix applies the HasPrefix predicate on the "deleted_by" field.
-func DeletedByHasPrefix(v string) predicate.Account {
-	return predicate.Account(sql.FieldHasPrefix(FieldDeletedBy, v))
-}
-
-// DeletedByHasSuffix applies the HasSuffix predicate on the "deleted_by" field.
-func DeletedByHasSuffix(v string) predicate.Account {
-	return predicate.Account(sql.FieldHasSuffix(FieldDeletedBy, v))
-}
-
-// DeletedByEqualFold applies the EqualFold predicate on the "deleted_by" field.
-func DeletedByEqualFold(v string) predicate.Account {
-	return predicate.Account(sql.FieldEqualFold(FieldDeletedBy, v))
-}
-
-// DeletedByContainsFold applies the ContainsFold predicate on the "deleted_by" field.
-func DeletedByContainsFold(v string) predicate.Account {
-	return predicate.Account(sql.FieldContainsFold(FieldDeletedBy, v))
 }
 
 // AccountEQ applies the EQ predicate on the "account" field.

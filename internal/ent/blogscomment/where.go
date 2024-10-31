@@ -59,7 +59,7 @@ func CreatedAt(v int64) predicate.BlogsComment {
 }
 
 // CreatedBy applies equality check predicate on the "created_by" field. It's identical to CreatedByEQ.
-func CreatedBy(v string) predicate.BlogsComment {
+func CreatedBy(v int64) predicate.BlogsComment {
 	return predicate.BlogsComment(sql.FieldEQ(FieldCreatedBy, v))
 }
 
@@ -69,13 +69,8 @@ func UpdatedAt(v int64) predicate.BlogsComment {
 }
 
 // UpdatedBy applies equality check predicate on the "updated_by" field. It's identical to UpdatedByEQ.
-func UpdatedBy(v string) predicate.BlogsComment {
+func UpdatedBy(v int64) predicate.BlogsComment {
 	return predicate.BlogsComment(sql.FieldEQ(FieldUpdatedBy, v))
-}
-
-// IsDeleted applies equality check predicate on the "is_deleted" field. It's identical to IsDeletedEQ.
-func IsDeleted(v uint8) predicate.BlogsComment {
-	return predicate.BlogsComment(sql.FieldEQ(FieldIsDeleted, v))
 }
 
 // DeletedAt applies equality check predicate on the "deleted_at" field. It's identical to DeletedAtEQ.
@@ -84,7 +79,7 @@ func DeletedAt(v int64) predicate.BlogsComment {
 }
 
 // DeletedBy applies equality check predicate on the "deleted_by" field. It's identical to DeletedByEQ.
-func DeletedBy(v string) predicate.BlogsComment {
+func DeletedBy(v int64) predicate.BlogsComment {
 	return predicate.BlogsComment(sql.FieldEQ(FieldDeletedBy, v))
 }
 
@@ -169,68 +164,43 @@ func CreatedAtLTE(v int64) predicate.BlogsComment {
 }
 
 // CreatedByEQ applies the EQ predicate on the "created_by" field.
-func CreatedByEQ(v string) predicate.BlogsComment {
+func CreatedByEQ(v int64) predicate.BlogsComment {
 	return predicate.BlogsComment(sql.FieldEQ(FieldCreatedBy, v))
 }
 
 // CreatedByNEQ applies the NEQ predicate on the "created_by" field.
-func CreatedByNEQ(v string) predicate.BlogsComment {
+func CreatedByNEQ(v int64) predicate.BlogsComment {
 	return predicate.BlogsComment(sql.FieldNEQ(FieldCreatedBy, v))
 }
 
 // CreatedByIn applies the In predicate on the "created_by" field.
-func CreatedByIn(vs ...string) predicate.BlogsComment {
+func CreatedByIn(vs ...int64) predicate.BlogsComment {
 	return predicate.BlogsComment(sql.FieldIn(FieldCreatedBy, vs...))
 }
 
 // CreatedByNotIn applies the NotIn predicate on the "created_by" field.
-func CreatedByNotIn(vs ...string) predicate.BlogsComment {
+func CreatedByNotIn(vs ...int64) predicate.BlogsComment {
 	return predicate.BlogsComment(sql.FieldNotIn(FieldCreatedBy, vs...))
 }
 
 // CreatedByGT applies the GT predicate on the "created_by" field.
-func CreatedByGT(v string) predicate.BlogsComment {
+func CreatedByGT(v int64) predicate.BlogsComment {
 	return predicate.BlogsComment(sql.FieldGT(FieldCreatedBy, v))
 }
 
 // CreatedByGTE applies the GTE predicate on the "created_by" field.
-func CreatedByGTE(v string) predicate.BlogsComment {
+func CreatedByGTE(v int64) predicate.BlogsComment {
 	return predicate.BlogsComment(sql.FieldGTE(FieldCreatedBy, v))
 }
 
 // CreatedByLT applies the LT predicate on the "created_by" field.
-func CreatedByLT(v string) predicate.BlogsComment {
+func CreatedByLT(v int64) predicate.BlogsComment {
 	return predicate.BlogsComment(sql.FieldLT(FieldCreatedBy, v))
 }
 
 // CreatedByLTE applies the LTE predicate on the "created_by" field.
-func CreatedByLTE(v string) predicate.BlogsComment {
+func CreatedByLTE(v int64) predicate.BlogsComment {
 	return predicate.BlogsComment(sql.FieldLTE(FieldCreatedBy, v))
-}
-
-// CreatedByContains applies the Contains predicate on the "created_by" field.
-func CreatedByContains(v string) predicate.BlogsComment {
-	return predicate.BlogsComment(sql.FieldContains(FieldCreatedBy, v))
-}
-
-// CreatedByHasPrefix applies the HasPrefix predicate on the "created_by" field.
-func CreatedByHasPrefix(v string) predicate.BlogsComment {
-	return predicate.BlogsComment(sql.FieldHasPrefix(FieldCreatedBy, v))
-}
-
-// CreatedByHasSuffix applies the HasSuffix predicate on the "created_by" field.
-func CreatedByHasSuffix(v string) predicate.BlogsComment {
-	return predicate.BlogsComment(sql.FieldHasSuffix(FieldCreatedBy, v))
-}
-
-// CreatedByEqualFold applies the EqualFold predicate on the "created_by" field.
-func CreatedByEqualFold(v string) predicate.BlogsComment {
-	return predicate.BlogsComment(sql.FieldEqualFold(FieldCreatedBy, v))
-}
-
-// CreatedByContainsFold applies the ContainsFold predicate on the "created_by" field.
-func CreatedByContainsFold(v string) predicate.BlogsComment {
-	return predicate.BlogsComment(sql.FieldContainsFold(FieldCreatedBy, v))
 }
 
 // UpdatedAtEQ applies the EQ predicate on the "updated_at" field.
@@ -274,108 +244,43 @@ func UpdatedAtLTE(v int64) predicate.BlogsComment {
 }
 
 // UpdatedByEQ applies the EQ predicate on the "updated_by" field.
-func UpdatedByEQ(v string) predicate.BlogsComment {
+func UpdatedByEQ(v int64) predicate.BlogsComment {
 	return predicate.BlogsComment(sql.FieldEQ(FieldUpdatedBy, v))
 }
 
 // UpdatedByNEQ applies the NEQ predicate on the "updated_by" field.
-func UpdatedByNEQ(v string) predicate.BlogsComment {
+func UpdatedByNEQ(v int64) predicate.BlogsComment {
 	return predicate.BlogsComment(sql.FieldNEQ(FieldUpdatedBy, v))
 }
 
 // UpdatedByIn applies the In predicate on the "updated_by" field.
-func UpdatedByIn(vs ...string) predicate.BlogsComment {
+func UpdatedByIn(vs ...int64) predicate.BlogsComment {
 	return predicate.BlogsComment(sql.FieldIn(FieldUpdatedBy, vs...))
 }
 
 // UpdatedByNotIn applies the NotIn predicate on the "updated_by" field.
-func UpdatedByNotIn(vs ...string) predicate.BlogsComment {
+func UpdatedByNotIn(vs ...int64) predicate.BlogsComment {
 	return predicate.BlogsComment(sql.FieldNotIn(FieldUpdatedBy, vs...))
 }
 
 // UpdatedByGT applies the GT predicate on the "updated_by" field.
-func UpdatedByGT(v string) predicate.BlogsComment {
+func UpdatedByGT(v int64) predicate.BlogsComment {
 	return predicate.BlogsComment(sql.FieldGT(FieldUpdatedBy, v))
 }
 
 // UpdatedByGTE applies the GTE predicate on the "updated_by" field.
-func UpdatedByGTE(v string) predicate.BlogsComment {
+func UpdatedByGTE(v int64) predicate.BlogsComment {
 	return predicate.BlogsComment(sql.FieldGTE(FieldUpdatedBy, v))
 }
 
 // UpdatedByLT applies the LT predicate on the "updated_by" field.
-func UpdatedByLT(v string) predicate.BlogsComment {
+func UpdatedByLT(v int64) predicate.BlogsComment {
 	return predicate.BlogsComment(sql.FieldLT(FieldUpdatedBy, v))
 }
 
 // UpdatedByLTE applies the LTE predicate on the "updated_by" field.
-func UpdatedByLTE(v string) predicate.BlogsComment {
+func UpdatedByLTE(v int64) predicate.BlogsComment {
 	return predicate.BlogsComment(sql.FieldLTE(FieldUpdatedBy, v))
-}
-
-// UpdatedByContains applies the Contains predicate on the "updated_by" field.
-func UpdatedByContains(v string) predicate.BlogsComment {
-	return predicate.BlogsComment(sql.FieldContains(FieldUpdatedBy, v))
-}
-
-// UpdatedByHasPrefix applies the HasPrefix predicate on the "updated_by" field.
-func UpdatedByHasPrefix(v string) predicate.BlogsComment {
-	return predicate.BlogsComment(sql.FieldHasPrefix(FieldUpdatedBy, v))
-}
-
-// UpdatedByHasSuffix applies the HasSuffix predicate on the "updated_by" field.
-func UpdatedByHasSuffix(v string) predicate.BlogsComment {
-	return predicate.BlogsComment(sql.FieldHasSuffix(FieldUpdatedBy, v))
-}
-
-// UpdatedByEqualFold applies the EqualFold predicate on the "updated_by" field.
-func UpdatedByEqualFold(v string) predicate.BlogsComment {
-	return predicate.BlogsComment(sql.FieldEqualFold(FieldUpdatedBy, v))
-}
-
-// UpdatedByContainsFold applies the ContainsFold predicate on the "updated_by" field.
-func UpdatedByContainsFold(v string) predicate.BlogsComment {
-	return predicate.BlogsComment(sql.FieldContainsFold(FieldUpdatedBy, v))
-}
-
-// IsDeletedEQ applies the EQ predicate on the "is_deleted" field.
-func IsDeletedEQ(v uint8) predicate.BlogsComment {
-	return predicate.BlogsComment(sql.FieldEQ(FieldIsDeleted, v))
-}
-
-// IsDeletedNEQ applies the NEQ predicate on the "is_deleted" field.
-func IsDeletedNEQ(v uint8) predicate.BlogsComment {
-	return predicate.BlogsComment(sql.FieldNEQ(FieldIsDeleted, v))
-}
-
-// IsDeletedIn applies the In predicate on the "is_deleted" field.
-func IsDeletedIn(vs ...uint8) predicate.BlogsComment {
-	return predicate.BlogsComment(sql.FieldIn(FieldIsDeleted, vs...))
-}
-
-// IsDeletedNotIn applies the NotIn predicate on the "is_deleted" field.
-func IsDeletedNotIn(vs ...uint8) predicate.BlogsComment {
-	return predicate.BlogsComment(sql.FieldNotIn(FieldIsDeleted, vs...))
-}
-
-// IsDeletedGT applies the GT predicate on the "is_deleted" field.
-func IsDeletedGT(v uint8) predicate.BlogsComment {
-	return predicate.BlogsComment(sql.FieldGT(FieldIsDeleted, v))
-}
-
-// IsDeletedGTE applies the GTE predicate on the "is_deleted" field.
-func IsDeletedGTE(v uint8) predicate.BlogsComment {
-	return predicate.BlogsComment(sql.FieldGTE(FieldIsDeleted, v))
-}
-
-// IsDeletedLT applies the LT predicate on the "is_deleted" field.
-func IsDeletedLT(v uint8) predicate.BlogsComment {
-	return predicate.BlogsComment(sql.FieldLT(FieldIsDeleted, v))
-}
-
-// IsDeletedLTE applies the LTE predicate on the "is_deleted" field.
-func IsDeletedLTE(v uint8) predicate.BlogsComment {
-	return predicate.BlogsComment(sql.FieldLTE(FieldIsDeleted, v))
 }
 
 // DeletedAtEQ applies the EQ predicate on the "deleted_at" field.
@@ -419,68 +324,43 @@ func DeletedAtLTE(v int64) predicate.BlogsComment {
 }
 
 // DeletedByEQ applies the EQ predicate on the "deleted_by" field.
-func DeletedByEQ(v string) predicate.BlogsComment {
+func DeletedByEQ(v int64) predicate.BlogsComment {
 	return predicate.BlogsComment(sql.FieldEQ(FieldDeletedBy, v))
 }
 
 // DeletedByNEQ applies the NEQ predicate on the "deleted_by" field.
-func DeletedByNEQ(v string) predicate.BlogsComment {
+func DeletedByNEQ(v int64) predicate.BlogsComment {
 	return predicate.BlogsComment(sql.FieldNEQ(FieldDeletedBy, v))
 }
 
 // DeletedByIn applies the In predicate on the "deleted_by" field.
-func DeletedByIn(vs ...string) predicate.BlogsComment {
+func DeletedByIn(vs ...int64) predicate.BlogsComment {
 	return predicate.BlogsComment(sql.FieldIn(FieldDeletedBy, vs...))
 }
 
 // DeletedByNotIn applies the NotIn predicate on the "deleted_by" field.
-func DeletedByNotIn(vs ...string) predicate.BlogsComment {
+func DeletedByNotIn(vs ...int64) predicate.BlogsComment {
 	return predicate.BlogsComment(sql.FieldNotIn(FieldDeletedBy, vs...))
 }
 
 // DeletedByGT applies the GT predicate on the "deleted_by" field.
-func DeletedByGT(v string) predicate.BlogsComment {
+func DeletedByGT(v int64) predicate.BlogsComment {
 	return predicate.BlogsComment(sql.FieldGT(FieldDeletedBy, v))
 }
 
 // DeletedByGTE applies the GTE predicate on the "deleted_by" field.
-func DeletedByGTE(v string) predicate.BlogsComment {
+func DeletedByGTE(v int64) predicate.BlogsComment {
 	return predicate.BlogsComment(sql.FieldGTE(FieldDeletedBy, v))
 }
 
 // DeletedByLT applies the LT predicate on the "deleted_by" field.
-func DeletedByLT(v string) predicate.BlogsComment {
+func DeletedByLT(v int64) predicate.BlogsComment {
 	return predicate.BlogsComment(sql.FieldLT(FieldDeletedBy, v))
 }
 
 // DeletedByLTE applies the LTE predicate on the "deleted_by" field.
-func DeletedByLTE(v string) predicate.BlogsComment {
+func DeletedByLTE(v int64) predicate.BlogsComment {
 	return predicate.BlogsComment(sql.FieldLTE(FieldDeletedBy, v))
-}
-
-// DeletedByContains applies the Contains predicate on the "deleted_by" field.
-func DeletedByContains(v string) predicate.BlogsComment {
-	return predicate.BlogsComment(sql.FieldContains(FieldDeletedBy, v))
-}
-
-// DeletedByHasPrefix applies the HasPrefix predicate on the "deleted_by" field.
-func DeletedByHasPrefix(v string) predicate.BlogsComment {
-	return predicate.BlogsComment(sql.FieldHasPrefix(FieldDeletedBy, v))
-}
-
-// DeletedByHasSuffix applies the HasSuffix predicate on the "deleted_by" field.
-func DeletedByHasSuffix(v string) predicate.BlogsComment {
-	return predicate.BlogsComment(sql.FieldHasSuffix(FieldDeletedBy, v))
-}
-
-// DeletedByEqualFold applies the EqualFold predicate on the "deleted_by" field.
-func DeletedByEqualFold(v string) predicate.BlogsComment {
-	return predicate.BlogsComment(sql.FieldEqualFold(FieldDeletedBy, v))
-}
-
-// DeletedByContainsFold applies the ContainsFold predicate on the "deleted_by" field.
-func DeletedByContainsFold(v string) predicate.BlogsComment {
-	return predicate.BlogsComment(sql.FieldContainsFold(FieldDeletedBy, v))
 }
 
 // AccountIDEQ applies the EQ predicate on the "account_id" field.

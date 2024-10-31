@@ -3,6 +3,7 @@ package biz
 import (
 	pb "blog/api/blogs/v1"
 	"blog/api/global"
+	"blog/internal/constx"
 	"context"
 	"errors"
 	"github.com/go-kratos/kratos/v2/log"
@@ -95,11 +96,11 @@ func (s *BlogsUseCase) GetBlogs(ctx context.Context, req *pb.GetBlogsRequest) (*
 	}, nil
 }
 func (s *BlogsUseCase) ListBlogs(ctx context.Context, req *pb.ListBlogsRequest) (*pb.ListBlogsReply, error) {
-	//todo 获取当前登陆人信息
+	user := constx.DefaultUser.Default(ctx)
 	total, list, err := s.repo.ListBlogs(ctx, &BlogsQuery{
 		PageInfo:  req.Page,
 		Title:     req.Title,
-		AccountId: 0,
+		AccountId: user.Id,
 		Tags:      req.Tags,
 	})
 	if err != nil {

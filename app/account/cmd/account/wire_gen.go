@@ -35,8 +35,8 @@ func wireApp(cfg *conf.Bootstrap, logger log.Logger) (*kratos.App, func(), error
 	accountUserCase:=biz.NewAccountUseCase(cfg.Auth,accountRepo,logger)
 
 	accountService := service.NewAccountService(accountUserCase) //accountUsecase
-	grpcServer := server.NewGRPCServer(cfg.Server, accountService, logger)
-	httpServer := server.NewHTTPServer(cfg.Server, accountService, logger)
+	grpcServer := server.NewGRPCServer(cfg, accountService, logger)
+	httpServer := server.NewHTTPServer(cfg, accountService, logger)
 	app := newApp(logger, grpcServer, httpServer)
 	return app, func() {
 		cleanup()

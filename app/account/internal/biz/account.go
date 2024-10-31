@@ -4,7 +4,9 @@ import (
 	"blog/api/account/v1"
 	"blog/app/account/internal/conf"
 	"blog/internal/common"
+	"blog/internal/constx"
 	"context"
+	"encoding/json"
 	"errors"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/golang-jwt/jwt/v5"
@@ -64,9 +66,12 @@ func (uc *AccountUseCase) LoginByAccount(ctx context.Context, req *v1.LoginByAcc
 	if account.Password != common.MD5(req.Password) {
 		return nil, errors.New("account password error")
 	}
+	by, _ := json.Marshal(constx.User{
+		Id:      int64(account.Id),
+		Account: account.Account,
+	})
 	claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"user_id": account.Id,
-		"account": req.Account,
+		constx.UserInfo: string(by),
 	})
 	signedStr, err := claims.SignedString([]byte(uc.key))
 	if err != nil {

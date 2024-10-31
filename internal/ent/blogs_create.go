@@ -36,15 +36,15 @@ func (bc *BlogsCreate) SetNillableCreatedAt(i *int64) *BlogsCreate {
 }
 
 // SetCreatedBy sets the "created_by" field.
-func (bc *BlogsCreate) SetCreatedBy(s string) *BlogsCreate {
-	bc.mutation.SetCreatedBy(s)
+func (bc *BlogsCreate) SetCreatedBy(i int64) *BlogsCreate {
+	bc.mutation.SetCreatedBy(i)
 	return bc
 }
 
 // SetNillableCreatedBy sets the "created_by" field if the given value is not nil.
-func (bc *BlogsCreate) SetNillableCreatedBy(s *string) *BlogsCreate {
-	if s != nil {
-		bc.SetCreatedBy(*s)
+func (bc *BlogsCreate) SetNillableCreatedBy(i *int64) *BlogsCreate {
+	if i != nil {
+		bc.SetCreatedBy(*i)
 	}
 	return bc
 }
@@ -64,29 +64,15 @@ func (bc *BlogsCreate) SetNillableUpdatedAt(i *int64) *BlogsCreate {
 }
 
 // SetUpdatedBy sets the "updated_by" field.
-func (bc *BlogsCreate) SetUpdatedBy(s string) *BlogsCreate {
-	bc.mutation.SetUpdatedBy(s)
+func (bc *BlogsCreate) SetUpdatedBy(i int64) *BlogsCreate {
+	bc.mutation.SetUpdatedBy(i)
 	return bc
 }
 
 // SetNillableUpdatedBy sets the "updated_by" field if the given value is not nil.
-func (bc *BlogsCreate) SetNillableUpdatedBy(s *string) *BlogsCreate {
-	if s != nil {
-		bc.SetUpdatedBy(*s)
-	}
-	return bc
-}
-
-// SetIsDeleted sets the "is_deleted" field.
-func (bc *BlogsCreate) SetIsDeleted(u uint8) *BlogsCreate {
-	bc.mutation.SetIsDeleted(u)
-	return bc
-}
-
-// SetNillableIsDeleted sets the "is_deleted" field if the given value is not nil.
-func (bc *BlogsCreate) SetNillableIsDeleted(u *uint8) *BlogsCreate {
-	if u != nil {
-		bc.SetIsDeleted(*u)
+func (bc *BlogsCreate) SetNillableUpdatedBy(i *int64) *BlogsCreate {
+	if i != nil {
+		bc.SetUpdatedBy(*i)
 	}
 	return bc
 }
@@ -106,15 +92,15 @@ func (bc *BlogsCreate) SetNillableDeletedAt(i *int64) *BlogsCreate {
 }
 
 // SetDeletedBy sets the "deleted_by" field.
-func (bc *BlogsCreate) SetDeletedBy(s string) *BlogsCreate {
-	bc.mutation.SetDeletedBy(s)
+func (bc *BlogsCreate) SetDeletedBy(i int64) *BlogsCreate {
+	bc.mutation.SetDeletedBy(i)
 	return bc
 }
 
 // SetNillableDeletedBy sets the "deleted_by" field if the given value is not nil.
-func (bc *BlogsCreate) SetNillableDeletedBy(s *string) *BlogsCreate {
-	if s != nil {
-		bc.SetDeletedBy(*s)
+func (bc *BlogsCreate) SetNillableDeletedBy(i *int64) *BlogsCreate {
+	if i != nil {
+		bc.SetDeletedBy(*i)
 	}
 	return bc
 }
@@ -160,12 +146,6 @@ func (bc *BlogsCreate) SetTags(s []string) *BlogsCreate {
 // SetCover sets the "cover" field.
 func (bc *BlogsCreate) SetCover(s string) *BlogsCreate {
 	bc.mutation.SetCover(s)
-	return bc
-}
-
-// SetContent sets the "content" field.
-func (bc *BlogsCreate) SetContent(s string) *BlogsCreate {
-	bc.mutation.SetContent(s)
 	return bc
 }
 
@@ -228,10 +208,6 @@ func (bc *BlogsCreate) defaults() error {
 		v := blogs.DefaultUpdatedBy
 		bc.mutation.SetUpdatedBy(v)
 	}
-	if _, ok := bc.mutation.IsDeleted(); !ok {
-		v := blogs.DefaultIsDeleted
-		bc.mutation.SetIsDeleted(v)
-	}
 	if _, ok := bc.mutation.DeletedAt(); !ok {
 		v := blogs.DefaultDeletedAt
 		bc.mutation.SetDeletedAt(v)
@@ -261,9 +237,6 @@ func (bc *BlogsCreate) check() error {
 	if _, ok := bc.mutation.UpdatedBy(); !ok {
 		return &ValidationError{Name: "updated_by", err: errors.New(`ent: missing required field "Blogs.updated_by"`)}
 	}
-	if _, ok := bc.mutation.IsDeleted(); !ok {
-		return &ValidationError{Name: "is_deleted", err: errors.New(`ent: missing required field "Blogs.is_deleted"`)}
-	}
 	if _, ok := bc.mutation.DeletedAt(); !ok {
 		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "Blogs.deleted_at"`)}
 	}
@@ -287,14 +260,6 @@ func (bc *BlogsCreate) check() error {
 	}
 	if _, ok := bc.mutation.Cover(); !ok {
 		return &ValidationError{Name: "cover", err: errors.New(`ent: missing required field "Blogs.cover"`)}
-	}
-	if _, ok := bc.mutation.Content(); !ok {
-		return &ValidationError{Name: "content", err: errors.New(`ent: missing required field "Blogs.content"`)}
-	}
-	if v, ok := bc.mutation.Content(); ok {
-		if err := blogs.ContentValidator(v); err != nil {
-			return &ValidationError{Name: "content", err: fmt.Errorf(`ent: validator failed for field "Blogs.content": %w`, err)}
-		}
 	}
 	if v, ok := bc.mutation.ID(); ok {
 		if err := blogs.IDValidator(v); err != nil {
@@ -339,7 +304,7 @@ func (bc *BlogsCreate) createSpec() (*Blogs, *sqlgraph.CreateSpec) {
 		_node.CreatedAt = value
 	}
 	if value, ok := bc.mutation.CreatedBy(); ok {
-		_spec.SetField(blogs.FieldCreatedBy, field.TypeString, value)
+		_spec.SetField(blogs.FieldCreatedBy, field.TypeInt64, value)
 		_node.CreatedBy = value
 	}
 	if value, ok := bc.mutation.UpdatedAt(); ok {
@@ -347,19 +312,15 @@ func (bc *BlogsCreate) createSpec() (*Blogs, *sqlgraph.CreateSpec) {
 		_node.UpdatedAt = value
 	}
 	if value, ok := bc.mutation.UpdatedBy(); ok {
-		_spec.SetField(blogs.FieldUpdatedBy, field.TypeString, value)
+		_spec.SetField(blogs.FieldUpdatedBy, field.TypeInt64, value)
 		_node.UpdatedBy = value
-	}
-	if value, ok := bc.mutation.IsDeleted(); ok {
-		_spec.SetField(blogs.FieldIsDeleted, field.TypeUint8, value)
-		_node.IsDeleted = value
 	}
 	if value, ok := bc.mutation.DeletedAt(); ok {
 		_spec.SetField(blogs.FieldDeletedAt, field.TypeInt64, value)
 		_node.DeletedAt = value
 	}
 	if value, ok := bc.mutation.DeletedBy(); ok {
-		_spec.SetField(blogs.FieldDeletedBy, field.TypeString, value)
+		_spec.SetField(blogs.FieldDeletedBy, field.TypeInt64, value)
 		_node.DeletedBy = value
 	}
 	if value, ok := bc.mutation.AccountID(); ok {
@@ -385,10 +346,6 @@ func (bc *BlogsCreate) createSpec() (*Blogs, *sqlgraph.CreateSpec) {
 	if value, ok := bc.mutation.Cover(); ok {
 		_spec.SetField(blogs.FieldCover, field.TypeString, value)
 		_node.Cover = value
-	}
-	if value, ok := bc.mutation.Content(); ok {
-		_spec.SetField(blogs.FieldContent, field.TypeString, value)
-		_node.Content = value
 	}
 	return _node, _spec
 }
@@ -461,7 +418,7 @@ func (u *BlogsUpsert) AddUpdatedAt(v int64) *BlogsUpsert {
 }
 
 // SetUpdatedBy sets the "updated_by" field.
-func (u *BlogsUpsert) SetUpdatedBy(v string) *BlogsUpsert {
+func (u *BlogsUpsert) SetUpdatedBy(v int64) *BlogsUpsert {
 	u.Set(blogs.FieldUpdatedBy, v)
 	return u
 }
@@ -472,21 +429,9 @@ func (u *BlogsUpsert) UpdateUpdatedBy() *BlogsUpsert {
 	return u
 }
 
-// SetIsDeleted sets the "is_deleted" field.
-func (u *BlogsUpsert) SetIsDeleted(v uint8) *BlogsUpsert {
-	u.Set(blogs.FieldIsDeleted, v)
-	return u
-}
-
-// UpdateIsDeleted sets the "is_deleted" field to the value that was provided on create.
-func (u *BlogsUpsert) UpdateIsDeleted() *BlogsUpsert {
-	u.SetExcluded(blogs.FieldIsDeleted)
-	return u
-}
-
-// AddIsDeleted adds v to the "is_deleted" field.
-func (u *BlogsUpsert) AddIsDeleted(v uint8) *BlogsUpsert {
-	u.Add(blogs.FieldIsDeleted, v)
+// AddUpdatedBy adds v to the "updated_by" field.
+func (u *BlogsUpsert) AddUpdatedBy(v int64) *BlogsUpsert {
+	u.Add(blogs.FieldUpdatedBy, v)
 	return u
 }
 
@@ -509,7 +454,7 @@ func (u *BlogsUpsert) AddDeletedAt(v int64) *BlogsUpsert {
 }
 
 // SetDeletedBy sets the "deleted_by" field.
-func (u *BlogsUpsert) SetDeletedBy(v string) *BlogsUpsert {
+func (u *BlogsUpsert) SetDeletedBy(v int64) *BlogsUpsert {
 	u.Set(blogs.FieldDeletedBy, v)
 	return u
 }
@@ -517,6 +462,12 @@ func (u *BlogsUpsert) SetDeletedBy(v string) *BlogsUpsert {
 // UpdateDeletedBy sets the "deleted_by" field to the value that was provided on create.
 func (u *BlogsUpsert) UpdateDeletedBy() *BlogsUpsert {
 	u.SetExcluded(blogs.FieldDeletedBy)
+	return u
+}
+
+// AddDeletedBy adds v to the "deleted_by" field.
+func (u *BlogsUpsert) AddDeletedBy(v int64) *BlogsUpsert {
+	u.Add(blogs.FieldDeletedBy, v)
 	return u
 }
 
@@ -604,18 +555,6 @@ func (u *BlogsUpsert) UpdateCover() *BlogsUpsert {
 	return u
 }
 
-// SetContent sets the "content" field.
-func (u *BlogsUpsert) SetContent(v string) *BlogsUpsert {
-	u.Set(blogs.FieldContent, v)
-	return u
-}
-
-// UpdateContent sets the "content" field to the value that was provided on create.
-func (u *BlogsUpsert) UpdateContent() *BlogsUpsert {
-	u.SetExcluded(blogs.FieldContent)
-	return u
-}
-
 // UpdateNewValues updates the mutable fields using the new values that were set on create except the ID field.
 // Using this option is equivalent to using:
 //
@@ -692,9 +631,16 @@ func (u *BlogsUpsertOne) UpdateUpdatedAt() *BlogsUpsertOne {
 }
 
 // SetUpdatedBy sets the "updated_by" field.
-func (u *BlogsUpsertOne) SetUpdatedBy(v string) *BlogsUpsertOne {
+func (u *BlogsUpsertOne) SetUpdatedBy(v int64) *BlogsUpsertOne {
 	return u.Update(func(s *BlogsUpsert) {
 		s.SetUpdatedBy(v)
+	})
+}
+
+// AddUpdatedBy adds v to the "updated_by" field.
+func (u *BlogsUpsertOne) AddUpdatedBy(v int64) *BlogsUpsertOne {
+	return u.Update(func(s *BlogsUpsert) {
+		s.AddUpdatedBy(v)
 	})
 }
 
@@ -702,27 +648,6 @@ func (u *BlogsUpsertOne) SetUpdatedBy(v string) *BlogsUpsertOne {
 func (u *BlogsUpsertOne) UpdateUpdatedBy() *BlogsUpsertOne {
 	return u.Update(func(s *BlogsUpsert) {
 		s.UpdateUpdatedBy()
-	})
-}
-
-// SetIsDeleted sets the "is_deleted" field.
-func (u *BlogsUpsertOne) SetIsDeleted(v uint8) *BlogsUpsertOne {
-	return u.Update(func(s *BlogsUpsert) {
-		s.SetIsDeleted(v)
-	})
-}
-
-// AddIsDeleted adds v to the "is_deleted" field.
-func (u *BlogsUpsertOne) AddIsDeleted(v uint8) *BlogsUpsertOne {
-	return u.Update(func(s *BlogsUpsert) {
-		s.AddIsDeleted(v)
-	})
-}
-
-// UpdateIsDeleted sets the "is_deleted" field to the value that was provided on create.
-func (u *BlogsUpsertOne) UpdateIsDeleted() *BlogsUpsertOne {
-	return u.Update(func(s *BlogsUpsert) {
-		s.UpdateIsDeleted()
 	})
 }
 
@@ -748,9 +673,16 @@ func (u *BlogsUpsertOne) UpdateDeletedAt() *BlogsUpsertOne {
 }
 
 // SetDeletedBy sets the "deleted_by" field.
-func (u *BlogsUpsertOne) SetDeletedBy(v string) *BlogsUpsertOne {
+func (u *BlogsUpsertOne) SetDeletedBy(v int64) *BlogsUpsertOne {
 	return u.Update(func(s *BlogsUpsert) {
 		s.SetDeletedBy(v)
+	})
+}
+
+// AddDeletedBy adds v to the "deleted_by" field.
+func (u *BlogsUpsertOne) AddDeletedBy(v int64) *BlogsUpsertOne {
+	return u.Update(func(s *BlogsUpsert) {
+		s.AddDeletedBy(v)
 	})
 }
 
@@ -856,20 +788,6 @@ func (u *BlogsUpsertOne) SetCover(v string) *BlogsUpsertOne {
 func (u *BlogsUpsertOne) UpdateCover() *BlogsUpsertOne {
 	return u.Update(func(s *BlogsUpsert) {
 		s.UpdateCover()
-	})
-}
-
-// SetContent sets the "content" field.
-func (u *BlogsUpsertOne) SetContent(v string) *BlogsUpsertOne {
-	return u.Update(func(s *BlogsUpsert) {
-		s.SetContent(v)
-	})
-}
-
-// UpdateContent sets the "content" field to the value that was provided on create.
-func (u *BlogsUpsertOne) UpdateContent() *BlogsUpsertOne {
-	return u.Update(func(s *BlogsUpsert) {
-		s.UpdateContent()
 	})
 }
 
@@ -1115,9 +1033,16 @@ func (u *BlogsUpsertBulk) UpdateUpdatedAt() *BlogsUpsertBulk {
 }
 
 // SetUpdatedBy sets the "updated_by" field.
-func (u *BlogsUpsertBulk) SetUpdatedBy(v string) *BlogsUpsertBulk {
+func (u *BlogsUpsertBulk) SetUpdatedBy(v int64) *BlogsUpsertBulk {
 	return u.Update(func(s *BlogsUpsert) {
 		s.SetUpdatedBy(v)
+	})
+}
+
+// AddUpdatedBy adds v to the "updated_by" field.
+func (u *BlogsUpsertBulk) AddUpdatedBy(v int64) *BlogsUpsertBulk {
+	return u.Update(func(s *BlogsUpsert) {
+		s.AddUpdatedBy(v)
 	})
 }
 
@@ -1125,27 +1050,6 @@ func (u *BlogsUpsertBulk) SetUpdatedBy(v string) *BlogsUpsertBulk {
 func (u *BlogsUpsertBulk) UpdateUpdatedBy() *BlogsUpsertBulk {
 	return u.Update(func(s *BlogsUpsert) {
 		s.UpdateUpdatedBy()
-	})
-}
-
-// SetIsDeleted sets the "is_deleted" field.
-func (u *BlogsUpsertBulk) SetIsDeleted(v uint8) *BlogsUpsertBulk {
-	return u.Update(func(s *BlogsUpsert) {
-		s.SetIsDeleted(v)
-	})
-}
-
-// AddIsDeleted adds v to the "is_deleted" field.
-func (u *BlogsUpsertBulk) AddIsDeleted(v uint8) *BlogsUpsertBulk {
-	return u.Update(func(s *BlogsUpsert) {
-		s.AddIsDeleted(v)
-	})
-}
-
-// UpdateIsDeleted sets the "is_deleted" field to the value that was provided on create.
-func (u *BlogsUpsertBulk) UpdateIsDeleted() *BlogsUpsertBulk {
-	return u.Update(func(s *BlogsUpsert) {
-		s.UpdateIsDeleted()
 	})
 }
 
@@ -1171,9 +1075,16 @@ func (u *BlogsUpsertBulk) UpdateDeletedAt() *BlogsUpsertBulk {
 }
 
 // SetDeletedBy sets the "deleted_by" field.
-func (u *BlogsUpsertBulk) SetDeletedBy(v string) *BlogsUpsertBulk {
+func (u *BlogsUpsertBulk) SetDeletedBy(v int64) *BlogsUpsertBulk {
 	return u.Update(func(s *BlogsUpsert) {
 		s.SetDeletedBy(v)
+	})
+}
+
+// AddDeletedBy adds v to the "deleted_by" field.
+func (u *BlogsUpsertBulk) AddDeletedBy(v int64) *BlogsUpsertBulk {
+	return u.Update(func(s *BlogsUpsert) {
+		s.AddDeletedBy(v)
 	})
 }
 
@@ -1279,20 +1190,6 @@ func (u *BlogsUpsertBulk) SetCover(v string) *BlogsUpsertBulk {
 func (u *BlogsUpsertBulk) UpdateCover() *BlogsUpsertBulk {
 	return u.Update(func(s *BlogsUpsert) {
 		s.UpdateCover()
-	})
-}
-
-// SetContent sets the "content" field.
-func (u *BlogsUpsertBulk) SetContent(v string) *BlogsUpsertBulk {
-	return u.Update(func(s *BlogsUpsert) {
-		s.SetContent(v)
-	})
-}
-
-// UpdateContent sets the "content" field to the value that was provided on create.
-func (u *BlogsUpsertBulk) UpdateContent() *BlogsUpsertBulk {
-	return u.Update(func(s *BlogsUpsert) {
-		s.UpdateContent()
 	})
 }
 

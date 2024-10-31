@@ -41,37 +41,23 @@ func (au *AccountUpdate) AddUpdatedAt(i int64) *AccountUpdate {
 }
 
 // SetUpdatedBy sets the "updated_by" field.
-func (au *AccountUpdate) SetUpdatedBy(s string) *AccountUpdate {
-	au.mutation.SetUpdatedBy(s)
+func (au *AccountUpdate) SetUpdatedBy(i int64) *AccountUpdate {
+	au.mutation.ResetUpdatedBy()
+	au.mutation.SetUpdatedBy(i)
 	return au
 }
 
 // SetNillableUpdatedBy sets the "updated_by" field if the given value is not nil.
-func (au *AccountUpdate) SetNillableUpdatedBy(s *string) *AccountUpdate {
-	if s != nil {
-		au.SetUpdatedBy(*s)
+func (au *AccountUpdate) SetNillableUpdatedBy(i *int64) *AccountUpdate {
+	if i != nil {
+		au.SetUpdatedBy(*i)
 	}
 	return au
 }
 
-// SetIsDeleted sets the "is_deleted" field.
-func (au *AccountUpdate) SetIsDeleted(u uint8) *AccountUpdate {
-	au.mutation.ResetIsDeleted()
-	au.mutation.SetIsDeleted(u)
-	return au
-}
-
-// SetNillableIsDeleted sets the "is_deleted" field if the given value is not nil.
-func (au *AccountUpdate) SetNillableIsDeleted(u *uint8) *AccountUpdate {
-	if u != nil {
-		au.SetIsDeleted(*u)
-	}
-	return au
-}
-
-// AddIsDeleted adds u to the "is_deleted" field.
-func (au *AccountUpdate) AddIsDeleted(u int8) *AccountUpdate {
-	au.mutation.AddIsDeleted(u)
+// AddUpdatedBy adds i to the "updated_by" field.
+func (au *AccountUpdate) AddUpdatedBy(i int64) *AccountUpdate {
+	au.mutation.AddUpdatedBy(i)
 	return au
 }
 
@@ -97,16 +83,23 @@ func (au *AccountUpdate) AddDeletedAt(i int64) *AccountUpdate {
 }
 
 // SetDeletedBy sets the "deleted_by" field.
-func (au *AccountUpdate) SetDeletedBy(s string) *AccountUpdate {
-	au.mutation.SetDeletedBy(s)
+func (au *AccountUpdate) SetDeletedBy(i int64) *AccountUpdate {
+	au.mutation.ResetDeletedBy()
+	au.mutation.SetDeletedBy(i)
 	return au
 }
 
 // SetNillableDeletedBy sets the "deleted_by" field if the given value is not nil.
-func (au *AccountUpdate) SetNillableDeletedBy(s *string) *AccountUpdate {
-	if s != nil {
-		au.SetDeletedBy(*s)
+func (au *AccountUpdate) SetNillableDeletedBy(i *int64) *AccountUpdate {
+	if i != nil {
+		au.SetDeletedBy(*i)
 	}
+	return au
+}
+
+// AddDeletedBy adds i to the "deleted_by" field.
+func (au *AccountUpdate) AddDeletedBy(i int64) *AccountUpdate {
+	au.mutation.AddDeletedBy(i)
 	return au
 }
 
@@ -254,13 +247,10 @@ func (au *AccountUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.AddField(account.FieldUpdatedAt, field.TypeInt64, value)
 	}
 	if value, ok := au.mutation.UpdatedBy(); ok {
-		_spec.SetField(account.FieldUpdatedBy, field.TypeString, value)
+		_spec.SetField(account.FieldUpdatedBy, field.TypeInt64, value)
 	}
-	if value, ok := au.mutation.IsDeleted(); ok {
-		_spec.SetField(account.FieldIsDeleted, field.TypeUint8, value)
-	}
-	if value, ok := au.mutation.AddedIsDeleted(); ok {
-		_spec.AddField(account.FieldIsDeleted, field.TypeUint8, value)
+	if value, ok := au.mutation.AddedUpdatedBy(); ok {
+		_spec.AddField(account.FieldUpdatedBy, field.TypeInt64, value)
 	}
 	if value, ok := au.mutation.DeletedAt(); ok {
 		_spec.SetField(account.FieldDeletedAt, field.TypeInt64, value)
@@ -269,7 +259,10 @@ func (au *AccountUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.AddField(account.FieldDeletedAt, field.TypeInt64, value)
 	}
 	if value, ok := au.mutation.DeletedBy(); ok {
-		_spec.SetField(account.FieldDeletedBy, field.TypeString, value)
+		_spec.SetField(account.FieldDeletedBy, field.TypeInt64, value)
+	}
+	if value, ok := au.mutation.AddedDeletedBy(); ok {
+		_spec.AddField(account.FieldDeletedBy, field.TypeInt64, value)
 	}
 	if value, ok := au.mutation.Account(); ok {
 		_spec.SetField(account.FieldAccount, field.TypeString, value)
@@ -320,37 +313,23 @@ func (auo *AccountUpdateOne) AddUpdatedAt(i int64) *AccountUpdateOne {
 }
 
 // SetUpdatedBy sets the "updated_by" field.
-func (auo *AccountUpdateOne) SetUpdatedBy(s string) *AccountUpdateOne {
-	auo.mutation.SetUpdatedBy(s)
+func (auo *AccountUpdateOne) SetUpdatedBy(i int64) *AccountUpdateOne {
+	auo.mutation.ResetUpdatedBy()
+	auo.mutation.SetUpdatedBy(i)
 	return auo
 }
 
 // SetNillableUpdatedBy sets the "updated_by" field if the given value is not nil.
-func (auo *AccountUpdateOne) SetNillableUpdatedBy(s *string) *AccountUpdateOne {
-	if s != nil {
-		auo.SetUpdatedBy(*s)
+func (auo *AccountUpdateOne) SetNillableUpdatedBy(i *int64) *AccountUpdateOne {
+	if i != nil {
+		auo.SetUpdatedBy(*i)
 	}
 	return auo
 }
 
-// SetIsDeleted sets the "is_deleted" field.
-func (auo *AccountUpdateOne) SetIsDeleted(u uint8) *AccountUpdateOne {
-	auo.mutation.ResetIsDeleted()
-	auo.mutation.SetIsDeleted(u)
-	return auo
-}
-
-// SetNillableIsDeleted sets the "is_deleted" field if the given value is not nil.
-func (auo *AccountUpdateOne) SetNillableIsDeleted(u *uint8) *AccountUpdateOne {
-	if u != nil {
-		auo.SetIsDeleted(*u)
-	}
-	return auo
-}
-
-// AddIsDeleted adds u to the "is_deleted" field.
-func (auo *AccountUpdateOne) AddIsDeleted(u int8) *AccountUpdateOne {
-	auo.mutation.AddIsDeleted(u)
+// AddUpdatedBy adds i to the "updated_by" field.
+func (auo *AccountUpdateOne) AddUpdatedBy(i int64) *AccountUpdateOne {
+	auo.mutation.AddUpdatedBy(i)
 	return auo
 }
 
@@ -376,16 +355,23 @@ func (auo *AccountUpdateOne) AddDeletedAt(i int64) *AccountUpdateOne {
 }
 
 // SetDeletedBy sets the "deleted_by" field.
-func (auo *AccountUpdateOne) SetDeletedBy(s string) *AccountUpdateOne {
-	auo.mutation.SetDeletedBy(s)
+func (auo *AccountUpdateOne) SetDeletedBy(i int64) *AccountUpdateOne {
+	auo.mutation.ResetDeletedBy()
+	auo.mutation.SetDeletedBy(i)
 	return auo
 }
 
 // SetNillableDeletedBy sets the "deleted_by" field if the given value is not nil.
-func (auo *AccountUpdateOne) SetNillableDeletedBy(s *string) *AccountUpdateOne {
-	if s != nil {
-		auo.SetDeletedBy(*s)
+func (auo *AccountUpdateOne) SetNillableDeletedBy(i *int64) *AccountUpdateOne {
+	if i != nil {
+		auo.SetDeletedBy(*i)
 	}
+	return auo
+}
+
+// AddDeletedBy adds i to the "deleted_by" field.
+func (auo *AccountUpdateOne) AddDeletedBy(i int64) *AccountUpdateOne {
+	auo.mutation.AddDeletedBy(i)
 	return auo
 }
 
@@ -563,13 +549,10 @@ func (auo *AccountUpdateOne) sqlSave(ctx context.Context) (_node *Account, err e
 		_spec.AddField(account.FieldUpdatedAt, field.TypeInt64, value)
 	}
 	if value, ok := auo.mutation.UpdatedBy(); ok {
-		_spec.SetField(account.FieldUpdatedBy, field.TypeString, value)
+		_spec.SetField(account.FieldUpdatedBy, field.TypeInt64, value)
 	}
-	if value, ok := auo.mutation.IsDeleted(); ok {
-		_spec.SetField(account.FieldIsDeleted, field.TypeUint8, value)
-	}
-	if value, ok := auo.mutation.AddedIsDeleted(); ok {
-		_spec.AddField(account.FieldIsDeleted, field.TypeUint8, value)
+	if value, ok := auo.mutation.AddedUpdatedBy(); ok {
+		_spec.AddField(account.FieldUpdatedBy, field.TypeInt64, value)
 	}
 	if value, ok := auo.mutation.DeletedAt(); ok {
 		_spec.SetField(account.FieldDeletedAt, field.TypeInt64, value)
@@ -578,7 +561,10 @@ func (auo *AccountUpdateOne) sqlSave(ctx context.Context) (_node *Account, err e
 		_spec.AddField(account.FieldDeletedAt, field.TypeInt64, value)
 	}
 	if value, ok := auo.mutation.DeletedBy(); ok {
-		_spec.SetField(account.FieldDeletedBy, field.TypeString, value)
+		_spec.SetField(account.FieldDeletedBy, field.TypeInt64, value)
+	}
+	if value, ok := auo.mutation.AddedDeletedBy(); ok {
+		_spec.AddField(account.FieldDeletedBy, field.TypeInt64, value)
 	}
 	if value, ok := auo.mutation.Account(); ok {
 		_spec.SetField(account.FieldAccount, field.TypeString, value)

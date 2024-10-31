@@ -20,8 +20,6 @@ const (
 	FieldUpdatedAt = "updated_at"
 	// FieldUpdatedBy holds the string denoting the updated_by field in the database.
 	FieldUpdatedBy = "updated_by"
-	// FieldIsDeleted holds the string denoting the is_deleted field in the database.
-	FieldIsDeleted = "is_deleted"
 	// FieldDeletedAt holds the string denoting the deleted_at field in the database.
 	FieldDeletedAt = "deleted_at"
 	// FieldDeletedBy holds the string denoting the deleted_by field in the database.
@@ -38,8 +36,6 @@ const (
 	FieldTags = "tags"
 	// FieldCover holds the string denoting the cover field in the database.
 	FieldCover = "cover"
-	// FieldContent holds the string denoting the content field in the database.
-	FieldContent = "content"
 	// Table holds the table name of the blogs in the database.
 	Table = "blogs"
 )
@@ -51,7 +47,6 @@ var Columns = []string{
 	FieldCreatedBy,
 	FieldUpdatedAt,
 	FieldUpdatedBy,
-	FieldIsDeleted,
 	FieldDeletedAt,
 	FieldDeletedBy,
 	FieldAccountID,
@@ -60,7 +55,6 @@ var Columns = []string{
 	FieldIsHidden,
 	FieldTags,
 	FieldCover,
-	FieldContent,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -84,23 +78,19 @@ var (
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
 	DefaultCreatedAt int64
 	// DefaultCreatedBy holds the default value on creation for the "created_by" field.
-	DefaultCreatedBy string
+	DefaultCreatedBy int64
 	// DefaultUpdatedAt holds the default value on creation for the "updated_at" field.
 	DefaultUpdatedAt int64
 	// UpdateDefaultUpdatedAt holds the default value on update for the "updated_at" field.
 	UpdateDefaultUpdatedAt func() int64
 	// DefaultUpdatedBy holds the default value on creation for the "updated_by" field.
-	DefaultUpdatedBy string
-	// DefaultIsDeleted holds the default value on creation for the "is_deleted" field.
-	DefaultIsDeleted uint8
+	DefaultUpdatedBy int64
 	// DefaultDeletedAt holds the default value on creation for the "deleted_at" field.
 	DefaultDeletedAt int64
 	// DefaultDeletedBy holds the default value on creation for the "deleted_by" field.
-	DefaultDeletedBy string
+	DefaultDeletedBy int64
 	// DefaultIsHidden holds the default value on creation for the "is_hidden" field.
 	DefaultIsHidden int8
-	// ContentValidator is a validator for the "content" field. It is called by the builders before save.
-	ContentValidator func(string) error
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
 	IDValidator func(int) error
 )
@@ -131,11 +121,6 @@ func ByUpdatedAt(opts ...sql.OrderTermOption) OrderOption {
 // ByUpdatedBy orders the results by the updated_by field.
 func ByUpdatedBy(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldUpdatedBy, opts...).ToFunc()
-}
-
-// ByIsDeleted orders the results by the is_deleted field.
-func ByIsDeleted(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldIsDeleted, opts...).ToFunc()
 }
 
 // ByDeletedAt orders the results by the deleted_at field.
@@ -171,9 +156,4 @@ func ByIsHidden(opts ...sql.OrderTermOption) OrderOption {
 // ByCover orders the results by the cover field.
 func ByCover(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldCover, opts...).ToFunc()
-}
-
-// ByContent orders the results by the content field.
-func ByContent(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldContent, opts...).ToFunc()
 }

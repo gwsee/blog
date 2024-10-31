@@ -16,9 +16,9 @@ type Time struct {
 func (Time) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int64("created_at").Immutable().Default(constx.Now().Unix()).Comment("创建时间").Immutable(),
-		field.String("created_by").Default("").Comment("创建人").Immutable(),
+		field.Int64("created_by").Default(0).Comment("创建人").Immutable(),
 		field.Int64("updated_at").Default(constx.Now().Unix()).UpdateDefault(constx.Now().Unix).Comment("更新时间"),
-		field.String("updated_by").Default("").Comment("更新人"),
+		field.Int64("updated_by").Default(0).Comment("更新人"),
 	}
 }
 
@@ -29,18 +29,17 @@ func (d Time) Hooks() []ent.Hook {
 			func(next ent.Mutator) ent.Mutator {
 				return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
 					mx, ok := m.(interface {
-						CreatedBy() (r string, exists bool)
-						SetCreatedBy(s string)
-						UpdatedBy() (r string, exists bool)
-						SetUpdatedBy(s string)
-						SetCompanyID(i int)
+						CreatedBy() (r int64, exists bool)
+						SetCreatedBy(s int64)
+						UpdatedBy() (r int64, exists bool)
+						SetUpdatedBy(s int64)
 					})
 					if ok {
 						if ex, _ := mx.CreatedBy(); ex == constx.EmptyUser {
-							mx.SetCreatedBy(constx.DefaultUser.Default(ctx).Name)
+							mx.SetCreatedBy(constx.DefaultUser.Default(ctx).Id)
 						}
 						if ex, _ := mx.UpdatedBy(); ex == constx.EmptyUser {
-							mx.SetUpdatedBy(constx.DefaultUser.Default(ctx).Name)
+							mx.SetUpdatedBy(constx.DefaultUser.Default(ctx).Id)
 						}
 					}
 					return next.Mutate(ctx, m)
@@ -52,12 +51,12 @@ func (d Time) Hooks() []ent.Hook {
 			func(next ent.Mutator) ent.Mutator {
 				return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
 					mx, ok := m.(interface {
-						UpdatedBy() (r string, exists bool)
-						SetUpdatedBy(s string)
+						UpdatedBy() (r int64, exists bool)
+						SetUpdatedBy(s int64)
 					})
 					if ok {
 						if ex, _ := mx.UpdatedBy(); ex == constx.EmptyUser {
-							mx.SetUpdatedBy(constx.DefaultUser.Default(ctx).Name)
+							mx.SetUpdatedBy(constx.DefaultUser.Default(ctx).Id)
 						}
 					}
 					return next.Mutate(ctx, m)

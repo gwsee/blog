@@ -41,37 +41,23 @@ func (bcu *BlogsCommentUpdate) AddUpdatedAt(i int64) *BlogsCommentUpdate {
 }
 
 // SetUpdatedBy sets the "updated_by" field.
-func (bcu *BlogsCommentUpdate) SetUpdatedBy(s string) *BlogsCommentUpdate {
-	bcu.mutation.SetUpdatedBy(s)
+func (bcu *BlogsCommentUpdate) SetUpdatedBy(i int64) *BlogsCommentUpdate {
+	bcu.mutation.ResetUpdatedBy()
+	bcu.mutation.SetUpdatedBy(i)
 	return bcu
 }
 
 // SetNillableUpdatedBy sets the "updated_by" field if the given value is not nil.
-func (bcu *BlogsCommentUpdate) SetNillableUpdatedBy(s *string) *BlogsCommentUpdate {
-	if s != nil {
-		bcu.SetUpdatedBy(*s)
+func (bcu *BlogsCommentUpdate) SetNillableUpdatedBy(i *int64) *BlogsCommentUpdate {
+	if i != nil {
+		bcu.SetUpdatedBy(*i)
 	}
 	return bcu
 }
 
-// SetIsDeleted sets the "is_deleted" field.
-func (bcu *BlogsCommentUpdate) SetIsDeleted(u uint8) *BlogsCommentUpdate {
-	bcu.mutation.ResetIsDeleted()
-	bcu.mutation.SetIsDeleted(u)
-	return bcu
-}
-
-// SetNillableIsDeleted sets the "is_deleted" field if the given value is not nil.
-func (bcu *BlogsCommentUpdate) SetNillableIsDeleted(u *uint8) *BlogsCommentUpdate {
-	if u != nil {
-		bcu.SetIsDeleted(*u)
-	}
-	return bcu
-}
-
-// AddIsDeleted adds u to the "is_deleted" field.
-func (bcu *BlogsCommentUpdate) AddIsDeleted(u int8) *BlogsCommentUpdate {
-	bcu.mutation.AddIsDeleted(u)
+// AddUpdatedBy adds i to the "updated_by" field.
+func (bcu *BlogsCommentUpdate) AddUpdatedBy(i int64) *BlogsCommentUpdate {
+	bcu.mutation.AddUpdatedBy(i)
 	return bcu
 }
 
@@ -97,16 +83,23 @@ func (bcu *BlogsCommentUpdate) AddDeletedAt(i int64) *BlogsCommentUpdate {
 }
 
 // SetDeletedBy sets the "deleted_by" field.
-func (bcu *BlogsCommentUpdate) SetDeletedBy(s string) *BlogsCommentUpdate {
-	bcu.mutation.SetDeletedBy(s)
+func (bcu *BlogsCommentUpdate) SetDeletedBy(i int64) *BlogsCommentUpdate {
+	bcu.mutation.ResetDeletedBy()
+	bcu.mutation.SetDeletedBy(i)
 	return bcu
 }
 
 // SetNillableDeletedBy sets the "deleted_by" field if the given value is not nil.
-func (bcu *BlogsCommentUpdate) SetNillableDeletedBy(s *string) *BlogsCommentUpdate {
-	if s != nil {
-		bcu.SetDeletedBy(*s)
+func (bcu *BlogsCommentUpdate) SetNillableDeletedBy(i *int64) *BlogsCommentUpdate {
+	if i != nil {
+		bcu.SetDeletedBy(*i)
 	}
+	return bcu
+}
+
+// AddDeletedBy adds i to the "deleted_by" field.
+func (bcu *BlogsCommentUpdate) AddDeletedBy(i int64) *BlogsCommentUpdate {
+	bcu.mutation.AddDeletedBy(i)
 	return bcu
 }
 
@@ -352,13 +345,10 @@ func (bcu *BlogsCommentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.AddField(blogscomment.FieldUpdatedAt, field.TypeInt64, value)
 	}
 	if value, ok := bcu.mutation.UpdatedBy(); ok {
-		_spec.SetField(blogscomment.FieldUpdatedBy, field.TypeString, value)
+		_spec.SetField(blogscomment.FieldUpdatedBy, field.TypeInt64, value)
 	}
-	if value, ok := bcu.mutation.IsDeleted(); ok {
-		_spec.SetField(blogscomment.FieldIsDeleted, field.TypeUint8, value)
-	}
-	if value, ok := bcu.mutation.AddedIsDeleted(); ok {
-		_spec.AddField(blogscomment.FieldIsDeleted, field.TypeUint8, value)
+	if value, ok := bcu.mutation.AddedUpdatedBy(); ok {
+		_spec.AddField(blogscomment.FieldUpdatedBy, field.TypeInt64, value)
 	}
 	if value, ok := bcu.mutation.DeletedAt(); ok {
 		_spec.SetField(blogscomment.FieldDeletedAt, field.TypeInt64, value)
@@ -367,7 +357,10 @@ func (bcu *BlogsCommentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.AddField(blogscomment.FieldDeletedAt, field.TypeInt64, value)
 	}
 	if value, ok := bcu.mutation.DeletedBy(); ok {
-		_spec.SetField(blogscomment.FieldDeletedBy, field.TypeString, value)
+		_spec.SetField(blogscomment.FieldDeletedBy, field.TypeInt64, value)
+	}
+	if value, ok := bcu.mutation.AddedDeletedBy(); ok {
+		_spec.AddField(blogscomment.FieldDeletedBy, field.TypeInt64, value)
 	}
 	if value, ok := bcu.mutation.AccountID(); ok {
 		_spec.SetField(blogscomment.FieldAccountID, field.TypeInt, value)
@@ -448,37 +441,23 @@ func (bcuo *BlogsCommentUpdateOne) AddUpdatedAt(i int64) *BlogsCommentUpdateOne 
 }
 
 // SetUpdatedBy sets the "updated_by" field.
-func (bcuo *BlogsCommentUpdateOne) SetUpdatedBy(s string) *BlogsCommentUpdateOne {
-	bcuo.mutation.SetUpdatedBy(s)
+func (bcuo *BlogsCommentUpdateOne) SetUpdatedBy(i int64) *BlogsCommentUpdateOne {
+	bcuo.mutation.ResetUpdatedBy()
+	bcuo.mutation.SetUpdatedBy(i)
 	return bcuo
 }
 
 // SetNillableUpdatedBy sets the "updated_by" field if the given value is not nil.
-func (bcuo *BlogsCommentUpdateOne) SetNillableUpdatedBy(s *string) *BlogsCommentUpdateOne {
-	if s != nil {
-		bcuo.SetUpdatedBy(*s)
+func (bcuo *BlogsCommentUpdateOne) SetNillableUpdatedBy(i *int64) *BlogsCommentUpdateOne {
+	if i != nil {
+		bcuo.SetUpdatedBy(*i)
 	}
 	return bcuo
 }
 
-// SetIsDeleted sets the "is_deleted" field.
-func (bcuo *BlogsCommentUpdateOne) SetIsDeleted(u uint8) *BlogsCommentUpdateOne {
-	bcuo.mutation.ResetIsDeleted()
-	bcuo.mutation.SetIsDeleted(u)
-	return bcuo
-}
-
-// SetNillableIsDeleted sets the "is_deleted" field if the given value is not nil.
-func (bcuo *BlogsCommentUpdateOne) SetNillableIsDeleted(u *uint8) *BlogsCommentUpdateOne {
-	if u != nil {
-		bcuo.SetIsDeleted(*u)
-	}
-	return bcuo
-}
-
-// AddIsDeleted adds u to the "is_deleted" field.
-func (bcuo *BlogsCommentUpdateOne) AddIsDeleted(u int8) *BlogsCommentUpdateOne {
-	bcuo.mutation.AddIsDeleted(u)
+// AddUpdatedBy adds i to the "updated_by" field.
+func (bcuo *BlogsCommentUpdateOne) AddUpdatedBy(i int64) *BlogsCommentUpdateOne {
+	bcuo.mutation.AddUpdatedBy(i)
 	return bcuo
 }
 
@@ -504,16 +483,23 @@ func (bcuo *BlogsCommentUpdateOne) AddDeletedAt(i int64) *BlogsCommentUpdateOne 
 }
 
 // SetDeletedBy sets the "deleted_by" field.
-func (bcuo *BlogsCommentUpdateOne) SetDeletedBy(s string) *BlogsCommentUpdateOne {
-	bcuo.mutation.SetDeletedBy(s)
+func (bcuo *BlogsCommentUpdateOne) SetDeletedBy(i int64) *BlogsCommentUpdateOne {
+	bcuo.mutation.ResetDeletedBy()
+	bcuo.mutation.SetDeletedBy(i)
 	return bcuo
 }
 
 // SetNillableDeletedBy sets the "deleted_by" field if the given value is not nil.
-func (bcuo *BlogsCommentUpdateOne) SetNillableDeletedBy(s *string) *BlogsCommentUpdateOne {
-	if s != nil {
-		bcuo.SetDeletedBy(*s)
+func (bcuo *BlogsCommentUpdateOne) SetNillableDeletedBy(i *int64) *BlogsCommentUpdateOne {
+	if i != nil {
+		bcuo.SetDeletedBy(*i)
 	}
+	return bcuo
+}
+
+// AddDeletedBy adds i to the "deleted_by" field.
+func (bcuo *BlogsCommentUpdateOne) AddDeletedBy(i int64) *BlogsCommentUpdateOne {
+	bcuo.mutation.AddDeletedBy(i)
 	return bcuo
 }
 
@@ -789,13 +775,10 @@ func (bcuo *BlogsCommentUpdateOne) sqlSave(ctx context.Context) (_node *BlogsCom
 		_spec.AddField(blogscomment.FieldUpdatedAt, field.TypeInt64, value)
 	}
 	if value, ok := bcuo.mutation.UpdatedBy(); ok {
-		_spec.SetField(blogscomment.FieldUpdatedBy, field.TypeString, value)
+		_spec.SetField(blogscomment.FieldUpdatedBy, field.TypeInt64, value)
 	}
-	if value, ok := bcuo.mutation.IsDeleted(); ok {
-		_spec.SetField(blogscomment.FieldIsDeleted, field.TypeUint8, value)
-	}
-	if value, ok := bcuo.mutation.AddedIsDeleted(); ok {
-		_spec.AddField(blogscomment.FieldIsDeleted, field.TypeUint8, value)
+	if value, ok := bcuo.mutation.AddedUpdatedBy(); ok {
+		_spec.AddField(blogscomment.FieldUpdatedBy, field.TypeInt64, value)
 	}
 	if value, ok := bcuo.mutation.DeletedAt(); ok {
 		_spec.SetField(blogscomment.FieldDeletedAt, field.TypeInt64, value)
@@ -804,7 +787,10 @@ func (bcuo *BlogsCommentUpdateOne) sqlSave(ctx context.Context) (_node *BlogsCom
 		_spec.AddField(blogscomment.FieldDeletedAt, field.TypeInt64, value)
 	}
 	if value, ok := bcuo.mutation.DeletedBy(); ok {
-		_spec.SetField(blogscomment.FieldDeletedBy, field.TypeString, value)
+		_spec.SetField(blogscomment.FieldDeletedBy, field.TypeInt64, value)
+	}
+	if value, ok := bcuo.mutation.AddedDeletedBy(); ok {
+		_spec.AddField(blogscomment.FieldDeletedBy, field.TypeInt64, value)
 	}
 	if value, ok := bcuo.mutation.AccountID(); ok {
 		_spec.SetField(blogscomment.FieldAccountID, field.TypeInt, value)

@@ -36,15 +36,15 @@ func (ac *AccountCreate) SetNillableCreatedAt(i *int64) *AccountCreate {
 }
 
 // SetCreatedBy sets the "created_by" field.
-func (ac *AccountCreate) SetCreatedBy(s string) *AccountCreate {
-	ac.mutation.SetCreatedBy(s)
+func (ac *AccountCreate) SetCreatedBy(i int64) *AccountCreate {
+	ac.mutation.SetCreatedBy(i)
 	return ac
 }
 
 // SetNillableCreatedBy sets the "created_by" field if the given value is not nil.
-func (ac *AccountCreate) SetNillableCreatedBy(s *string) *AccountCreate {
-	if s != nil {
-		ac.SetCreatedBy(*s)
+func (ac *AccountCreate) SetNillableCreatedBy(i *int64) *AccountCreate {
+	if i != nil {
+		ac.SetCreatedBy(*i)
 	}
 	return ac
 }
@@ -64,29 +64,15 @@ func (ac *AccountCreate) SetNillableUpdatedAt(i *int64) *AccountCreate {
 }
 
 // SetUpdatedBy sets the "updated_by" field.
-func (ac *AccountCreate) SetUpdatedBy(s string) *AccountCreate {
-	ac.mutation.SetUpdatedBy(s)
+func (ac *AccountCreate) SetUpdatedBy(i int64) *AccountCreate {
+	ac.mutation.SetUpdatedBy(i)
 	return ac
 }
 
 // SetNillableUpdatedBy sets the "updated_by" field if the given value is not nil.
-func (ac *AccountCreate) SetNillableUpdatedBy(s *string) *AccountCreate {
-	if s != nil {
-		ac.SetUpdatedBy(*s)
-	}
-	return ac
-}
-
-// SetIsDeleted sets the "is_deleted" field.
-func (ac *AccountCreate) SetIsDeleted(u uint8) *AccountCreate {
-	ac.mutation.SetIsDeleted(u)
-	return ac
-}
-
-// SetNillableIsDeleted sets the "is_deleted" field if the given value is not nil.
-func (ac *AccountCreate) SetNillableIsDeleted(u *uint8) *AccountCreate {
-	if u != nil {
-		ac.SetIsDeleted(*u)
+func (ac *AccountCreate) SetNillableUpdatedBy(i *int64) *AccountCreate {
+	if i != nil {
+		ac.SetUpdatedBy(*i)
 	}
 	return ac
 }
@@ -106,15 +92,15 @@ func (ac *AccountCreate) SetNillableDeletedAt(i *int64) *AccountCreate {
 }
 
 // SetDeletedBy sets the "deleted_by" field.
-func (ac *AccountCreate) SetDeletedBy(s string) *AccountCreate {
-	ac.mutation.SetDeletedBy(s)
+func (ac *AccountCreate) SetDeletedBy(i int64) *AccountCreate {
+	ac.mutation.SetDeletedBy(i)
 	return ac
 }
 
 // SetNillableDeletedBy sets the "deleted_by" field if the given value is not nil.
-func (ac *AccountCreate) SetNillableDeletedBy(s *string) *AccountCreate {
-	if s != nil {
-		ac.SetDeletedBy(*s)
+func (ac *AccountCreate) SetNillableDeletedBy(i *int64) *AccountCreate {
+	if i != nil {
+		ac.SetDeletedBy(*i)
 	}
 	return ac
 }
@@ -218,10 +204,6 @@ func (ac *AccountCreate) defaults() error {
 		v := account.DefaultUpdatedBy
 		ac.mutation.SetUpdatedBy(v)
 	}
-	if _, ok := ac.mutation.IsDeleted(); !ok {
-		v := account.DefaultIsDeleted
-		ac.mutation.SetIsDeleted(v)
-	}
 	if _, ok := ac.mutation.DeletedAt(); !ok {
 		v := account.DefaultDeletedAt
 		ac.mutation.SetDeletedAt(v)
@@ -254,9 +236,6 @@ func (ac *AccountCreate) check() error {
 	}
 	if _, ok := ac.mutation.UpdatedBy(); !ok {
 		return &ValidationError{Name: "updated_by", err: errors.New(`ent: missing required field "Account.updated_by"`)}
-	}
-	if _, ok := ac.mutation.IsDeleted(); !ok {
-		return &ValidationError{Name: "is_deleted", err: errors.New(`ent: missing required field "Account.is_deleted"`)}
 	}
 	if _, ok := ac.mutation.DeletedAt(); !ok {
 		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "Account.deleted_at"`)}
@@ -329,7 +308,7 @@ func (ac *AccountCreate) createSpec() (*Account, *sqlgraph.CreateSpec) {
 		_node.CreatedAt = value
 	}
 	if value, ok := ac.mutation.CreatedBy(); ok {
-		_spec.SetField(account.FieldCreatedBy, field.TypeString, value)
+		_spec.SetField(account.FieldCreatedBy, field.TypeInt64, value)
 		_node.CreatedBy = value
 	}
 	if value, ok := ac.mutation.UpdatedAt(); ok {
@@ -337,19 +316,15 @@ func (ac *AccountCreate) createSpec() (*Account, *sqlgraph.CreateSpec) {
 		_node.UpdatedAt = value
 	}
 	if value, ok := ac.mutation.UpdatedBy(); ok {
-		_spec.SetField(account.FieldUpdatedBy, field.TypeString, value)
+		_spec.SetField(account.FieldUpdatedBy, field.TypeInt64, value)
 		_node.UpdatedBy = value
-	}
-	if value, ok := ac.mutation.IsDeleted(); ok {
-		_spec.SetField(account.FieldIsDeleted, field.TypeUint8, value)
-		_node.IsDeleted = value
 	}
 	if value, ok := ac.mutation.DeletedAt(); ok {
 		_spec.SetField(account.FieldDeletedAt, field.TypeInt64, value)
 		_node.DeletedAt = value
 	}
 	if value, ok := ac.mutation.DeletedBy(); ok {
-		_spec.SetField(account.FieldDeletedBy, field.TypeString, value)
+		_spec.SetField(account.FieldDeletedBy, field.TypeInt64, value)
 		_node.DeletedBy = value
 	}
 	if value, ok := ac.mutation.Account(); ok {
@@ -439,7 +414,7 @@ func (u *AccountUpsert) AddUpdatedAt(v int64) *AccountUpsert {
 }
 
 // SetUpdatedBy sets the "updated_by" field.
-func (u *AccountUpsert) SetUpdatedBy(v string) *AccountUpsert {
+func (u *AccountUpsert) SetUpdatedBy(v int64) *AccountUpsert {
 	u.Set(account.FieldUpdatedBy, v)
 	return u
 }
@@ -450,21 +425,9 @@ func (u *AccountUpsert) UpdateUpdatedBy() *AccountUpsert {
 	return u
 }
 
-// SetIsDeleted sets the "is_deleted" field.
-func (u *AccountUpsert) SetIsDeleted(v uint8) *AccountUpsert {
-	u.Set(account.FieldIsDeleted, v)
-	return u
-}
-
-// UpdateIsDeleted sets the "is_deleted" field to the value that was provided on create.
-func (u *AccountUpsert) UpdateIsDeleted() *AccountUpsert {
-	u.SetExcluded(account.FieldIsDeleted)
-	return u
-}
-
-// AddIsDeleted adds v to the "is_deleted" field.
-func (u *AccountUpsert) AddIsDeleted(v uint8) *AccountUpsert {
-	u.Add(account.FieldIsDeleted, v)
+// AddUpdatedBy adds v to the "updated_by" field.
+func (u *AccountUpsert) AddUpdatedBy(v int64) *AccountUpsert {
+	u.Add(account.FieldUpdatedBy, v)
 	return u
 }
 
@@ -487,7 +450,7 @@ func (u *AccountUpsert) AddDeletedAt(v int64) *AccountUpsert {
 }
 
 // SetDeletedBy sets the "deleted_by" field.
-func (u *AccountUpsert) SetDeletedBy(v string) *AccountUpsert {
+func (u *AccountUpsert) SetDeletedBy(v int64) *AccountUpsert {
 	u.Set(account.FieldDeletedBy, v)
 	return u
 }
@@ -495,6 +458,12 @@ func (u *AccountUpsert) SetDeletedBy(v string) *AccountUpsert {
 // UpdateDeletedBy sets the "deleted_by" field to the value that was provided on create.
 func (u *AccountUpsert) UpdateDeletedBy() *AccountUpsert {
 	u.SetExcluded(account.FieldDeletedBy)
+	return u
+}
+
+// AddDeletedBy adds v to the "deleted_by" field.
+func (u *AccountUpsert) AddDeletedBy(v int64) *AccountUpsert {
+	u.Add(account.FieldDeletedBy, v)
 	return u
 }
 
@@ -628,9 +597,16 @@ func (u *AccountUpsertOne) UpdateUpdatedAt() *AccountUpsertOne {
 }
 
 // SetUpdatedBy sets the "updated_by" field.
-func (u *AccountUpsertOne) SetUpdatedBy(v string) *AccountUpsertOne {
+func (u *AccountUpsertOne) SetUpdatedBy(v int64) *AccountUpsertOne {
 	return u.Update(func(s *AccountUpsert) {
 		s.SetUpdatedBy(v)
+	})
+}
+
+// AddUpdatedBy adds v to the "updated_by" field.
+func (u *AccountUpsertOne) AddUpdatedBy(v int64) *AccountUpsertOne {
+	return u.Update(func(s *AccountUpsert) {
+		s.AddUpdatedBy(v)
 	})
 }
 
@@ -638,27 +614,6 @@ func (u *AccountUpsertOne) SetUpdatedBy(v string) *AccountUpsertOne {
 func (u *AccountUpsertOne) UpdateUpdatedBy() *AccountUpsertOne {
 	return u.Update(func(s *AccountUpsert) {
 		s.UpdateUpdatedBy()
-	})
-}
-
-// SetIsDeleted sets the "is_deleted" field.
-func (u *AccountUpsertOne) SetIsDeleted(v uint8) *AccountUpsertOne {
-	return u.Update(func(s *AccountUpsert) {
-		s.SetIsDeleted(v)
-	})
-}
-
-// AddIsDeleted adds v to the "is_deleted" field.
-func (u *AccountUpsertOne) AddIsDeleted(v uint8) *AccountUpsertOne {
-	return u.Update(func(s *AccountUpsert) {
-		s.AddIsDeleted(v)
-	})
-}
-
-// UpdateIsDeleted sets the "is_deleted" field to the value that was provided on create.
-func (u *AccountUpsertOne) UpdateIsDeleted() *AccountUpsertOne {
-	return u.Update(func(s *AccountUpsert) {
-		s.UpdateIsDeleted()
 	})
 }
 
@@ -684,9 +639,16 @@ func (u *AccountUpsertOne) UpdateDeletedAt() *AccountUpsertOne {
 }
 
 // SetDeletedBy sets the "deleted_by" field.
-func (u *AccountUpsertOne) SetDeletedBy(v string) *AccountUpsertOne {
+func (u *AccountUpsertOne) SetDeletedBy(v int64) *AccountUpsertOne {
 	return u.Update(func(s *AccountUpsert) {
 		s.SetDeletedBy(v)
+	})
+}
+
+// AddDeletedBy adds v to the "deleted_by" field.
+func (u *AccountUpsertOne) AddDeletedBy(v int64) *AccountUpsertOne {
+	return u.Update(func(s *AccountUpsert) {
+		s.AddDeletedBy(v)
 	})
 }
 
@@ -1002,9 +964,16 @@ func (u *AccountUpsertBulk) UpdateUpdatedAt() *AccountUpsertBulk {
 }
 
 // SetUpdatedBy sets the "updated_by" field.
-func (u *AccountUpsertBulk) SetUpdatedBy(v string) *AccountUpsertBulk {
+func (u *AccountUpsertBulk) SetUpdatedBy(v int64) *AccountUpsertBulk {
 	return u.Update(func(s *AccountUpsert) {
 		s.SetUpdatedBy(v)
+	})
+}
+
+// AddUpdatedBy adds v to the "updated_by" field.
+func (u *AccountUpsertBulk) AddUpdatedBy(v int64) *AccountUpsertBulk {
+	return u.Update(func(s *AccountUpsert) {
+		s.AddUpdatedBy(v)
 	})
 }
 
@@ -1012,27 +981,6 @@ func (u *AccountUpsertBulk) SetUpdatedBy(v string) *AccountUpsertBulk {
 func (u *AccountUpsertBulk) UpdateUpdatedBy() *AccountUpsertBulk {
 	return u.Update(func(s *AccountUpsert) {
 		s.UpdateUpdatedBy()
-	})
-}
-
-// SetIsDeleted sets the "is_deleted" field.
-func (u *AccountUpsertBulk) SetIsDeleted(v uint8) *AccountUpsertBulk {
-	return u.Update(func(s *AccountUpsert) {
-		s.SetIsDeleted(v)
-	})
-}
-
-// AddIsDeleted adds v to the "is_deleted" field.
-func (u *AccountUpsertBulk) AddIsDeleted(v uint8) *AccountUpsertBulk {
-	return u.Update(func(s *AccountUpsert) {
-		s.AddIsDeleted(v)
-	})
-}
-
-// UpdateIsDeleted sets the "is_deleted" field to the value that was provided on create.
-func (u *AccountUpsertBulk) UpdateIsDeleted() *AccountUpsertBulk {
-	return u.Update(func(s *AccountUpsert) {
-		s.UpdateIsDeleted()
 	})
 }
 
@@ -1058,9 +1006,16 @@ func (u *AccountUpsertBulk) UpdateDeletedAt() *AccountUpsertBulk {
 }
 
 // SetDeletedBy sets the "deleted_by" field.
-func (u *AccountUpsertBulk) SetDeletedBy(v string) *AccountUpsertBulk {
+func (u *AccountUpsertBulk) SetDeletedBy(v int64) *AccountUpsertBulk {
 	return u.Update(func(s *AccountUpsert) {
 		s.SetDeletedBy(v)
+	})
+}
+
+// AddDeletedBy adds v to the "deleted_by" field.
+func (u *AccountUpsertBulk) AddDeletedBy(v int64) *AccountUpsertBulk {
+	return u.Update(func(s *AccountUpsert) {
+		s.AddDeletedBy(v)
 	})
 }
 

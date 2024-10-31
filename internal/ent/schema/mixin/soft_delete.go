@@ -21,9 +21,8 @@ type SoftDelete struct {
 // Fields of the SoftDelete.
 func (SoftDelete) Fields() []ent.Field {
 	return []ent.Field{
-		field.Uint8("is_deleted").Default(constx.NotDelete).Comment("是否删除;0：正常，1：删除"),
 		field.Int64("deleted_at").Default(0).Comment("软删除时间"),
-		field.String("deleted_by").Default(constx.EmptyUser).Comment("删除人"),
+		field.Int64("deleted_by").Default(0).Comment("删除人"),
 	}
 }
 
@@ -60,8 +59,7 @@ func (d SoftDelete) Hooks() []ent.Hook {
 					mx, ok := m.(interface {
 						SetOp(ent.Op)
 						Client() *gen.Client
-						SetIsDeleted(uint8)
-						SetDeletedBy(s string)
+						SetDeletedBy(s int64)
 						SetDeletedAt(int642 int64)
 						WhereP(...func(*sql.Selector))
 					})
@@ -70,8 +68,7 @@ func (d SoftDelete) Hooks() []ent.Hook {
 					}
 					d.P(mx)
 					mx.SetOp(ent.OpUpdate)
-					mx.SetIsDeleted(constx.IsDeleted)
-					mx.SetDeletedBy(constx.DefaultUser.Default(ctx).Name)
+					mx.SetDeletedBy(constx.DefaultUser.Default(ctx).Id)
 					mx.SetDeletedAt(constx.Now().Unix())
 					return mx.Client().Mutate(ctx, m)
 				})
