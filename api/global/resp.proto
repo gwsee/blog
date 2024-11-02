@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package api.global;
+
+option go_package = "blog/api/global";
+option java_multiple_files = true;
+option java_package = "api.global";
+import "google/protobuf/any.proto";
+
+message Response {
+  int32 code = 1;
+  string message = 2;
+  google.protobuf.Any data = 3;
+}

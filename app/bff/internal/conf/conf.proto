@@ -1,7 +1,7 @@
 syntax = "proto3";
 package kratos.api;
 
-option go_package = "blog/app/account/internal/conf;conf";
+option go_package = "blog/app/bff/internal/conf;conf";
 
 import "google/protobuf/duration.proto";
 
@@ -27,9 +27,6 @@ message Auth {
   string service_key = 1;
   string api_key = 2;
 }
-message Trace {
-  string endpoint = 1;
-}
 message Server {
   message HTTP {
     string network = 1;
@@ -44,7 +41,9 @@ message Server {
   HTTP http = 1;
   GRPC grpc = 2;
 }
-
+message Trace {
+  string endpoint = 1;
+}
 message Data {
   message Database {
     string driver = 1;

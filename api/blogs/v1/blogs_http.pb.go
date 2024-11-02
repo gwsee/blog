@@ -45,7 +45,7 @@ func RegisterBlogsHTTPServer(s *http.Server, srv BlogsHTTPServer) {
 func _Blogs_CreateBlogs0_HTTP_Handler(srv BlogsHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in CreateBlogsRequest
-		if err :=  ctx.Bind(&in); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationBlogsCreateBlogs)
@@ -64,7 +64,7 @@ func _Blogs_CreateBlogs0_HTTP_Handler(srv BlogsHTTPServer) func(ctx http.Context
 func _Blogs_UpdateBlogs0_HTTP_Handler(srv BlogsHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in UpdateBlogsRequest
-		if err :=  ctx.Bind(&in); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationBlogsUpdateBlogs)
@@ -83,7 +83,7 @@ func _Blogs_UpdateBlogs0_HTTP_Handler(srv BlogsHTTPServer) func(ctx http.Context
 func _Blogs_DeleteBlogs0_HTTP_Handler(srv BlogsHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in DeleteBlogsRequest
-		if err :=  ctx.Bind(&in); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationBlogsDeleteBlogs)
@@ -102,7 +102,7 @@ func _Blogs_DeleteBlogs0_HTTP_Handler(srv BlogsHTTPServer) func(ctx http.Context
 func _Blogs_GetBlogs0_HTTP_Handler(srv BlogsHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in GetBlogsRequest
-		if err :=  ctx.Bind(&in); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationBlogsGetBlogs)
@@ -121,7 +121,7 @@ func _Blogs_GetBlogs0_HTTP_Handler(srv BlogsHTTPServer) func(ctx http.Context) e
 func _Blogs_ListBlogs0_HTTP_Handler(srv BlogsHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in ListBlogsRequest
-		if err :=  ctx.Bind(&in); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationBlogsListBlogs)

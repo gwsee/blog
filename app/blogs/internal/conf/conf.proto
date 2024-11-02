@@ -9,6 +9,19 @@ message Bootstrap {
   Server server = 1;
   Data data = 2;
   Auth auth = 3;
+  Trace trace = 4;
+  Etcd  etcd = 5;
+}
+message Etcd {
+  repeated string Hosts =1;
+  string Key =2;
+  int64 Id =3;
+  string User =4;
+  string  Pass =5;
+  string CertFile =6;
+  string CertKeyFile =7;
+  string CACertFile =8;
+  bool InsecureSkipVerify =9;
 }
 message Auth {
   string service_key = 1;
@@ -28,7 +41,9 @@ message Server {
   HTTP http = 1;
   GRPC grpc = 2;
 }
-
+message Trace {
+  string endpoint = 1;
+}
 message Data {
   message Database {
     string driver = 1;

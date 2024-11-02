@@ -1,0 +1,77 @@
+syntax = "proto3";
+
+package api.bff.v1;
+
+option go_package = "blog/api/bff/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.bff.v1";
+import "api/blogs/v1/blogs.proto";
+import "api/blogs/v1/blogs_comment.proto";
+import "third_party/google/api/annotations.proto";
+import "api/global/resp.proto";
+
+service Blogs {
+	rpc CreateBlogs (blogs.v1.CreateBlogsRequest) returns  (global.Response){
+		option (google.api.http) = {
+			post: "/v1/blogs/create"
+			body: "*"
+		};
+	};
+	rpc UpdateBlogs (blogs.v1.UpdateBlogsRequest) returns  (global.Response){
+		option (google.api.http) = {
+			post: "/v1/blogs/update"
+			body: "*"
+		};
+	};
+	rpc DeleteBlogs (blogs.v1.DeleteBlogsRequest) returns  (global.Response){
+		option (google.api.http) = {
+			post: "/v1/blogs/del"
+			body: "*"
+		};
+	};
+	rpc GetBlogs (blogs.v1.GetBlogsRequest) returns  (global.Response){
+		option (google.api.http) = {
+			post: "/v1/blogs/get"
+			body: "*"
+		};
+	};
+	rpc ListBlogs (blogs.v1.ListBlogsRequest) returns  (global.Response){
+		option (google.api.http) = {
+			post: "/v1/blogs/list"
+			body: "*"
+		};
+	};
+}
+
+service BlogsComment {
+	rpc CreateBlogsComment (blogs.v1.CreateBlogsCommentRequest) returns  (global.Response){
+		option (google.api.http) = {
+			post: "/v1/blogs_comment/create"
+			body: "*"
+		};
+	};
+	rpc UpdateBlogsComment (blogs.v1.UpdateBlogsCommentRequest) returns  (global.Response){
+		option (google.api.http) = {
+			post: "/v1/blogs_comment/update"
+			body: "*"
+		};
+	};
+	rpc DeleteBlogsComment (blogs.v1.DeleteBlogsCommentRequest) returns  (global.Response){
+		option (google.api.http) = {
+			post: "/v1/blogs_comment/del"
+			body: "*"
+		};
+	};
+	rpc GetBlogsComment (blogs.v1.GetBlogsCommentRequest) returns (global.Response){
+		option (google.api.http) = {
+			post: "/v1/blogs_comment/get"
+			body: "*"
+		};
+	};
+	rpc ListBlogsComment (blogs.v1.ListBlogsCommentRequest) returns (global.Response){
+		option (google.api.http) = {
+			post: "/v1/blogs_comment/list"
+			body: "*"
+		};
+	};
+}

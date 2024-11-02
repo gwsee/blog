@@ -15,6 +15,7 @@ var DefaultUser User
 type User struct {
 	Id      int64  `json:"id"`
 	Account string `json:"account"`
+	jwt5.MapClaims
 }
 
 func (User) Default(ctx context.Context) *User {
