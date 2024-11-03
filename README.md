@@ -63,3 +63,5 @@ kratos proto server api/blog/v1/demo.proto -t internal/service
 protoc --go_out=./ conf.proto --go_opt=paths=source_relative
 protoc --go_out=./ page.proto --go_opt=paths=source_relative
 ```
+
+## 对于单个或者说小团队 bff层不建议
