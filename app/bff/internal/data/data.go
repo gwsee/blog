@@ -51,7 +51,7 @@ func NewData(c *conf.Etcd, logger log.Logger) (*Data, func(), error) {
 
 func (l *Data) NewAccountClient() error {
 	endpoint := "discovery:///app-account"
-	conn, err := grpc.Dial(context.Background(), grpc.WithEndpoint(endpoint), grpc.WithDiscovery(l.dis))
+	conn, err := grpc.DialInsecure(context.Background(), grpc.WithEndpoint(endpoint), grpc.WithDiscovery(l.dis))
 	if err != nil {
 		return err
 	}
@@ -60,7 +60,7 @@ func (l *Data) NewAccountClient() error {
 }
 func (l *Data) NewBlogsClient() error {
 	endpoint := "discovery:///app-blogs"
-	conn, err := grpc.Dial(context.Background(), grpc.WithEndpoint(endpoint), grpc.WithDiscovery(l.dis))
+	conn, err := grpc.DialInsecure(context.Background(), grpc.WithEndpoint(endpoint), grpc.WithDiscovery(l.dis))
 	if err != nil {
 		return err
 	}
@@ -69,7 +69,7 @@ func (l *Data) NewBlogsClient() error {
 }
 func (l *Data) NewBlogsClientClient() error {
 	endpoint := "discovery:///app-blogs"
-	conn, err := grpc.Dial(context.Background(), grpc.WithEndpoint(endpoint), grpc.WithDiscovery(l.dis))
+	conn, err := grpc.DialInsecure(context.Background(), grpc.WithEndpoint(endpoint), grpc.WithDiscovery(l.dis))
 	if err != nil {
 		return err
 	}
