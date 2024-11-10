@@ -51,6 +51,6 @@ echo "镜像推送成功: $REPO_URL/$IMAGE_NAME:$TAG"
 # 完成
 echo "任务完成"
 
-## ./deploy/dockerfile/run.sh blog bff.001 ./install/dockerfile/bff.Dockerfile
-## ./deploy/dockerfile/run.sh blog rpc.account.001 ./install/dockerfile/rpc.account.Dockerfile
-## ./deploy/dockerfile/run.sh blog rpc.blogs.001 ./install/dockerfile/rpc.blog.Dockerfile
+## ./deploy/dockerfile/run.sh blog bff.001 ./deploy/dockerfile/bff.Dockerfile
+## ./deploy/dockerfile/run.sh blog rpc.account.001 ./deploy/dockerfile/rpc.account.Dockerfile
+## ./deploy/dockerfile/run.sh blog rpc.blogs.001 ./deploy/dockerfile/rpc.blog.Dockerfile
