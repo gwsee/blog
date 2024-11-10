@@ -13,7 +13,7 @@ ENV CGO_ENABLED 0
 RUN go mod tidy
 RUN go build -o bff -ldflags="-s -w"  app/bff/cmd/main.go
 
-FROM alpine:latest
+FROM debian:buster
 RUN apt-get -y update && DEBIAN_FRONTEND="noninteractive" apt -y install tzdata
 RUN apt-get -y install --no-install-recommends ca-certificates curl
 COPY --from=builder /bff /
