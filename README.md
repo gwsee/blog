@@ -49,6 +49,22 @@ docker build -t <your-docker-image-name> .
 docker run --rm -p 8000:8000 -p 9000:9000 -v </path/to/your/configs>:/data/conf <your-docker-image-name>
 ```
 
+计划中：
+    后端：golang
+    前端：vue3 
+    管理：react？目前好像不需要
+功能点--现在想到的
+    首页--登录;
+         游历(简历)
+         留言
+         随笔(日常记录)
+         学习(学习记录)
+         面试(随机面试;自己选择tag+其他的)
+
+
+## 对于单个或者说小团队 bff层不建议
+
+
 ## CMD
 ```bash
 kratos new blog
@@ -63,5 +79,3 @@ kratos proto server api/blog/v1/demo.proto -t internal/service
 protoc --go_out=./ conf.proto --go_opt=paths=source_relative
 protoc --go_out=./ page.proto --go_opt=paths=source_relative
 ```
-
-## 对于单个或者说小团队 bff层不建议
