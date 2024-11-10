@@ -53,4 +53,4 @@ echo "任务完成"
 
 ## ./deploy/dockerfile/run.sh blog bff.001 ./deploy/dockerfile/bff.Dockerfile
 ## ./deploy/dockerfile/run.sh blog rpc.account.001 ./deploy/dockerfile/rpc.account.Dockerfile
-## ./deploy/dockerfile/run.sh blog rpc.blogs.001 ./deploy/dockerfile/rpc.blog.Dockerfile
+## ./deploy/dockerfile/run.sh blog rpc.blogs.001 ./deploy/dockerfile/rpc.blogs.Dockerfile
