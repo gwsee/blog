@@ -1,7 +1,7 @@
 FROM golang:1.23.0 AS builder
 
-COPY . /go/src
-WORKDIR /go/src
+COPY . /
+WORKDIR /
 
 ENV GO111MODULE on
 ENV GOPATH /go
@@ -16,7 +16,7 @@ RUN go build -o account -ldflags="-s -w"  app/account/cmd/main.go
 FROM alpine:latest
 RUN apt-get -y update && DEBIAN_FRONTEND="noninteractive" apt -y install tzdata
 RUN apt-get -y install --no-install-recommends ca-certificates curl
-COPY --from=builder /go/src/account /
+COPY --from=builder /account /
 WORKDIR /
 ENV TZ Asia/Shanghai
 EXPOSE 88
