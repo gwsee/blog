@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+package api.blogs.v1;
+
+import "api/global/page.proto";
+
+option go_package = "blog/api/blogs/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.blogs.v1";
+
+service BlogsComment {
+	rpc CreateBlogsComment (CreateBlogsCommentRequest) returns (CreateBlogsCommentReply);
+	rpc UpdateBlogsComment (UpdateBlogsCommentRequest) returns (UpdateBlogsCommentReply);
+	rpc DeleteBlogsComment (DeleteBlogsCommentRequest) returns (DeleteBlogsCommentReply);
+	rpc GetBlogsComment (GetBlogsCommentRequest) returns (GetBlogsCommentReply);
+	rpc ListBlogsComment (ListBlogsCommentRequest) returns (ListBlogsCommentReply);
+}
+
+message CreateBlogsCommentRequest {
+	int64 BlogId =1; //博客的ID
+	int64 TopId =2; //顶级评论
+	int64 ParentId =3; //回复的那个评论
+	int64 Level=4; //第几楼
+	int64 Total =5; //总数
+	int64 Status = 6; //是否隐藏
+	string Content = 7; //评论内容
+}
+message CreateBlogsCommentReply {}
+
+message UpdateBlogsCommentRequest {
+	int64 Id = 1;  //评论的ID
+	int64 Status = 2; //是否隐藏
+	string Content = 3; //评论内容
+}
+message UpdateBlogsCommentReply {}
+
+message DeleteBlogsCommentRequest {
+	int64 Id = 1;  //评论的ID
+}
+message DeleteBlogsCommentReply {}
+
+message GetBlogsCommentRequest {
+	int64 Id = 1;  //评论的ID
+}
+message GetBlogsCommentReply {
+	int64 Id = 1;  //评论的ID
+	int64 BlogId =2; //博客的ID
+	int64 TopId =3; //顶级评论
+	int64 ParentId =4; //回复的那个评论
+	int64 Level=5; //第几楼
+	int64 Total =6; //总数
+	int64 Status = 7; //是否隐藏
+	string Content = 8; //评论内容
+	int64 AccountId = 9;//评论人帐号ID
+	int64 CreatedAt = 10;//创建时间
+}
+
+message ListBlogsCommentRequest {
+	global.PageIndex Page = 1; //分页信息
+	int64 BlogId =2; //博客的ID
+	int64 ParentId =3; //回复的那个评论的ID
+	string Content = 4; //评论内容
+	int64 AccountId = 5;//查看某人的评论
+}
+message ListBlogsCommentReply {
+	int64 End =1;
+	repeated GetBlogsCommentReply List = 2;
+}

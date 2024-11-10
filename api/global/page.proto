@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package api.global;
+
+option go_package = "blog/api/global";
+option java_multiple_files = true;
+option java_package = "api.global";
+
+message PageInfo {
+  int64 PageNum = 1;
+  int64 PageSize = 2;
+}
+
+message PageIndex {
+  int64 Start = 1;
+  int64 PageSize = 2;
+}

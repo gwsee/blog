@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+package api.blogs.v1;
+
+import "api/global/page.proto";
+
+option go_package = "blog/api/blogs/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.blogs.v1";
+service Blogs {
+	rpc CreateBlogs (CreateBlogsRequest) returns (CreateBlogsReply);
+	rpc UpdateBlogs (UpdateBlogsRequest) returns (UpdateBlogsReply);
+	rpc DeleteBlogs (DeleteBlogsRequest) returns (DeleteBlogsReply);
+	rpc GetBlogs (GetBlogsRequest) returns (GetBlogsReply);
+	rpc ListBlogs (ListBlogsRequest) returns (ListBlogsReply);
+}
+enum HiddenType {
+	Hidden = 0; //不隐藏
+	IsHidden = 1;//隐藏
+}
+message CreateBlogsRequest {
+	string Title  = 1; //标题
+	string Description = 2; //描述
+	HiddenType IsHidden = 3; //是否隐藏
+	repeated string tags = 4;//标签
+	string Cover = 5;//封面
+	string Content = 6; //内容
+}
+message CreateBlogsReply {}
+
+message UpdateBlogsRequest {
+	int64 Id = 1; //根据ID修改
+	string Title  = 2; //标题
+	string Description = 3; //描述
+	HiddenType IsHidden = 4; //是否隐藏
+	repeated string tags = 5;//标签
+	string Cover = 6; //封面
+	string Content = 7; //内容
+}
+message UpdateBlogsReply {}
+
+message DeleteBlogsRequest {
+	int64 Id = 1;
+}
+message DeleteBlogsReply {}
+
+message GetBlogsRequest {
+	int64 Id = 1;
+}
+
+message BlogsHeader {
+	int64 Id = 1; //ID
+	string Title  = 2; //标题
+	string Description = 3; //描述
+	HiddenType IsHidden = 4;//是否隐藏
+	repeated string tags = 5;//标签
+	string Cover = 6;//封面
+	int64 AccountId = 7;//所属帐号ID
+	int64 CreatedAt = 8;//创建时间
+}
+
+message GetBlogsReply {
+	BlogsHeader Header = 1; //头部内容
+	string Content = 2;//主内容
+}
+
+message ListBlogsRequest {
+	global.PageInfo Page = 1; //分页
+	string Title = 2; //标题
+	repeated string tags = 3; //标签
+}
+
+message ListBlogsReply {
+	int64 Total =1; //总博客数
+	repeated BlogsHeader List = 2; //返回的内容
+}
