@@ -1,1 +1,1 @@
-docker network create etct_network
+docker network create etcd_network

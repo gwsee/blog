@@ -2,7 +2,7 @@ docker run -d \
   -p 2379:2379 \
   -p 2380:2380 \
   --name etcd \
-  --network etct_network \
+  --network etcd_network \
   --restart=always \
   quay.io/coreos/etcd:v3.5.0 \
   /usr/local/bin/etcd \

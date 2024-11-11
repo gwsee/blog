@@ -10,7 +10,7 @@ docker pull registry.cn-chengdu.aliyuncs.com/pf94514203/blog:bff.${version}
 docker rm -fv bff
 docker run -d --name=bff --restart=always \
       -p 8088:88 \
-      --network etct_network \
+      --network etcd_network \
       -v /data/golang/blog/deploy/cfg/bff:/cfg:rw \
       -v /data/golang/blog/log:/data:rw \
       --link redis:redis \

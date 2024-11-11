@@ -1,6 +1,6 @@
 docker run --name redis -d -p 6379:6379 \
   --restart=always \
-  --network etct_network \
+  --network etcd_network \
   -v /data/redis/config/redis.conf:/etc/redis/redis.conf \
   -v /data/redis/data:/data redis:latest \
   --requirepass OoO0o0ilLi1I1

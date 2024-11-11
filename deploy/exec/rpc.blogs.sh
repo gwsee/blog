@@ -10,7 +10,7 @@ docker pull registry.cn-chengdu.aliyuncs.com/pf94514203/blog:rpc.blogs.${version
 docker rm -fv rpc-blogs
 docker run -d --name=rpc-blogs --restart=always \
       -p 8088:88 \
-      --network etct_network \
+      --network etcd_network \
       -v /data/golang/blog/deploy/cfg/rpc.blogs:/cfg:rw \
       -v /data/golang/blog/log:/data:rw \
       --link redis:redis \
