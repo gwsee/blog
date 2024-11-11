@@ -15,4 +15,4 @@ docker run -d --name=bff --restart=always \
       -v /data/golang/blog/log:/data:rw \
       --link redis:redis \
       -e PARAMS="-conf /cfg" \
-      registry.cn-chengdu.aliyuncs.com/pf94514203/yunchuang:bff.${version}
+      registry.cn-chengdu.aliyuncs.com/pf94514203/blog:bff.${version}

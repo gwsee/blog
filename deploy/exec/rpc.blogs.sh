@@ -15,4 +15,4 @@ docker run -d --name=rpc-blogs --restart=always \
       -v /data/golang/blog/log:/data:rw \
       --link redis:redis \
       -e PARAMS="-conf /cfg" \
-      registry.cn-chengdu.aliyuncs.com/pf94514203/yunchuang:rpc.blogs.${version}
+      registry.cn-chengdu.aliyuncs.com/pf94514203/blog:rpc.blogs.${version}
