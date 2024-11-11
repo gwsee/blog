@@ -10,7 +10,7 @@ fi
 IMAGE_NAME=$1   # 镜像名称
 TAG=$2          # 标签
 DOCKERFILE_PATH=$3  # Dockerfile 路径
-REPO_URL="registry.cn-hangzhou.aliyuncs.com/pf94514203"  # 固定的 Docker 仓库地址
+REPO_URL="registry.cn-chengdu.aliyuncs.com/pf94514203"  # 固定的 Docker 仓库地址
 
 # 构建 Docker 镜像
 echo "正在构建 Docker 镜像..."
