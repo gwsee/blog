@@ -1,7 +1,7 @@
 FROM golang:1.23 AS builder
 
-COPY . /
-WORKDIR /
+COPY . /go/src
+WORKDIR /go/src
 
 ENV GO111MODULE on
 ENV GOPATH /go
@@ -11,12 +11,12 @@ ENV GOSUMDB off
 ENV CGO_ENABLED 0
 
 RUN go mod tidy
-RUN go build -o bff -ldflags="-s -w"  app/bff/cmd/main.go
+RUN go build -o bff -ldflags="-s -w"  app/bff/cmd/bff/main.go
 
 FROM debian:buster
 RUN apt-get -y update && DEBIAN_FRONTEND="noninteractive" apt -y install tzdata
 RUN apt-get -y install --no-install-recommends ca-certificates curl
-COPY --from=builder /bff /
+COPY --from=builder /go/src/bff /
 WORKDIR /
 ENV TZ Asia/Shanghai
 EXPOSE 88
