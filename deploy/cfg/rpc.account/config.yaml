@@ -11,6 +11,8 @@ data:
     source: root:root@tcp(47.100.14.57:3306)/my_blog?parseTime=True&loc=Local
   redis:
     addr: redis:6379
+    user_name:
+    pws: OoO0o0ilLi1I1
     read_timeout: 0.2s
     write_timeout: 0.2s
 auth:
