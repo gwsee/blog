@@ -11,7 +11,7 @@ ENV GOSUMDB off
 ENV CGO_ENABLED 0
 
 RUN go mod tidy
-RUN go build -o blog -ldflags="-s -w"  app/blogs/cmd/blogs/main.go
+RUN go build -o blog -ldflags="-s -w" ./app/blogs/cmd/blogs/
 
 FROM debian:buster
 RUN apt-get -y update && DEBIAN_FRONTEND="noninteractive" apt -y install tzdata
