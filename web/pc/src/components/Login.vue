@@ -1,67 +1,116 @@
 <template>
-  <a-modal v-model:open="open" title="Welcome" >
+  <a-modal v-model:open="open" :title="isRegister?`注册`:`登录`" >
     <a-form
         style="margin: 32px 4px"
         ref="formRef"
         :model="formState"
-        :label-col="{ span: 6 }"
-        :wrapper-col="{ span: 16 }"
+        :wrapper-col="{ span: 20, offset:2 }"
         autocomplete="off"
     >
       <a-form-item
-          label="Username"
-          name="username"
-          :rules="[{ required: true, message: 'Please input your username!' }]"
+          name="account"
+          :rules="[{ required: true, message: '请输入账户名称' }]"
       >
-        <a-input placeholder="input your username" v-model:value="formState.username" />
+        <a-input placeholder="请输入账户名称" v-model:value="formState.account" />
       </a-form-item>
 
       <a-form-item
-          label="Password"
           name="password"
-          :rules="[{ required: true, message: 'Please input your password!' }]"
+          :rules="[{ required: true, message: isRegister?'请输入新密码':'请输入密码' }]"
       >
-        <a-input-password  placeholder="input your password" v-model:value="formState.password" />
+        <a-input-password  :placeholder="isRegister?'请输入新密码':'请输入密码'" v-model:value="formState.password" />
+      </a-form-item>
+      <a-form-item
+          v-if="isRegister"
+          name="confirm"
+          :rules="[{ required: true,   validator: validatePassConfirm }]"
+      >
+        <a-input-password  placeholder="请再次确认密码" v-model:value="formState.confirm" />
       </a-form-item>
     </a-form>
     <template #footer>
-      <a-button type="primary" key="back" @click="close" style="float: left">Registry</a-button>
-      <a-button key="back" @click="close">Cancel</a-button>
-      <a-button type="primary" :loading="confirmLoading" @click="handleOk">Submit</a-button>
+      <a-button type="primary" key="back" @click="()=>{isRegister=!isRegister}" style="float: left">{{ isRegister?'去登录':'去注册' }}</a-button>
+      <a-button key="back" @click="close">取消</a-button>
+      <a-button type="primary" :loading="confirmLoading" @click="handleOk">{{ isRegister?'提交':'确定' }}</a-button>
     </template>
   </a-modal>
 </template>
 
 <script setup>
+import {login,register,resetPass} from "@/api/account.js";
 import { ref,reactive } from 'vue';
-const modalText = ref('Content of the modal');
 const open = ref(false);
 const formRef = ref(null)
 const confirmLoading = ref(false);
+const isRegister = ref(false);
+const formState = reactive({
+  account: '',
+  password: '',
+  confirm: '',
+});
+const validatePassConfirm= async (_rule, value) => {
+  if (!isRegister.value){
+    return Promise.resolve();
+  }
+  if (value === '') {
+    return Promise.reject('请再次确认密码');
+  } else if (value !== formState.password) {
+    return Promise.reject("两次密码输入不一致!");
+  } else {
+    return Promise.resolve();
+  }
+};
+
 const show = () => {
   open.value = true;
   if(formRef.value){
     formRef.value.resetFields();
   }
 };
+
 const close = ()=>{
   open.value = false;
 }
+const handleLogin =(data)=>{
+  confirmLoading.value = true;
+  login(data).then(res=>{
 
-const formState = reactive({
-  username: '',
-  password: '',
-});
+  }).finally(()=>{
+    confirmLoading.value = false;
+  });
+}
+const handleRegister =(data)=>{
+  confirmLoading.value = true;
+  register(data).then(res=>{
+
+  }).finally(()=>{
+    confirmLoading.value = false;
+  });
+}
+const handleReset =(data)=>{
+  confirmLoading.value = true;
+  register(data).then(res=>{
+
+  }).finally(()=>{
+    confirmLoading.value = false;
+  });
+}
 const handleOk = () => {
     formRef.value
     .validate()
     .then(() => {
-      console.log('values', formState, toRaw(formState));
+      console.log(isRegister.value);
+      if(isRegister.value){
+        handleRegister(formState)
+      }else{
+        handleLogin(formState)
+      }
     })
     .catch(error => {
       console.log('error', error);
     });
 };
+
 defineExpose({
   show
 })
