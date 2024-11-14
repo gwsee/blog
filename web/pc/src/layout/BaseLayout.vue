@@ -8,7 +8,7 @@ const router = useRouter();
 const loginRef = ref(null);
 
 const openDialog = () => {
-  if( loginRef.value){
+  if(loginRef.value){
     loginRef.value.show()
   }
 };

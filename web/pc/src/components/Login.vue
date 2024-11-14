@@ -8,24 +8,24 @@
         autocomplete="off"
     >
       <a-form-item
-          name="account"
+          name="Account"
           :rules="[{ required: true, message: '请输入账户名称' }]"
       >
-        <a-input placeholder="请输入账户名称" v-model:value="formState.account" />
+        <a-input placeholder="请输入账户名称" v-model:value="formState.Account" />
       </a-form-item>
 
       <a-form-item
-          name="password"
+          name="Password"
           :rules="[{ required: true, message: isRegister?'请输入新密码':'请输入密码' }]"
       >
-        <a-input-password  :placeholder="isRegister?'请输入新密码':'请输入密码'" v-model:value="formState.password" />
+        <a-input-password  :placeholder="isRegister?'请输入新密码':'请输入密码'" v-model:value="formState.Password" />
       </a-form-item>
       <a-form-item
           v-if="isRegister"
-          name="confirm"
+          name="Confirm"
           :rules="[{ required: true,   validator: validatePassConfirm }]"
       >
-        <a-input-password  placeholder="请再次确认密码" v-model:value="formState.confirm" />
+        <a-input-password  placeholder="请再次确认密码" v-model:value="formState.Confirm" />
       </a-form-item>
     </a-form>
     <template #footer>
@@ -38,15 +38,16 @@
 
 <script setup>
 import {login,register,resetPass} from "@/api/account.js";
+import { setToken } from '@/utils/auth'
 import { ref,reactive } from 'vue';
 const open = ref(false);
 const formRef = ref(null)
 const confirmLoading = ref(false);
 const isRegister = ref(false);
 const formState = reactive({
-  account: '',
-  password: '',
-  confirm: '',
+  Account: '',
+  Password: '',
+  Confirm: '',
 });
 const validatePassConfirm= async (_rule, value) => {
   if (!isRegister.value){
@@ -54,7 +55,7 @@ const validatePassConfirm= async (_rule, value) => {
   }
   if (value === '') {
     return Promise.reject('请再次确认密码');
-  } else if (value !== formState.password) {
+  } else if (value !== formState.Password) {
     return Promise.reject("两次密码输入不一致!");
   } else {
     return Promise.resolve();
@@ -74,7 +75,11 @@ const close = ()=>{
 const handleLogin =(data)=>{
   confirmLoading.value = true;
   login(data).then(res=>{
-
+    if(res.code===0){
+      setToken(res.data.Token)
+      confirmLoading.value = false;
+      close()
+    }
   }).finally(()=>{
     confirmLoading.value = false;
   });

@@ -1,8 +1,9 @@
 import axios from 'axios'
-import { getToken } from '@/utils/auth'
+import { getToken,removeToken } from '@/utils/auth'
 import { tansParams } from "@/utils/params";
 import cache from '@/utils/cache'
 import errorCode from '@/utils/errorCode'
+import { message } from 'ant-design-vue';
 
 export let isRelogin = { show: false };
 
@@ -60,10 +61,8 @@ service.interceptors.request.use(config => {
             }
         }
     }
-    console.log(config)
     return config
 }, error => {
-    console.log(error)
     Promise.reject(error)
 })
 
@@ -78,45 +77,36 @@ service.interceptors.response.use(res => {
             return res.data
         }
         if (code === 401) {
-            // if (!isRelogin.show) {
-            //     isRelogin.show = true;
-            //     MessageBox.confirm('登录状态已过期，您可以继续留在该页面，或者重新登录', '系统提示',
-            //         { confirmButtonText: '重新登录', cancelButtonText: '取消', type: 'warning' }
-            //     ).then(() => {
-            //         localStorage.removeItem("userInfo")
-            //         isRelogin.show = false;
-            //         store.dispatch('LogOut').then(() => {
-            //             location.href = '/index';
-            //         })
-            //     }).catch(() => {
-            //         isRelogin.show = false;
-            //     });
-            // }
             return Promise.reject('无效的会话，或者会话已过期，请重新登录。')
         } else if (code === 500) {
-            // Message({ message: msg, type: 'error' })
             return Promise.reject(new Error(msg))
         } else if (code === 601) {
-            // Message({ message: msg, type: 'warning' })
             return Promise.reject('error')
         } else if (code !== 200) {
-            // Notification.error({ title: msg })
             return Promise.reject('error')
         } else {
             return res.data
         }
     },
     error => {
-        console.log('err:' + error)
-        let { message } = error;
-        if (message === "Network Error") {
-            message = "后端接口连接异常";
-        } else if (message.includes("timeout")) {
-            message = "系统接口请求超时";
-        } else if (message.includes("Request failed with status code")) {
-            message = "系统接口" + message.substr(message.length - 3) + "异常";
+        let { response } = error;
+        if(response&&response.data){
+            let data = response.data
+            if(data.message){
+                message.error(data.message);
+                return
+            }
+        }else{
+            let msg = error.message || ''
+            if (msg === "Network Error") {
+                msg = "后端接口连接异常";
+            } else if (msg.includes("timeout")) {
+                msg = "系统接口请求超时";
+            } else if (msg.includes("Request failed with status code")) {
+                msg = "系统接口" + msg.substr(message.length - 3) + "异常";
+            }
+            message.error(msg);
         }
-        // Message({ message: message, type: 'error', duration: 5 * 1000 })
         return Promise.reject(error)
     }
 )
