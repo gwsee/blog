@@ -36,4 +36,4 @@ bin/
 .vscode/
 .idea/
 *.swp
-*/deploy/
+/deploy/*
