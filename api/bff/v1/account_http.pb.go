@@ -39,16 +39,12 @@ func RegisterAccountHTTPServer(s *http.Server, srv AccountHTTPServer) {
 }
 
 func _Account_CreateAccount0_HTTP_Handler(srv AccountHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) (err error) {
+	return func(ctx http.Context) error {
 		var in v1.CreateAccountRequest
-		reply := new(global.Response)
-		defer func() {
-			reply.Resp(ctx, err)
-		}()
-		if err = ctx.Bind(&in); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
-		if err = ctx.BindQuery(&in); err != nil {
+		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationAccountCreateAccount)
@@ -59,22 +55,18 @@ func _Account_CreateAccount0_HTTP_Handler(srv AccountHTTPServer) func(ctx http.C
 		if err != nil {
 			return err
 		}
-		reply = out.(*global.Response)
-		return
+		reply := out.(*global.Response)
+		return ctx.Result(200, reply)
 	}
 }
 
 func _Account_ResetPassword0_HTTP_Handler(srv AccountHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) (err error) {
+	return func(ctx http.Context) error {
 		var in v1.ResetPasswordRequest
-		reply := new(global.Response)
-		defer func() {
-			reply.Resp(ctx, err)
-		}()
-		if err = ctx.Bind(&in); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
-		if err = ctx.BindQuery(&in); err != nil {
+		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationAccountResetPassword)
@@ -85,22 +77,18 @@ func _Account_ResetPassword0_HTTP_Handler(srv AccountHTTPServer) func(ctx http.C
 		if err != nil {
 			return err
 		}
-		reply = out.(*global.Response)
-		return
+		reply := out.(*global.Response)
+		return ctx.Result(200, reply)
 	}
 }
 
 func _Account_LoginByAccount0_HTTP_Handler(srv AccountHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) (err error) {
+	return func(ctx http.Context) error {
 		var in v1.LoginByAccountRequest
-		reply := new(global.Response)
-		defer func() {
-			reply.Resp(ctx, err)
-		}()
-		if err = ctx.Bind(&in); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
-		if err = ctx.BindQuery(&in); err != nil {
+		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationAccountLoginByAccount)
@@ -111,8 +99,8 @@ func _Account_LoginByAccount0_HTTP_Handler(srv AccountHTTPServer) func(ctx http.
 		if err != nil {
 			return err
 		}
-		reply = out.(*global.Response)
-		return
+		reply := out.(*global.Response)
+		return ctx.Result(200, reply)
 	}
 }
 

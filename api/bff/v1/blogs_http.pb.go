@@ -45,16 +45,12 @@ func RegisterBlogsHTTPServer(s *http.Server, srv BlogsHTTPServer) {
 }
 
 func _Blogs_CreateBlogs0_HTTP_Handler(srv BlogsHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) (err error) {
+	return func(ctx http.Context) error {
 		var in v1.CreateBlogsRequest
-		reply := new(global.Response)
-		defer func() {
-			reply.Resp(ctx, err)
-		}()
-		if err = ctx.Bind(&in); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
-		if err = ctx.BindQuery(&in); err != nil {
+		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationBlogsCreateBlogs)
@@ -65,22 +61,18 @@ func _Blogs_CreateBlogs0_HTTP_Handler(srv BlogsHTTPServer) func(ctx http.Context
 		if err != nil {
 			return err
 		}
-		reply = out.(*global.Response)
-		return
+		reply := out.(*global.Response)
+		return ctx.Result(200, reply)
 	}
 }
 
 func _Blogs_UpdateBlogs0_HTTP_Handler(srv BlogsHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) (err error) {
+	return func(ctx http.Context) error {
 		var in v1.UpdateBlogsRequest
-		reply := new(global.Response)
-		defer func() {
-			reply.Resp(ctx, err)
-		}()
-		if err = ctx.Bind(&in); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
-		if err = ctx.BindQuery(&in); err != nil {
+		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationBlogsUpdateBlogs)
@@ -91,22 +83,18 @@ func _Blogs_UpdateBlogs0_HTTP_Handler(srv BlogsHTTPServer) func(ctx http.Context
 		if err != nil {
 			return err
 		}
-		reply = out.(*global.Response)
-		return
+		reply := out.(*global.Response)
+		return ctx.Result(200, reply)
 	}
 }
 
 func _Blogs_DeleteBlogs0_HTTP_Handler(srv BlogsHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) (err error) {
+	return func(ctx http.Context) error {
 		var in v1.DeleteBlogsRequest
-		reply := new(global.Response)
-		defer func() {
-			reply.Resp(ctx, err)
-		}()
-		if err = ctx.Bind(&in); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
-		if err = ctx.BindQuery(&in); err != nil {
+		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationBlogsDeleteBlogs)
@@ -117,22 +105,18 @@ func _Blogs_DeleteBlogs0_HTTP_Handler(srv BlogsHTTPServer) func(ctx http.Context
 		if err != nil {
 			return err
 		}
-		reply = out.(*global.Response)
-		return
+		reply := out.(*global.Response)
+		return ctx.Result(200, reply)
 	}
 }
 
 func _Blogs_GetBlogs0_HTTP_Handler(srv BlogsHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) (err error) {
+	return func(ctx http.Context) error {
 		var in v1.GetBlogsRequest
-		reply := new(global.Response)
-		defer func() {
-			reply.Resp(ctx, err)
-		}()
-		if err = ctx.Bind(&in); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
-		if err = ctx.BindQuery(&in); err != nil {
+		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationBlogsGetBlogs)
@@ -143,22 +127,18 @@ func _Blogs_GetBlogs0_HTTP_Handler(srv BlogsHTTPServer) func(ctx http.Context) e
 		if err != nil {
 			return err
 		}
-		reply = out.(*global.Response)
-		return
+		reply := out.(*global.Response)
+		return ctx.Result(200, reply)
 	}
 }
 
 func _Blogs_ListBlogs0_HTTP_Handler(srv BlogsHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) (err error) {
+	return func(ctx http.Context) error {
 		var in v1.ListBlogsRequest
-		reply := new(global.Response)
-		defer func() {
-			reply.Resp(ctx, err)
-		}()
-		if err = ctx.Bind(&in); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
-		if err = ctx.BindQuery(&in); err != nil {
+		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationBlogsListBlogs)
@@ -169,8 +149,8 @@ func _Blogs_ListBlogs0_HTTP_Handler(srv BlogsHTTPServer) func(ctx http.Context) 
 		if err != nil {
 			return err
 		}
-		reply = out.(*global.Response)
-		return
+		reply := out.(*global.Response)
+		return ctx.Result(200, reply)
 	}
 }
 
@@ -279,16 +259,12 @@ func RegisterBlogsCommentHTTPServer(s *http.Server, srv BlogsCommentHTTPServer) 
 }
 
 func _BlogsComment_CreateBlogsComment0_HTTP_Handler(srv BlogsCommentHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) (err error) {
+	return func(ctx http.Context) error {
 		var in v1.CreateBlogsCommentRequest
-		reply := new(global.Response)
-		defer func() {
-			reply.Resp(ctx, err)
-		}()
-		if err = ctx.Bind(&in); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
-		if err = ctx.BindQuery(&in); err != nil {
+		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationBlogsCommentCreateBlogsComment)
@@ -299,22 +275,18 @@ func _BlogsComment_CreateBlogsComment0_HTTP_Handler(srv BlogsCommentHTTPServer) 
 		if err != nil {
 			return err
 		}
-		reply = out.(*global.Response)
-		return
+		reply := out.(*global.Response)
+		return ctx.Result(200, reply)
 	}
 }
 
 func _BlogsComment_UpdateBlogsComment0_HTTP_Handler(srv BlogsCommentHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) (err error) {
+	return func(ctx http.Context) error {
 		var in v1.UpdateBlogsCommentRequest
-		reply := new(global.Response)
-		defer func() {
-			reply.Resp(ctx, err)
-		}()
-		if err = ctx.Bind(&in); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
-		if err = ctx.BindQuery(&in); err != nil {
+		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationBlogsCommentUpdateBlogsComment)
@@ -325,22 +297,18 @@ func _BlogsComment_UpdateBlogsComment0_HTTP_Handler(srv BlogsCommentHTTPServer) 
 		if err != nil {
 			return err
 		}
-		reply = out.(*global.Response)
-		return
+		reply := out.(*global.Response)
+		return ctx.Result(200, reply)
 	}
 }
 
 func _BlogsComment_DeleteBlogsComment0_HTTP_Handler(srv BlogsCommentHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) (err error) {
+	return func(ctx http.Context) error {
 		var in v1.DeleteBlogsCommentRequest
-		reply := new(global.Response)
-		defer func() {
-			reply.Resp(ctx, err)
-		}()
-		if err = ctx.Bind(&in); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
-		if err = ctx.BindQuery(&in); err != nil {
+		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationBlogsCommentDeleteBlogsComment)
@@ -351,22 +319,18 @@ func _BlogsComment_DeleteBlogsComment0_HTTP_Handler(srv BlogsCommentHTTPServer) 
 		if err != nil {
 			return err
 		}
-		reply = out.(*global.Response)
-		return
+		reply := out.(*global.Response)
+		return ctx.Result(200, reply)
 	}
 }
 
 func _BlogsComment_GetBlogsComment0_HTTP_Handler(srv BlogsCommentHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) (err error) {
+	return func(ctx http.Context) error {
 		var in v1.GetBlogsCommentRequest
-		reply := new(global.Response)
-		defer func() {
-			reply.Resp(ctx, err)
-		}()
-		if err = ctx.Bind(&in); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
-		if err = ctx.BindQuery(&in); err != nil {
+		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationBlogsCommentGetBlogsComment)
@@ -377,22 +341,18 @@ func _BlogsComment_GetBlogsComment0_HTTP_Handler(srv BlogsCommentHTTPServer) fun
 		if err != nil {
 			return err
 		}
-		reply = out.(*global.Response)
-		return
+		reply := out.(*global.Response)
+		return ctx.Result(200, reply)
 	}
 }
 
 func _BlogsComment_ListBlogsComment0_HTTP_Handler(srv BlogsCommentHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) (err error) {
+	return func(ctx http.Context) error {
 		var in v1.ListBlogsCommentRequest
-		reply := new(global.Response)
-		defer func() {
-			reply.Resp(ctx, err)
-		}()
-		if err = ctx.Bind(&in); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
-		if err = ctx.BindQuery(&in); err != nil {
+		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationBlogsCommentListBlogsComment)
@@ -403,8 +363,8 @@ func _BlogsComment_ListBlogsComment0_HTTP_Handler(srv BlogsCommentHTTPServer) fu
 		if err != nil {
 			return err
 		}
-		reply = out.(*global.Response)
-		return
+		reply := out.(*global.Response)
+		return ctx.Result(200, reply)
 	}
 }
 
