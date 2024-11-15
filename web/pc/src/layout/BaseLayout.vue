@@ -1,9 +1,8 @@
 <script setup>
 import Login from "@/components/Login.vue";
-import {getInfo} from "@/api/index.js";
-import {ref} from "vue"
+import { ref, watch } from "vue"
 import { useRouter } from 'vue-router';
-
+import { showLogin,setLoginShow } from '@/store/auth.js'
 const router = useRouter();
 const loginRef = ref(null);
 
@@ -13,10 +12,15 @@ const openDialog = () => {
   }
 };
 const getInfoData =()=>{
-  getInfo().then(res=>{
-    console.log(res)
-  })
+  setLoginShow(true)
 }
+
+watch(showLogin,(value)=>{
+  if(value){
+    loginRef.value.show()
+  }
+})
+
 const goToAbout=(path)=> {
   router.push(path)
 }

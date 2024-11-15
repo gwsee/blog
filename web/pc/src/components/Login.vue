@@ -38,8 +38,9 @@
 
 <script setup>
 import {login,register,resetPass} from "@/api/account.js";
+import { showLogin,setLoginShow } from '@/store/auth.js'
 import { setToken } from '@/utils/auth'
-import { ref,reactive } from 'vue';
+import { ref,reactive,watch } from 'vue';
 const open = ref(false);
 const formRef = ref(null)
 const confirmLoading = ref(false);
@@ -62,16 +63,18 @@ const validatePassConfirm= async (_rule, value) => {
   }
 };
 
-const show = () => {
-  open.value = true;
-  if(formRef.value){
-    formRef.value.resetFields();
+watch(showLogin,(value)=>{
+  if(value){
+    open.value = true
+  }else{
+    setLoginShow(false);
   }
-};
+})
 
 const close = ()=>{
-  open.value = false;
+  setLoginShow(false);
 }
+
 const handleLogin =(data)=>{
   confirmLoading.value = true;
   login(data).then(res=>{
@@ -87,7 +90,7 @@ const handleLogin =(data)=>{
 const handleRegister =(data)=>{
   confirmLoading.value = true;
   register(data).then(res=>{
-
+    isRegister.value = false;
   }).finally(()=>{
     confirmLoading.value = false;
   });
@@ -116,9 +119,16 @@ const handleOk = () => {
     });
 };
 
-defineExpose({
-  show
-})
+// 通过storage来控制弹出的显隐 就不用show 来暴露
+const show = () => {
+  open.value = true;
+  if(formRef.value){
+    formRef.value.resetFields();
+  }
+};
+// defineExpose({
+//   show
+// })
 </script>
 
 <style scoped>
