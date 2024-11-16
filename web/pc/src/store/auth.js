@@ -5,17 +5,17 @@ const state = reactive({
     token: null,
 })
 
-const isLoggedIn = computed(() => !!state.token)
+const isLoggedIn = computed(() => !!getLoginToken())
 
 const showLogin = ref(false)
 
-const login = (userData, token) => {
+const setLoginData = (userData, token) => {
     state.user = userData
     state.token = token
     localStorage.setItem('token', token)
 }
+
 const setLoginShow=(flag)=>{
-    console.log('setLoginShow',flag)
     if(!flag){
         showLogin.value = false
         return
@@ -25,10 +25,15 @@ const setLoginShow=(flag)=>{
     }
     showLogin.value = true
 }
+
 const logout = () => {
     state.user = null
     state.token = null
     localStorage.removeItem('token')
+}
+
+const getLoginToken=()=>{
+   return  localStorage.getItem('token')
 }
 
 const checkAuth = () => {
@@ -46,7 +51,8 @@ export const useAuthStore = () => ({
     isLoggedIn,
     showLogin,
     setLoginShow,
-    login,
+    setLoginData,
+    getLoginToken,
     logout,
     checkAuth,
 })

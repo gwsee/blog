@@ -1,5 +1,5 @@
 <template>
-  <a-modal v-model:open="open" :title="isRegister?`注册`:`登录`" >
+  <a-modal v-model:open="open" :title="isRegister?`注册`:`登录`"  @cancel="close">
     <a-form
         style="margin: 32px 4px"
         ref="formRef"
@@ -37,11 +37,10 @@
 </template>
 
 <script setup>
-import { login, register, resetPass} from "@/api/account.js";
-import { setToken } from '@/utils/auth'
+import { login, register, resetPass} from "@/api/account";
 import { ref,reactive } from 'vue';
-import { useAuthStore  } from '@/store/auth.js'
-const { setLoginShow } = useAuthStore();
+import { useAuthStore  } from '@/store/auth'
+const { setLoginShow,setLoginData } = useAuthStore();
 
 const open = ref(false);
 const formRef = ref(null)
@@ -75,7 +74,7 @@ const handleLogin =(data)=>{
   confirmLoading.value = true;
   login(data).then(res=>{
     if(res.code===0){
-      setToken(res.data.Token)
+      setLoginData({},res.data.Token)
       confirmLoading.value = false;
       close()
     }

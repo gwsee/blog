@@ -1,9 +1,10 @@
 <script setup>
 import Login from "@/components/Login.vue";
+import avatar from "@/assets/image/default-avatar.png"
 import { ref, watch } from "vue"
 import { useRouter } from 'vue-router';
 import { useAuthStore  } from '@/store/auth.js'
-const { showLogin, setLoginShow } = useAuthStore();
+const { showLogin, setLoginShow, isLoggedIn } = useAuthStore();
 const router = useRouter();
 const loginRef = ref(null);
 
@@ -12,7 +13,6 @@ const showLoginDialog =()=>{
 }
 
 watch(showLogin,(value)=>{
-  console.log("watch-showLogin-",value)
   if(value){
     loginRef.value.show()
   }
@@ -40,7 +40,8 @@ const goToAbout=(path)=> {
         <a-col  :md="8" :sm="24" :xs="24">
         </a-col>
         <a-col  :md="8" :sm="24" :xs="24">
-          <a-avatar :size="44" class="layout-content-menu-item" @click="showLoginDialog" >登陆</a-avatar>
+          <a-avatar :size="44" class="layout-content-menu-item" @click="showLoginDialog" v-if="!isLoggedIn" >登陆</a-avatar>
+          <a-avatar :size="44" class="layout-content-menu-item" :src="avatar" v-else ></a-avatar>
           <a-avatar :size="44" class="layout-content-menu-item" @click="showLoginDialog" >杂谈</a-avatar>
           <a-avatar :size="44" class="layout-content-menu-item" @click="showLoginDialog" >留言</a-avatar>
           <a-avatar :size="44" class="layout-content-menu-item" @click="goToAbout('/about')" >关于</a-avatar>
@@ -62,7 +63,7 @@ const goToAbout=(path)=> {
   height: 100%;
   width: 100%;
   overflow: auto;
-  background: transparent  url("src/assets/image/Sara11712577366099546.jpg");
+  background: transparent  url("src/assets/image/default-bg.jpg");
   background-size: cover;
   display: flex;
   flex-direction: column;

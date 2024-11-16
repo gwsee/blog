@@ -1,13 +1,10 @@
 import axios from 'axios'
-import { getToken,removeToken } from '@/utils/auth'
-import { tansParams } from "@/utils/params";
 import cache from '@/utils/cache'
 import errorCode from '@/utils/errorCode'
 import { message } from 'ant-design-vue';
-import { useAuthStore  } from '@/store/auth.js'
-const { setLoginShow } = useAuthStore();
-
-export let isRelogin = { show: false };
+import { useAuthStore  } from '@/store/auth'
+import { tansParams } from "@/utils/params";
+const { setLoginShow, getLoginToken } = useAuthStore();
 
 axios.defaults.headers['Content-Type'] = 'application/json;charset=utf-8'
 // 创建axios实例
@@ -24,8 +21,10 @@ service.interceptors.request.use(config => {
     const isToken = (config.headers || {}).isToken === false
     // 是否需要防止数据重复提交
     const isRepeatSubmit = (config.headers || {}).repeatSubmit === false
-    if (getToken() && !isToken) {
-        config.headers['Authorization'] = 'Bearer ' + getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
+    const _token = getLoginToken()
+    console.log("_token....",_token)
+    if (_token && !isToken) {
+        config.headers['Authorization'] = 'Bearer ' + _token // 让每个请求携带自定义token 请根据实际情况自行修改
     }
     // get请求映射params参数
     if (config.method === 'get' && config.params) {
