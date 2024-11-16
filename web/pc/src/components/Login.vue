@@ -37,10 +37,12 @@
 </template>
 
 <script setup>
-import {login,register,resetPass} from "@/api/account.js";
-import { showLogin,setLoginShow } from '@/store/auth.js'
+import { login, register, resetPass} from "@/api/account.js";
 import { setToken } from '@/utils/auth'
-import { ref,reactive,watch } from 'vue';
+import { ref,reactive } from 'vue';
+import { useAuthStore  } from '@/store/auth.js'
+const { setLoginShow } = useAuthStore();
+
 const open = ref(false);
 const formRef = ref(null)
 const confirmLoading = ref(false);
@@ -63,16 +65,10 @@ const validatePassConfirm= async (_rule, value) => {
   }
 };
 
-watch(showLogin,(value)=>{
-  if(value){
-    open.value = true
-  }else{
-    setLoginShow(false);
-  }
-})
 
 const close = ()=>{
   setLoginShow(false);
+  open.value = false
 }
 
 const handleLogin =(data)=>{
@@ -126,9 +122,10 @@ const show = () => {
     formRef.value.resetFields();
   }
 };
-// defineExpose({
-//   show
-// })
+
+defineExpose({
+  show
+})
 </script>
 
 <style scoped>

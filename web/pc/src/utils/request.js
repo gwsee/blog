@@ -4,6 +4,8 @@ import { tansParams } from "@/utils/params";
 import cache from '@/utils/cache'
 import errorCode from '@/utils/errorCode'
 import { message } from 'ant-design-vue';
+import { useAuthStore  } from '@/store/auth.js'
+const { setLoginShow } = useAuthStore();
 
 export let isRelogin = { show: false };
 
@@ -77,6 +79,7 @@ service.interceptors.response.use(res => {
             return res.data
         }
         if (code === 401) {
+            setLoginShow(true)
             return Promise.reject('无效的会话，或者会话已过期，请重新登录。')
         } else if (code === 500) {
             return Promise.reject(new Error(msg))

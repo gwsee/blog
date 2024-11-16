@@ -2,20 +2,17 @@
 import Login from "@/components/Login.vue";
 import { ref, watch } from "vue"
 import { useRouter } from 'vue-router';
-import { showLogin,setLoginShow } from '@/store/auth.js'
+import { useAuthStore  } from '@/store/auth.js'
+const { showLogin, setLoginShow } = useAuthStore();
 const router = useRouter();
 const loginRef = ref(null);
 
-const openDialog = () => {
-  if(loginRef.value){
-    loginRef.value.show()
-  }
-};
-const getInfoData =()=>{
+const showLoginDialog =()=>{
   setLoginShow(true)
 }
 
 watch(showLogin,(value)=>{
+  console.log("watch-showLogin-",value)
   if(value){
     loginRef.value.show()
   }
@@ -43,9 +40,9 @@ const goToAbout=(path)=> {
         <a-col  :md="8" :sm="24" :xs="24">
         </a-col>
         <a-col  :md="8" :sm="24" :xs="24">
-          <a-avatar :size="44" class="layout-content-menu-item" @click="openDialog" >登陆</a-avatar>
-          <a-avatar :size="44" class="layout-content-menu-item" @click="getInfoData" >杂谈</a-avatar>
-          <a-avatar :size="44" class="layout-content-menu-item" @click="getInfoData" >留言</a-avatar>
+          <a-avatar :size="44" class="layout-content-menu-item" @click="showLoginDialog" >登陆</a-avatar>
+          <a-avatar :size="44" class="layout-content-menu-item" @click="showLoginDialog" >杂谈</a-avatar>
+          <a-avatar :size="44" class="layout-content-menu-item" @click="showLoginDialog" >留言</a-avatar>
           <a-avatar :size="44" class="layout-content-menu-item" @click="goToAbout('/about')" >关于</a-avatar>
           <a-avatar :size="44" class="layout-content-menu-item" @click="goToAbout('/travel')" >旅行</a-avatar>
           <a-avatar :size="44" class="layout-content-menu-item" @click="goToAbout('/blog')" >日记</a-avatar>
