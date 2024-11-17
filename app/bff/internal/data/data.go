@@ -7,8 +7,12 @@ import (
 	"context"
 	"github.com/go-kratos/kratos/contrib/registry/etcd/v2"
 	"github.com/go-kratos/kratos/v2/log"
+	"github.com/go-kratos/kratos/v2/middleware/auth/jwt"
+	"github.com/go-kratos/kratos/v2/middleware/metadata"
+	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/registry"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
+	jwtv5 "github.com/golang-jwt/jwt/v5"
 	"github.com/google/wire"
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
@@ -51,7 +55,16 @@ func NewData(c *conf.Etcd, logger log.Logger) (*Data, func(), error) {
 
 func (l *Data) NewAccountClient() error {
 	endpoint := "discovery:///app-account"
-	conn, err := grpc.DialInsecure(context.Background(), grpc.WithEndpoint(endpoint), grpc.WithDiscovery(l.dis))
+	conn, err := grpc.DialInsecure(context.Background(), grpc.WithEndpoint(endpoint), grpc.WithDiscovery(l.dis),
+		grpc.WithMiddleware(recovery.Recovery(), metadata.Client(),
+			jwt.Client(func(token *jwtv5.Token) (interface{}, error) {
+				return []byte("gwsee"), nil
+			}, jwt.WithSigningMethod(jwtv5.SigningMethodHS256),
+				jwt.WithClaims(func() jwtv5.Claims {
+					return &jwtv5.MapClaims{}
+				}),
+			),
+		))
 	if err != nil {
 		return err
 	}
@@ -60,7 +73,17 @@ func (l *Data) NewAccountClient() error {
 }
 func (l *Data) NewBlogsClient() error {
 	endpoint := "discovery:///app-blogs"
-	conn, err := grpc.DialInsecure(context.Background(), grpc.WithEndpoint(endpoint), grpc.WithDiscovery(l.dis))
+	conn, err := grpc.DialInsecure(context.Background(), grpc.WithEndpoint(endpoint), grpc.WithDiscovery(l.dis), grpc.WithMiddleware(
+		recovery.Recovery(),
+		metadata.Client(),
+		jwt.Client(func(token *jwtv5.Token) (interface{}, error) {
+			return []byte("gwsee"), nil
+		}, jwt.WithSigningMethod(jwtv5.SigningMethodHS256),
+			jwt.WithClaims(func() jwtv5.Claims {
+				return &jwtv5.MapClaims{}
+			}),
+		),
+	))
 	if err != nil {
 		return err
 	}
@@ -69,7 +92,19 @@ func (l *Data) NewBlogsClient() error {
 }
 func (l *Data) NewBlogsClientClient() error {
 	endpoint := "discovery:///app-blogs"
-	conn, err := grpc.DialInsecure(context.Background(), grpc.WithEndpoint(endpoint), grpc.WithDiscovery(l.dis))
+	conn, err := grpc.DialInsecure(context.Background(), grpc.WithEndpoint(endpoint), grpc.WithDiscovery(l.dis),
+		grpc.WithMiddleware(
+			recovery.Recovery(),
+			metadata.Client(),
+			jwt.Client(func(token *jwtv5.Token) (interface{}, error) {
+				return []byte("gwsee"), nil
+			}, jwt.WithSigningMethod(jwtv5.SigningMethodHS256),
+				jwt.WithClaims(func() jwtv5.Claims {
+					return &jwtv5.MapClaims{}
+				}),
+			),
+		))
+
 	if err != nil {
 		return err
 	}

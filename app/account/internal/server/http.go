@@ -8,7 +8,6 @@ import (
 	"github.com/go-kratos/kratos/v2/middleware/logging"
 	"github.com/go-kratos/kratos/v2/middleware/ratelimit"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
-	"github.com/go-kratos/kratos/v2/middleware/tracing"
 	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/gorilla/handlers"
 	"go.opentelemetry.io/otel/sdk/trace"
@@ -19,8 +18,8 @@ func NewHTTPServer(c *conf.Bootstrap, logger log.Logger, tp *trace.TracerProvide
 	var opts = []http.ServerOption{
 		http.Middleware(
 			recovery.Recovery(),
-			tracing.Server(
-				tracing.WithTracerProvider(tp)),
+			//tracing.Server(
+			//	tracing.WithTracerProvider(tp)),
 			logging.Server(logger),
 			ratelimit.Server(), //// 默认 bbr limiter
 		),

@@ -29,7 +29,7 @@
       </a-form-item>
     </a-form>
     <template #footer>
-      <a-button type="primary" key="back" @click="()=>{isRegister=!isRegister}" style="float: left">{{ isRegister?'去登录':'去注册' }}</a-button>
+      <a-button type="primary" key="reg" @click="()=>{isRegister=!isRegister}" style="float: left">{{ isRegister?'去登录':'去注册' }}</a-button>
       <a-button key="back" @click="close">取消</a-button>
       <a-button type="primary" :loading="confirmLoading" @click="handleOk">{{ isRegister?'提交':'确定' }}</a-button>
     </template>
@@ -102,7 +102,6 @@ const handleOk = () => {
     formRef.value
     .validate()
     .then(() => {
-      console.log(isRegister.value);
       if(isRegister.value){
         handleRegister(formState)
       }else{

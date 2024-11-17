@@ -8,7 +8,6 @@ import (
 	"github.com/go-kratos/kratos/v2/middleware/logging"
 	"github.com/go-kratos/kratos/v2/middleware/ratelimit"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
-	"github.com/go-kratos/kratos/v2/middleware/tracing"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"go.opentelemetry.io/otel/sdk/trace"
 )
@@ -18,8 +17,8 @@ func NewGRPCServer(c *conf.Bootstrap, logger log.Logger, tp *trace.TracerProvide
 	var opts = []grpc.ServerOption{
 		grpc.Middleware(
 			recovery.Recovery(),
-			tracing.Server(
-				tracing.WithTracerProvider(tp)),
+			//tracing.Server(
+			//	tracing.WithTracerProvider(tp)),
 			logging.Server(logger),
 			ratelimit.Server(), //// 默认 bbr limiter
 		),

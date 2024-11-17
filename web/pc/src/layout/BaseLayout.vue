@@ -1,6 +1,7 @@
 <script setup>
 import Login from "@/components/Login.vue";
 import avatar from "@/assets/image/default-avatar.png"
+import logo from "@/assets/image/logo.png"
 import { ref, watch } from "vue"
 import { useRouter } from 'vue-router';
 import { useAuthStore  } from '@/store/auth.js'
@@ -34,7 +35,7 @@ const goToAbout=(path)=> {
               :width="200"
               :height="44"
               class="layout-content-logo-item"
-              src="https://www.antdv.com/assets/logo.1ef800a8.svg"
+              :src="logo"
           />
         </a-col>
         <a-col  :md="8" :sm="24" :xs="24">

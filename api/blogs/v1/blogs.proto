@@ -14,15 +14,12 @@ service Blogs {
 	rpc GetBlogs (GetBlogsRequest) returns (GetBlogsReply);
 	rpc ListBlogs (ListBlogsRequest) returns (ListBlogsReply);
 }
-enum HiddenType {
-	Hidden = 0; //不隐藏
-	IsHidden = 1;//隐藏
-}
+
 message CreateBlogsRequest {
 	string Title  = 1; //标题
 	string Description = 2; //描述
-	HiddenType IsHidden = 3; //是否隐藏
-	repeated string tags = 4;//标签
+	int64 IsHidden = 3; //是否隐藏
+	repeated string Tags = 4;//标签
 	string Cover = 5;//封面
 	string Content = 6; //内容
 }
@@ -32,8 +29,8 @@ message UpdateBlogsRequest {
 	int64 Id = 1; //根据ID修改
 	string Title  = 2; //标题
 	string Description = 3; //描述
-	HiddenType IsHidden = 4; //是否隐藏
-	repeated string tags = 5;//标签
+	int64 IsHidden = 4; //是否隐藏
+	repeated string Tags = 5;//标签
 	string Cover = 6; //封面
 	string Content = 7; //内容
 }
@@ -52,8 +49,8 @@ message BlogsHeader {
 	int64 Id = 1; //ID
 	string Title  = 2; //标题
 	string Description = 3; //描述
-	HiddenType IsHidden = 4;//是否隐藏
-	repeated string tags = 5;//标签
+	int64 IsHidden = 4;//是否隐藏
+	repeated string Tags = 5;//标签
 	string Cover = 6;//封面
 	int64 AccountId = 7;//所属帐号ID
 	int64 CreatedAt = 8;//创建时间
@@ -67,10 +64,10 @@ message GetBlogsReply {
 message ListBlogsRequest {
 	global.PageInfo Page = 1; //分页
 	string Title = 2; //标题
-	repeated string tags = 3; //标签
+	repeated string Tags = 3; //标签
 }
 
 message ListBlogsReply {
-	int64 Total =1; //总博客数
+	int64 Total = 1; //总博客数
 	repeated BlogsHeader List = 2; //返回的内容
 }

@@ -38,8 +38,8 @@ func wireApp(confServer *conf.Bootstrap, tracerProvider *trace.TracerProvider, l
 	blogsService := service.NewBlogsService(blogsUseCase)
 	blogsCommentService := service.NewBlogsCommentService(blogsUseCase)
 
-	grpcServer := server.NewGRPCServer(confServer.Server, logger, tracerProvider, accountService, blogsService, blogsCommentService)
-	httpServer := server.NewHTTPServer(confServer.Server, logger, tracerProvider, accountService, blogsService, blogsCommentService)
+	grpcServer := server.NewGRPCServer(confServer, logger, tracerProvider, accountService, blogsService, blogsCommentService)
+	httpServer := server.NewHTTPServer(confServer, logger, tracerProvider, accountService, blogsService, blogsCommentService)
 	app := newApp(logger, grpcServer, httpServer)
 	return app, func() {
 		cleanup()

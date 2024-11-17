@@ -66,6 +66,7 @@ func NewEntClient(conf *conf.Data, logger log.Logger) (*ent.Client, error) {
 	client := ent.NewClient(ent.Driver(driver), ent.Log(func(args ...any) {
 		logs.Info("closing the data resources", args)
 	}))
+	client = client.Debug()
 	return client, nil
 }
 func NewRedisCmd(conf *conf.Data, logger log.Logger) (redis.Cmdable, error) {
@@ -83,6 +84,7 @@ func NewRedisCmd(conf *conf.Data, logger log.Logger) (redis.Cmdable, error) {
 	defer cancelFunc()
 	err := client.Ping(timeout).Err()
 	if err != nil {
+		return nil, nil
 		logs.Fatalf("redis connect error: %v", err)
 		return nil, err
 	}

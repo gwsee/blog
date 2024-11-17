@@ -3,7 +3,8 @@ package constx
 import (
 	"context"
 	"encoding/json"
-	"github.com/go-kratos/kratos/v2/middleware/auth/jwt"
+	"errors"
+	"github.com/go-kratos/kratos/v2/transport"
 	jwt5 "github.com/golang-jwt/jwt/v5"
 )
 
@@ -19,23 +20,26 @@ type User struct {
 }
 
 func (User) Default(ctx context.Context) *User {
-	info, ex := jwt.FromContext(ctx)
-	if !ex {
-		return &User{}
-	}
-	data, ok := info.(jwt5.MapClaims)
+	tr, ok := transport.FromServerContext(ctx)
 	if !ok {
 		return &User{}
 	}
-	val, ok := data[UserInfo]
-	if !ok {
-		return &User{}
-	}
-	vals, ok := val.(string)
-	if !ok {
-		return &User{}
-	}
+	vals := tr.RequestHeader().Get(UserInfo)
 	var user User
 	_ = json.Unmarshal([]byte(vals), &user)
 	return &user
+}
+
+func (User) User(ctx context.Context) (*User, error) {
+	tr, ok := transport.FromServerContext(ctx)
+	if !ok {
+		return nil, errors.New("请登陆")
+	}
+	vals := tr.RequestHeader().Get(UserInfo)
+	var user User
+	err := json.Unmarshal([]byte(vals), &user)
+	if err != nil {
+		return nil, errors.New("请登陆")
+	}
+	return &user, nil
 }

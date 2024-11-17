@@ -51,10 +51,10 @@ func (s *BlogsUseCase) CreateBlogs(ctx context.Context, req *pb.CreateBlogsReque
 	if req.Title == "" || req.Content == "" {
 		return nil, errors.New("title or content is empty")
 	}
-	//todo 获取当前登陆人信息
+	u := constx.DefaultUser.Default(ctx)
 	return &pb.CreateBlogsReply{}, s.repo.CreateBlogs(ctx, &Blogs{
 		IsHidden:    int64(req.IsHidden),
-		AccountId:   0,
+		AccountId:   u.Id,
 		Title:       req.Title,
 		Description: req.Description,
 		Tags:        req.Tags,
@@ -86,7 +86,7 @@ func (s *BlogsUseCase) GetBlogs(ctx context.Context, req *pb.GetBlogsRequest) (*
 			Id:          info.Id,
 			Title:       info.Title,
 			Description: info.Description,
-			IsHidden:    pb.HiddenType(info.IsHidden),
+			IsHidden:    info.IsHidden,
 			Tags:        info.Tags,
 			Cover:       info.Cover,
 			AccountId:   info.AccountId,
@@ -115,7 +115,7 @@ func (s *BlogsUseCase) ListBlogs(ctx context.Context, req *pb.ListBlogsRequest) 
 			Id:          info.Id,
 			Title:       info.Title,
 			Description: info.Description,
-			IsHidden:    pb.HiddenType(info.IsHidden),
+			IsHidden:    info.IsHidden,
 			Tags:        info.Tags,
 			Cover:       info.Cover,
 			AccountId:   info.AccountId,

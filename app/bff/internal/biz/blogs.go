@@ -33,6 +33,9 @@ func NewBlogsUseCase(repo BlogsRepo, logger log.Logger) *BlogsUseCase {
 
 func (l *BlogsUseCase) CreateBlogs(ctx context.Context, data *blogs.CreateBlogsRequest) (*global.Response, error) {
 	res, err := l.repo.CreateBlogs(ctx, data)
+	if err != nil {
+		return nil, err
+	}
 	anyData, err := anypb.New(res)
 	if err != nil {
 		return nil, fmt.Errorf("failed to marshal response data: %w", err)
@@ -43,6 +46,9 @@ func (l *BlogsUseCase) CreateBlogs(ctx context.Context, data *blogs.CreateBlogsR
 }
 func (l *BlogsUseCase) UpdateBlogs(ctx context.Context, data *blogs.UpdateBlogsRequest) (*global.Response, error) {
 	res, err := l.repo.UpdateBlogs(ctx, data)
+	if err != nil {
+		return nil, err
+	}
 	anyData, err := anypb.New(res)
 	if err != nil {
 		return nil, fmt.Errorf("failed to marshal response data: %w", err)
@@ -53,6 +59,9 @@ func (l *BlogsUseCase) UpdateBlogs(ctx context.Context, data *blogs.UpdateBlogsR
 }
 func (l *BlogsUseCase) DeleteBlogs(ctx context.Context, data *blogs.DeleteBlogsRequest) (*global.Response, error) {
 	res, err := l.repo.DeleteBlogs(ctx, data)
+	if err != nil {
+		return nil, err
+	}
 	anyData, err := anypb.New(res)
 	if err != nil {
 		return nil, fmt.Errorf("failed to marshal response data: %w", err)
@@ -63,6 +72,9 @@ func (l *BlogsUseCase) DeleteBlogs(ctx context.Context, data *blogs.DeleteBlogsR
 }
 func (l *BlogsUseCase) GetBlogs(ctx context.Context, data *blogs.GetBlogsRequest) (*global.Response, error) {
 	res, err := l.repo.GetBlogs(ctx, data)
+	if err != nil {
+		return nil, err
+	}
 	anyData, err := anypb.New(res)
 	if err != nil {
 		return nil, fmt.Errorf("failed to marshal response data: %w", err)
@@ -73,6 +85,9 @@ func (l *BlogsUseCase) GetBlogs(ctx context.Context, data *blogs.GetBlogsRequest
 }
 func (l *BlogsUseCase) ListBlogs(ctx context.Context, data *blogs.ListBlogsRequest) (*global.Response, error) {
 	res, err := l.repo.ListBlogs(ctx, data)
+	if err != nil {
+		return nil, err
+	}
 	anyData, err := anypb.New(res)
 	if err != nil {
 		return nil, fmt.Errorf("failed to marshal response data: %w", err)
@@ -83,6 +98,9 @@ func (l *BlogsUseCase) ListBlogs(ctx context.Context, data *blogs.ListBlogsReque
 }
 func (l *BlogsUseCase) CreateBlogsComment(ctx context.Context, data *blogs.CreateBlogsCommentRequest) (*global.Response, error) {
 	res, err := l.repo.CreateBlogsComment(ctx, data)
+	if err != nil {
+		return nil, err
+	}
 	anyData, err := anypb.New(res)
 	if err != nil {
 		return nil, fmt.Errorf("failed to marshal response data: %w", err)
@@ -93,6 +111,9 @@ func (l *BlogsUseCase) CreateBlogsComment(ctx context.Context, data *blogs.Creat
 }
 func (l *BlogsUseCase) UpdateBlogsComment(ctx context.Context, data *blogs.UpdateBlogsCommentRequest) (*global.Response, error) {
 	res, err := l.repo.UpdateBlogsComment(ctx, data)
+	if err != nil {
+		return nil, err
+	}
 	anyData, err := anypb.New(res)
 	if err != nil {
 		return nil, fmt.Errorf("failed to marshal response data: %w", err)
@@ -103,6 +124,9 @@ func (l *BlogsUseCase) UpdateBlogsComment(ctx context.Context, data *blogs.Updat
 }
 func (l *BlogsUseCase) DeleteBlogsComment(ctx context.Context, data *blogs.DeleteBlogsCommentRequest) (*global.Response, error) {
 	res, err := l.repo.DeleteBlogsComment(ctx, data)
+	if err != nil {
+		return nil, err
+	}
 	anyData, err := anypb.New(res)
 	if err != nil {
 		return nil, fmt.Errorf("failed to marshal response data: %w", err)
@@ -113,6 +137,9 @@ func (l *BlogsUseCase) DeleteBlogsComment(ctx context.Context, data *blogs.Delet
 }
 func (l *BlogsUseCase) GetBlogsComment(ctx context.Context, data *blogs.GetBlogsCommentRequest) (*global.Response, error) {
 	res, err := l.repo.GetBlogsComment(ctx, data)
+	if err != nil {
+		return nil, err
+	}
 	anyData, err := anypb.New(res)
 	if err != nil {
 		return nil, fmt.Errorf("failed to marshal response data: %w", err)
