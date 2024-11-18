@@ -1,9 +1,9 @@
 <template>
-  <a-row style="background-color: green;width: 100%"  >
-    <a-col :md="5" :sm="24" :xs="24" style="background-color: #1a1a1a" >
-      1
+  <a-row style="background-color: transparent;width: 100%"  >
+    <a-col :md="5" :sm="24" :xs="24"  >
+      <span/>
     </a-col>
-    <a-col :md="14" :sm="24" :xs="24"  style="background-color: #992929;text-align: center" >
+    <a-col :md="14" :sm="24" :xs="24"  style="text-align: center" >
       <a-form :label-col="labelCol"   ref="formBlogRef" :model="formState"   autocomplete="off"  class="blog-card-edit" :wrapper-col="wrapperCol">
         <a-form-item label="Title" :rules="[{ required: true, message: '请输入博客标题' }]">
           <a-input  v-model:value="formState.Title"   placeholder="请输入博客标题"/>
@@ -63,8 +63,8 @@
         </a-form-item>
       </a-form>
     </a-col>
-    <a-col :md="5" :sm="24" :xs="24"  style="background-color: #1a1a1a" >
-      3
+    <a-col :md="5" :sm="24" :xs="24"   >
+      <span/>
     </a-col>
   </a-row>
 </template>

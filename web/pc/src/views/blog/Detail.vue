@@ -1,59 +1,137 @@
 <template>
-  <a-row style="background-color: green;width: 100%"  >
-    <a-col :md="5" :sm="24" :xs="24" style="background-color: #1a1a1a" >
-      1
+  <a-row style="background-color: transparent;width: 100%"  >
+    <a-col :md="5" :sm="24" :xs="24"  >
+      <span/>
     </a-col>
-    <a-col :md="14" :sm="24" :xs="24"  style="background-color: #992929;text-align: center" >
-      <a-form :model="formState" :label-col="labelCol"  class="blog-card" :wrapper-col="wrapperCol">
-        <a-form-item label="Activity name">
-          <a-input v-model:value="formState.name" />
-        </a-form-item>
-        <a-form-item label="Instant delivery">
-          <a-switch v-model:checked="formState.delivery" />
-        </a-form-item>
-        <a-form-item label="Activity type">
-          <a-checkbox-group v-model:value="formState.type">
-            <a-checkbox value="1" name="type">Online</a-checkbox>
-            <a-checkbox value="2" name="type">Promotion</a-checkbox>
-            <a-checkbox value="3" name="type">Offline</a-checkbox>
-          </a-checkbox-group>
-        </a-form-item>
-        <a-form-item label="Resources">
-          <a-radio-group v-model:value="formState.resource">
-            <a-radio value="1">Sponsor</a-radio>
-            <a-radio value="2">Venue</a-radio>
-          </a-radio-group>
-        </a-form-item>
-        <a-form-item label="Activity form">
-          <a-textarea v-model:value="formState.desc" />
-        </a-form-item>
-        <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
-          <a-button type="primary" @click="onSubmit">Create</a-button>
-          <a-button style="margin-left: 10px">Cancel</a-button>
-        </a-form-item>
-      </a-form>
+    <a-col :md="14" :sm="24" :xs="24"  style="text-align: unset">
+      <a-card hoverable>
+        <template #cover>
+          <img
+              alt="example"
+              src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+          />
+        </template>
+        <template #actions>
+          <setting-outlined key="setting" />
+          <edit-outlined key="edit" />
+          <ellipsis-outlined key="ellipsis" />
+        </template>
+        <a-card-meta :title="formState.Title" :description="formState.Description">
+          <template #avatar>
+            <a-avatar src="https://joeschmoe.io/api/v1/random" />
+          </template>
+        </a-card-meta>
+        <div  v-html="formState.Content">
+
+        </div>
+      </a-card>
     </a-col>
-    <a-col :md="5" :sm="24" :xs="24"  style="background-color: #1a1a1a" >
-      3
+    <a-col :md="5" :sm="24" :xs="24"  >
+     <span/>
     </a-col>
   </a-row>
 </template>
 
 <script setup>
-import { reactive, toRaw } from 'vue';
+import '@wangeditor/editor/dist/css/style.css' // 引入 css
+import { onBeforeUnmount,  shallowRef, onMounted ,reactive, toRaw, ref } from 'vue'
+import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
+import { blogUpdate,blogCreate, blogGet} from "@/api/blog";
+const editorRef = shallowRef()
+import { useRouter,useRoute } from 'vue-router';
+const router = useRouter();
+
+const toRoute=(path)=> {
+  router.push(path)
+}
+const mode = ref("default")
+const toolbarConfig = {}
+const editorConfig = { placeholder: '请输入内容...' }
+
+// 组件销毁时，也及时销毁编辑器
+onBeforeUnmount(() => {
+  const editor = editorRef.value
+  if (editor == null) return
+  editor.destroy()
+})
+
+const handleChange = (value) => {
+  console.log(`selected ${value}`);
+};
+
+const handleCreated = (editor) => {
+  editorRef.value = editor // 记录 editor 实例，重要！
+}
 
 const formState = reactive({
-  name: '',
-  delivery: false,
-  type: [],
-  resource: '',
-  desc: '',
+  Id: 0,
+  Title: '',
+  Description: '',
+  IsHidden: 0,
+  Tags:[],
+  Content: '',
+  Cover: '',
 });
+const formBlogRef = ref(null)
+
+onMounted(function (){
+  if(formBlogRef.value){
+    formBlogRef.value.resetFields();
+  }
+  console.log("here, on Mounted")
+  const route = useRoute();
+  let id = route.params.id;
+  id = id - 0
+  if(!id){
+    return
+  }
+  blogGet({Id:id}).then(res=>{
+    if(res&&res.code===0){
+      formState.Content = res.data.Content
+      const obj = res.data.Header
+      formState.Cover = obj.Cover
+      formState.Tags = obj.Tags
+      formState.Id = id
+      formState.Title = obj.Title
+      formState.Description = obj.Description
+      formState.IsHidden = obj.IsHidden-0
+    }
+  })
+})
+const confirmLoading = ref(false);
 const onSubmit = () => {
-  console.log('submit!', toRaw(formState));
+  formBlogRef.value
+      .validate()
+      .then(() => {
+        confirmLoading.value = true
+        if(formState.Id>0){
+          blogUpdate(formState).then(res=>{
+            console.log(res,"....")
+            if(res&&res.code===0){
+              toRoute('/blog')
+            }
+          }).finally(()=>{
+            confirmLoading.value = false
+          })
+        }else{
+          blogCreate(formState).then(res=>{
+            console.log(res,"....")
+            if(res&&res.code===0){
+              toRoute('/blog')
+            }
+          }).finally(()=>{
+            confirmLoading.value = false
+          })
+        }
+      })
+      .catch(error => {
+        console.log('error', error);
+      });
 };
-const labelCol = { style: { width: '150px' } };
-const wrapperCol = { span: 14 };
+const labelCol = { style: { width: '100px' } };
+const wrapperCol = { span: 24 };
+
+
 </script>
 
 <style scoped>
@@ -68,11 +146,13 @@ const wrapperCol = { span: 14 };
   text-overflow: ellipsis;
 }
 
-.blog-card{
+.blog-card-edit{
   width: 90%;
   margin-top: 20px;
   text-align: left;
   margin-left: auto;
   margin-right: auto;
+}
+.tag-class{
 }
 </style>

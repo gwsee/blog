@@ -53,7 +53,7 @@ const goToAbout=(path)=> {
     </div>
     <router-view class="layout-content" />
     <div class="layout-footer">
-      我是底部
+      <span/>
     </div>
     <Login ref="loginRef"/>
   </div>
@@ -64,7 +64,7 @@ const goToAbout=(path)=> {
   height: 100%;
   width: 100%;
   overflow: auto;
-  background: transparent  url("src/assets/image/default-bg.jpg");
+  background: transparent  url("src/assets/image/bg.jpg");
   background-size: cover;
   display: flex;
   flex-direction: column;
@@ -88,8 +88,6 @@ const goToAbout=(path)=> {
 }
 
 .layout-content{
-  text-align: center;
-  justify-content: center;
   color: #d47777;
   flex:1;
   /*min-height: calc(100vh - 104px);*/

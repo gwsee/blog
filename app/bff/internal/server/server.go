@@ -10,14 +10,14 @@ import (
 var ProviderSet = wire.NewSet(NewGRPCServer, NewHTTPServer)
 
 var whiteList = map[string]struct{}{
-	"/v1/blogs/get":          {},
-	"/v1/blogs/list":         {},
-	"/v1/blogs_comment/list": {},
-	"/v1/blogs_comment/get":  {},
+	"/api.bff.v1.Blogs/GetBlogs":                {},
+	"/api.bff.v1.Blogs/ListBlogs":               {},
+	"/api.bff.v1.BlogsComment/ListBlogsComment": {},
+	"/api.bff.v1.BlogsComment/GetBlogsComment":  {},
 
-	"/v1/register":       {},
-	"/v1/reset_password": {},
-	"/v1/login":          {},
+	"/api.bff.v1.Account/CreateAccount":  {},
+	"/api.bff.v1.Account/ResetPassword":  {},
+	"/api.bff.v1.Account/LoginByAccount": {},
 }
 
 func NewWhiteListMatcher() selector.MatchFunc {
