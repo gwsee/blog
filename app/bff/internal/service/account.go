@@ -26,3 +26,9 @@ func (s *AccountService) ResetPassword(ctx context.Context, req *account.ResetPa
 func (s *AccountService) LoginByAccount(ctx context.Context, req *account.LoginByAccountRequest) (*global.Response, error) {
 	return s.biz.LoginByAccount(ctx, req)
 }
+func (s *AccountService) Info(ctx context.Context, req *global.Empty) (*global.Response, error) {
+	return s.biz.Info(ctx, req)
+}
+func (s *AccountService) UpdateAccount(ctx context.Context, req *account.UpdateAccountRequest) (*global.Response, error) {
+	return s.biz.UpdateAccount(ctx, req)
+}

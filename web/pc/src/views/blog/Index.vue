@@ -11,12 +11,12 @@
                     class="tag-class" v-model:value="Tags" style="width: 20%;height: 40px;" >
         </a-select>
         <a-input v-model:value="Title" placeholder="请输入需要查询的内容!"
-                 style="width: calc(70% - 140px);height: 40px;" />
-        <a-button type="default" style="height: 40px;width: 70px" @click="onQuery">查询</a-button>
-        <a-button type="default" style="height: 40px;width: 70px" @click="toRoute('/blog/edit/0')" >新增</a-button>
+                 :style="state.user&&state.user.ID?`width: calc(70% - 140px);height: 40px;`:`width: calc(70% - 70px);height: 40px;`" />
+        <a-button type="default" :style="`height: 40px;width: 70px`" @click="onQuery">查询</a-button>
+        <a-button type="default" :style="`height: 40px;width: 70px`" @click="toRoute('/blog/edit/0')" v-if="state.user&&state.user.ID" >新增</a-button>
       </a-input-group>
       <a-card :title="item.Title" class="blog-card" :hoverable="true" :bodyStyle="{padding:0}" v-for="(item,key) in data">
-        <template #extra><a @click="toRoute('/blog/edit/'+item.Id)" style="color: #b3cfec">编辑</a></template>
+        <template #extra><a @click="toRoute('/blog/edit/'+item.Id)" v-if="state.user&&state.user.ID === item.AccountId">编辑</a></template>
         <div style="height: 130px;display: flex">
           <a-avatar :size="100"  style="margin: 15px;" :src="item.cover||defaultCover">
           </a-avatar>
@@ -49,6 +49,8 @@ import { useRouter } from 'vue-router';
 import {blogList} from "@/api/blog";
 import {onMounted, ref,watch} from "vue";
 import defaultCover from "@/assets/image/default-cover.jpg"
+import { useAuthStore  } from '@/store/auth'
+const { state } = useAuthStore();
 const router = useRouter();
 const toRoute=(path)=> {
   router.push(path)

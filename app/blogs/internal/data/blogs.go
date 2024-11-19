@@ -9,6 +9,7 @@ import (
 	"context"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqljson"
+	"errors"
 	"github.com/go-kratos/kratos/v2/log"
 )
 
@@ -56,6 +57,10 @@ func (o *blogsRepo) CreateBlogs(ctx context.Context, data *biz.Blogs) error {
 		return err
 	}
 	_, err = tx.BlogsContent.Create().SetID(blog.ID).SetContent(data.Content).Save(ctx)
+	if err != nil {
+		return err
+	}
+	_, err = tx.Account.UpdateOneID(int(data.AccountId)).AddBlogNum(1).Save(ctx)
 	return err
 }
 func (o *blogsRepo) UpdateBlogs(ctx context.Context, data *biz.Blogs) error {
@@ -83,21 +88,45 @@ func (o *blogsRepo) UpdateBlogs(ctx context.Context, data *biz.Blogs) error {
 	_, err = tx.BlogsContent.UpdateOneID(int(data.Id)).SetContent(data.Content).Save(ctx)
 	return err
 }
-func (o *blogsRepo) DeleteBlogs(ctx context.Context, id int64) error {
-	_, err := o.data.db.Blogs.Delete().Where(blogs.ID(int(id))).Exec(ctx)
+func (o *blogsRepo) DeleteBlogs(ctx context.Context, data *biz.Blogs) error {
+	blog, err := o.data.db.Blogs.Query().Where(blogs.ID(int(data.Id))).First(ctx)
+	if err != nil {
+		return err
+	}
+	tx, err := o.data.db.Tx(ctx)
+	if err != nil {
+		return err
+	}
+	defer func() {
+		if err != nil {
+			_ = tx.Rollback()
+		} else {
+			err = tx.Commit()
+		}
+	}()
+	row, err := tx.Blogs.Delete().Where(blogs.ID(int(data.Id))).Where(blogs.AccountIDEQ(int(data.AccountId))).Exec(ctx)
+	if err != nil {
+		return err
+	}
+	if row == 0 {
+		return errors.New("blog not found")
+	}
+	_, err = tx.Account.UpdateOneID(int(blog.AccountID)).AddBlogNum(-1).Save(ctx)
 	return err
 }
-func (o *blogsRepo) GetBlogs(ctx context.Context, id int64) (*biz.Blogs, error) {
-	blog, err := o.data.db.Blogs.Query().Where(blogs.ID(int(id))).First(ctx)
+func (o *blogsRepo) GetBlogs(ctx context.Context, data *biz.Blogs) (*biz.Blogs, error) {
+	blog, err := o.data.db.Blogs.Query().Where(blogs.ID(int(data.Id))).
+		Where(blogs.Or(blogs.AccountIDEQ(int(data.AccountId)), blogs.IsHiddenEQ(NotHidden))).First(ctx)
 	if err != nil {
 		return nil, err
 	}
-	content, err := o.data.db.BlogsContent.Query().Where(blogscontent.ID(int(id))).First(ctx)
+	content, err := o.data.db.BlogsContent.Query().Where(blogscontent.ID(int(data.Id))).First(ctx)
 	if err != nil {
 		return nil, err
 	}
 	return &biz.Blogs{
 		CreatedAt:   blog.CreatedAt,
+		UpdatedAt:   blog.UpdatedAt,
 		Id:          int64(blog.ID),
 		IsHidden:    int64(blog.IsHidden),
 		AccountId:   int64(blog.AccountID),
@@ -135,6 +164,7 @@ func (o *blogsRepo) ListBlogs(ctx context.Context, query *biz.BlogsQuery) (int64
 	for _, blog := range list {
 		data = append(data, &biz.Blogs{
 			CreatedAt:   blog.CreatedAt,
+			UpdatedAt:   blog.UpdatedAt,
 			Id:          int64(blog.ID),
 			IsHidden:    int64(blog.IsHidden),
 			AccountId:   int64(blog.AccountID),

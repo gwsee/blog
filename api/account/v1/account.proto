@@ -5,30 +5,69 @@ package api.account.v1;
 option go_package = "blog/api/account/v1;v1";
 option java_multiple_files = true;
 option java_package = "api.account.v1";
+import "api/global/index.proto";
+import "third_party/google/api/annotations.proto";
 
 service Account {
-	rpc CreateAccount (CreateAccountRequest) returns (CreateAccountReply);
-	rpc ResetPassword (ResetPasswordRequest) returns (ResetPasswordReply);
-	rpc LoginByAccount (LoginByAccountRequest) returns (LoginByAccountReply);
+	rpc CreateAccount (CreateAccountRequest) returns (api.global.Empty){
+		option (google.api.http) = {
+			body: "*"
+		};
+	};
+	rpc ResetPassword (ResetPasswordRequest) returns (api.global.Empty){
+		option (google.api.http) = {
+			body: "*"
+		};
+	};
+	rpc LoginByAccount (LoginByAccountRequest) returns (LoginByAccountReply){
+		option (google.api.http) = {
+			body: "*"
+		};
+	};
+	rpc Info (api.global.Empty) returns (AccountInfoReply){
+	};
+	rpc UpdateAccount(UpdateAccountRequest) returns (api.global.Empty){
+		option (google.api.http) = {
+			body: "*"
+		};
+	};
 }
 
 message CreateAccountRequest {
 	string Account = 1;
 	string Password = 2;
 	string Email = 3;
+	string NickName = 4;
+	string Avatar = 5;
+	string Description = 6;
 }
-message CreateAccountReply {}
 
 message ResetPasswordRequest {
 	string Account = 1;
 	string Password = 2;
 }
-message ResetPasswordReply {}
 
 message LoginByAccountRequest {
 	string Account = 1;
 	string Password = 2;
 }
+
 message LoginByAccountReply {
 	string Token = 1;
+}
+
+message UpdateAccountRequest {
+	string NickName = 1;
+	string Avatar = 2;
+	string Description = 3;
+}
+
+message AccountInfoReply{
+	int64  ID = 1;
+	string NickName = 2;
+	string Account = 3;
+	string Email = 4;
+	string Avatar = 5;
+	string Description = 6;
+	int64  BlogNum = 7;
 }

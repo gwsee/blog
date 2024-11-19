@@ -2,6 +2,7 @@ package biz
 
 import (
 	"blog/api/account/v1"
+	"blog/api/global"
 	"blog/app/account/internal/conf"
 	"blog/internal/common"
 	"blog/internal/constx"
@@ -13,10 +14,14 @@ import (
 )
 
 type Account struct {
-	Id       int
-	Account  string
-	Password string
-	Email    string
+	Id          int
+	Account     string
+	Password    string
+	Email       string
+	Nickname    string
+	Avatar      string
+	Description string
+	BlogNum     int
 }
 
 // AccountRepo is a  repo.
@@ -24,6 +29,8 @@ type AccountRepo interface {
 	CreateAccount(context.Context, *Account) error
 	ResetPassword(context.Context, *Account) error
 	FindByValidAccount(context.Context, string) (*Account, error)
+	UpdateAccount(context.Context, *Account) error
+	Info(context.Context, int64) (*Account, error)
 }
 type AccountUseCase struct {
 	repo AccountRepo
@@ -39,24 +46,35 @@ func NewAccountUseCase(conf *conf.Auth, repo AccountRepo, logger log.Logger) *Ac
 	}
 }
 
-func (uc *AccountUseCase) CreateAccount(ctx context.Context, req *v1.CreateAccountRequest) (reply *v1.CreateAccountReply, err error) {
+func (uc *AccountUseCase) CreateAccount(ctx context.Context, req *v1.CreateAccountRequest) (reply *global.Empty, err error) {
 	if req.Account == "" || req.Password == "" {
 		return nil, errors.New("account or password is empty")
 	}
 	//两次MD5 //前端传过来应该已经MD5了  然后我们再次MD5才行
 	req.Password = common.MD5(req.Password)
 	err = uc.repo.CreateAccount(ctx, &Account{
-		Account:  req.Account,
-		Password: req.Password,
-		Email:    req.Email,
+		Account:     req.Account,
+		Password:    req.Password,
+		Email:       req.Email,
+		Nickname:    req.NickName,
+		Avatar:      req.Avatar,
+		Description: req.Description,
 	})
 	if err != nil {
 		return
 	}
-	return &v1.CreateAccountReply{}, err
+	return &global.Empty{}, err
 }
-func (uc *AccountUseCase) ResetPassword(ctx context.Context, req *v1.ResetPasswordRequest) (reply *v1.ResetPasswordReply, err error) {
-	return nil, nil
+func (uc *AccountUseCase) ResetPassword(ctx context.Context, req *v1.ResetPasswordRequest) (reply *global.Empty, err error) {
+	user, err := constx.DefaultUser.User(ctx)
+	if err != nil {
+		return nil, err
+	}
+	err = uc.repo.ResetPassword(ctx, &Account{
+		Id:       int(user.Id),
+		Password: req.Password,
+	})
+	return &global.Empty{}, err
 }
 func (uc *AccountUseCase) LoginByAccount(ctx context.Context, req *v1.LoginByAccountRequest) (reply *v1.LoginByAccountReply, err error) {
 	account, err := uc.repo.FindByValidAccount(ctx, req.Account)
@@ -80,4 +98,37 @@ func (uc *AccountUseCase) LoginByAccount(ctx context.Context, req *v1.LoginByAcc
 	return &v1.LoginByAccountReply{
 		Token: signedStr,
 	}, nil
+}
+
+func (uc *AccountUseCase) Info(ctx context.Context) (reply *v1.AccountInfoReply, err error) {
+	user, err := constx.DefaultUser.User(ctx)
+	if err != nil {
+		return nil, err
+	}
+	info, err := uc.repo.Info(ctx, user.Id)
+	if err != nil {
+		return nil, err
+	}
+	return &v1.AccountInfoReply{
+		ID:          int64(info.Id),
+		NickName:    info.Nickname,
+		Account:     info.Account,
+		Email:       info.Email,
+		Avatar:      info.Avatar,
+		Description: info.Description,
+		BlogNum:     int64(info.BlogNum),
+	}, nil
+}
+func (uc *AccountUseCase) UpdateAccount(ctx context.Context, req *v1.UpdateAccountRequest) (reply *global.Empty, err error) {
+	user, err := constx.DefaultUser.User(ctx)
+	if err != nil {
+		return nil, err
+	}
+	err = uc.repo.UpdateAccount(ctx, &Account{
+		Id:          int(user.Id),
+		Nickname:    req.NickName,
+		Avatar:      req.Avatar,
+		Description: req.Description,
+	})
+	return &global.Empty{}, err
 }

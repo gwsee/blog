@@ -15,9 +15,11 @@ type AccountUseCase struct {
 }
 
 type AccountRepo interface {
-	CreateAccount(ctx context.Context, data *account.CreateAccountRequest) (*account.CreateAccountReply, error)
-	ResetPassword(ctx context.Context, data *account.ResetPasswordRequest) (*account.ResetPasswordReply, error)
+	CreateAccount(ctx context.Context, data *account.CreateAccountRequest) (*global.Empty, error)
+	ResetPassword(ctx context.Context, data *account.ResetPasswordRequest) (*global.Empty, error)
 	LoginByAccount(ctx context.Context, data *account.LoginByAccountRequest) (*account.LoginByAccountReply, error)
+	Info(ctx context.Context, data *global.Empty) (*account.AccountInfoReply, error)
+	UpdateAccount(ctx context.Context, data *account.UpdateAccountRequest) (*global.Empty, error)
 }
 
 func NewAccountUseCase(repo AccountRepo, logger log.Logger) *AccountUseCase {
@@ -51,6 +53,32 @@ func (l *AccountUseCase) ResetPassword(ctx context.Context, request *account.Res
 }
 func (l *AccountUseCase) LoginByAccount(ctx context.Context, request *account.LoginByAccountRequest) (*global.Response, error) {
 	res, err := l.repo.LoginByAccount(ctx, request)
+	if err != nil {
+		return nil, err
+	}
+	anyData, err := anypb.New(res)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal response data: %w", err)
+	}
+	return &global.Response{
+		Data: anyData,
+	}, nil
+}
+func (l *AccountUseCase) Info(ctx context.Context, data *global.Empty) (*global.Response, error) {
+	res, err := l.repo.Info(ctx, data)
+	if err != nil {
+		return nil, err
+	}
+	anyData, err := anypb.New(res)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal response data: %w", err)
+	}
+	return &global.Response{
+		Data: anyData,
+	}, nil
+}
+func (l *AccountUseCase) UpdateAccount(ctx context.Context, data *account.UpdateAccountRequest) (*global.Response, error) {
+	res, err := l.repo.UpdateAccount(ctx, data)
 	if err != nil {
 		return nil, err
 	}

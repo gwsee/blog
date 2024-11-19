@@ -2,20 +2,24 @@
 import Login from "@/components/Login.vue";
 import avatar from "@/assets/image/default-avatar.png"
 import logo from "@/assets/image/logo.png"
-import { ref, watch } from "vue"
+import {onMounted, ref, watch} from "vue"
 import { useRouter } from 'vue-router';
 import { useAuthStore  } from '@/store/auth.js'
-const { showLogin, setLoginShow, isLoggedIn } = useAuthStore();
+const { isLoggedIn, state, setLoginData, getLoginToken } = useAuthStore();
 const router = useRouter();
 const loginRef = ref(null);
 
 const showLoginDialog =()=>{
-  setLoginShow(true)
+  loginRef.value.show()
 }
 
-watch(showLogin,(value)=>{
-  if(value){
-    loginRef.value.show()
+onMounted(function () {
+  if(isLoggedIn){
+    const tk = getLoginToken()
+    if(!tk||tk=='undefined'){
+     return
+    }
+    setLoginData(tk)
   }
 })
 
@@ -43,8 +47,8 @@ const goToAbout=(path)=> {
         <a-col  :md="8" :sm="24" :xs="24">
           <a-avatar :size="44" class="layout-content-menu-item" @click="showLoginDialog" v-if="!isLoggedIn" >登陆</a-avatar>
           <a-avatar :size="44" class="layout-content-menu-item" :src="avatar" v-else ></a-avatar>
-          <a-avatar :size="44" class="layout-content-menu-item" @click="showLoginDialog" >杂谈</a-avatar>
-          <a-avatar :size="44" class="layout-content-menu-item" @click="showLoginDialog" >留言</a-avatar>
+          <a-avatar :size="44" class="layout-content-menu-item" @click="goToAbout('/about')" v-if="false">杂谈</a-avatar>
+          <a-avatar :size="44" class="layout-content-menu-item" @click="goToAbout('/about')" v-if="false">留言</a-avatar>
           <a-avatar :size="44" class="layout-content-menu-item" @click="goToAbout('/about')" >关于</a-avatar>
           <a-avatar :size="44" class="layout-content-menu-item" @click="goToAbout('/travel')" >旅行</a-avatar>
           <a-avatar :size="44" class="layout-content-menu-item" @click="goToAbout('/blog')" >日记</a-avatar>

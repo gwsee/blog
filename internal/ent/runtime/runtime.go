@@ -66,8 +66,24 @@ func init() {
 	accountDescEmail := accountFields[3].Descriptor()
 	// account.DefaultEmail holds the default value on creation for the email field.
 	account.DefaultEmail = accountDescEmail.Default.(string)
+	// accountDescNickname is the schema descriptor for nickname field.
+	accountDescNickname := accountFields[4].Descriptor()
+	// account.DefaultNickname holds the default value on creation for the nickname field.
+	account.DefaultNickname = accountDescNickname.Default.(string)
+	// accountDescAvatar is the schema descriptor for avatar field.
+	accountDescAvatar := accountFields[5].Descriptor()
+	// account.DefaultAvatar holds the default value on creation for the avatar field.
+	account.DefaultAvatar = accountDescAvatar.Default.(string)
+	// accountDescDescription is the schema descriptor for description field.
+	accountDescDescription := accountFields[6].Descriptor()
+	// account.DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
+	account.DescriptionValidator = accountDescDescription.Validators[0].(func(string) error)
+	// accountDescBlogNum is the schema descriptor for blog_num field.
+	accountDescBlogNum := accountFields[7].Descriptor()
+	// account.DefaultBlogNum holds the default value on creation for the blog_num field.
+	account.DefaultBlogNum = accountDescBlogNum.Default.(int)
 	// accountDescStatus is the schema descriptor for status field.
-	accountDescStatus := accountFields[4].Descriptor()
+	accountDescStatus := accountFields[8].Descriptor()
 	// account.DefaultStatus holds the default value on creation for the status field.
 	account.DefaultStatus = accountDescStatus.Default.(int8)
 	// accountDescID is the schema descriptor for id field.

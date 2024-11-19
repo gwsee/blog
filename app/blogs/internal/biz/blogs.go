@@ -11,6 +11,7 @@ import (
 
 type Blogs struct {
 	CreatedAt   int64
+	UpdatedAt   int64
 	Id          int64
 	IsHidden    int64
 	AccountId   int64
@@ -31,8 +32,8 @@ type BlogsQuery struct {
 type BlogsRepo interface {
 	CreateBlogs(context.Context, *Blogs) error
 	UpdateBlogs(context.Context, *Blogs) error
-	DeleteBlogs(context.Context, int64) error
-	GetBlogs(context.Context, int64) (*Blogs, error)
+	DeleteBlogs(context.Context, *Blogs) error
+	GetBlogs(context.Context, *Blogs) (*Blogs, error)
 	ListBlogs(context.Context, *BlogsQuery) (int64, []*Blogs, error)
 }
 
@@ -51,7 +52,10 @@ func (s *BlogsUseCase) CreateBlogs(ctx context.Context, req *pb.CreateBlogsReque
 	if req.Title == "" || req.Content == "" {
 		return nil, errors.New("title or content is empty")
 	}
-	u := constx.DefaultUser.Default(ctx)
+	u, err := constx.DefaultUser.User(ctx)
+	if err != nil {
+		return nil, err
+	}
 	return &pb.CreateBlogsReply{}, s.repo.CreateBlogs(ctx, &Blogs{
 		IsHidden:    int64(req.IsHidden),
 		AccountId:   u.Id,
@@ -63,21 +67,38 @@ func (s *BlogsUseCase) CreateBlogs(ctx context.Context, req *pb.CreateBlogsReque
 	})
 }
 func (s *BlogsUseCase) UpdateBlogs(ctx context.Context, req *pb.UpdateBlogsRequest) (*pb.UpdateBlogsReply, error) {
+	u, err := constx.DefaultUser.User(ctx)
+	if err != nil {
+		return nil, err
+	}
+
 	return &pb.UpdateBlogsReply{}, s.repo.UpdateBlogs(ctx, &Blogs{
 		Id:          req.Id,
 		IsHidden:    int64(req.IsHidden),
 		Title:       req.Title,
 		Description: req.Description,
+		AccountId:   u.Id,
 		Tags:        req.Tags,
 		Cover:       req.Cover,
 		Content:     req.Content,
 	})
 }
 func (s *BlogsUseCase) DeleteBlogs(ctx context.Context, req *pb.DeleteBlogsRequest) (*pb.DeleteBlogsReply, error) {
-	return &pb.DeleteBlogsReply{}, s.repo.DeleteBlogs(ctx, req.Id)
+	u, err := constx.DefaultUser.User(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.DeleteBlogsReply{}, s.repo.DeleteBlogs(ctx, &Blogs{
+		Id:        req.Id,
+		AccountId: u.Id,
+	})
 }
 func (s *BlogsUseCase) GetBlogs(ctx context.Context, req *pb.GetBlogsRequest) (*pb.GetBlogsReply, error) {
-	info, err := s.repo.GetBlogs(ctx, req.GetId())
+	u := constx.DefaultUser.Default(ctx)
+	info, err := s.repo.GetBlogs(ctx, &Blogs{
+		Id:        req.Id,
+		AccountId: u.Id,
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -91,6 +112,7 @@ func (s *BlogsUseCase) GetBlogs(ctx context.Context, req *pb.GetBlogsRequest) (*
 			Cover:       info.Cover,
 			AccountId:   info.AccountId,
 			CreatedAt:   info.CreatedAt,
+			UpdatedAt:   info.UpdatedAt,
 		},
 		Content: info.Content,
 	}, nil
@@ -120,6 +142,7 @@ func (s *BlogsUseCase) ListBlogs(ctx context.Context, req *pb.ListBlogsRequest) 
 			Cover:       info.Cover,
 			AccountId:   info.AccountId,
 			CreatedAt:   info.CreatedAt,
+			UpdatedAt:   info.UpdatedAt,
 		})
 	}
 	return res, nil

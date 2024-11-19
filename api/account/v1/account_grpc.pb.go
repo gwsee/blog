@@ -7,6 +7,7 @@
 package v1
 
 import (
+	global "blog/api/global"
 	context "context"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
@@ -22,15 +23,19 @@ const (
 	Account_CreateAccount_FullMethodName  = "/api.account.v1.Account/CreateAccount"
 	Account_ResetPassword_FullMethodName  = "/api.account.v1.Account/ResetPassword"
 	Account_LoginByAccount_FullMethodName = "/api.account.v1.Account/LoginByAccount"
+	Account_Info_FullMethodName           = "/api.account.v1.Account/Info"
+	Account_UpdateAccount_FullMethodName  = "/api.account.v1.Account/UpdateAccount"
 )
 
 // AccountClient is the client API for Account service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AccountClient interface {
-	CreateAccount(ctx context.Context, in *CreateAccountRequest, opts ...grpc.CallOption) (*CreateAccountReply, error)
-	ResetPassword(ctx context.Context, in *ResetPasswordRequest, opts ...grpc.CallOption) (*ResetPasswordReply, error)
+	CreateAccount(ctx context.Context, in *CreateAccountRequest, opts ...grpc.CallOption) (*global.Empty, error)
+	ResetPassword(ctx context.Context, in *ResetPasswordRequest, opts ...grpc.CallOption) (*global.Empty, error)
 	LoginByAccount(ctx context.Context, in *LoginByAccountRequest, opts ...grpc.CallOption) (*LoginByAccountReply, error)
+	Info(ctx context.Context, in *global.Empty, opts ...grpc.CallOption) (*AccountInfoReply, error)
+	UpdateAccount(ctx context.Context, in *UpdateAccountRequest, opts ...grpc.CallOption) (*global.Empty, error)
 }
 
 type accountClient struct {
@@ -41,9 +46,9 @@ func NewAccountClient(cc grpc.ClientConnInterface) AccountClient {
 	return &accountClient{cc}
 }
 
-func (c *accountClient) CreateAccount(ctx context.Context, in *CreateAccountRequest, opts ...grpc.CallOption) (*CreateAccountReply, error) {
+func (c *accountClient) CreateAccount(ctx context.Context, in *CreateAccountRequest, opts ...grpc.CallOption) (*global.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CreateAccountReply)
+	out := new(global.Empty)
 	err := c.cc.Invoke(ctx, Account_CreateAccount_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -51,9 +56,9 @@ func (c *accountClient) CreateAccount(ctx context.Context, in *CreateAccountRequ
 	return out, nil
 }
 
-func (c *accountClient) ResetPassword(ctx context.Context, in *ResetPasswordRequest, opts ...grpc.CallOption) (*ResetPasswordReply, error) {
+func (c *accountClient) ResetPassword(ctx context.Context, in *ResetPasswordRequest, opts ...grpc.CallOption) (*global.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ResetPasswordReply)
+	out := new(global.Empty)
 	err := c.cc.Invoke(ctx, Account_ResetPassword_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -71,13 +76,35 @@ func (c *accountClient) LoginByAccount(ctx context.Context, in *LoginByAccountRe
 	return out, nil
 }
 
+func (c *accountClient) Info(ctx context.Context, in *global.Empty, opts ...grpc.CallOption) (*AccountInfoReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AccountInfoReply)
+	err := c.cc.Invoke(ctx, Account_Info_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *accountClient) UpdateAccount(ctx context.Context, in *UpdateAccountRequest, opts ...grpc.CallOption) (*global.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(global.Empty)
+	err := c.cc.Invoke(ctx, Account_UpdateAccount_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AccountServer is the server API for Account service.
 // All implementations must embed UnimplementedAccountServer
 // for forward compatibility.
 type AccountServer interface {
-	CreateAccount(context.Context, *CreateAccountRequest) (*CreateAccountReply, error)
-	ResetPassword(context.Context, *ResetPasswordRequest) (*ResetPasswordReply, error)
+	CreateAccount(context.Context, *CreateAccountRequest) (*global.Empty, error)
+	ResetPassword(context.Context, *ResetPasswordRequest) (*global.Empty, error)
 	LoginByAccount(context.Context, *LoginByAccountRequest) (*LoginByAccountReply, error)
+	Info(context.Context, *global.Empty) (*AccountInfoReply, error)
+	UpdateAccount(context.Context, *UpdateAccountRequest) (*global.Empty, error)
 	mustEmbedUnimplementedAccountServer()
 }
 
@@ -88,14 +115,20 @@ type AccountServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAccountServer struct{}
 
-func (UnimplementedAccountServer) CreateAccount(context.Context, *CreateAccountRequest) (*CreateAccountReply, error) {
+func (UnimplementedAccountServer) CreateAccount(context.Context, *CreateAccountRequest) (*global.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateAccount not implemented")
 }
-func (UnimplementedAccountServer) ResetPassword(context.Context, *ResetPasswordRequest) (*ResetPasswordReply, error) {
+func (UnimplementedAccountServer) ResetPassword(context.Context, *ResetPasswordRequest) (*global.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ResetPassword not implemented")
 }
 func (UnimplementedAccountServer) LoginByAccount(context.Context, *LoginByAccountRequest) (*LoginByAccountReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LoginByAccount not implemented")
+}
+func (UnimplementedAccountServer) Info(context.Context, *global.Empty) (*AccountInfoReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Info not implemented")
+}
+func (UnimplementedAccountServer) UpdateAccount(context.Context, *UpdateAccountRequest) (*global.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateAccount not implemented")
 }
 func (UnimplementedAccountServer) mustEmbedUnimplementedAccountServer() {}
 func (UnimplementedAccountServer) testEmbeddedByValue()                 {}
@@ -172,6 +205,42 @@ func _Account_LoginByAccount_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Account_Info_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(global.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServer).Info(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Account_Info_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServer).Info(ctx, req.(*global.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Account_UpdateAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateAccountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServer).UpdateAccount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Account_UpdateAccount_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServer).UpdateAccount(ctx, req.(*UpdateAccountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Account_ServiceDesc is the grpc.ServiceDesc for Account service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -190,6 +259,14 @@ var Account_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "LoginByAccount",
 			Handler:    _Account_LoginByAccount_Handler,
+		},
+		{
+			MethodName: "Info",
+			Handler:    _Account_Info_Handler,
+		},
+		{
+			MethodName: "UpdateAccount",
+			Handler:    _Account_UpdateAccount_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

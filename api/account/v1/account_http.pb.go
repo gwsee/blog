@@ -7,6 +7,7 @@
 package v1
 
 import (
+	global "blog/api/global"
 	context "context"
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
@@ -20,13 +21,17 @@ var _ = binding.EncodeURL
 const _ = http.SupportPackageIsVersion1
 
 const OperationAccountCreateAccount = "/api.account.v1.Account/CreateAccount"
+const OperationAccountInfo = "/api.account.v1.Account/Info"
 const OperationAccountLoginByAccount = "/api.account.v1.Account/LoginByAccount"
 const OperationAccountResetPassword = "/api.account.v1.Account/ResetPassword"
+const OperationAccountUpdateAccount = "/api.account.v1.Account/UpdateAccount"
 
 type AccountHTTPServer interface {
-	CreateAccount(context.Context, *CreateAccountRequest) (*CreateAccountReply, error)
+	CreateAccount(context.Context, *CreateAccountRequest) (*global.Empty, error)
+	Info(context.Context, *global.Empty) (*AccountInfoReply, error)
 	LoginByAccount(context.Context, *LoginByAccountRequest) (*LoginByAccountReply, error)
-	ResetPassword(context.Context, *ResetPasswordRequest) (*ResetPasswordReply, error)
+	ResetPassword(context.Context, *ResetPasswordRequest) (*global.Empty, error)
+	UpdateAccount(context.Context, *UpdateAccountRequest) (*global.Empty, error)
 }
 
 func RegisterAccountHTTPServer(s *http.Server, srv AccountHTTPServer) {
@@ -34,12 +39,17 @@ func RegisterAccountHTTPServer(s *http.Server, srv AccountHTTPServer) {
 	r.POST("/api.account.v1.Account/CreateAccount", _Account_CreateAccount0_HTTP_Handler(srv))
 	r.POST("/api.account.v1.Account/ResetPassword", _Account_ResetPassword0_HTTP_Handler(srv))
 	r.POST("/api.account.v1.Account/LoginByAccount", _Account_LoginByAccount0_HTTP_Handler(srv))
+	r.POST("/api.account.v1.Account/Info", _Account_Info0_HTTP_Handler(srv))
+	r.POST("/api.account.v1.Account/UpdateAccount", _Account_UpdateAccount0_HTTP_Handler(srv))
 }
 
 func _Account_CreateAccount0_HTTP_Handler(srv AccountHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in CreateAccountRequest
 		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationAccountCreateAccount)
@@ -50,7 +60,7 @@ func _Account_CreateAccount0_HTTP_Handler(srv AccountHTTPServer) func(ctx http.C
 		if err != nil {
 			return err
 		}
-		reply := out.(*CreateAccountReply)
+		reply := out.(*global.Empty)
 		return ctx.Result(200, reply)
 	}
 }
@@ -61,6 +71,9 @@ func _Account_ResetPassword0_HTTP_Handler(srv AccountHTTPServer) func(ctx http.C
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
 		http.SetOperation(ctx, OperationAccountResetPassword)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.ResetPassword(ctx, req.(*ResetPasswordRequest))
@@ -69,7 +82,7 @@ func _Account_ResetPassword0_HTTP_Handler(srv AccountHTTPServer) func(ctx http.C
 		if err != nil {
 			return err
 		}
-		reply := out.(*ResetPasswordReply)
+		reply := out.(*global.Empty)
 		return ctx.Result(200, reply)
 	}
 }
@@ -78,6 +91,9 @@ func _Account_LoginByAccount0_HTTP_Handler(srv AccountHTTPServer) func(ctx http.
 	return func(ctx http.Context) error {
 		var in LoginByAccountRequest
 		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationAccountLoginByAccount)
@@ -93,10 +109,53 @@ func _Account_LoginByAccount0_HTTP_Handler(srv AccountHTTPServer) func(ctx http.
 	}
 }
 
+func _Account_Info0_HTTP_Handler(srv AccountHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in global.Empty
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAccountInfo)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.Info(ctx, req.(*global.Empty))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*AccountInfoReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Account_UpdateAccount0_HTTP_Handler(srv AccountHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UpdateAccountRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAccountUpdateAccount)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateAccount(ctx, req.(*UpdateAccountRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*global.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
 type AccountHTTPClient interface {
-	CreateAccount(ctx context.Context, req *CreateAccountRequest, opts ...http.CallOption) (rsp *CreateAccountReply, err error)
+	CreateAccount(ctx context.Context, req *CreateAccountRequest, opts ...http.CallOption) (rsp *global.Empty, err error)
+	Info(ctx context.Context, req *global.Empty, opts ...http.CallOption) (rsp *AccountInfoReply, err error)
 	LoginByAccount(ctx context.Context, req *LoginByAccountRequest, opts ...http.CallOption) (rsp *LoginByAccountReply, err error)
-	ResetPassword(ctx context.Context, req *ResetPasswordRequest, opts ...http.CallOption) (rsp *ResetPasswordReply, err error)
+	ResetPassword(ctx context.Context, req *ResetPasswordRequest, opts ...http.CallOption) (rsp *global.Empty, err error)
+	UpdateAccount(ctx context.Context, req *UpdateAccountRequest, opts ...http.CallOption) (rsp *global.Empty, err error)
 }
 
 type AccountHTTPClientImpl struct {
@@ -107,11 +166,24 @@ func NewAccountHTTPClient(client *http.Client) AccountHTTPClient {
 	return &AccountHTTPClientImpl{client}
 }
 
-func (c *AccountHTTPClientImpl) CreateAccount(ctx context.Context, in *CreateAccountRequest, opts ...http.CallOption) (*CreateAccountReply, error) {
-	var out CreateAccountReply
+func (c *AccountHTTPClientImpl) CreateAccount(ctx context.Context, in *CreateAccountRequest, opts ...http.CallOption) (*global.Empty, error) {
+	var out global.Empty
 	pattern := "/api.account.v1.Account/CreateAccount"
-	path := binding.EncodeURL(pattern, in, true)
+	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAccountCreateAccount))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *AccountHTTPClientImpl) Info(ctx context.Context, in *global.Empty, opts ...http.CallOption) (*AccountInfoReply, error) {
+	var out AccountInfoReply
+	pattern := "/api.account.v1.Account/Info"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAccountInfo))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, nil, &out, opts...)
 	if err != nil {
@@ -123,23 +195,36 @@ func (c *AccountHTTPClientImpl) CreateAccount(ctx context.Context, in *CreateAcc
 func (c *AccountHTTPClientImpl) LoginByAccount(ctx context.Context, in *LoginByAccountRequest, opts ...http.CallOption) (*LoginByAccountReply, error) {
 	var out LoginByAccountReply
 	pattern := "/api.account.v1.Account/LoginByAccount"
-	path := binding.EncodeURL(pattern, in, true)
+	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAccountLoginByAccount))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, nil, &out, opts...)
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return &out, nil
 }
 
-func (c *AccountHTTPClientImpl) ResetPassword(ctx context.Context, in *ResetPasswordRequest, opts ...http.CallOption) (*ResetPasswordReply, error) {
-	var out ResetPasswordReply
+func (c *AccountHTTPClientImpl) ResetPassword(ctx context.Context, in *ResetPasswordRequest, opts ...http.CallOption) (*global.Empty, error) {
+	var out global.Empty
 	pattern := "/api.account.v1.Account/ResetPassword"
-	path := binding.EncodeURL(pattern, in, true)
+	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAccountResetPassword))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, nil, &out, opts...)
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *AccountHTTPClientImpl) UpdateAccount(ctx context.Context, in *UpdateAccountRequest, opts ...http.CallOption) (*global.Empty, error) {
+	var out global.Empty
+	pattern := "/api.account.v1.Account/UpdateAccount"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAccountUpdateAccount))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

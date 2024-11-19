@@ -1,18 +1,27 @@
 import {reactive, computed, ref} from 'vue'
+import {info} from "@/api/account";
 
 const state = reactive({
     user: null,
     token: null,
 })
 
-const isLoggedIn = computed(() => !!getLoginToken())
+const isLoggedIn = computed(() => !!state.token)
 
 const showLogin = ref(false)
 
-const setLoginData = (userData, token) => {
-    state.user = userData
-    state.token = token
+const setLoginData = (token) => {
+    if(!token){
+        return
+    }
     localStorage.setItem('token', token)
+    info({}).then(res=>{
+        if(res&&res.code===0){
+            state.user = res.data
+        }
+    }).finally(()=>{
+        state.token = token
+    })
 }
 
 const setLoginShow=(flag)=>{
@@ -21,6 +30,7 @@ const setLoginShow=(flag)=>{
         return
     }
     if(isLoggedIn.value){
+        console.log("这里去掉了token？")
         logout()
     }
     showLogin.value = true

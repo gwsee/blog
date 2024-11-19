@@ -38,10 +38,9 @@
 
 <script setup>
 import { login, register, resetPass} from "@/api/account";
-import { ref,reactive } from 'vue';
+import {ref, reactive, watch} from 'vue';
 import { useAuthStore  } from '@/store/auth'
-const { setLoginShow,setLoginData } = useAuthStore();
-
+const { showLogin,setLoginShow,setLoginData } = useAuthStore();
 const open = ref(false);
 const formRef = ref(null)
 const confirmLoading = ref(false);
@@ -64,6 +63,11 @@ const validatePassConfirm= async (_rule, value) => {
   }
 };
 
+watch(showLogin,(value)=>{
+  if(value){
+    open.value = true
+  }
+})
 
 const close = ()=>{
   setLoginShow(false);
@@ -74,7 +78,7 @@ const handleLogin =(data)=>{
   confirmLoading.value = true;
   login(data).then(res=>{
     if(res.code===0){
-      setLoginData({},res.data.Token)
+      setLoginData(res.data.Token)
       confirmLoading.value = false;
       close()
     }

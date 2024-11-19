@@ -145,6 +145,69 @@ func (au *AccountUpdate) SetNillableEmail(s *string) *AccountUpdate {
 	return au
 }
 
+// SetNickname sets the "nickname" field.
+func (au *AccountUpdate) SetNickname(s string) *AccountUpdate {
+	au.mutation.SetNickname(s)
+	return au
+}
+
+// SetNillableNickname sets the "nickname" field if the given value is not nil.
+func (au *AccountUpdate) SetNillableNickname(s *string) *AccountUpdate {
+	if s != nil {
+		au.SetNickname(*s)
+	}
+	return au
+}
+
+// SetAvatar sets the "avatar" field.
+func (au *AccountUpdate) SetAvatar(s string) *AccountUpdate {
+	au.mutation.SetAvatar(s)
+	return au
+}
+
+// SetNillableAvatar sets the "avatar" field if the given value is not nil.
+func (au *AccountUpdate) SetNillableAvatar(s *string) *AccountUpdate {
+	if s != nil {
+		au.SetAvatar(*s)
+	}
+	return au
+}
+
+// SetDescription sets the "description" field.
+func (au *AccountUpdate) SetDescription(s string) *AccountUpdate {
+	au.mutation.SetDescription(s)
+	return au
+}
+
+// SetNillableDescription sets the "description" field if the given value is not nil.
+func (au *AccountUpdate) SetNillableDescription(s *string) *AccountUpdate {
+	if s != nil {
+		au.SetDescription(*s)
+	}
+	return au
+}
+
+// SetBlogNum sets the "blog_num" field.
+func (au *AccountUpdate) SetBlogNum(i int) *AccountUpdate {
+	au.mutation.ResetBlogNum()
+	au.mutation.SetBlogNum(i)
+	return au
+}
+
+// SetNillableBlogNum sets the "blog_num" field if the given value is not nil.
+func (au *AccountUpdate) SetNillableBlogNum(i *int) *AccountUpdate {
+	if i != nil {
+		au.SetBlogNum(*i)
+	}
+	return au
+}
+
+// AddBlogNum adds i to the "blog_num" field.
+func (au *AccountUpdate) AddBlogNum(i int) *AccountUpdate {
+	au.mutation.AddBlogNum(i)
+	return au
+}
+
 // SetStatus sets the "status" field.
 func (au *AccountUpdate) SetStatus(i int8) *AccountUpdate {
 	au.mutation.ResetStatus()
@@ -225,6 +288,11 @@ func (au *AccountUpdate) check() error {
 			return &ValidationError{Name: "password", err: fmt.Errorf(`ent: validator failed for field "Account.password": %w`, err)}
 		}
 	}
+	if v, ok := au.mutation.Description(); ok {
+		if err := account.DescriptionValidator(v); err != nil {
+			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Account.description": %w`, err)}
+		}
+	}
 	return nil
 }
 
@@ -272,6 +340,21 @@ func (au *AccountUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := au.mutation.Email(); ok {
 		_spec.SetField(account.FieldEmail, field.TypeString, value)
+	}
+	if value, ok := au.mutation.Nickname(); ok {
+		_spec.SetField(account.FieldNickname, field.TypeString, value)
+	}
+	if value, ok := au.mutation.Avatar(); ok {
+		_spec.SetField(account.FieldAvatar, field.TypeString, value)
+	}
+	if value, ok := au.mutation.Description(); ok {
+		_spec.SetField(account.FieldDescription, field.TypeString, value)
+	}
+	if value, ok := au.mutation.BlogNum(); ok {
+		_spec.SetField(account.FieldBlogNum, field.TypeInt, value)
+	}
+	if value, ok := au.mutation.AddedBlogNum(); ok {
+		_spec.AddField(account.FieldBlogNum, field.TypeInt, value)
 	}
 	if value, ok := au.mutation.Status(); ok {
 		_spec.SetField(account.FieldStatus, field.TypeInt8, value)
@@ -417,6 +500,69 @@ func (auo *AccountUpdateOne) SetNillableEmail(s *string) *AccountUpdateOne {
 	return auo
 }
 
+// SetNickname sets the "nickname" field.
+func (auo *AccountUpdateOne) SetNickname(s string) *AccountUpdateOne {
+	auo.mutation.SetNickname(s)
+	return auo
+}
+
+// SetNillableNickname sets the "nickname" field if the given value is not nil.
+func (auo *AccountUpdateOne) SetNillableNickname(s *string) *AccountUpdateOne {
+	if s != nil {
+		auo.SetNickname(*s)
+	}
+	return auo
+}
+
+// SetAvatar sets the "avatar" field.
+func (auo *AccountUpdateOne) SetAvatar(s string) *AccountUpdateOne {
+	auo.mutation.SetAvatar(s)
+	return auo
+}
+
+// SetNillableAvatar sets the "avatar" field if the given value is not nil.
+func (auo *AccountUpdateOne) SetNillableAvatar(s *string) *AccountUpdateOne {
+	if s != nil {
+		auo.SetAvatar(*s)
+	}
+	return auo
+}
+
+// SetDescription sets the "description" field.
+func (auo *AccountUpdateOne) SetDescription(s string) *AccountUpdateOne {
+	auo.mutation.SetDescription(s)
+	return auo
+}
+
+// SetNillableDescription sets the "description" field if the given value is not nil.
+func (auo *AccountUpdateOne) SetNillableDescription(s *string) *AccountUpdateOne {
+	if s != nil {
+		auo.SetDescription(*s)
+	}
+	return auo
+}
+
+// SetBlogNum sets the "blog_num" field.
+func (auo *AccountUpdateOne) SetBlogNum(i int) *AccountUpdateOne {
+	auo.mutation.ResetBlogNum()
+	auo.mutation.SetBlogNum(i)
+	return auo
+}
+
+// SetNillableBlogNum sets the "blog_num" field if the given value is not nil.
+func (auo *AccountUpdateOne) SetNillableBlogNum(i *int) *AccountUpdateOne {
+	if i != nil {
+		auo.SetBlogNum(*i)
+	}
+	return auo
+}
+
+// AddBlogNum adds i to the "blog_num" field.
+func (auo *AccountUpdateOne) AddBlogNum(i int) *AccountUpdateOne {
+	auo.mutation.AddBlogNum(i)
+	return auo
+}
+
 // SetStatus sets the "status" field.
 func (auo *AccountUpdateOne) SetStatus(i int8) *AccountUpdateOne {
 	auo.mutation.ResetStatus()
@@ -510,6 +656,11 @@ func (auo *AccountUpdateOne) check() error {
 			return &ValidationError{Name: "password", err: fmt.Errorf(`ent: validator failed for field "Account.password": %w`, err)}
 		}
 	}
+	if v, ok := auo.mutation.Description(); ok {
+		if err := account.DescriptionValidator(v); err != nil {
+			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Account.description": %w`, err)}
+		}
+	}
 	return nil
 }
 
@@ -574,6 +725,21 @@ func (auo *AccountUpdateOne) sqlSave(ctx context.Context) (_node *Account, err e
 	}
 	if value, ok := auo.mutation.Email(); ok {
 		_spec.SetField(account.FieldEmail, field.TypeString, value)
+	}
+	if value, ok := auo.mutation.Nickname(); ok {
+		_spec.SetField(account.FieldNickname, field.TypeString, value)
+	}
+	if value, ok := auo.mutation.Avatar(); ok {
+		_spec.SetField(account.FieldAvatar, field.TypeString, value)
+	}
+	if value, ok := auo.mutation.Description(); ok {
+		_spec.SetField(account.FieldDescription, field.TypeString, value)
+	}
+	if value, ok := auo.mutation.BlogNum(); ok {
+		_spec.SetField(account.FieldBlogNum, field.TypeInt, value)
+	}
+	if value, ok := auo.mutation.AddedBlogNum(); ok {
+		_spec.AddField(account.FieldBlogNum, field.TypeInt, value)
 	}
 	if value, ok := auo.mutation.Status(); ok {
 		_spec.SetField(account.FieldStatus, field.TypeInt8, value)

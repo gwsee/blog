@@ -26,3 +26,11 @@ export function resetPass(data) {
         data: data
     })
 }
+
+export function info(data){
+    return request({
+        url: '/v1/info',
+        method: 'post',
+        data: data
+    })
+}

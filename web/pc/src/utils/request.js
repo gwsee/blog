@@ -22,7 +22,6 @@ service.interceptors.request.use(config => {
     // 是否需要防止数据重复提交
     const isRepeatSubmit = (config.headers || {}).repeatSubmit === false
     const _token = getLoginToken()
-    console.log("_token....",_token)
     if (_token && !isToken) {
         config.headers['Authorization'] = 'Bearer ' + _token // 让每个请求携带自定义token 请根据实际情况自行修改
     }

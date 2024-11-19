@@ -7,12 +7,34 @@ import "api/global/page.proto";
 option go_package = "blog/api/blogs/v1;v1";
 option java_multiple_files = true;
 option java_package = "api.blogs.v1";
+import "third_party/google/api/annotations.proto";
+
 service Blogs {
-	rpc CreateBlogs (CreateBlogsRequest) returns (CreateBlogsReply);
-	rpc UpdateBlogs (UpdateBlogsRequest) returns (UpdateBlogsReply);
-	rpc DeleteBlogs (DeleteBlogsRequest) returns (DeleteBlogsReply);
-	rpc GetBlogs (GetBlogsRequest) returns (GetBlogsReply);
-	rpc ListBlogs (ListBlogsRequest) returns (ListBlogsReply);
+	rpc CreateBlogs (CreateBlogsRequest) returns (CreateBlogsReply){
+		option (google.api.http) = {
+			body: "*"
+		};
+	};
+	rpc UpdateBlogs (UpdateBlogsRequest) returns (UpdateBlogsReply){
+		option (google.api.http) = {
+			body: "*"
+		};
+	};
+	rpc DeleteBlogs (DeleteBlogsRequest) returns (DeleteBlogsReply){
+		option (google.api.http) = {
+			body: "*"
+		};
+	};
+	rpc GetBlogs (GetBlogsRequest) returns (GetBlogsReply){
+		option (google.api.http) = {
+			body: "*"
+		};
+	};
+	rpc ListBlogs (ListBlogsRequest) returns (ListBlogsReply){
+		option (google.api.http) = {
+			body: "*"
+		};
+	};
 }
 
 message CreateBlogsRequest {
@@ -54,6 +76,7 @@ message BlogsHeader {
 	string Cover = 6;//封面
 	int64 AccountId = 7;//所属帐号ID
 	int64 CreatedAt = 8;//创建时间
+	int64 UpdatedAt = 9;//更新时间
 }
 
 message GetBlogsReply {

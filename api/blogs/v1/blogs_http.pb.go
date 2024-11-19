@@ -45,6 +45,9 @@ func RegisterBlogsHTTPServer(s *http.Server, srv BlogsHTTPServer) {
 func _Blogs_CreateBlogs0_HTTP_Handler(srv BlogsHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in CreateBlogsRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
@@ -64,6 +67,9 @@ func _Blogs_CreateBlogs0_HTTP_Handler(srv BlogsHTTPServer) func(ctx http.Context
 func _Blogs_UpdateBlogs0_HTTP_Handler(srv BlogsHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in UpdateBlogsRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
@@ -83,6 +89,9 @@ func _Blogs_UpdateBlogs0_HTTP_Handler(srv BlogsHTTPServer) func(ctx http.Context
 func _Blogs_DeleteBlogs0_HTTP_Handler(srv BlogsHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in DeleteBlogsRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
@@ -102,6 +111,9 @@ func _Blogs_DeleteBlogs0_HTTP_Handler(srv BlogsHTTPServer) func(ctx http.Context
 func _Blogs_GetBlogs0_HTTP_Handler(srv BlogsHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in GetBlogsRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
@@ -121,6 +133,9 @@ func _Blogs_GetBlogs0_HTTP_Handler(srv BlogsHTTPServer) func(ctx http.Context) e
 func _Blogs_ListBlogs0_HTTP_Handler(srv BlogsHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in ListBlogsRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
@@ -156,10 +171,10 @@ func NewBlogsHTTPClient(client *http.Client) BlogsHTTPClient {
 func (c *BlogsHTTPClientImpl) CreateBlogs(ctx context.Context, in *CreateBlogsRequest, opts ...http.CallOption) (*CreateBlogsReply, error) {
 	var out CreateBlogsReply
 	pattern := "/api.blogs.v1.Blogs/CreateBlogs"
-	path := binding.EncodeURL(pattern, in, true)
+	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationBlogsCreateBlogs))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, nil, &out, opts...)
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -169,10 +184,10 @@ func (c *BlogsHTTPClientImpl) CreateBlogs(ctx context.Context, in *CreateBlogsRe
 func (c *BlogsHTTPClientImpl) DeleteBlogs(ctx context.Context, in *DeleteBlogsRequest, opts ...http.CallOption) (*DeleteBlogsReply, error) {
 	var out DeleteBlogsReply
 	pattern := "/api.blogs.v1.Blogs/DeleteBlogs"
-	path := binding.EncodeURL(pattern, in, true)
+	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationBlogsDeleteBlogs))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, nil, &out, opts...)
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -182,10 +197,10 @@ func (c *BlogsHTTPClientImpl) DeleteBlogs(ctx context.Context, in *DeleteBlogsRe
 func (c *BlogsHTTPClientImpl) GetBlogs(ctx context.Context, in *GetBlogsRequest, opts ...http.CallOption) (*GetBlogsReply, error) {
 	var out GetBlogsReply
 	pattern := "/api.blogs.v1.Blogs/GetBlogs"
-	path := binding.EncodeURL(pattern, in, true)
+	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationBlogsGetBlogs))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, nil, &out, opts...)
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -195,10 +210,10 @@ func (c *BlogsHTTPClientImpl) GetBlogs(ctx context.Context, in *GetBlogsRequest,
 func (c *BlogsHTTPClientImpl) ListBlogs(ctx context.Context, in *ListBlogsRequest, opts ...http.CallOption) (*ListBlogsReply, error) {
 	var out ListBlogsReply
 	pattern := "/api.blogs.v1.Blogs/ListBlogs"
-	path := binding.EncodeURL(pattern, in, true)
+	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationBlogsListBlogs))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, nil, &out, opts...)
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -208,10 +223,10 @@ func (c *BlogsHTTPClientImpl) ListBlogs(ctx context.Context, in *ListBlogsReques
 func (c *BlogsHTTPClientImpl) UpdateBlogs(ctx context.Context, in *UpdateBlogsRequest, opts ...http.CallOption) (*UpdateBlogsReply, error) {
 	var out UpdateBlogsReply
 	pattern := "/api.blogs.v1.Blogs/UpdateBlogs"
-	path := binding.EncodeURL(pattern, in, true)
+	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationBlogsUpdateBlogs))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, nil, &out, opts...)
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

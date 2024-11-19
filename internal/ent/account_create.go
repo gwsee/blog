@@ -131,6 +131,54 @@ func (ac *AccountCreate) SetNillableEmail(s *string) *AccountCreate {
 	return ac
 }
 
+// SetNickname sets the "nickname" field.
+func (ac *AccountCreate) SetNickname(s string) *AccountCreate {
+	ac.mutation.SetNickname(s)
+	return ac
+}
+
+// SetNillableNickname sets the "nickname" field if the given value is not nil.
+func (ac *AccountCreate) SetNillableNickname(s *string) *AccountCreate {
+	if s != nil {
+		ac.SetNickname(*s)
+	}
+	return ac
+}
+
+// SetAvatar sets the "avatar" field.
+func (ac *AccountCreate) SetAvatar(s string) *AccountCreate {
+	ac.mutation.SetAvatar(s)
+	return ac
+}
+
+// SetNillableAvatar sets the "avatar" field if the given value is not nil.
+func (ac *AccountCreate) SetNillableAvatar(s *string) *AccountCreate {
+	if s != nil {
+		ac.SetAvatar(*s)
+	}
+	return ac
+}
+
+// SetDescription sets the "description" field.
+func (ac *AccountCreate) SetDescription(s string) *AccountCreate {
+	ac.mutation.SetDescription(s)
+	return ac
+}
+
+// SetBlogNum sets the "blog_num" field.
+func (ac *AccountCreate) SetBlogNum(i int) *AccountCreate {
+	ac.mutation.SetBlogNum(i)
+	return ac
+}
+
+// SetNillableBlogNum sets the "blog_num" field if the given value is not nil.
+func (ac *AccountCreate) SetNillableBlogNum(i *int) *AccountCreate {
+	if i != nil {
+		ac.SetBlogNum(*i)
+	}
+	return ac
+}
+
 // SetStatus sets the "status" field.
 func (ac *AccountCreate) SetStatus(i int8) *AccountCreate {
 	ac.mutation.SetStatus(i)
@@ -216,6 +264,18 @@ func (ac *AccountCreate) defaults() error {
 		v := account.DefaultEmail
 		ac.mutation.SetEmail(v)
 	}
+	if _, ok := ac.mutation.Nickname(); !ok {
+		v := account.DefaultNickname
+		ac.mutation.SetNickname(v)
+	}
+	if _, ok := ac.mutation.Avatar(); !ok {
+		v := account.DefaultAvatar
+		ac.mutation.SetAvatar(v)
+	}
+	if _, ok := ac.mutation.BlogNum(); !ok {
+		v := account.DefaultBlogNum
+		ac.mutation.SetBlogNum(v)
+	}
 	if _, ok := ac.mutation.Status(); !ok {
 		v := account.DefaultStatus
 		ac.mutation.SetStatus(v)
@@ -261,6 +321,23 @@ func (ac *AccountCreate) check() error {
 	}
 	if _, ok := ac.mutation.Email(); !ok {
 		return &ValidationError{Name: "email", err: errors.New(`ent: missing required field "Account.email"`)}
+	}
+	if _, ok := ac.mutation.Nickname(); !ok {
+		return &ValidationError{Name: "nickname", err: errors.New(`ent: missing required field "Account.nickname"`)}
+	}
+	if _, ok := ac.mutation.Avatar(); !ok {
+		return &ValidationError{Name: "avatar", err: errors.New(`ent: missing required field "Account.avatar"`)}
+	}
+	if _, ok := ac.mutation.Description(); !ok {
+		return &ValidationError{Name: "description", err: errors.New(`ent: missing required field "Account.description"`)}
+	}
+	if v, ok := ac.mutation.Description(); ok {
+		if err := account.DescriptionValidator(v); err != nil {
+			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Account.description": %w`, err)}
+		}
+	}
+	if _, ok := ac.mutation.BlogNum(); !ok {
+		return &ValidationError{Name: "blog_num", err: errors.New(`ent: missing required field "Account.blog_num"`)}
 	}
 	if _, ok := ac.mutation.Status(); !ok {
 		return &ValidationError{Name: "status", err: errors.New(`ent: missing required field "Account.status"`)}
@@ -338,6 +415,22 @@ func (ac *AccountCreate) createSpec() (*Account, *sqlgraph.CreateSpec) {
 	if value, ok := ac.mutation.Email(); ok {
 		_spec.SetField(account.FieldEmail, field.TypeString, value)
 		_node.Email = value
+	}
+	if value, ok := ac.mutation.Nickname(); ok {
+		_spec.SetField(account.FieldNickname, field.TypeString, value)
+		_node.Nickname = value
+	}
+	if value, ok := ac.mutation.Avatar(); ok {
+		_spec.SetField(account.FieldAvatar, field.TypeString, value)
+		_node.Avatar = value
+	}
+	if value, ok := ac.mutation.Description(); ok {
+		_spec.SetField(account.FieldDescription, field.TypeString, value)
+		_node.Description = value
+	}
+	if value, ok := ac.mutation.BlogNum(); ok {
+		_spec.SetField(account.FieldBlogNum, field.TypeInt, value)
+		_node.BlogNum = value
 	}
 	if value, ok := ac.mutation.Status(); ok {
 		_spec.SetField(account.FieldStatus, field.TypeInt8, value)
@@ -500,6 +593,60 @@ func (u *AccountUpsert) SetEmail(v string) *AccountUpsert {
 // UpdateEmail sets the "email" field to the value that was provided on create.
 func (u *AccountUpsert) UpdateEmail() *AccountUpsert {
 	u.SetExcluded(account.FieldEmail)
+	return u
+}
+
+// SetNickname sets the "nickname" field.
+func (u *AccountUpsert) SetNickname(v string) *AccountUpsert {
+	u.Set(account.FieldNickname, v)
+	return u
+}
+
+// UpdateNickname sets the "nickname" field to the value that was provided on create.
+func (u *AccountUpsert) UpdateNickname() *AccountUpsert {
+	u.SetExcluded(account.FieldNickname)
+	return u
+}
+
+// SetAvatar sets the "avatar" field.
+func (u *AccountUpsert) SetAvatar(v string) *AccountUpsert {
+	u.Set(account.FieldAvatar, v)
+	return u
+}
+
+// UpdateAvatar sets the "avatar" field to the value that was provided on create.
+func (u *AccountUpsert) UpdateAvatar() *AccountUpsert {
+	u.SetExcluded(account.FieldAvatar)
+	return u
+}
+
+// SetDescription sets the "description" field.
+func (u *AccountUpsert) SetDescription(v string) *AccountUpsert {
+	u.Set(account.FieldDescription, v)
+	return u
+}
+
+// UpdateDescription sets the "description" field to the value that was provided on create.
+func (u *AccountUpsert) UpdateDescription() *AccountUpsert {
+	u.SetExcluded(account.FieldDescription)
+	return u
+}
+
+// SetBlogNum sets the "blog_num" field.
+func (u *AccountUpsert) SetBlogNum(v int) *AccountUpsert {
+	u.Set(account.FieldBlogNum, v)
+	return u
+}
+
+// UpdateBlogNum sets the "blog_num" field to the value that was provided on create.
+func (u *AccountUpsert) UpdateBlogNum() *AccountUpsert {
+	u.SetExcluded(account.FieldBlogNum)
+	return u
+}
+
+// AddBlogNum adds v to the "blog_num" field.
+func (u *AccountUpsert) AddBlogNum(v int) *AccountUpsert {
+	u.Add(account.FieldBlogNum, v)
 	return u
 }
 
@@ -698,6 +845,69 @@ func (u *AccountUpsertOne) SetEmail(v string) *AccountUpsertOne {
 func (u *AccountUpsertOne) UpdateEmail() *AccountUpsertOne {
 	return u.Update(func(s *AccountUpsert) {
 		s.UpdateEmail()
+	})
+}
+
+// SetNickname sets the "nickname" field.
+func (u *AccountUpsertOne) SetNickname(v string) *AccountUpsertOne {
+	return u.Update(func(s *AccountUpsert) {
+		s.SetNickname(v)
+	})
+}
+
+// UpdateNickname sets the "nickname" field to the value that was provided on create.
+func (u *AccountUpsertOne) UpdateNickname() *AccountUpsertOne {
+	return u.Update(func(s *AccountUpsert) {
+		s.UpdateNickname()
+	})
+}
+
+// SetAvatar sets the "avatar" field.
+func (u *AccountUpsertOne) SetAvatar(v string) *AccountUpsertOne {
+	return u.Update(func(s *AccountUpsert) {
+		s.SetAvatar(v)
+	})
+}
+
+// UpdateAvatar sets the "avatar" field to the value that was provided on create.
+func (u *AccountUpsertOne) UpdateAvatar() *AccountUpsertOne {
+	return u.Update(func(s *AccountUpsert) {
+		s.UpdateAvatar()
+	})
+}
+
+// SetDescription sets the "description" field.
+func (u *AccountUpsertOne) SetDescription(v string) *AccountUpsertOne {
+	return u.Update(func(s *AccountUpsert) {
+		s.SetDescription(v)
+	})
+}
+
+// UpdateDescription sets the "description" field to the value that was provided on create.
+func (u *AccountUpsertOne) UpdateDescription() *AccountUpsertOne {
+	return u.Update(func(s *AccountUpsert) {
+		s.UpdateDescription()
+	})
+}
+
+// SetBlogNum sets the "blog_num" field.
+func (u *AccountUpsertOne) SetBlogNum(v int) *AccountUpsertOne {
+	return u.Update(func(s *AccountUpsert) {
+		s.SetBlogNum(v)
+	})
+}
+
+// AddBlogNum adds v to the "blog_num" field.
+func (u *AccountUpsertOne) AddBlogNum(v int) *AccountUpsertOne {
+	return u.Update(func(s *AccountUpsert) {
+		s.AddBlogNum(v)
+	})
+}
+
+// UpdateBlogNum sets the "blog_num" field to the value that was provided on create.
+func (u *AccountUpsertOne) UpdateBlogNum() *AccountUpsertOne {
+	return u.Update(func(s *AccountUpsert) {
+		s.UpdateBlogNum()
 	})
 }
 
@@ -1065,6 +1275,69 @@ func (u *AccountUpsertBulk) SetEmail(v string) *AccountUpsertBulk {
 func (u *AccountUpsertBulk) UpdateEmail() *AccountUpsertBulk {
 	return u.Update(func(s *AccountUpsert) {
 		s.UpdateEmail()
+	})
+}
+
+// SetNickname sets the "nickname" field.
+func (u *AccountUpsertBulk) SetNickname(v string) *AccountUpsertBulk {
+	return u.Update(func(s *AccountUpsert) {
+		s.SetNickname(v)
+	})
+}
+
+// UpdateNickname sets the "nickname" field to the value that was provided on create.
+func (u *AccountUpsertBulk) UpdateNickname() *AccountUpsertBulk {
+	return u.Update(func(s *AccountUpsert) {
+		s.UpdateNickname()
+	})
+}
+
+// SetAvatar sets the "avatar" field.
+func (u *AccountUpsertBulk) SetAvatar(v string) *AccountUpsertBulk {
+	return u.Update(func(s *AccountUpsert) {
+		s.SetAvatar(v)
+	})
+}
+
+// UpdateAvatar sets the "avatar" field to the value that was provided on create.
+func (u *AccountUpsertBulk) UpdateAvatar() *AccountUpsertBulk {
+	return u.Update(func(s *AccountUpsert) {
+		s.UpdateAvatar()
+	})
+}
+
+// SetDescription sets the "description" field.
+func (u *AccountUpsertBulk) SetDescription(v string) *AccountUpsertBulk {
+	return u.Update(func(s *AccountUpsert) {
+		s.SetDescription(v)
+	})
+}
+
+// UpdateDescription sets the "description" field to the value that was provided on create.
+func (u *AccountUpsertBulk) UpdateDescription() *AccountUpsertBulk {
+	return u.Update(func(s *AccountUpsert) {
+		s.UpdateDescription()
+	})
+}
+
+// SetBlogNum sets the "blog_num" field.
+func (u *AccountUpsertBulk) SetBlogNum(v int) *AccountUpsertBulk {
+	return u.Update(func(s *AccountUpsert) {
+		s.SetBlogNum(v)
+	})
+}
+
+// AddBlogNum adds v to the "blog_num" field.
+func (u *AccountUpsertBulk) AddBlogNum(v int) *AccountUpsertBulk {
+	return u.Update(func(s *AccountUpsert) {
+		s.AddBlogNum(v)
+	})
+}
+
+// UpdateBlogNum sets the "blog_num" field to the value that was provided on create.
+func (u *AccountUpsertBulk) UpdateBlogNum() *AccountUpsertBulk {
+	return u.Update(func(s *AccountUpsert) {
+		s.UpdateBlogNum()
 	})
 }
 

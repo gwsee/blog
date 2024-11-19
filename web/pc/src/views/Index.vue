@@ -1,8 +1,10 @@
 <script setup>
 import {ref} from "vue"
 const value = ref('');
+import { message } from 'ant-design-vue';
 const onQuery = () => {
   console.log('query!', value.value);
+  message.info("很抱歉，还没想好这个做什么")
 };
 </script>
 

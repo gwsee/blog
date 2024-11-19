@@ -8,6 +8,7 @@ option java_package = "api.bff.v1";
 import "api/account/v1/account.proto";
 import "third_party/google/api/annotations.proto";
 import "api/global/resp.proto";
+import "api/global/index.proto";
 
 service Account {
 	rpc CreateAccount (account.v1.CreateAccountRequest) returns (global.Response){
@@ -25,6 +26,18 @@ service Account {
 	rpc LoginByAccount (account.v1.LoginByAccountRequest) returns  (global.Response){
 		option (google.api.http) = {
 			post: "/v1/login"
+			body: "*"
+		};
+	};
+	rpc Info (api.global.Empty) returns (global.Response){
+		option (google.api.http) = {
+			post: "/v1/info"
+			body: "*"
+		};
+	};
+	rpc UpdateAccount(account.v1.UpdateAccountRequest) returns (global.Response){
+		option (google.api.http) = {
+			post: "/v1/update_account"
 			body: "*"
 		};
 	};

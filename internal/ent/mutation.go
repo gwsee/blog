@@ -53,6 +53,11 @@ type AccountMutation struct {
 	account       *string
 	password      *string
 	email         *string
+	nickname      *string
+	avatar        *string
+	description   *string
+	blog_num      *int
+	addblog_num   *int
 	status        *int8
 	addstatus     *int8
 	clearedFields map[string]struct{}
@@ -609,6 +614,170 @@ func (m *AccountMutation) ResetEmail() {
 	m.email = nil
 }
 
+// SetNickname sets the "nickname" field.
+func (m *AccountMutation) SetNickname(s string) {
+	m.nickname = &s
+}
+
+// Nickname returns the value of the "nickname" field in the mutation.
+func (m *AccountMutation) Nickname() (r string, exists bool) {
+	v := m.nickname
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldNickname returns the old "nickname" field's value of the Account entity.
+// If the Account object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AccountMutation) OldNickname(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldNickname is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldNickname requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldNickname: %w", err)
+	}
+	return oldValue.Nickname, nil
+}
+
+// ResetNickname resets all changes to the "nickname" field.
+func (m *AccountMutation) ResetNickname() {
+	m.nickname = nil
+}
+
+// SetAvatar sets the "avatar" field.
+func (m *AccountMutation) SetAvatar(s string) {
+	m.avatar = &s
+}
+
+// Avatar returns the value of the "avatar" field in the mutation.
+func (m *AccountMutation) Avatar() (r string, exists bool) {
+	v := m.avatar
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAvatar returns the old "avatar" field's value of the Account entity.
+// If the Account object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AccountMutation) OldAvatar(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAvatar is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAvatar requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAvatar: %w", err)
+	}
+	return oldValue.Avatar, nil
+}
+
+// ResetAvatar resets all changes to the "avatar" field.
+func (m *AccountMutation) ResetAvatar() {
+	m.avatar = nil
+}
+
+// SetDescription sets the "description" field.
+func (m *AccountMutation) SetDescription(s string) {
+	m.description = &s
+}
+
+// Description returns the value of the "description" field in the mutation.
+func (m *AccountMutation) Description() (r string, exists bool) {
+	v := m.description
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDescription returns the old "description" field's value of the Account entity.
+// If the Account object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AccountMutation) OldDescription(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDescription is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDescription requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDescription: %w", err)
+	}
+	return oldValue.Description, nil
+}
+
+// ResetDescription resets all changes to the "description" field.
+func (m *AccountMutation) ResetDescription() {
+	m.description = nil
+}
+
+// SetBlogNum sets the "blog_num" field.
+func (m *AccountMutation) SetBlogNum(i int) {
+	m.blog_num = &i
+	m.addblog_num = nil
+}
+
+// BlogNum returns the value of the "blog_num" field in the mutation.
+func (m *AccountMutation) BlogNum() (r int, exists bool) {
+	v := m.blog_num
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldBlogNum returns the old "blog_num" field's value of the Account entity.
+// If the Account object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AccountMutation) OldBlogNum(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldBlogNum is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldBlogNum requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldBlogNum: %w", err)
+	}
+	return oldValue.BlogNum, nil
+}
+
+// AddBlogNum adds i to the "blog_num" field.
+func (m *AccountMutation) AddBlogNum(i int) {
+	if m.addblog_num != nil {
+		*m.addblog_num += i
+	} else {
+		m.addblog_num = &i
+	}
+}
+
+// AddedBlogNum returns the value that was added to the "blog_num" field in this mutation.
+func (m *AccountMutation) AddedBlogNum() (r int, exists bool) {
+	v := m.addblog_num
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetBlogNum resets all changes to the "blog_num" field.
+func (m *AccountMutation) ResetBlogNum() {
+	m.blog_num = nil
+	m.addblog_num = nil
+}
+
 // SetStatus sets the "status" field.
 func (m *AccountMutation) SetStatus(i int8) {
 	m.status = &i
@@ -699,7 +868,7 @@ func (m *AccountMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *AccountMutation) Fields() []string {
-	fields := make([]string, 0, 10)
+	fields := make([]string, 0, 14)
 	if m.created_at != nil {
 		fields = append(fields, account.FieldCreatedAt)
 	}
@@ -726,6 +895,18 @@ func (m *AccountMutation) Fields() []string {
 	}
 	if m.email != nil {
 		fields = append(fields, account.FieldEmail)
+	}
+	if m.nickname != nil {
+		fields = append(fields, account.FieldNickname)
+	}
+	if m.avatar != nil {
+		fields = append(fields, account.FieldAvatar)
+	}
+	if m.description != nil {
+		fields = append(fields, account.FieldDescription)
+	}
+	if m.blog_num != nil {
+		fields = append(fields, account.FieldBlogNum)
 	}
 	if m.status != nil {
 		fields = append(fields, account.FieldStatus)
@@ -756,6 +937,14 @@ func (m *AccountMutation) Field(name string) (ent.Value, bool) {
 		return m.Password()
 	case account.FieldEmail:
 		return m.Email()
+	case account.FieldNickname:
+		return m.Nickname()
+	case account.FieldAvatar:
+		return m.Avatar()
+	case account.FieldDescription:
+		return m.Description()
+	case account.FieldBlogNum:
+		return m.BlogNum()
 	case account.FieldStatus:
 		return m.Status()
 	}
@@ -785,6 +974,14 @@ func (m *AccountMutation) OldField(ctx context.Context, name string) (ent.Value,
 		return m.OldPassword(ctx)
 	case account.FieldEmail:
 		return m.OldEmail(ctx)
+	case account.FieldNickname:
+		return m.OldNickname(ctx)
+	case account.FieldAvatar:
+		return m.OldAvatar(ctx)
+	case account.FieldDescription:
+		return m.OldDescription(ctx)
+	case account.FieldBlogNum:
+		return m.OldBlogNum(ctx)
 	case account.FieldStatus:
 		return m.OldStatus(ctx)
 	}
@@ -859,6 +1056,34 @@ func (m *AccountMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetEmail(v)
 		return nil
+	case account.FieldNickname:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetNickname(v)
+		return nil
+	case account.FieldAvatar:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAvatar(v)
+		return nil
+	case account.FieldDescription:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDescription(v)
+		return nil
+	case account.FieldBlogNum:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetBlogNum(v)
+		return nil
 	case account.FieldStatus:
 		v, ok := value.(int8)
 		if !ok {
@@ -892,6 +1117,9 @@ func (m *AccountMutation) AddedFields() []string {
 	if m.adddeleted_by != nil {
 		fields = append(fields, account.FieldDeletedBy)
 	}
+	if m.addblog_num != nil {
+		fields = append(fields, account.FieldBlogNum)
+	}
 	if m.addstatus != nil {
 		fields = append(fields, account.FieldStatus)
 	}
@@ -915,6 +1143,8 @@ func (m *AccountMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedDeletedAt()
 	case account.FieldDeletedBy:
 		return m.AddedDeletedBy()
+	case account.FieldBlogNum:
+		return m.AddedBlogNum()
 	case account.FieldStatus:
 		return m.AddedStatus()
 	}
@@ -967,6 +1197,13 @@ func (m *AccountMutation) AddField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddDeletedBy(v)
+		return nil
+	case account.FieldBlogNum:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddBlogNum(v)
 		return nil
 	case account.FieldStatus:
 		v, ok := value.(int8)
@@ -1028,6 +1265,18 @@ func (m *AccountMutation) ResetField(name string) error {
 		return nil
 	case account.FieldEmail:
 		m.ResetEmail()
+		return nil
+	case account.FieldNickname:
+		m.ResetNickname()
+		return nil
+	case account.FieldAvatar:
+		m.ResetAvatar()
+		return nil
+	case account.FieldDescription:
+		m.ResetDescription()
+		return nil
+	case account.FieldBlogNum:
+		m.ResetBlogNum()
 		return nil
 	case account.FieldStatus:
 		m.ResetStatus()
