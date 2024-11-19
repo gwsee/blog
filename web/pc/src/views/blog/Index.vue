@@ -3,7 +3,7 @@
     <a-col :md="5" :sm="24" :xs="24" >
       <span></span>
     </a-col>
-    <a-col :md="14" :sm="24" :xs="24"  style="text-align: center;position: relative" >
+    <a-col :md="14" :sm="24" :xs="24"  style="text-align: center;position: relative;    background: linear-gradient(rgb(241 241 241), rgb(173 215 197));" >
       <a-input-group compact  style="margin-top:30px;">
         <a-select   mode="tags"
                     max-tag-count="responsive"
@@ -12,16 +12,19 @@
         </a-select>
         <a-input v-model:value="Title" placeholder="请输入需要查询的内容!"
                  style="width: calc(70% - 140px);height: 40px;" />
-        <a-button type="default" style="height: 40px;width: 70px" @click="onQuery">Query</a-button>
-        <a-button type="default" style="height: 40px;width: 70px" @click="toRoute('/blog/edit/0')">New</a-button>
+        <a-button type="default" style="height: 40px;width: 70px" @click="onQuery">查询</a-button>
+        <a-button type="default" style="height: 40px;width: 70px" @click="toRoute('/blog/edit/0')" >新增</a-button>
       </a-input-group>
       <a-card :title="item.Title" class="blog-card" :hoverable="true" :bodyStyle="{padding:0}" v-for="(item,key) in data">
-        <template #extra><a @click="toRoute('/blog/edit/'+item.Id)">Edit</a></template>
+        <template #extra><a @click="toRoute('/blog/edit/'+item.Id)" style="color: #b3cfec">编辑</a></template>
         <div style="height: 130px;display: flex">
           <a-avatar :size="100"  style="margin: 15px;" :src="item.cover||defaultCover">
           </a-avatar>
           <div class="blog-content-eclipses" @click="toRoute('/blog/detail/'+item.Id)">
            &nbsp; &nbsp;  {{item.Description||'这个人很烂什么都没写'}}
+            <div style="bottom: 2px;position: absolute">
+              &nbsp; &nbsp;  <a-tag v-for="tag in item.Tags" :key="tag" color="cyan"  :bordered="false">{{ tag }}</a-tag>
+            </div>
           </div>
         </div>
         <template #actions>
@@ -97,9 +100,11 @@ const onQuery=()=>{
   flex: 1; /* 右边部分自适应 */
   margin: 15px 15px 15px 0;
   display: -webkit-box;
+  color: gray;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 4; /* 显示3行 */
   overflow: hidden;
+  position: relative;
   font-size: 15px;
   text-overflow: ellipsis;
 }

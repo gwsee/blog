@@ -3,8 +3,51 @@
     <a-col :md="5" :sm="24" :xs="24"  >
       <span/>
     </a-col>
-    <a-col :md="14" :sm="24" :xs="24"  style="text-align: unset">
-      <a-card hoverable>
+    <a-col :md="14" :sm="24" :xs="24"  style="text-align: unset;" :loading="loading">
+      <a-spin :spinning="loading">
+      <a-layout class="blog-post" style="background: linear-gradient(rgb(241 241 241), rgb(173 215 197));">
+        <a-layout-content>
+          <a-typography-title :level="1" class="blog-title">
+            {{ formState.Title }}
+          </a-typography-title>
+
+          <div class="post-meta">
+            <a-space>
+              <a-tag v-for="tag in formState.Tags" :key="tag" color="cyan"  :bordered="false">{{ tag }}</a-tag>
+            </a-space>
+            <a-typography-text type="secondary">
+              最后更新时间:  {{ formatDate(formState.CreatedAt) }}
+            </a-typography-text>
+          </div>
+
+          <a-divider />
+
+          <div class="author-info" v-if="false">
+            <a-space align="center">
+              <a-avatar :src="formState.avatar||avatar" :size="64" />
+              <div>
+                <a-typography-title :level="4" :style="{ margin: 0 }">
+                  {{ formState.author||'Gwsee'  }}
+                </a-typography-title>
+                <a-typography-text type="secondary">
+                  {{ formState.author||'2024-10-12' }}
+                </a-typography-text>
+              </div>
+            </a-space>
+          </div>
+
+          <a-divider  v-if="false" />
+
+          <a-typography-paragraph class="post-summary">
+            &nbsp;&nbsp;&nbsp;&nbsp;{{ formState.Description }}
+          </a-typography-paragraph>
+
+          <a-divider />
+
+          <div class="post-content" v-html="formState.Content"></div>
+        </a-layout-content>
+      </a-layout>
+      <a-card hoverable v-if="false">
         <template #cover>
           <img
               alt="example"
@@ -25,6 +68,7 @@
 
         </div>
       </a-card>
+      </a-spin>
     </a-col>
     <a-col :md="5" :sm="24" :xs="24"  >
      <span/>
@@ -47,7 +91,7 @@ const toRoute=(path)=> {
 const mode = ref("default")
 const toolbarConfig = {}
 const editorConfig = { placeholder: '请输入内容...' }
-
+const loading = ref(false);
 // 组件销毁时，也及时销毁编辑器
 onBeforeUnmount(() => {
   const editor = editorRef.value
@@ -71,6 +115,7 @@ const formState = reactive({
   Tags:[],
   Content: '',
   Cover: '',
+  CreatedAt:"0",
 });
 const formBlogRef = ref(null)
 
@@ -85,6 +130,7 @@ onMounted(function (){
   if(!id){
     return
   }
+  loading.value = true;
   blogGet({Id:id}).then(res=>{
     if(res&&res.code===0){
       formState.Content = res.data.Content
@@ -95,7 +141,10 @@ onMounted(function (){
       formState.Title = obj.Title
       formState.Description = obj.Description
       formState.IsHidden = obj.IsHidden-0
+      formState.CreatedAt = obj.CreatedAt
     }
+  }).finally(()=>{
+    loading.value = false;
   })
 })
 const confirmLoading = ref(false);
@@ -131,28 +180,113 @@ const onSubmit = () => {
 const labelCol = { style: { width: '100px' } };
 const wrapperCol = { span: 24 };
 
+const formatDate = (timestamp) => {
+  const date = new Date(Number(timestamp) * 1000);
+  console.log(date)
+  const year = date.getFullYear().toString()
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  const hours = date.getHours().toString().padStart(2, '0');
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  const seconds = date.getSeconds().toString().padStart(2, '0');
+
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+};
 
 </script>
 
 <style scoped>
-.blog-content-eclipses{
-  flex: 1; /* 右边部分自适应 */
-  margin: 15px 15px 15px 0;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 4; /* 显示3行 */
+.blog-post {
+  max-width: 100%;
+  width: fit-content;
+  margin: 0 auto;
+  padding: 24px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e0e6ed 100%);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border: 1px solid #e8e8e8;
+  position: relative;
   overflow: hidden;
-  font-size: 15px;
-  text-overflow: ellipsis;
+}
+.blog-post::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, rgba(233, 242, 248, 0.5) 0%, rgba(197, 239, 203, 0.5) 100%);
 }
 
-.blog-card-edit{
-  width: 90%;
-  margin-top: 20px;
-  text-align: left;
-  margin-left: auto;
-  margin-right: auto;
+.blog-post:hover {
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  transform: translateY(-5px);
 }
-.tag-class{
+
+.blog-title {
+  margin-bottom: 16px !important;
+  color: #2c3e50;
 }
+
+.post-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.author-info {
+  margin: 24px 0;
+  padding: 16px;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 8px;
+}
+
+.post-summary {
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 24px;
+  padding: 16px;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 8px;
+  border-left: 4px solid rgba(79,172,254,0.3);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.post-content {
+  font-size: 16px;
+  line-height: 1.8;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.post-content h2 {
+  font-size: 24px;
+  margin-top: 32px;
+  margin-bottom: 16px;
+  color: #34495e;
+}
+
+.post-content p {
+  margin-bottom: 16px;
+}
+
+.post-content pre {
+  background-color: #f8f8f8;
+  padding: 16px;
+  border-radius: 4px;
+  overflow-x: auto;
+  border: 1px solid #e8e8e8;
+}
+
+@media (max-width: 768px) {
+  .blog-post {
+    padding: 20px;
+    margin: 10px;
+  }
+}
+
 </style>
