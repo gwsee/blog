@@ -21,7 +21,7 @@
             <a-avatar src="https://joeschmoe.io/api/v1/random" />
           </template>
         </a-card-meta>
-        <div  v-html="formState.Content">
+        <div  v-html="formState.Content" style="overflow-x: hidden">
 
         </div>
       </a-card>

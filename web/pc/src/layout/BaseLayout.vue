@@ -64,7 +64,7 @@ const goToAbout=(path)=> {
   height: 100%;
   width: 100%;
   overflow: auto;
-  background: transparent  url("src/assets/image/bg.jpg");
+  background: transparent  url("/src/assets/image/bg02.gif");
   background-size: cover;
   display: flex;
   flex-direction: column;
