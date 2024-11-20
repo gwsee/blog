@@ -12,9 +12,9 @@ var (
 	// AccountColumns holds the columns for the "account" table.
 	AccountColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true, Comment: "账户ID"},
-		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1732029427},
+		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1732080836},
 		{Name: "created_by", Type: field.TypeInt64, Comment: "创建人", Default: 0},
-		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1732029427},
+		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1732080836},
 		{Name: "updated_by", Type: field.TypeInt64, Comment: "更新人", Default: 0},
 		{Name: "deleted_at", Type: field.TypeInt64, Comment: "软删除时间", Default: 0},
 		{Name: "deleted_by", Type: field.TypeInt64, Comment: "删除人", Default: 0},
@@ -37,9 +37,9 @@ var (
 	// BlogsColumns holds the columns for the "blogs" table.
 	BlogsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true, Comment: "博客ID"},
-		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1732029427},
+		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1732080836},
 		{Name: "created_by", Type: field.TypeInt64, Comment: "创建人", Default: 0},
-		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1732029427},
+		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1732080836},
 		{Name: "updated_by", Type: field.TypeInt64, Comment: "更新人", Default: 0},
 		{Name: "deleted_at", Type: field.TypeInt64, Comment: "软删除时间", Default: 0},
 		{Name: "deleted_by", Type: field.TypeInt64, Comment: "删除人", Default: 0},
@@ -60,9 +60,9 @@ var (
 	// BlogsCommentsColumns holds the columns for the "blogs_comments" table.
 	BlogsCommentsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true, Comment: "评论ID"},
-		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1732029427},
+		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1732080836},
 		{Name: "created_by", Type: field.TypeInt64, Comment: "创建人", Default: 0},
-		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1732029427},
+		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1732080836},
 		{Name: "updated_by", Type: field.TypeInt64, Comment: "更新人", Default: 0},
 		{Name: "deleted_at", Type: field.TypeInt64, Comment: "软删除时间", Default: 0},
 		{Name: "deleted_by", Type: field.TypeInt64, Comment: "删除人", Default: 0},
@@ -85,7 +85,7 @@ var (
 	// BlogsContentColumns holds the columns for the "blogs_content" table.
 	BlogsContentColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true, Comment: "博客ID"},
-		{Name: "content", Type: field.TypeString, Comment: "内容", SchemaType: map[string]string{"mysql": "text"}},
+		{Name: "content", Type: field.TypeString, Comment: "内容", SchemaType: map[string]string{"mysql": "mediumtext"}},
 	}
 	// BlogsContentTable holds the schema information for the "blogs_content" table.
 	BlogsContentTable = &schema.Table{

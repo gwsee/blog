@@ -17,7 +17,7 @@ func (BlogsContent) Fields() []ent.Field {
 		field.Int("id").Unique().Comment("博客ID"),
 		field.String("content").NotEmpty().Comment("内容").
 			SchemaType(map[string]string{
-				dialect.MySQL: "text",
+				dialect.MySQL: "mediumtext",
 			}),
 	}
 }
