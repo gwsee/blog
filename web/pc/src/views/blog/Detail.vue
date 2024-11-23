@@ -38,13 +38,13 @@
 
           <a-divider  v-if="false" />
 
-          <a-typography-paragraph class="post-summary">
+          <a-typography-paragraph class="post-summary" v-if="formState.Description">
             &nbsp;&nbsp;&nbsp;&nbsp;{{ formState.Description }}
           </a-typography-paragraph>
 
-          <a-divider />
+          <a-divider  v-if="formState.Description"/>
 
-          <div class="post-content" v-html="formState.Content"></div>
+          <div class="post-content" v-if="formState.Content" v-html="formState.Content"></div>
         </a-layout-content>
       </a-layout>
       <a-card hoverable v-if="false">
@@ -201,6 +201,8 @@ const formatDate = (timestamp) => {
   width: fit-content;
   margin: 0 auto;
   padding: 24px;
+  min-height: 50vh;
+  min-width: 100%;
   background: linear-gradient(135deg, #f5f7fa 0%, #e0e6ed 100%);
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);

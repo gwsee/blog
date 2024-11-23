@@ -10,44 +10,74 @@ export const constantRoutes = [
         children: [
             {
                 path: 'index',
-                component: () => import('@/views/Index.vue'),
-                name: 'Index',
+                component: () => import('@/views/index.vue'),
+                name: 'index',
                 meta: { title: '首页',  affix: true }
             },
             {
                 path: 'about',
-                component: () => import('@/views/about/Index.vue'),
+                component: () => import('@/views/about/index.vue'),
                 name: 'about',
                 meta: { title: '关于我',  affix: true }
             },
             {
+                path: 'about/experience/:id(\\d+)',
+                component: () => import('@/views/about/experience.vue'),
+                name: 'about-experience',
+                meta: { title: '工作经历管理',  affix: true }
+            },
+            {
+                path: 'about/experience/manage/:id(\\d+)',
+                component: () => import('@/views/about/manage/experience.vue'),
+                name: 'about-experience-manage',
+                meta: { title: '工作经历管理',  affix: true }
+            },
+            {
+                path: 'about/profile/manage',
+                component: () => import('@/views/about/manage/profile.vue'),
+                name: 'about-profile-manage',
+                meta: { title: '个人简介管理',  affix: true }
+            },
+            {
+                path: 'about/project/manage/:id(\\d+)',
+                component: () => import('@/views/about/manage/project.vue'),
+                name: 'about-project-manage',
+                meta: { title: '工作项目管理',  affix: true }
+            },
+            {
                 path: 'blog',
-                component: () => import('@/views/blog/Index.vue'),
+                component: () => import('@/views/blog/index.vue'),
                 name: 'blog',
                 meta: { title: '日记',  affix: true }
             },
             {
                 path: 'blog/detail/:id(\\d+)',
-                component: () => import('@/views/blog/Detail.vue'),
+                component: () => import('@/views/blog/detail.vue'),
                 name: 'blog-detail',
                 meta: { title: '日记',  affix: true }
             },
             {
-                path: 'blog/edit/:id(\\d+)',
-                component: () => import('@/views/blog/Edit.vue'),
+                path: 'blog/manage/:id(\\d+)',
+                component: () => import('@/views/blog/manage.vue'),
                 name: 'blog-edit',
                 meta: { title: '日记',  affix: true }
             },
             {
                 path: 'user',
-                component: () => import('@/views/user/Index.vue'),
+                component: () => import('@/views/user/index.vue'),
                 name: 'user',
                 meta: { title: '我',  affix: true }
             },
             {
                 path: 'travel',
-                component: () => import('@/views/travel/Index.vue'),
+                component: () => import('@/views/travel/index.vue'),
                 name: 'travel',
+                meta: { title: '旅行',  affix: true }
+            },
+            {
+                path: 'picture',
+                component: () => import('@/views/picture/index.vue'),
+                name: 'picture',
                 meta: { title: '旅行',  affix: true }
             },
         ]

@@ -37,3 +37,4 @@ bin/
 .idea/
 *.swp
 /deploy/*
+/node_modules/

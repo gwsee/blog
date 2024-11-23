@@ -30,7 +30,7 @@
           </a-col>
         </a-row>
         <a-form-item label="Cover">
-          <a-upload action="/upload.do" :maxCount="1" list-type="picture-card">
+          <a-upload action="/upload.do" :maxCount="1" list-type="picture-card" >
             <div>
               <PlusOutlined />
               <div style="margin-top: 8px">Upload</div>
