@@ -46,9 +46,7 @@ const goToAbout=(path)=> {
         </a-col>
         <a-col  :md="8" :sm="24" :xs="24">
           <a-avatar :size="44" class="layout-content-menu-item" @click="showLoginDialog" v-if="!isLoggedIn" >登陆</a-avatar>
-          <a-avatar :size="44" class="layout-content-menu-item" :src="avatar" v-else ></a-avatar>
-          <a-avatar :size="44" class="layout-content-menu-item" @click="goToAbout('/about')" v-if="false">杂谈</a-avatar>
-          <a-avatar :size="44" class="layout-content-menu-item" @click="goToAbout('/about')" >关于我</a-avatar>
+          <a-avatar :size="44" class="layout-content-menu-item" :src="avatar" v-else @click="goToAbout('/about')"></a-avatar>
           <a-avatar :size="44" class="layout-content-menu-item" @click="goToAbout('/picture')">照片墙</a-avatar>
           <a-avatar :size="44" class="layout-content-menu-item" @click="goToAbout('/travel')" >旅行</a-avatar>
           <a-avatar :size="44" class="layout-content-menu-item" @click="goToAbout('/blog')" >日记</a-avatar>

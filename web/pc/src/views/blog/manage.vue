@@ -4,7 +4,7 @@
       <span/>
     </a-col>
     <a-col :md="14" :sm="24" :xs="24"  style="text-align: center;    background: linear-gradient(rgb(241 241 241), rgb(173 215 197));" >
-      <a-form :label-col="labelCol"   ref="formBlogRef" :model="formState"   autocomplete="off"  class="blog-card-edit" :wrapper-col="wrapperCol">
+      <a-form :label-col="labelCol"  :wrapper-col="wrapperCol"  ref="formBlogRef" :model="formState"   autocomplete="off"  class="blog-card-edit">
         <a-form-item label="Title" :rules="[{ required: true, message: '请输入博客标题' }]">
           <a-input  v-model:value="formState.Title"   placeholder="请输入博客标题"/>
         </a-form-item>

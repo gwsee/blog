@@ -1,33 +1,35 @@
 <template>
   <div class="min-h-screen bg-gray-50 py-12">
     <div class="container mx-auto px-4">
-      <h1 class="text-3xl font-bold mb-8 text-center">Add Profile Information</h1>
       <a-form
+          :label-col="labelCol"  :wrapper-col="wrapperCol"
           :model="formState"
           @finish="onFinish"
           class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md"
       >
-        <a-form-item name="name" label="Full Name" :rules="[{ required: true }]">
+        <a-form-item name="name" label="姓名" :rules="[{ required: true }]">
           <a-input v-model:value="formState.name" />
         </a-form-item>
-
-        <a-form-item name="title" label="Professional Title" :rules="[{ required: true }]">
+        <a-form-item name="nickname" label="昵称" :rules="[{ required: true }]">
+          <a-input v-model:value="formState.nickname" />
+        </a-form-item>
+        <a-form-item name="title" label="职称" :rules="[{ required: true }]">
           <a-input v-model:value="formState.title" />
         </a-form-item>
 
-        <a-form-item name="bio" label="Bio" :rules="[{ required: true }]">
+        <a-form-item name="bio" label="个人经历" :rules="[{ required: true }]">
           <a-textarea v-model:value="formState.bio" :rows="4" />
         </a-form-item>
 
-        <a-form-item name="email" label="Email" :rules="[{ required: true, type: 'email' }]">
+        <a-form-item name="email" label="邮箱" :rules="[{ required: true, type: 'email' }]">
           <a-input v-model:value="formState.email" />
         </a-form-item>
 
-        <a-form-item name="location" label="Location">
+        <a-form-item name="location" label="地址">
           <a-input v-model:value="formState.location" />
         </a-form-item>
 
-        <a-form-item name="skills" label="Skills">
+        <a-form-item name="skills" label="技能">
           <a-select
               v-model:value="formState.skills"
               mode="tags"
@@ -40,7 +42,7 @@
           </a-select>
         </a-form-item>
 
-        <a-form-item name="avatar" label="Profile Picture">
+        <a-form-item name="avatar" label="头像">
           <a-upload
               v-model:fileList="fileList"
               name="avatar"
@@ -71,7 +73,8 @@
 import { ref, reactive } from 'vue'
 import { message } from 'ant-design-vue'
 import { PlusOutlined } from '@ant-design/icons-vue'
-
+const labelCol = { style: { width: '80px' } };
+const wrapperCol = { span: 24 };
 const formState = reactive({
   name: '',
   title: '',

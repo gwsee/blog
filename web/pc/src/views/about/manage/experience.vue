@@ -3,6 +3,7 @@
     <div class="container mx-auto px-4">
       <h1 class="text-3xl font-bold mb-8 text-center">Add Work Experience</h1>
       <a-form
+          :label-col="labelCol"  :wrapper-col="wrapperCol"
           :model="formState"
           @finish="onFinish"
           class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md"
@@ -59,7 +60,8 @@
 <script setup>
 import { reactive } from 'vue'
 import { message } from 'ant-design-vue'
-
+const labelCol = { style: { width: '80px' } };
+const wrapperCol = { span: 24 };
 const formState = reactive({
   role: '',
   company: '',
