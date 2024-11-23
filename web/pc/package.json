@@ -20,7 +20,9 @@
     "quill": "^2.0.2",
     "three": "^0.170.0",
     "vue": "^3.4.37",
-    "vue-router": "^4.4.5"
+    "vue-router": "^4.4.5",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.15"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.1.2",
