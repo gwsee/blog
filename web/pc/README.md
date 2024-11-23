@@ -7,8 +7,9 @@ Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://
 ```
 npm create vite@latest
 npm i --save ant-design-vue@4.x
-
-
+npm install three @types/three 
+npm install -D tailwindcss@latest postcss@latest autoprefixer@latest
+npx tailwindcss init -p
 ```
 
 # 关于功能
