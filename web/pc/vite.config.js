@@ -23,8 +23,8 @@ export default defineConfig({
     https:false,
     proxy:{
       "/api":{
-        // target: `http://127.0.0.1:7999/`,
-        target: `http://blog.gwsee.com:8080/`,
+        target: `http://127.0.0.1:7999/`,
+        // target: `http://blog.gwsee.com:8080/`,
         changeOrigin:true,
         rewrite:(path)=>path.replace(/^\/api/,"")
       }
