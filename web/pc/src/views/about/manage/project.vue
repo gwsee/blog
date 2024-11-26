@@ -38,7 +38,7 @@
           <a-input v-model:value="formState.projectUrl" />
         </a-form-item>
 
-        <a-form-item name="image" label="项目描述">
+        <a-form-item name="image" label="项目快照">
           <a-upload
               v-model:fileList="fileList"
               name="image"
