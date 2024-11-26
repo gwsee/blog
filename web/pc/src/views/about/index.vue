@@ -61,34 +61,34 @@
         <h2 class="text-3xl font-bold mb-12 text-center">Work Experience</h2>
         <div class="relative">
           <!-- Experience Cards Container -->
-            <a-timeline mode="alternate">
-              <a-timeline-item v-for="experience in experiences" :key="experience.id"   :class="index % 2 === 0 ? 'self-start' : 'self-start'">
-                <template #dot>
-                  <AppstoreOutlined style="font-size: 16px;" />
+          <a-timeline mode="alternate">
+            <a-timeline-item v-for="experience in experiences" :key="experience.id"   :class="index % 2 === 0 ? 'self-start' : 'self-start'">
+              <template #dot>
+                <AppstoreOutlined style="font-size: 16px;" />
+              </template>
+              <a-card
+                  hoverable
+                  class="experience-card overflow-hidden"
+                  style="text-align: left"
+                  @click="toRoute(`/about/experience/1`)"
+              >
+                <template #cover>
+                  <div class="h-32 bg-gradient-to-r from-blue-500 to-purple-500"></div>
                 </template>
-                <a-card
-                    hoverable
-                    class="experience-card overflow-hidden"
-                    style="text-align: left"
-                    @click="toRoute(`/about/experience/1`)"
-                >
-                  <template #cover>
-                    <div class="h-32 bg-gradient-to-r from-blue-500 to-purple-500"></div>
+                <a-card-meta :title="experience.role">
+                  <template #description>
+                    <div>
+                      <p class="text-gray-600">{{ experience.company }}</p>
+                      <p class="text-sm text-gray-500">{{ experience.period }}</p>
+                    </div>
                   </template>
-                  <a-card-meta :title="experience.role">
-                    <template #description>
-                      <div>
-                        <p class="text-gray-600">{{ experience.company }}</p>
-                        <p class="text-sm text-gray-500">{{ experience.period }}</p>
-                      </div>
-                    </template>
-                  </a-card-meta>
-                  <div class="mt-4 experience-details opacity-0 transition-opacity duration-300">
-                    <p class="text-sm text-gray-600">{{ experience.description }}</p>
-                  </div>
-                </a-card>
-              </a-timeline-item>
-            </a-timeline>
+                </a-card-meta>
+                <div class="mt-4 experience-details opacity-0 transition-opacity duration-300">
+                  <p class="text-sm text-gray-600">{{ experience.description }}</p>
+                </div>
+              </a-card>
+            </a-timeline-item>
+          </a-timeline>
         </div>
       </div>
     </section>
@@ -96,8 +96,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import {ref} from 'vue'
+import {useRouter} from 'vue-router'
+const router = useRouter()
 import {
   UserOutlined,
   MailOutlined,
@@ -105,7 +106,7 @@ import {
   AppstoreOutlined,
 } from '@ant-design/icons-vue'
 
-const router = useRouter()
+
 
 const projects = ref([
   {
@@ -154,7 +155,7 @@ const experiences = ref([
   },
 ])
 
-const toRoute=(path)=> {
+const toRoute = (path) => {
   router.push(path)
 }
 </script>

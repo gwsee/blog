@@ -1,22 +1,22 @@
 <template>
   <div class="min-h-screen bg-gray-50 py-12">
     <div class="container mx-auto px-4">
-      <h1 class="text-3xl font-bold mb-8 text-center">Add Project</h1>
+      <h1 class="text-3xl font-bold mb-8 text-center" v-if="false">Add Project</h1>
       <a-form
           :label-col="labelCol"  :wrapper-col="wrapperCol"
           :model="formState"
           @finish="onFinish"
           class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md"
       >
-        <a-form-item name="title" label="Project Title" :rules="[{ required: true }]">
+        <a-form-item name="title" label="项目名称" :rules="[{ required: true }]">
           <a-input v-model:value="formState.title" />
         </a-form-item>
 
-        <a-form-item name="description" label="Project Description" :rules="[{ required: true }]">
+        <a-form-item name="description" label="项目描述" :rules="[{ required: true }]">
           <a-textarea v-model:value="formState.description" :rows="4" />
         </a-form-item>
 
-        <a-form-item name="technologies" label="Technologies Used">
+        <a-form-item name="technologies" label="使用技能">
           <a-select
               v-model:value="formState.technologies"
               mode="tags"
@@ -29,19 +29,19 @@
           </a-select>
         </a-form-item>
 
-        <a-form-item name="startDate" label="Start Date">
+        <a-form-item name="startDate" label="开始日期">
           <a-date-picker v-model:value="formState.startDate" />
         </a-form-item>
 
-        <a-form-item name="endDate" label="End Date">
+        <a-form-item name="endDate" label="结束日期">
           <a-date-picker v-model:value="formState.endDate" />
         </a-form-item>
 
-        <a-form-item name="projectUrl" label="Project URL">
+        <a-form-item name="projectUrl" label="项目地址">
           <a-input v-model:value="formState.projectUrl" />
         </a-form-item>
 
-        <a-form-item name="image" label="Project Image">
+        <a-form-item name="image" label="项目描述">
           <a-upload
               v-model:fileList="fileList"
               name="image"
@@ -125,7 +125,7 @@ const onFinish = (values) => {
   message.success('Project saved successfully!')
   // Here you would typically send the data to your backend
 }
-const labelCol = { style: { width: '80px' } };
+const labelCol = { style: { width: '90px' } };
 const wrapperCol = { span: 24 };
 </script>
 

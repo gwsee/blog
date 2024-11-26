@@ -1,42 +1,38 @@
 <template>
   <div class="min-h-screen bg-gray-50 py-12">
     <div class="container mx-auto px-4">
-      <h1 class="text-3xl font-bold mb-8 text-center">Add Work Experience</h1>
+      <h1 class="text-3xl font-bold mb-8 text-center"  v-if="false">Add Work Experience</h1>
       <a-form
           :label-col="labelCol"  :wrapper-col="wrapperCol"
           :model="formState"
           @finish="onFinish"
           class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md"
       >
-        <a-form-item name="role" label="Job Title" :rules="[{ required: true }]">
-          <a-input v-model:value="formState.role" />
-        </a-form-item>
-
-        <a-form-item name="company" label="Company" :rules="[{ required: true }]">
+        <a-form-item name="company" label="公司名称" :rules="[{ required: true }]">
           <a-input v-model:value="formState.company" />
         </a-form-item>
-
-        <a-form-item name="location" label="Location">
+        <a-form-item name="role" label="职位名称" :rules="[{ required: true }]">
+          <a-input v-model:value="formState.role" />
+        </a-form-item>
+        <a-form-item name="location" label="公司地址">
           <a-input v-model:value="formState.location" />
         </a-form-item>
-
-        <a-form-item name="period" label="Employment Period" :rules="[{ required: true }]">
+        <a-form-item name="period" label="在职时间" :rules="[{ required: true }]">
           <a-range-picker v-model:value="formState.period" />
         </a-form-item>
-
-        <a-form-item name="description" label="Job Description" :rules="[{ required: true }]">
+        <a-form-item name="description" label="职位描述" :rules="[{ required: true }]">
           <a-textarea v-model:value="formState.description" :rows="4" />
         </a-form-item>
 
-        <a-form-item name="responsibilities" label="Key Responsibilities">
+        <a-form-item name="responsibilities" label="主要职责">
           <a-textarea v-model:value="formState.responsibilities" :rows="4" placeholder="Enter each responsibility on a new line" />
         </a-form-item>
 
-        <a-form-item name="achievements" label="Key Achievements">
+        <a-form-item name="achievements" label="工作成就">
           <a-textarea v-model:value="formState.achievements" :rows="4" placeholder="Enter each achievement on a new line" />
         </a-form-item>
 
-        <a-form-item name="skills" label="Skills Used">
+        <a-form-item name="skills" label="使用技能">
           <a-select
               v-model:value="formState.skills"
               mode="tags"
@@ -59,8 +55,10 @@
 
 <script setup>
 import { reactive } from 'vue'
+import {useRouter} from 'vue-router'
+const router = useRouter()
 import { message } from 'ant-design-vue'
-const labelCol = { style: { width: '80px' } };
+const labelCol = { style: { width: '90px' } };
 const wrapperCol = { span: 24 };
 const formState = reactive({
   role: '',
