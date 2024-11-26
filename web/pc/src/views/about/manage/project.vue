@@ -1,21 +1,18 @@
 <template>
-  <div class="min-h-screen bg-gray-50 py-12">
-    <div class="container mx-auto px-4">
-      <h1 class="text-3xl font-bold mb-8 text-center" v-if="false">Add Project</h1>
+  <a-modal v-model:open="open" :title="`项目管理`"  @cancel="close">
       <a-form
           :label-col="labelCol"  :wrapper-col="wrapperCol"
           :model="formState"
+          ref="formRef"
           @finish="onFinish"
-          class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md"
+          class=" py-8 "
       >
         <a-form-item name="title" label="项目名称" :rules="[{ required: true }]">
           <a-input v-model:value="formState.title" />
         </a-form-item>
-
         <a-form-item name="description" label="项目描述" :rules="[{ required: true }]">
           <a-textarea v-model:value="formState.description" :rows="4" />
         </a-form-item>
-
         <a-form-item name="technologies" label="使用技能">
           <a-select
               v-model:value="formState.technologies"
@@ -59,20 +56,23 @@
             </div>
           </a-upload>
         </a-form-item>
-
-        <a-form-item>
-          <a-button type="primary" html-type="submit" block>Save Project</a-button>
-        </a-form-item>
       </a-form>
-    </div>
-  </div>
+    <template #footer>
+      <a-button key="back" @click="close">取消</a-button>
+      <a-button type="primary" :loading="confirmLoading" @click="handleOk">{{ '保存' }}</a-button>
+    </template>
+  </a-modal>
 </template>
 
 <script setup>
 import { ref, reactive } from 'vue'
 import { message } from 'ant-design-vue'
 import { PlusOutlined } from '@ant-design/icons-vue'
-
+const open = ref(false)
+const confirmLoading = ref(false)
+const handleOk = ()=>{
+  confirmLoading.value = true
+}
 const formState = reactive({
   title: '',
   description: '',
@@ -125,8 +125,22 @@ const onFinish = (values) => {
   message.success('Project saved successfully!')
   // Here you would typically send the data to your backend
 }
-const labelCol = { style: { width: '90px' } };
+const labelCol = { style: { width: '80px' } };
 const wrapperCol = { span: 24 };
+// 通过storage来控制弹出的显隐 就不用show 来暴露
+const formRef = ref(null)
+const show = () => {
+  open.value = true;
+  if(formRef.value){
+    formRef.value.resetFields();
+  }
+};
+const close = ()=>{
+  open.value = false
+}
+defineExpose({
+  show
+})
 </script>
 
 <style scoped>

@@ -67,7 +67,7 @@
         </a-card>
         <a-card title="工作经历">
           <template #extra>
-            <a-button @click="()=>{formState.experiences.push({role:'设计师',company:'出海国际技术公司',period:'2021-04 -- 2024-09'})}">add more</a-button>
+            <a-button @click="toRoute('/about/experience/manage/0')">add more</a-button>
           </template>
           <a-list
               :data-source="formState.experiences"
@@ -93,7 +93,7 @@
             </template>
           </a-list>
         </a-card>
-        <a-form-item style="text-align: center;padding: 5px 0">
+        <a-form-item style="text-align: center;padding: 5px 5px">
           <a-button type="primary" html-type="submit" block>保    存</a-button>
         </a-form-item>
       </a-form>

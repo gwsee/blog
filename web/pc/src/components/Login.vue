@@ -4,7 +4,6 @@
         style="margin: 32px 4px"
         ref="formRef"
         :model="formState"
-        :wrapper-col="{ span: 20, offset:2 }"
         autocomplete="off"
     >
       <a-form-item
@@ -50,6 +49,8 @@ const formState = reactive({
   Password: '',
   Confirm: '',
 });
+const labelCol = { style: { width: '90px' } };
+const wrapperCol = { span: 24 };
 const validatePassConfirm= async (_rule, value) => {
   if (!isRegister.value){
     return Promise.resolve();

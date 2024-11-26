@@ -31,4 +31,8 @@ npx tailwindcss init -p
    是一个时间轴的方式介绍自己
 4：题库 = 博客
    这里主要是为了刷题而存在,方便自己刷题
+5：工具链
+6：脑图
+    可以参考
+    Mermaid Excalidraw  Draw.io / Diagrams.net   Mind-elixir.js
 ```

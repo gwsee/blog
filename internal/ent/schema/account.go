@@ -30,9 +30,12 @@ func (Account) Fields() []ent.Field {
 			}),
 		field.String("nickname").Default("好运连连").Comment("昵称"),
 		field.String("avatar").Default("").Comment("头像"),
-		field.String("description").NotEmpty().Comment("描述").
+		field.String("name").Default("").Comment("姓名"),
+		field.String("professional").Default("").Comment("职称"),
+		field.JSON("skills", []string{}).Comment("技能"),
+		field.String("description").NotEmpty().Comment("个人简介").
 			SchemaType(map[string]string{
-				dialect.MySQL: "varchar(200)",
+				dialect.MySQL: "text",
 			}),
 		field.Int("blog_num").Default(0).Comment("博客数量"),
 		field.Int8("status").Default(1).Comment("状态:0失效,1正常").
