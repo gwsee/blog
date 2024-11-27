@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package api.tools.v1;
+
+option go_package = "blog/api/tools/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.tools.v1";
+import "third_party/google/api/annotations.proto";
+
+service Tools {
+	rpc UploadFileByStream (StreamRequest) returns (UploadFileReply){
+		option (google.api.http) = {
+			body: "*"
+		};
+	};//上传文件流的方式
+	rpc UploadFile (UploadFileRequest) returns (UploadFileReply){
+		option (google.api.http) = {
+			body: "*"
+		};
+	};//上传文件流的方式
+}
+
+message UploadFileReply{
+	string uuid  = 1;
+	string message = 2;   // 返回消息
+	bool  success = 3;     // 是否成功
+}
+
+message StreamRequest {
+	string filename = 1;  // 文件名（在第一个请求中可传递）
+	bytes chunk = 2;      // 文件数据的分块
+}
+
+message UploadFileRequest {
+	string filename = 1; // 文件名
+	bytes content = 2;   // 文件的完整内容
+}

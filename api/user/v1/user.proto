@@ -1,0 +1,186 @@
+syntax = "proto3";
+
+package api.user.v1;
+
+option go_package = "blog/api/user/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.user.v1";
+import "api/global/page.proto";
+import "api/global/index.proto";
+import "third_party/google/api/annotations.proto";
+
+service User {
+	rpc SaveUser (SaveUserRequest) returns (global.Empty){
+		option (google.api.http) = {
+			body: "*"
+		};
+	};
+	rpc GetUser (global.Empty) returns (GetUserReply){
+		option (google.api.http) = {
+			body: "*"
+		};
+	};
+
+	rpc SaveProject (SaveProjectRequest) returns (global.Empty){
+		option (google.api.http) = {
+			body: "*"
+		};
+	};
+	rpc DeleteProject (global.ID) returns (global.Empty){
+		option (google.api.http) = {
+			body: "*"
+		};
+	};
+	rpc GetProject (global.ID) returns (GetProjectReply){
+		option (google.api.http) = {
+			body: "*"
+		};
+	};
+	rpc ListProject (ListProjectRequest) returns (ListProjectReply){
+		option (google.api.http) = {
+			body: "*"
+		};
+	};
+
+	rpc SaveExperience (SaveExperienceRequest) returns (global.Empty){
+		option (google.api.http) = {
+			body: "*"
+		};
+	};
+	rpc DeleteExperience (global.ID) returns (global.Empty){
+		option (google.api.http) = {
+			body: "*"
+		};
+	};
+	rpc GetExperience (global.ID) returns (GetExperienceReply){
+		option (google.api.http) = {
+			body: "*"
+		};
+	};
+	rpc ListExperience (ListExperienceRequest) returns (ListExperienceReply){
+		option (google.api.http) = {
+			body: "*"
+		};
+	};
+}
+
+message SaveExperienceRequest {
+	int64 id =1;//ID
+	string company =2;//公司名称
+	string role = 3;//职位名称
+	string location = 4;//公司地址
+	int64 start = 5;//开始时间
+	int64 end = 6;//结束时间
+	string description = 7;// 职位描述
+	string responsibilities = 8;//主要职责
+	string achievements = 9;//工作成就
+	repeated string skills = 10;//使用技能
+}
+
+message GetExperienceReply {
+	int64 id =1;//ID
+	string company =2;//公司名称
+	string role = 3;//职位名称
+	string location = 4;//公司地址
+	int64 start = 5;//开始时间
+	int64 end = 6;//结束时间
+	string description = 7;// 职位描述
+	string responsibilities = 8;//主要职责
+	string achievements = 9;//工作成就
+	repeated string skills = 10;//使用技能
+	int64 createdAt=11;//创建时间
+	int64 updatedAt=12;//编辑时间
+}
+
+message ListExperienceRequest {
+	global.PageInfo page = 1; //分页
+	string company =2;//公司名称
+}
+message ListExperienceReply {
+	repeated ListExperience list = 1;
+	int64 total = 2;
+}
+
+message ListExperience {
+	int64 id =1;//ID
+	string company =2;//公司名称
+	string role = 3;//职位名称
+	string location = 4;//公司地址
+	int64 start = 5;//开始时间
+	int64 end = 6;//结束时间
+	string description = 7;// 职位描述
+	int64 updatedAt=8;//编辑时间
+}
+
+message SaveProjectRequest {
+	int64 id =1;//ID
+	int64 experienceId =2;//对应的经历的ID
+	string title = 3;//项目名称
+	string description = 4;//项目描述
+	repeated string skills = 5;//使用技能
+	int64 start = 6;//开始时间
+	int64 end = 7;//结束时间
+	string link = 8;//项目地址
+	repeated string photos = 9;//项目地址
+}
+
+message GetProjectReply {
+	int64 id =1;//ID
+	int64 experienceId =2;//对应的经历的ID
+	string title = 3;//项目名称
+	string description = 4;//项目描述
+	repeated string skills = 5;//使用技能
+	int64 start = 6;//开始时间
+	int64 end = 7;//结束时间
+	string link = 8;//项目地址
+	repeated string photos = 9;//项目图片
+	int64 createdAt=10;//创建时间
+	int64 updatedAt=11;//编辑时间
+}
+
+message ListProjectRequest {
+	global.PageInfo page = 1; //分页
+	int64 experienceId =2;//对应的经历的ID
+	string title = 3;//项目名称
+	repeated string skills = 4;//使用技能
+	repeated int64 time = 5;//项目时间 --查询全部在这个时间范围内的项目
+}
+message ListProject {
+	int64 id =1;//ID
+	int64 experienceId = 2;//对应的经历的ID
+	string title = 3;//项目名称
+	repeated string skills = 4;//使用技能
+	int64 start = 5;//开始时间
+	int64 end = 6;//结束时间
+	string link = 7;//项目地址
+	string photo = 8;//项目图片
+	int64 updatedAt=9;//编辑时间
+}
+message ListProjectReply {
+	repeated ListProject list = 1;
+	int64  total =2;
+}
+
+
+
+message SaveUserRequest {
+	string name = 2;//姓名
+	string email = 3;//工作邮箱
+	string avatar = 4;//头像
+	string professional = 5;//职称
+	repeated string skills = 6;//技能
+	string description = 7;//个人简介
+}
+
+message GetUserReply {
+	int64 id =1;//ID
+	string name = 2;//姓名
+	string email = 3;//工作邮箱
+	string avatar = 4;//头像
+	string professional = 5;//职称
+	repeated string skills = 6;//技能
+	string description = 7;//个人简介
+	int64 createdAt=8;//创建时间
+	int64 updatedAt=9;//编辑时间
+}
+

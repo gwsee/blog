@@ -34,40 +34,40 @@ service Account {
 }
 
 message CreateAccountRequest {
-	string Account = 1;
-	string Password = 2;
-	string Email = 3;
-	string NickName = 4;
-	string Avatar = 5;
-	string Description = 6;
+	string account = 1;
+	string password = 2;
+	string email = 3;
+	string nickName = 4;
+	string avatar = 5;
+	string description = 6;
 }
 
 message ResetPasswordRequest {
-	string Account = 1;
-	string Password = 2;
+	string account = 1;
+	string password = 2;
 }
 
 message LoginByAccountRequest {
-	string Account = 1;
-	string Password = 2;
+	string account = 1;
+	string password = 2;
 }
 
 message LoginByAccountReply {
-	string Token = 1;
+	string token = 1;
 }
 
 message UpdateAccountRequest {
-	string NickName = 1;
-	string Avatar = 2;
-	string Description = 3;
+	string nickName = 1;
+	string avatar = 2;
+	string description = 3;
 }
 
 message AccountInfoReply{
-	int64  ID = 1;
-	string NickName = 2;
-	string Account = 3;
-	string Email = 4;
-	string Avatar = 5;
-	string Description = 6;
-	int64  BlogNum = 7;
+	int64  id = 1;
+	string nickname = 2;
+	string account = 3;
+	string email = 4;
+	string avatar = 5;
+	string description = 6;
+	int64  blogNum = 7;
 }

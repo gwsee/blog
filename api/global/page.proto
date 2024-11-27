@@ -7,11 +7,11 @@ option java_multiple_files = true;
 option java_package = "api.global";
 
 message PageInfo {
-  int64 PageNum = 1;
-  int64 PageSize = 2;
+  int64 pageNum = 1;
+  int64 pageSize = 2;
 }
 
 message PageIndex {
-  int64 Start = 1;
-  int64 PageSize = 2;
+  int64 start = 1;
+  int64 pageSize = 2;
 }

@@ -3,6 +3,7 @@ syntax = "proto3";
 package api.blogs.v1;
 
 import "api/global/page.proto";
+import "api/global/index.proto";
 
 option go_package = "blog/api/blogs/v1;v1";
 option java_multiple_files = true;
@@ -10,22 +11,22 @@ option java_package = "api.blogs.v1";
 import "third_party/google/api/annotations.proto";
 
 service Blogs {
-	rpc CreateBlogs (CreateBlogsRequest) returns (CreateBlogsReply){
+	rpc CreateBlogs (CreateBlogsRequest) returns (global.Empty){
 		option (google.api.http) = {
 			body: "*"
 		};
 	};
-	rpc UpdateBlogs (UpdateBlogsRequest) returns (UpdateBlogsReply){
+	rpc UpdateBlogs (UpdateBlogsRequest) returns (global.Empty){
 		option (google.api.http) = {
 			body: "*"
 		};
 	};
-	rpc DeleteBlogs (DeleteBlogsRequest) returns (DeleteBlogsReply){
+	rpc DeleteBlogs (global.ID) returns (global.Empty){
 		option (google.api.http) = {
 			body: "*"
 		};
 	};
-	rpc GetBlogs (GetBlogsRequest) returns (GetBlogsReply){
+	rpc GetBlogs (global.ID) returns (GetBlogsReply){
 		option (google.api.http) = {
 			body: "*"
 		};
@@ -38,59 +39,51 @@ service Blogs {
 }
 
 message CreateBlogsRequest {
-	string Title  = 1; //标题
-	string Description = 2; //描述
-	int64 IsHidden = 3; //是否隐藏
+	string title  = 1; //标题
+	string description = 2; //描述
+	int64 isHidden = 3; //是否隐藏
 	repeated string Tags = 4;//标签
-	string Cover = 5;//封面
-	string Content = 6; //内容
+	string cover = 5;//封面
+	string content = 6; //内容
 }
-message CreateBlogsReply {}
 
 message UpdateBlogsRequest {
-	int64 Id = 1; //根据ID修改
-	string Title  = 2; //标题
-	string Description = 3; //描述
-	int64 IsHidden = 4; //是否隐藏
-	repeated string Tags = 5;//标签
-	string Cover = 6; //封面
-	string Content = 7; //内容
+	int64 id = 1; //根据ID修改
+	string title  = 2; //标题
+	string description = 3; //描述
+	int64 isHidden = 4; //是否隐藏
+	repeated string tags = 5;//标签
+	string cover = 6; //封面
+	string content = 7; //内容
 }
-message UpdateBlogsReply {}
 
-message DeleteBlogsRequest {
-	int64 Id = 1;
-}
-message DeleteBlogsReply {}
 
-message GetBlogsRequest {
-	int64 Id = 1;
-}
+
 
 message BlogsHeader {
-	int64 Id = 1; //ID
-	string Title  = 2; //标题
-	string Description = 3; //描述
-	int64 IsHidden = 4;//是否隐藏
-	repeated string Tags = 5;//标签
-	string Cover = 6;//封面
-	int64 AccountId = 7;//所属帐号ID
-	int64 CreatedAt = 8;//创建时间
-	int64 UpdatedAt = 9;//更新时间
+	int64 id = 1; //ID
+	string title  = 2; //标题
+	string description = 3; //描述
+	int64 isHidden = 4;//是否隐藏
+	repeated string tags = 5;//标签
+	string cover = 6;//封面
+	int64 accountId = 7;//所属帐号ID
+	int64 createdAt = 8;//创建时间
+	int64 updatedAt = 9;//更新时间
 }
 
 message GetBlogsReply {
-	BlogsHeader Header = 1; //头部内容
-	string Content = 2;//主内容
+	BlogsHeader header = 1; //头部内容
+	string content = 2;//主内容
 }
 
 message ListBlogsRequest {
-	global.PageInfo Page = 1; //分页
-	string Title = 2; //标题
-	repeated string Tags = 3; //标签
+	global.PageInfo page = 1; //分页
+	string title = 2; //标题
+	repeated string tags = 3; //标签
 }
 
 message ListBlogsReply {
-	int64 Total = 1; //总博客数
-	repeated BlogsHeader List = 2; //返回的内容
+	int64 total = 1; //总博客数
+	repeated BlogsHeader list = 2; //返回的内容
 }

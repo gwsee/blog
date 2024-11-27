@@ -8,34 +8,34 @@ option java_package = "api.bff.v1";
 import "api/blogs/v1/blogs.proto";
 import "api/blogs/v1/blogs_comment.proto";
 import "third_party/google/api/annotations.proto";
-import "api/global/resp.proto";
+import "api/global/index.proto";
 
 service Blogs {
-	rpc CreateBlogs (blogs.v1.CreateBlogsRequest) returns  (global.Response){
+	rpc CreateBlogs (blogs.v1.CreateBlogsRequest) returns  (global.Empty){
 		option (google.api.http) = {
 			post: "/v1/blogs/create"
 			body: "*"
 		};
 	};
-	rpc UpdateBlogs (blogs.v1.UpdateBlogsRequest) returns  (global.Response){
+	rpc UpdateBlogs (blogs.v1.UpdateBlogsRequest) returns  (global.Empty){
 		option (google.api.http) = {
 			post: "/v1/blogs/update"
 			body: "*"
 		};
 	};
-	rpc DeleteBlogs (blogs.v1.DeleteBlogsRequest) returns  (global.Response){
+	rpc DeleteBlogs (global.ID) returns  (global.Empty){
 		option (google.api.http) = {
 			post: "/v1/blogs/del"
 			body: "*"
 		};
 	};
-	rpc GetBlogs (blogs.v1.GetBlogsRequest) returns  (global.Response){
+	rpc GetBlogs (global.ID) returns  (blogs.v1.GetBlogsReply){
 		option (google.api.http) = {
 			post: "/v1/blogs/get"
 			body: "*"
 		};
 	};
-	rpc ListBlogs (blogs.v1.ListBlogsRequest) returns  (global.Response){
+	rpc ListBlogs (blogs.v1.ListBlogsRequest) returns  (blogs.v1.ListBlogsReply){
 		option (google.api.http) = {
 			post: "/v1/blogs/list"
 			body: "*"
@@ -44,31 +44,31 @@ service Blogs {
 }
 
 service BlogsComment {
-	rpc CreateBlogsComment (blogs.v1.CreateBlogsCommentRequest) returns  (global.Response){
+	rpc CreateBlogsComment (blogs.v1.CreateBlogsCommentRequest) returns  (global.Empty){
 		option (google.api.http) = {
 			post: "/v1/blogs_comment/create"
 			body: "*"
 		};
 	};
-	rpc UpdateBlogsComment (blogs.v1.UpdateBlogsCommentRequest) returns  (global.Response){
+	rpc UpdateBlogsComment (blogs.v1.UpdateBlogsCommentRequest) returns  (global.Empty){
 		option (google.api.http) = {
 			post: "/v1/blogs_comment/update"
 			body: "*"
 		};
 	};
-	rpc DeleteBlogsComment (blogs.v1.DeleteBlogsCommentRequest) returns  (global.Response){
+	rpc DeleteBlogsComment (global.ID) returns  (global.Empty){
 		option (google.api.http) = {
 			post: "/v1/blogs_comment/del"
 			body: "*"
 		};
 	};
-	rpc GetBlogsComment (blogs.v1.GetBlogsCommentRequest) returns (global.Response){
+	rpc GetBlogsComment (global.ID) returns (blogs.v1.GetBlogsCommentReply){
 		option (google.api.http) = {
 			post: "/v1/blogs_comment/get"
 			body: "*"
 		};
 	};
-	rpc ListBlogsComment (blogs.v1.ListBlogsCommentRequest) returns (global.Response){
+	rpc ListBlogsComment (blogs.v1.ListBlogsCommentRequest) returns (blogs.v1.ListBlogsCommentReply){
 		option (google.api.http) = {
 			post: "/v1/blogs_comment/list"
 			body: "*"

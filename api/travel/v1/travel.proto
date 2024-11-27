@@ -1,0 +1,87 @@
+syntax = "proto3";
+
+package api.travel.v1;
+
+option go_package = "blog/api/travel/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.travel.v1";
+import "api/global/index.proto";
+import "api/global/page.proto";
+import "third_party/google/api/annotations.proto";
+
+service Travel {
+	rpc SaveTravel (SaveTravelRequest) returns (global.Empty){
+		option (google.api.http) = {
+			body: "*"
+		};
+	};
+	rpc DeleteTravel (global.ID) returns (global.Empty){
+		option (google.api.http) = {
+			body: "*"
+		};
+	};
+	rpc GetTravel (global.ID) returns (GetTravelReply){
+		option (google.api.http) = {
+			body: "*"
+		};
+	};
+	rpc ListTravel (ListTravelRequest) returns (ListTravelReply){
+		option (google.api.http) = {
+			body: "*"
+		};
+	};
+	rpc Thumb(global.ID) returns (GetTravelReply){
+		option (google.api.http) = {
+			body: "*"
+		};
+	};
+	rpc Collect(global.ID) returns (GetTravelReply){
+		option (google.api.http) = {
+			body: "*"
+		};
+	};
+}
+
+
+message SaveTravelRequest {
+	int64 id = 1;//ID 没有就是新增
+	string title = 2;//标题
+	string description = 3;//描述
+	string video = 4;//视频地址
+	repeated string photo =5;//照片
+}
+
+message GetTravelReply {
+	int64 id = 1;//ID
+	string title = 2;//标题
+	string description = 3;//描述
+	string video = 4;//视频地址
+	repeated string photos =5;//照片
+	int64 browseNum =6;//浏览量
+	int64 thumbNum =7;//点赞量
+	int64 collectNum =8;//收藏量
+	int64 createdAt=9;//创建时间
+	int64 updatedAt=10;//编辑时间
+}
+
+message ListTravelRequest {
+	global.PageInfo page = 1; //分页
+	string title =2 ;//标题
+	string description = 3;//描述
+	bool my = 4;//是否只查看自己的
+}
+message ListTravelReply {
+	repeated ListTravel list = 1;
+	int64 total = 2;
+}
+message ListTravel {
+	int64 id = 1;//ID
+	string title = 2;//标题
+	string description = 3;//描述
+	string video = 4;//视频地址
+	string photo =5;//照片--第一个作为数据显示
+	int64 browseNum =6;//浏览量
+	int64 thumbNum =7;//点赞量
+	int64 collectNum =8;//收藏量
+	int64 createdAt=9;//创建时间
+}
