@@ -36,6 +36,8 @@ const (
 	FieldTags = "tags"
 	// FieldCover holds the string denoting the cover field in the database.
 	FieldCover = "cover"
+	// FieldFiles holds the string denoting the files field in the database.
+	FieldFiles = "files"
 	// Table holds the table name of the blogs in the database.
 	Table = "blogs"
 )
@@ -55,6 +57,7 @@ var Columns = []string{
 	FieldIsHidden,
 	FieldTags,
 	FieldCover,
+	FieldFiles,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).

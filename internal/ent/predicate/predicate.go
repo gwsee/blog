@@ -9,6 +9,12 @@ import (
 // Account is the predicate function for account builders.
 type Account func(*sql.Selector)
 
+// AccountExperience is the predicate function for accountexperience builders.
+type AccountExperience func(*sql.Selector)
+
+// AccountProject is the predicate function for accountproject builders.
+type AccountProject func(*sql.Selector)
+
 // Blogs is the predicate function for blogs builders.
 type Blogs func(*sql.Selector)
 
@@ -17,3 +23,18 @@ type BlogsComment func(*sql.Selector)
 
 // BlogsContent is the predicate function for blogscontent builders.
 type BlogsContent func(*sql.Selector)
+
+// Files is the predicate function for files builders.
+type Files func(*sql.Selector)
+
+// FilesExtend is the predicate function for filesextend builders.
+type FilesExtend func(*sql.Selector)
+
+// Travel is the predicate function for travel builders.
+type Travel func(*sql.Selector)
+
+// TravelExtend is the predicate function for travelextend builders.
+type TravelExtend func(*sql.Selector)
+
+// User is the predicate function for user builders.
+type User func(*sql.Selector)

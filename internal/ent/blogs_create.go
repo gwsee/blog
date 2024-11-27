@@ -149,6 +149,12 @@ func (bc *BlogsCreate) SetCover(s string) *BlogsCreate {
 	return bc
 }
 
+// SetFiles sets the "files" field.
+func (bc *BlogsCreate) SetFiles(s []string) *BlogsCreate {
+	bc.mutation.SetFiles(s)
+	return bc
+}
+
 // SetID sets the "id" field.
 func (bc *BlogsCreate) SetID(i int) *BlogsCreate {
 	bc.mutation.SetID(i)
@@ -261,6 +267,9 @@ func (bc *BlogsCreate) check() error {
 	if _, ok := bc.mutation.Cover(); !ok {
 		return &ValidationError{Name: "cover", err: errors.New(`ent: missing required field "Blogs.cover"`)}
 	}
+	if _, ok := bc.mutation.Files(); !ok {
+		return &ValidationError{Name: "files", err: errors.New(`ent: missing required field "Blogs.files"`)}
+	}
 	if v, ok := bc.mutation.ID(); ok {
 		if err := blogs.IDValidator(v); err != nil {
 			return &ValidationError{Name: "id", err: fmt.Errorf(`ent: validator failed for field "Blogs.id": %w`, err)}
@@ -346,6 +355,10 @@ func (bc *BlogsCreate) createSpec() (*Blogs, *sqlgraph.CreateSpec) {
 	if value, ok := bc.mutation.Cover(); ok {
 		_spec.SetField(blogs.FieldCover, field.TypeString, value)
 		_node.Cover = value
+	}
+	if value, ok := bc.mutation.Files(); ok {
+		_spec.SetField(blogs.FieldFiles, field.TypeJSON, value)
+		_node.Files = value
 	}
 	return _node, _spec
 }
@@ -552,6 +565,18 @@ func (u *BlogsUpsert) SetCover(v string) *BlogsUpsert {
 // UpdateCover sets the "cover" field to the value that was provided on create.
 func (u *BlogsUpsert) UpdateCover() *BlogsUpsert {
 	u.SetExcluded(blogs.FieldCover)
+	return u
+}
+
+// SetFiles sets the "files" field.
+func (u *BlogsUpsert) SetFiles(v []string) *BlogsUpsert {
+	u.Set(blogs.FieldFiles, v)
+	return u
+}
+
+// UpdateFiles sets the "files" field to the value that was provided on create.
+func (u *BlogsUpsert) UpdateFiles() *BlogsUpsert {
+	u.SetExcluded(blogs.FieldFiles)
 	return u
 }
 
@@ -788,6 +813,20 @@ func (u *BlogsUpsertOne) SetCover(v string) *BlogsUpsertOne {
 func (u *BlogsUpsertOne) UpdateCover() *BlogsUpsertOne {
 	return u.Update(func(s *BlogsUpsert) {
 		s.UpdateCover()
+	})
+}
+
+// SetFiles sets the "files" field.
+func (u *BlogsUpsertOne) SetFiles(v []string) *BlogsUpsertOne {
+	return u.Update(func(s *BlogsUpsert) {
+		s.SetFiles(v)
+	})
+}
+
+// UpdateFiles sets the "files" field to the value that was provided on create.
+func (u *BlogsUpsertOne) UpdateFiles() *BlogsUpsertOne {
+	return u.Update(func(s *BlogsUpsert) {
+		s.UpdateFiles()
 	})
 }
 
@@ -1190,6 +1229,20 @@ func (u *BlogsUpsertBulk) SetCover(v string) *BlogsUpsertBulk {
 func (u *BlogsUpsertBulk) UpdateCover() *BlogsUpsertBulk {
 	return u.Update(func(s *BlogsUpsert) {
 		s.UpdateCover()
+	})
+}
+
+// SetFiles sets the "files" field.
+func (u *BlogsUpsertBulk) SetFiles(v []string) *BlogsUpsertBulk {
+	return u.Update(func(s *BlogsUpsert) {
+		s.SetFiles(v)
+	})
+}
+
+// UpdateFiles sets the "files" field to the value that was provided on create.
+func (u *BlogsUpsertBulk) UpdateFiles() *BlogsUpsertBulk {
+	return u.Update(func(s *BlogsUpsert) {
+		s.UpdateFiles()
 	})
 }
 

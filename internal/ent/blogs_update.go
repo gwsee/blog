@@ -200,6 +200,18 @@ func (bu *BlogsUpdate) SetNillableCover(s *string) *BlogsUpdate {
 	return bu
 }
 
+// SetFiles sets the "files" field.
+func (bu *BlogsUpdate) SetFiles(s []string) *BlogsUpdate {
+	bu.mutation.SetFiles(s)
+	return bu
+}
+
+// AppendFiles appends s to the "files" field.
+func (bu *BlogsUpdate) AppendFiles(s []string) *BlogsUpdate {
+	bu.mutation.AppendFiles(s)
+	return bu
+}
+
 // Mutation returns the BlogsMutation object of the builder.
 func (bu *BlogsUpdate) Mutation() *BlogsMutation {
 	return bu.mutation
@@ -308,6 +320,14 @@ func (bu *BlogsUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := bu.mutation.Cover(); ok {
 		_spec.SetField(blogs.FieldCover, field.TypeString, value)
+	}
+	if value, ok := bu.mutation.Files(); ok {
+		_spec.SetField(blogs.FieldFiles, field.TypeJSON, value)
+	}
+	if value, ok := bu.mutation.AppendedFiles(); ok {
+		_spec.AddModifier(func(u *sql.UpdateBuilder) {
+			sqljson.Append(u, blogs.FieldFiles, value)
+		})
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, bu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -501,6 +521,18 @@ func (buo *BlogsUpdateOne) SetNillableCover(s *string) *BlogsUpdateOne {
 	return buo
 }
 
+// SetFiles sets the "files" field.
+func (buo *BlogsUpdateOne) SetFiles(s []string) *BlogsUpdateOne {
+	buo.mutation.SetFiles(s)
+	return buo
+}
+
+// AppendFiles appends s to the "files" field.
+func (buo *BlogsUpdateOne) AppendFiles(s []string) *BlogsUpdateOne {
+	buo.mutation.AppendFiles(s)
+	return buo
+}
+
 // Mutation returns the BlogsMutation object of the builder.
 func (buo *BlogsUpdateOne) Mutation() *BlogsMutation {
 	return buo.mutation
@@ -639,6 +671,14 @@ func (buo *BlogsUpdateOne) sqlSave(ctx context.Context) (_node *Blogs, err error
 	}
 	if value, ok := buo.mutation.Cover(); ok {
 		_spec.SetField(blogs.FieldCover, field.TypeString, value)
+	}
+	if value, ok := buo.mutation.Files(); ok {
+		_spec.SetField(blogs.FieldFiles, field.TypeJSON, value)
+	}
+	if value, ok := buo.mutation.AppendedFiles(); ok {
+		_spec.AddModifier(func(u *sql.UpdateBuilder) {
+			sqljson.Append(u, blogs.FieldFiles, value)
+		})
 	}
 	_node = &Blogs{config: buo.config}
 	_spec.Assign = _node.assignValues

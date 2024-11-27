@@ -145,6 +145,20 @@ func (au *AccountUpdate) SetNillableEmail(s *string) *AccountUpdate {
 	return au
 }
 
+// SetDescription sets the "description" field.
+func (au *AccountUpdate) SetDescription(s string) *AccountUpdate {
+	au.mutation.SetDescription(s)
+	return au
+}
+
+// SetNillableDescription sets the "description" field if the given value is not nil.
+func (au *AccountUpdate) SetNillableDescription(s *string) *AccountUpdate {
+	if s != nil {
+		au.SetDescription(*s)
+	}
+	return au
+}
+
 // SetNickname sets the "nickname" field.
 func (au *AccountUpdate) SetNickname(s string) *AccountUpdate {
 	au.mutation.SetNickname(s)
@@ -169,20 +183,6 @@ func (au *AccountUpdate) SetAvatar(s string) *AccountUpdate {
 func (au *AccountUpdate) SetNillableAvatar(s *string) *AccountUpdate {
 	if s != nil {
 		au.SetAvatar(*s)
-	}
-	return au
-}
-
-// SetDescription sets the "description" field.
-func (au *AccountUpdate) SetDescription(s string) *AccountUpdate {
-	au.mutation.SetDescription(s)
-	return au
-}
-
-// SetNillableDescription sets the "description" field if the given value is not nil.
-func (au *AccountUpdate) SetNillableDescription(s *string) *AccountUpdate {
-	if s != nil {
-		au.SetDescription(*s)
 	}
 	return au
 }
@@ -341,14 +341,14 @@ func (au *AccountUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := au.mutation.Email(); ok {
 		_spec.SetField(account.FieldEmail, field.TypeString, value)
 	}
+	if value, ok := au.mutation.Description(); ok {
+		_spec.SetField(account.FieldDescription, field.TypeString, value)
+	}
 	if value, ok := au.mutation.Nickname(); ok {
 		_spec.SetField(account.FieldNickname, field.TypeString, value)
 	}
 	if value, ok := au.mutation.Avatar(); ok {
 		_spec.SetField(account.FieldAvatar, field.TypeString, value)
-	}
-	if value, ok := au.mutation.Description(); ok {
-		_spec.SetField(account.FieldDescription, field.TypeString, value)
 	}
 	if value, ok := au.mutation.BlogNum(); ok {
 		_spec.SetField(account.FieldBlogNum, field.TypeInt, value)
@@ -500,6 +500,20 @@ func (auo *AccountUpdateOne) SetNillableEmail(s *string) *AccountUpdateOne {
 	return auo
 }
 
+// SetDescription sets the "description" field.
+func (auo *AccountUpdateOne) SetDescription(s string) *AccountUpdateOne {
+	auo.mutation.SetDescription(s)
+	return auo
+}
+
+// SetNillableDescription sets the "description" field if the given value is not nil.
+func (auo *AccountUpdateOne) SetNillableDescription(s *string) *AccountUpdateOne {
+	if s != nil {
+		auo.SetDescription(*s)
+	}
+	return auo
+}
+
 // SetNickname sets the "nickname" field.
 func (auo *AccountUpdateOne) SetNickname(s string) *AccountUpdateOne {
 	auo.mutation.SetNickname(s)
@@ -524,20 +538,6 @@ func (auo *AccountUpdateOne) SetAvatar(s string) *AccountUpdateOne {
 func (auo *AccountUpdateOne) SetNillableAvatar(s *string) *AccountUpdateOne {
 	if s != nil {
 		auo.SetAvatar(*s)
-	}
-	return auo
-}
-
-// SetDescription sets the "description" field.
-func (auo *AccountUpdateOne) SetDescription(s string) *AccountUpdateOne {
-	auo.mutation.SetDescription(s)
-	return auo
-}
-
-// SetNillableDescription sets the "description" field if the given value is not nil.
-func (auo *AccountUpdateOne) SetNillableDescription(s *string) *AccountUpdateOne {
-	if s != nil {
-		auo.SetDescription(*s)
 	}
 	return auo
 }
@@ -726,14 +726,14 @@ func (auo *AccountUpdateOne) sqlSave(ctx context.Context) (_node *Account, err e
 	if value, ok := auo.mutation.Email(); ok {
 		_spec.SetField(account.FieldEmail, field.TypeString, value)
 	}
+	if value, ok := auo.mutation.Description(); ok {
+		_spec.SetField(account.FieldDescription, field.TypeString, value)
+	}
 	if value, ok := auo.mutation.Nickname(); ok {
 		_spec.SetField(account.FieldNickname, field.TypeString, value)
 	}
 	if value, ok := auo.mutation.Avatar(); ok {
 		_spec.SetField(account.FieldAvatar, field.TypeString, value)
-	}
-	if value, ok := auo.mutation.Description(); ok {
-		_spec.SetField(account.FieldDescription, field.TypeString, value)
 	}
 	if value, ok := auo.mutation.BlogNum(); ok {
 		_spec.SetField(account.FieldBlogNum, field.TypeInt, value)

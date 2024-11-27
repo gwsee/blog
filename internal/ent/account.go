@@ -35,12 +35,12 @@ type Account struct {
 	Password string `json:"password,omitempty"`
 	// 邮箱
 	Email string `json:"email,omitempty"`
+	// 想说啥?
+	Description string `json:"description,omitempty"`
 	// 昵称
 	Nickname string `json:"nickname,omitempty"`
 	// 头像
 	Avatar string `json:"avatar,omitempty"`
-	// 描述
-	Description string `json:"description,omitempty"`
 	// 博客数量
 	BlogNum int `json:"blog_num,omitempty"`
 	// 状态:0失效,1正常
@@ -55,7 +55,7 @@ func (*Account) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case account.FieldID, account.FieldCreatedAt, account.FieldCreatedBy, account.FieldUpdatedAt, account.FieldUpdatedBy, account.FieldDeletedAt, account.FieldDeletedBy, account.FieldBlogNum, account.FieldStatus:
 			values[i] = new(sql.NullInt64)
-		case account.FieldAccount, account.FieldPassword, account.FieldEmail, account.FieldNickname, account.FieldAvatar, account.FieldDescription:
+		case account.FieldAccount, account.FieldPassword, account.FieldEmail, account.FieldDescription, account.FieldNickname, account.FieldAvatar:
 			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -132,6 +132,12 @@ func (a *Account) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				a.Email = value.String
 			}
+		case account.FieldDescription:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field description", values[i])
+			} else if value.Valid {
+				a.Description = value.String
+			}
 		case account.FieldNickname:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field nickname", values[i])
@@ -143,12 +149,6 @@ func (a *Account) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field avatar", values[i])
 			} else if value.Valid {
 				a.Avatar = value.String
-			}
-		case account.FieldDescription:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field description", values[i])
-			} else if value.Valid {
-				a.Description = value.String
 			}
 		case account.FieldBlogNum:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -225,14 +225,14 @@ func (a *Account) String() string {
 	builder.WriteString("email=")
 	builder.WriteString(a.Email)
 	builder.WriteString(", ")
+	builder.WriteString("description=")
+	builder.WriteString(a.Description)
+	builder.WriteString(", ")
 	builder.WriteString("nickname=")
 	builder.WriteString(a.Nickname)
 	builder.WriteString(", ")
 	builder.WriteString("avatar=")
 	builder.WriteString(a.Avatar)
-	builder.WriteString(", ")
-	builder.WriteString("description=")
-	builder.WriteString(a.Description)
 	builder.WriteString(", ")
 	builder.WriteString("blog_num=")
 	builder.WriteString(fmt.Sprintf("%v", a.BlogNum))

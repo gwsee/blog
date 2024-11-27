@@ -21,6 +21,12 @@ export const constantRoutes = [
                 meta: { title: '关于我',  affix: true }
             },
             {
+                path: 'demo',
+                component: () => import('@/views/demo/index.vue'),
+                name: 'demo',
+                meta: { title: 'demo',  affix: true }
+            },
+            {
                 path: 'about/experience/:id(\\d+)',
                 component: () => import('@/views/about/experience.vue'),
                 name: 'about-experience',

@@ -34,6 +34,7 @@ func (Blogs) Fields() []ent.Field {
 			SchemaType(map[string]string{
 				dialect.MySQL: "varchar(200)",
 			}),
+		field.JSON("files", []string{}).Comment("博客内容可以关联的文件"),
 	}
 }
 

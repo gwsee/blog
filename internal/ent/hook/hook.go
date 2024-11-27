@@ -20,6 +20,30 @@ func (f AccountFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, err
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AccountMutation", m)
 }
 
+// The AccountExperienceFunc type is an adapter to allow the use of ordinary
+// function as AccountExperience mutator.
+type AccountExperienceFunc func(context.Context, *ent.AccountExperienceMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f AccountExperienceFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.AccountExperienceMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AccountExperienceMutation", m)
+}
+
+// The AccountProjectFunc type is an adapter to allow the use of ordinary
+// function as AccountProject mutator.
+type AccountProjectFunc func(context.Context, *ent.AccountProjectMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f AccountProjectFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.AccountProjectMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AccountProjectMutation", m)
+}
+
 // The BlogsFunc type is an adapter to allow the use of ordinary
 // function as Blogs mutator.
 type BlogsFunc func(context.Context, *ent.BlogsMutation) (ent.Value, error)
@@ -54,6 +78,66 @@ func (f BlogsContentFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value
 		return f(ctx, mv)
 	}
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.BlogsContentMutation", m)
+}
+
+// The FilesFunc type is an adapter to allow the use of ordinary
+// function as Files mutator.
+type FilesFunc func(context.Context, *ent.FilesMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f FilesFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.FilesMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.FilesMutation", m)
+}
+
+// The FilesExtendFunc type is an adapter to allow the use of ordinary
+// function as FilesExtend mutator.
+type FilesExtendFunc func(context.Context, *ent.FilesExtendMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f FilesExtendFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.FilesExtendMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.FilesExtendMutation", m)
+}
+
+// The TravelFunc type is an adapter to allow the use of ordinary
+// function as Travel mutator.
+type TravelFunc func(context.Context, *ent.TravelMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f TravelFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.TravelMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.TravelMutation", m)
+}
+
+// The TravelExtendFunc type is an adapter to allow the use of ordinary
+// function as TravelExtend mutator.
+type TravelExtendFunc func(context.Context, *ent.TravelExtendMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f TravelExtendFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.TravelExtendMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.TravelExtendMutation", m)
+}
+
+// The UserFunc type is an adapter to allow the use of ordinary
+// function as User mutator.
+type UserFunc func(context.Context, *ent.UserMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f UserFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.UserMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.UserMutation", m)
 }
 
 // Condition is a hook condition function.
