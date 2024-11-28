@@ -6,21 +6,21 @@
     <a-col :md="14" :sm="24" :xs="24"  style="text-align: center;    background: linear-gradient(rgb(241 241 241), rgb(173 215 197));" >
       <a-form :label-col="labelCol"  :wrapper-col="wrapperCol"  ref="formBlogRef" :model="formState"   autocomplete="off"  class="blog-card-edit">
         <a-form-item label="Title" :rules="[{ required: true, message: '请输入博客标题' }]">
-          <a-input  v-model:value="formState.Title"   placeholder="请输入博客标题"/>
+          <a-input  v-model:value="formState.title"   placeholder="请输入博客标题"/>
         </a-form-item>
         <a-form-item label="Description">
-          <a-textarea v-model:value="formState.Description"   placeholder="请输入博客简介"/>
+          <a-textarea v-model:value="formState.description"   placeholder="请输入博客简介"/>
         </a-form-item>
         <a-row  >
           <a-col :md="12" :sm="24" :xs="24"   >
             <a-form-item label="IsHidden">
-              <a-switch :checkedValue="1" :unCheckedValue="0" v-model:checked="formState.IsHidden" />
+              <a-switch :checkedValue="1" :unCheckedValue="0" v-model:checked="formState.isHidden" />
             </a-form-item>
           </a-col>
           <a-col :md="12" :sm="24" :xs="24"   >
             <a-form-item label="Tags"  :rules="[{ required: true, message: '请输入至少一个标签' }]">
               <a-select
-                  v-model:value="formState.Tags"
+                  v-model:value="formState.tags"
                   mode="tags"
                   class="tag-class"
                   placeholder="请输入标签,方便查询"
@@ -78,13 +78,13 @@ const handleChange = (value) => {
 
 
 const formState = reactive({
-  Id: 0,
-  Title: '',
-  Description: '',
-  IsHidden: 0,
-  Tags:[],
-  Content: '',
-  Cover: '',
+  id: 0,
+  title: '',
+  description: '',
+  isHidden: 0,
+  tags:[],
+  content: '',
+  cover: '',
 });
 const formBlogRef = ref(null)
 const toolbarOptions = [
@@ -131,10 +131,10 @@ onMounted(function (){
   editorRef.value = quill
   quill.on('editor-change', (eventName, ...args) => {
     if (eventName === 'text-change') {
-      formState.Content = quill.getSemanticHTML()
+      formState.content = quill.getSemanticHTML()
     } else if (eventName === 'selection-change') {
       // args[0] will be old range
-      formState.Content= quill.getSemanticHTML()
+      formState.content= quill.getSemanticHTML()
     }
   });
   // quill.on('text-change', (delta, oldDelta, source) => {
@@ -153,17 +153,17 @@ onMounted(function (){
   if(!id){
     return
   }
-  blogGet({Id:id}).then(res=>{
-    if(res&&res.code===0){
-      formState.Content = res.data.Content
-      quill.clipboard.dangerouslyPasteHTML(res.data.Content);
-      const obj = res.data.Header
-      formState.Cover = obj.Cover
-      formState.Tags = obj.Tags
-      formState.Id = id
-      formState.Title = obj.Title
-      formState.Description = obj.Description
-      formState.IsHidden = obj.IsHidden-0
+  blogGet({ID:id}).then(res=>{
+    if(res&&res.code===200){
+      formState.content = res.data.content
+      quill.clipboard.dangerouslyPasteHTML(res.data.content);
+      const obj = res.data.header
+      formState.cover = obj.cover
+      formState.tags = obj.tags
+      formState.id = id
+      formState.title = obj.title
+      formState.description = obj.description
+      formState.isHidden = obj.isHidden-0
     }
   })
 })
@@ -173,10 +173,10 @@ const onSubmit = () => {
       .validate()
       .then(() => {
         confirmLoading.value = true
-       if(formState.Id>0){
+       if(formState.id>0){
          blogUpdate(formState).then(res=>{
            console.log(res,"....")
-           if(res&&res.code===0){
+           if(res&&res.code===200){
              toRoute('/blog')
            }
          }).finally(()=>{
@@ -185,7 +185,7 @@ const onSubmit = () => {
        }else{
          blogCreate(formState).then(res=>{
            console.log(res,"....")
-           if(res&&res.code===0){
+           if(res&&res.code===200){
              toRoute('/blog')
            }
          }).finally(()=>{

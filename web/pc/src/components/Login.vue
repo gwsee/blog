@@ -78,8 +78,8 @@ const close = ()=>{
 const handleLogin =(data)=>{
   confirmLoading.value = true;
   login(data).then(res=>{
-    if(res.code===0){
-      setLoginData(res.data.Token)
+    if(res.code===200){
+      setLoginData(res.data.token)
       confirmLoading.value = false;
       close()
     }

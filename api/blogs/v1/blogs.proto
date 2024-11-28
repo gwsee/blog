@@ -57,9 +57,6 @@ message UpdateBlogsRequest {
 	string content = 7; //内容
 }
 
-
-
-
 message BlogsHeader {
 	int64 id = 1; //ID
 	string title  = 2; //标题

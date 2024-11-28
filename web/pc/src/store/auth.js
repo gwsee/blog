@@ -16,7 +16,7 @@ const setLoginData = (token) => {
     }
     localStorage.setItem('token', token)
     info({}).then(res=>{
-        if(res&&res.code===0){
+        if(res&&res.code===200){
             state.user = res.data
         }
     }).finally(()=>{

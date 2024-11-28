@@ -8,15 +8,15 @@
       <a-layout class="blog-post" style="background: linear-gradient(rgb(241 241 241), rgb(173 215 197));">
         <a-layout-content>
           <a-typography-title :level="1" class="blog-title">
-            {{ formState.Title }}
+            {{ formState.title }}
           </a-typography-title>
 
           <div class="post-meta">
             <a-space>
-              <a-tag v-for="tag in formState.Tags" :key="tag" color="cyan"  :bordered="false">{{ tag }}</a-tag>
+              <a-tag v-for="tag in formState.tags" :key="tag" color="cyan"  :bordered="false">{{ tag }}</a-tag>
             </a-space>
             <a-typography-text type="secondary">
-              最后更新时间:  {{ formatDate(formState.CreatedAt) }}
+              最后更新时间:  {{ formatDate(formState.createdAt) }}
             </a-typography-text>
           </div>
 
@@ -38,13 +38,13 @@
 
           <a-divider  v-if="false" />
 
-          <a-typography-paragraph class="post-summary" v-if="formState.Description">
-            &nbsp;&nbsp;&nbsp;&nbsp;{{ formState.Description }}
+          <a-typography-paragraph class="post-summary" v-if="formState.description">
+            &nbsp;&nbsp;&nbsp;&nbsp;{{ formState.description }}
           </a-typography-paragraph>
 
-          <a-divider  v-if="formState.Description"/>
+          <a-divider  v-if="formState.description"/>
 
-          <div class="post-content" v-if="formState.Content" v-html="formState.Content"></div>
+          <div class="post-content" v-if="formState.content" v-html="formState.content"></div>
         </a-layout-content>
       </a-layout>
       <a-card hoverable v-if="false">
@@ -59,12 +59,12 @@
           <edit-outlined key="edit" />
           <ellipsis-outlined key="ellipsis" />
         </template>
-        <a-card-meta :title="formState.Title" :description="formState.Description">
+        <a-card-meta :title="formState.title" :description="formState.description">
           <template #avatar>
             <a-avatar src="https://joeschmoe.io/api/v1/random" />
           </template>
         </a-card-meta>
-        <div  v-html="formState.Content" style="overflow-x: hidden">
+        <div  v-html="formState.content" style="overflow-x: hidden">
 
         </div>
       </a-card>
@@ -108,14 +108,14 @@ const handleCreated = (editor) => {
 }
 
 const formState = reactive({
-  Id: 0,
-  Title: '',
-  Description: '',
-  IsHidden: 0,
-  Tags:[],
-  Content: '',
-  Cover: '',
-  CreatedAt:"0",
+  id: 0,
+  title: '',
+  description: '',
+  isHidden: 0,
+  tags:[],
+  content: '',
+  cover: '',
+  createdAt:0,
 });
 const formBlogRef = ref(null)
 
@@ -131,17 +131,17 @@ onMounted(function (){
     return
   }
   loading.value = true;
-  blogGet({Id:id}).then(res=>{
-    if(res&&res.code===0){
-      formState.Content = res.data.Content
-      const obj = res.data.Header
-      formState.Cover = obj.Cover
-      formState.Tags = obj.Tags
-      formState.Id = id
-      formState.Title = obj.Title
-      formState.Description = obj.Description
-      formState.IsHidden = obj.IsHidden-0
-      formState.CreatedAt = obj.CreatedAt
+  blogGet({ID:id}).then(res=>{
+    if(res&&res.code===200){
+      formState.content = res.data.content
+      const obj = res.data.header
+      formState.cover = obj.cover
+      formState.tags = obj.tags
+      formState.id = id
+      formState.title = obj.title
+      formState.description = obj.description
+      formState.isHidden = obj.isHidden
+      formState.createdAt = obj.createdAt
     }
   }).finally(()=>{
     loading.value = false;
@@ -156,7 +156,7 @@ const onSubmit = () => {
         if(formState.Id>0){
           blogUpdate(formState).then(res=>{
             console.log(res,"....")
-            if(res&&res.code===0){
+            if(res&&res.code===200){
               toRoute('/blog')
             }
           }).finally(()=>{
@@ -165,7 +165,7 @@ const onSubmit = () => {
         }else{
           blogCreate(formState).then(res=>{
             console.log(res,"....")
-            if(res&&res.code===0){
+            if(res&&res.code===200){
               toRoute('/blog')
             }
           }).finally(()=>{

@@ -11,19 +11,19 @@
                     class="tag-class" v-model:value="Tags" style="width: 20%;height: 40px;" >
         </a-select>
         <a-input v-model:value="Title" placeholder="请输入需要查询的内容!"
-                 :style="state.user&&state.user.ID?`width: calc(70% - 140px);height: 40px;`:`width: calc(70% - 70px);height: 40px;`" />
+                 :style="state.user&&state.user.id?`width: calc(70% - 140px);height: 40px;`:`width: calc(70% - 70px);height: 40px;`" />
         <a-button type="default" :style="`height: 40px;width: 70px`" @click="onQuery">查询</a-button>
-        <a-button type="default" :style="`height: 40px;width: 70px`" @click="toRoute('/blog/manage/0')" v-if="state.user&&state.user.ID" >新增</a-button>
+        <a-button type="default" :style="`height: 40px;width: 70px`" @click="toRoute('/blog/manage/0')" v-if="state.user&&state.user.id" >新增</a-button>
       </a-input-group>
-      <a-card :title="item.Title" class="blog-card" :hoverable="true" :bodyStyle="{padding:0}" v-for="(item,key) in data">
-        <template #extra><a @click="toRoute('/blog/manage/'+item.Id)" v-if="state.user&&state.user.ID === item.AccountId">编辑</a></template>
+      <a-card :title="item.title" class="blog-card" :hoverable="true" :bodyStyle="{padding:0}" v-for="(item,key) in data">
+        <template #extra><a @click="toRoute('/blog/manage/'+item.id)" v-if="state.user&&state.user.id === item.accountId">编辑</a></template>
         <div style="height: 130px;display: flex">
           <a-avatar :size="100"  style="margin: 15px;" :src="item.cover||defaultCover">
           </a-avatar>
-          <div class="blog-content-eclipses" @click="toRoute('/blog/detail/'+item.Id)">
+          <div class="blog-content-eclipses" @click="toRoute('/blog/detail/'+item.id)">
            &nbsp; &nbsp;  {{item.Description||'这个人很烂什么都没写'}}
             <div style="bottom: 2px;position: absolute">
-              &nbsp; &nbsp;  <a-tag v-for="tag in item.Tags" :key="tag" color="cyan"  :bordered="false">{{ tag }}</a-tag>
+              &nbsp; &nbsp;  <a-tag v-for="tag in item.tags" :key="tag" color="cyan"  :bordered="false">{{ tag }}</a-tag>
             </div>
           </div>
         </div>
@@ -79,10 +79,10 @@ watch(current, () => {
 });
 const list =()=>{
   loading.value=true
-  blogList({"Page":{"PageNum":current.value,"PageSize":pageSize.value},"Title":Title.value,"Tags":Tags.value}).then(res=>{
-    if(res&&res.code===0){
-     data.value = res.data.List
-     total.value = res.data.Total-0
+  blogList({"page":{"pageNum":current.value,"pageSize":pageSize.value},"title":Title.value,"tags":Tags.value}).then(res=>{
+    if(res&&res.code===200){
+     data.value = res.data.list
+     total.value = res.data.total
     }
   }).finally(()=>{
     loading.value = false
