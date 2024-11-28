@@ -21,7 +21,7 @@
           <a-avatar :size="100"  style="margin: 15px;" :src="item.cover||defaultCover">
           </a-avatar>
           <div class="blog-content-eclipses" @click="toRoute('/blog/detail/'+item.id)">
-           &nbsp; &nbsp;  {{item.Description||'这个人很烂什么都没写'}}
+           &nbsp; &nbsp;  {{item.description||'这个人很烂什么都没写'}}
             <div style="bottom: 2px;position: absolute">
               &nbsp; &nbsp;  <a-tag v-for="tag in item.tags" :key="tag" color="cyan"  :bordered="false">{{ tag }}</a-tag>
             </div>
