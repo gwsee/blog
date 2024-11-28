@@ -78,4 +78,7 @@ kratos proto server api/blog/v1/demo.proto -t internal/service
 
 protoc --go_out=./ conf.proto --go_opt=paths=source_relative
 protoc --go_out=./ page.proto --go_opt=paths=source_relative
+
+
+protoc --go_out=./ ./app/user/internal/conf/conf.proto --go_opt=paths=source_relative   
 ```

@@ -3,7 +3,7 @@ package kratos.api;
 
 option go_package = "blog/app/travel/internal/conf;conf";
 
-import "google/protobuf/duration.proto";
+import "third_party/google/protobuf/duration.proto";
 
 message Bootstrap {
   Server server = 1;
