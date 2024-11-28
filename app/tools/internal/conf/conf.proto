@@ -1,7 +1,7 @@
 syntax = "proto3";
 package kratos.api;
 
-option go_package = "blog/app/blogs/internal/conf;conf";
+option go_package = "blog/app/tools/internal/conf;conf";
 
 import "google/protobuf/duration.proto";
 
@@ -30,6 +30,7 @@ message Auth {
 message Trace {
   string endpoint = 1;
 }
+
 message Server {
   message HTTP {
     string network = 1;
@@ -53,10 +54,8 @@ message Data {
   message Redis {
     string network = 1;
     string addr = 2;
-    string user_name = 3;
-    string pws = 4;
-    google.protobuf.Duration read_timeout = 5;
-    google.protobuf.Duration write_timeout = 6;
+    google.protobuf.Duration read_timeout = 3;
+    google.protobuf.Duration write_timeout = 4;
   }
   Database database = 1;
   Redis redis = 2;
