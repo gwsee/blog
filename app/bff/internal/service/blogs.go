@@ -18,18 +18,18 @@ func NewBlogsService(bc *biz.BlogsUseCase) *BlogsService {
 	return &BlogsService{bc: bc}
 }
 
-func (s *BlogsService) CreateBlogs(ctx context.Context, req *blog.CreateBlogsRequest) (*global.Response, error) {
+func (s *BlogsService) CreateBlogs(ctx context.Context, req *blog.CreateBlogsRequest) (*global.Empty, error) {
 	return s.bc.CreateBlogs(ctx, req)
 }
-func (s *BlogsService) UpdateBlogs(ctx context.Context, req *blog.UpdateBlogsRequest) (*global.Response, error) {
+func (s *BlogsService) UpdateBlogs(ctx context.Context, req *blog.UpdateBlogsRequest) (*global.Empty, error) {
 	return s.bc.UpdateBlogs(ctx, req)
 }
-func (s *BlogsService) DeleteBlogs(ctx context.Context, req *blog.DeleteBlogsRequest) (*global.Response, error) {
+func (s *BlogsService) DeleteBlogs(ctx context.Context, req *global.ID) (*global.Empty, error) {
 	return s.bc.DeleteBlogs(ctx, req)
 }
-func (s *BlogsService) GetBlogs(ctx context.Context, req *blog.GetBlogsRequest) (*global.Response, error) {
+func (s *BlogsService) GetBlogs(ctx context.Context, req *global.ID) (*blog.GetBlogsReply, error) {
 	return s.bc.GetBlogs(ctx, req)
 }
-func (s *BlogsService) ListBlogs(ctx context.Context, req *blog.ListBlogsRequest) (*global.Response, error) {
+func (s *BlogsService) ListBlogs(ctx context.Context, req *blog.ListBlogsRequest) (*blog.ListBlogsReply, error) {
 	return s.bc.ListBlogs(ctx, req)
 }

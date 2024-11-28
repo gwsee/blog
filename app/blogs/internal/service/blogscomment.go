@@ -1,6 +1,7 @@
 package service
 
 import (
+	"blog/api/global"
 	"blog/app/blogs/internal/biz"
 	"context"
 
@@ -16,16 +17,16 @@ func NewBlogsCommentService(bcc *biz.BlogsCommentUseCase) *BlogsCommentService {
 	return &BlogsCommentService{bcc: bcc}
 }
 
-func (s *BlogsCommentService) CreateBlogsComment(ctx context.Context, req *pb.CreateBlogsCommentRequest) (*pb.CreateBlogsCommentReply, error) {
+func (s *BlogsCommentService) CreateBlogsComment(ctx context.Context, req *pb.CreateBlogsCommentRequest) (*global.Empty, error) {
 	return s.bcc.CreateBlogsComment(ctx, req)
 }
-func (s *BlogsCommentService) UpdateBlogsComment(ctx context.Context, req *pb.UpdateBlogsCommentRequest) (*pb.UpdateBlogsCommentReply, error) {
+func (s *BlogsCommentService) UpdateBlogsComment(ctx context.Context, req *pb.UpdateBlogsCommentRequest) (*global.Empty, error) {
 	return s.bcc.UpdateBlogsComment(ctx, req)
 }
-func (s *BlogsCommentService) DeleteBlogsComment(ctx context.Context, req *pb.DeleteBlogsCommentRequest) (*pb.DeleteBlogsCommentReply, error) {
+func (s *BlogsCommentService) DeleteBlogsComment(ctx context.Context, req *global.ID) (*global.Empty, error) {
 	return s.bcc.DeleteBlogsComment(ctx, req)
 }
-func (s *BlogsCommentService) GetBlogsComment(ctx context.Context, req *pb.GetBlogsCommentRequest) (*pb.GetBlogsCommentReply, error) {
+func (s *BlogsCommentService) GetBlogsComment(ctx context.Context, req *global.ID) (*pb.GetBlogsCommentReply, error) {
 	return s.bcc.GetBlogsComment(ctx, req)
 }
 func (s *BlogsCommentService) ListBlogsComment(ctx context.Context, req *pb.ListBlogsCommentRequest) (*pb.ListBlogsCommentReply, error) {

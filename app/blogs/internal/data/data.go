@@ -84,9 +84,8 @@ func NewRedisCmd(conf *conf.Data, logger log.Logger) (redis.Cmdable, error) {
 	defer cancelFunc()
 	err := client.Ping(timeout).Err()
 	if err != nil {
-		return nil, nil
-		logs.Fatalf("redis connect error: %v", err)
-		return nil, err
+		logs.Errorf("redis connect error: %v", err)
+		return client, nil
 	}
 	return client, err
 }

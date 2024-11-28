@@ -48,7 +48,7 @@ func NewBlogsUseCase(repo BlogsRepo, logger log.Logger) *BlogsUseCase {
 		log:  log.NewHelper(log.With(logger, "module", "app/blogs-blogs-service")),
 	}
 }
-func (s *BlogsUseCase) CreateBlogs(ctx context.Context, req *pb.CreateBlogsRequest) (*pb.CreateBlogsReply, error) {
+func (s *BlogsUseCase) CreateBlogs(ctx context.Context, req *pb.CreateBlogsRequest) (*global.Empty, error) {
 	if req.Title == "" || req.Content == "" {
 		return nil, errors.New("title or content is empty")
 	}
@@ -56,7 +56,7 @@ func (s *BlogsUseCase) CreateBlogs(ctx context.Context, req *pb.CreateBlogsReque
 	if err != nil {
 		return nil, err
 	}
-	return &pb.CreateBlogsReply{}, s.repo.CreateBlogs(ctx, &Blogs{
+	return &global.Empty{}, s.repo.CreateBlogs(ctx, &Blogs{
 		IsHidden:    int64(req.IsHidden),
 		AccountId:   u.Id,
 		Title:       req.Title,
@@ -66,13 +66,13 @@ func (s *BlogsUseCase) CreateBlogs(ctx context.Context, req *pb.CreateBlogsReque
 		Content:     req.Content,
 	})
 }
-func (s *BlogsUseCase) UpdateBlogs(ctx context.Context, req *pb.UpdateBlogsRequest) (*pb.UpdateBlogsReply, error) {
+func (s *BlogsUseCase) UpdateBlogs(ctx context.Context, req *pb.UpdateBlogsRequest) (*global.Empty, error) {
 	u, err := constx.DefaultUser.User(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	return &pb.UpdateBlogsReply{}, s.repo.UpdateBlogs(ctx, &Blogs{
+	return &global.Empty{}, s.repo.UpdateBlogs(ctx, &Blogs{
 		Id:          req.Id,
 		IsHidden:    int64(req.IsHidden),
 		Title:       req.Title,
@@ -83,20 +83,20 @@ func (s *BlogsUseCase) UpdateBlogs(ctx context.Context, req *pb.UpdateBlogsReque
 		Content:     req.Content,
 	})
 }
-func (s *BlogsUseCase) DeleteBlogs(ctx context.Context, req *pb.DeleteBlogsRequest) (*pb.DeleteBlogsReply, error) {
+func (s *BlogsUseCase) DeleteBlogs(ctx context.Context, req *global.ID) (*global.Empty, error) {
 	u, err := constx.DefaultUser.User(ctx)
 	if err != nil {
 		return nil, err
 	}
-	return &pb.DeleteBlogsReply{}, s.repo.DeleteBlogs(ctx, &Blogs{
-		Id:        req.Id,
+	return &global.Empty{}, s.repo.DeleteBlogs(ctx, &Blogs{
+		Id:        req.ID,
 		AccountId: u.Id,
 	})
 }
-func (s *BlogsUseCase) GetBlogs(ctx context.Context, req *pb.GetBlogsRequest) (*pb.GetBlogsReply, error) {
+func (s *BlogsUseCase) GetBlogs(ctx context.Context, req *global.ID) (*pb.GetBlogsReply, error) {
 	u := constx.DefaultUser.Default(ctx)
 	info, err := s.repo.GetBlogs(ctx, &Blogs{
-		Id:        req.Id,
+		Id:        req.ID,
 		AccountId: u.Id,
 	})
 	if err != nil {

@@ -48,9 +48,8 @@ func NewBlogsCommentUseCase(repo BlogsCommentRepo, logger log.Logger) *BlogsComm
 	}
 }
 
-func (s *BlogsCommentUseCase) CreateBlogsComment(ctx context.Context, req *pb.CreateBlogsCommentRequest) (*pb.CreateBlogsCommentReply, error) {
-	//todo 获取accountId
-	return &pb.CreateBlogsCommentReply{}, s.repo.CreateBlogsComment(ctx, &BlogsComment{
+func (s *BlogsCommentUseCase) CreateBlogsComment(ctx context.Context, req *pb.CreateBlogsCommentRequest) (*global.Empty, error) {
+	return &global.Empty{}, s.repo.CreateBlogsComment(ctx, &BlogsComment{
 		BlogId:    req.BlogId,
 		TopId:     req.TopId,
 		ParentId:  req.ParentId,
@@ -61,18 +60,18 @@ func (s *BlogsCommentUseCase) CreateBlogsComment(ctx context.Context, req *pb.Cr
 		AccountId: 0,
 	})
 }
-func (s *BlogsCommentUseCase) UpdateBlogsComment(ctx context.Context, req *pb.UpdateBlogsCommentRequest) (*pb.UpdateBlogsCommentReply, error) {
-	return &pb.UpdateBlogsCommentReply{}, s.repo.UpdateBlogsComment(ctx, &BlogsComment{
+func (s *BlogsCommentUseCase) UpdateBlogsComment(ctx context.Context, req *pb.UpdateBlogsCommentRequest) (*global.Empty, error) {
+	return &global.Empty{}, s.repo.UpdateBlogsComment(ctx, &BlogsComment{
 		Id:      req.Id,
 		Status:  req.Status,
 		Content: req.Content,
 	})
 }
-func (s *BlogsCommentUseCase) DeleteBlogsComment(ctx context.Context, req *pb.DeleteBlogsCommentRequest) (*pb.DeleteBlogsCommentReply, error) {
-	return &pb.DeleteBlogsCommentReply{}, s.repo.DeleteBlogsComment(ctx, req.Id)
+func (s *BlogsCommentUseCase) DeleteBlogsComment(ctx context.Context, req *global.ID) (*global.Empty, error) {
+	return &global.Empty{}, s.repo.DeleteBlogsComment(ctx, req.ID)
 }
-func (s *BlogsCommentUseCase) GetBlogsComment(ctx context.Context, req *pb.GetBlogsCommentRequest) (*pb.GetBlogsCommentReply, error) {
-	comment, err := s.repo.GetBlogsComment(ctx, req.Id)
+func (s *BlogsCommentUseCase) GetBlogsComment(ctx context.Context, req *global.ID) (*pb.GetBlogsCommentReply, error) {
+	comment, err := s.repo.GetBlogsComment(ctx, req.ID)
 	if err != nil {
 		return nil, err
 	}

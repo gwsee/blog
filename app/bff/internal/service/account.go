@@ -17,18 +17,18 @@ func NewAccountService(biz *biz.AccountUseCase) *AccountService {
 	return &AccountService{biz: biz}
 }
 
-func (s *AccountService) CreateAccount(ctx context.Context, req *account.CreateAccountRequest) (*global.Response, error) {
+func (s *AccountService) CreateAccount(ctx context.Context, req *account.CreateAccountRequest) (*global.Empty, error) {
 	return s.biz.CreateAccount(ctx, req)
 }
-func (s *AccountService) ResetPassword(ctx context.Context, req *account.ResetPasswordRequest) (*global.Response, error) {
+func (s *AccountService) ResetPassword(ctx context.Context, req *account.ResetPasswordRequest) (*global.Empty, error) {
 	return s.biz.ResetPassword(ctx, req)
 }
-func (s *AccountService) LoginByAccount(ctx context.Context, req *account.LoginByAccountRequest) (*global.Response, error) {
+func (s *AccountService) LoginByAccount(ctx context.Context, req *account.LoginByAccountRequest) (*account.LoginByAccountReply, error) {
 	return s.biz.LoginByAccount(ctx, req)
 }
-func (s *AccountService) Info(ctx context.Context, req *global.Empty) (*global.Response, error) {
+func (s *AccountService) Info(ctx context.Context, req *global.Empty) (*account.AccountInfoReply, error) {
 	return s.biz.Info(ctx, req)
 }
-func (s *AccountService) UpdateAccount(ctx context.Context, req *account.UpdateAccountRequest) (*global.Response, error) {
+func (s *AccountService) UpdateAccount(ctx context.Context, req *account.UpdateAccountRequest) (*global.Empty, error) {
 	return s.biz.UpdateAccount(ctx, req)
 }

@@ -110,8 +110,8 @@ func (uc *AccountUseCase) Info(ctx context.Context) (reply *v1.AccountInfoReply,
 		return nil, err
 	}
 	return &v1.AccountInfoReply{
-		ID:          int64(info.Id),
-		NickName:    info.Nickname,
+		Id:          int64(info.Id),
+		Nickname:    info.Nickname,
 		Account:     info.Account,
 		Email:       info.Email,
 		Avatar:      info.Avatar,
