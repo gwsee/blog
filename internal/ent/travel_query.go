@@ -3,9 +3,12 @@
 package ent
 
 import (
+	"blog/internal/ent/account"
 	"blog/internal/ent/predicate"
 	"blog/internal/ent/travel"
+	"blog/internal/ent/travelextend"
 	"context"
+	"database/sql/driver"
 	"fmt"
 	"math"
 
@@ -18,10 +21,13 @@ import (
 // TravelQuery is the builder for querying Travel entities.
 type TravelQuery struct {
 	config
-	ctx        *QueryContext
-	order      []travel.OrderOption
-	inters     []Interceptor
-	predicates []predicate.Travel
+	ctx               *QueryContext
+	order             []travel.OrderOption
+	inters            []Interceptor
+	predicates        []predicate.Travel
+	withTravelExtend  *TravelExtendQuery
+	withAccountTravel *AccountQuery
+	withFKs           bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -56,6 +62,50 @@ func (tq *TravelQuery) Unique(unique bool) *TravelQuery {
 func (tq *TravelQuery) Order(o ...travel.OrderOption) *TravelQuery {
 	tq.order = append(tq.order, o...)
 	return tq
+}
+
+// QueryTravelExtend chains the current query on the "travel_extend" edge.
+func (tq *TravelQuery) QueryTravelExtend() *TravelExtendQuery {
+	query := (&TravelExtendClient{config: tq.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := tq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := tq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(travel.Table, travel.FieldID, selector),
+			sqlgraph.To(travelextend.Table, travelextend.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, travel.TravelExtendTable, travel.TravelExtendColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(tq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryAccountTravel chains the current query on the "account_travel" edge.
+func (tq *TravelQuery) QueryAccountTravel() *AccountQuery {
+	query := (&AccountClient{config: tq.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := tq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := tq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(travel.Table, travel.FieldID, selector),
+			sqlgraph.To(account.Table, account.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, travel.AccountTravelTable, travel.AccountTravelColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(tq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
 }
 
 // First returns the first Travel entity from the query.
@@ -245,15 +295,39 @@ func (tq *TravelQuery) Clone() *TravelQuery {
 		return nil
 	}
 	return &TravelQuery{
-		config:     tq.config,
-		ctx:        tq.ctx.Clone(),
-		order:      append([]travel.OrderOption{}, tq.order...),
-		inters:     append([]Interceptor{}, tq.inters...),
-		predicates: append([]predicate.Travel{}, tq.predicates...),
+		config:            tq.config,
+		ctx:               tq.ctx.Clone(),
+		order:             append([]travel.OrderOption{}, tq.order...),
+		inters:            append([]Interceptor{}, tq.inters...),
+		predicates:        append([]predicate.Travel{}, tq.predicates...),
+		withTravelExtend:  tq.withTravelExtend.Clone(),
+		withAccountTravel: tq.withAccountTravel.Clone(),
 		// clone intermediate query.
 		sql:  tq.sql.Clone(),
 		path: tq.path,
 	}
+}
+
+// WithTravelExtend tells the query-builder to eager-load the nodes that are connected to
+// the "travel_extend" edge. The optional arguments are used to configure the query builder of the edge.
+func (tq *TravelQuery) WithTravelExtend(opts ...func(*TravelExtendQuery)) *TravelQuery {
+	query := (&TravelExtendClient{config: tq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	tq.withTravelExtend = query
+	return tq
+}
+
+// WithAccountTravel tells the query-builder to eager-load the nodes that are connected to
+// the "account_travel" edge. The optional arguments are used to configure the query builder of the edge.
+func (tq *TravelQuery) WithAccountTravel(opts ...func(*AccountQuery)) *TravelQuery {
+	query := (&AccountClient{config: tq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	tq.withAccountTravel = query
+	return tq
 }
 
 // GroupBy is used to group vertices by one or more fields/columns.
@@ -332,15 +406,27 @@ func (tq *TravelQuery) prepareQuery(ctx context.Context) error {
 
 func (tq *TravelQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Travel, error) {
 	var (
-		nodes = []*Travel{}
-		_spec = tq.querySpec()
+		nodes       = []*Travel{}
+		withFKs     = tq.withFKs
+		_spec       = tq.querySpec()
+		loadedTypes = [2]bool{
+			tq.withTravelExtend != nil,
+			tq.withAccountTravel != nil,
+		}
 	)
+	if tq.withAccountTravel != nil {
+		withFKs = true
+	}
+	if withFKs {
+		_spec.Node.Columns = append(_spec.Node.Columns, travel.ForeignKeys...)
+	}
 	_spec.ScanValues = func(columns []string) ([]any, error) {
 		return (*Travel).scanValues(nil, columns)
 	}
 	_spec.Assign = func(columns []string, values []any) error {
 		node := &Travel{config: tq.config}
 		nodes = append(nodes, node)
+		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
 	for i := range hooks {
@@ -352,7 +438,84 @@ func (tq *TravelQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Trave
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+	if query := tq.withTravelExtend; query != nil {
+		if err := tq.loadTravelExtend(ctx, query, nodes,
+			func(n *Travel) { n.Edges.TravelExtend = []*TravelExtend{} },
+			func(n *Travel, e *TravelExtend) { n.Edges.TravelExtend = append(n.Edges.TravelExtend, e) }); err != nil {
+			return nil, err
+		}
+	}
+	if query := tq.withAccountTravel; query != nil {
+		if err := tq.loadAccountTravel(ctx, query, nodes, nil,
+			func(n *Travel, e *Account) { n.Edges.AccountTravel = e }); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
+}
+
+func (tq *TravelQuery) loadTravelExtend(ctx context.Context, query *TravelExtendQuery, nodes []*Travel, init func(*Travel), assign func(*Travel, *TravelExtend)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[int]*Travel)
+	for i := range nodes {
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+		if init != nil {
+			init(nodes[i])
+		}
+	}
+	query.withFKs = true
+	query.Where(predicate.TravelExtend(func(s *sql.Selector) {
+		s.Where(sql.InValues(s.C(travel.TravelExtendColumn), fks...))
+	}))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		fk := n.travel_travel_extend
+		if fk == nil {
+			return fmt.Errorf(`foreign-key "travel_travel_extend" is nil for node %v`, n.ID)
+		}
+		node, ok := nodeids[*fk]
+		if !ok {
+			return fmt.Errorf(`unexpected referenced foreign-key "travel_travel_extend" returned %v for node %v`, *fk, n.ID)
+		}
+		assign(node, n)
+	}
+	return nil
+}
+func (tq *TravelQuery) loadAccountTravel(ctx context.Context, query *AccountQuery, nodes []*Travel, init func(*Travel), assign func(*Travel, *Account)) error {
+	ids := make([]int, 0, len(nodes))
+	nodeids := make(map[int][]*Travel)
+	for i := range nodes {
+		if nodes[i].account_travel_account == nil {
+			continue
+		}
+		fk := *nodes[i].account_travel_account
+		if _, ok := nodeids[fk]; !ok {
+			ids = append(ids, fk)
+		}
+		nodeids[fk] = append(nodeids[fk], nodes[i])
+	}
+	if len(ids) == 0 {
+		return nil
+	}
+	query.Where(account.IDIn(ids...))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		nodes, ok := nodeids[n.ID]
+		if !ok {
+			return fmt.Errorf(`unexpected foreign-key "account_travel_account" returned %v`, n.ID)
+		}
+		for i := range nodes {
+			assign(nodes[i], n)
+		}
+	}
+	return nil
 }
 
 func (tq *TravelQuery) sqlCount(ctx context.Context) (int, error) {

@@ -26,6 +26,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 
 	stdsql "database/sql"
 )
@@ -395,6 +396,22 @@ func (c *AccountClient) GetX(ctx context.Context, id int) *Account {
 		panic(err)
 	}
 	return obj
+}
+
+// QueryTravelAccount queries the travel_account edge of a Account.
+func (c *AccountClient) QueryTravelAccount(a *Account) *TravelQuery {
+	query := (&TravelClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := a.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(account.Table, account.FieldID, id),
+			sqlgraph.To(travel.Table, travel.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, account.TravelAccountTable, account.TravelAccountColumn),
+		)
+		fromV = sqlgraph.Neighbors(a.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
 }
 
 // Hooks returns the client hooks.
@@ -1205,6 +1222,38 @@ func (c *TravelClient) GetX(ctx context.Context, id int) *Travel {
 	return obj
 }
 
+// QueryTravelExtend queries the travel_extend edge of a Travel.
+func (c *TravelClient) QueryTravelExtend(t *Travel) *TravelExtendQuery {
+	query := (&TravelExtendClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := t.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(travel.Table, travel.FieldID, id),
+			sqlgraph.To(travelextend.Table, travelextend.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, travel.TravelExtendTable, travel.TravelExtendColumn),
+		)
+		fromV = sqlgraph.Neighbors(t.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryAccountTravel queries the account_travel edge of a Travel.
+func (c *TravelClient) QueryAccountTravel(t *Travel) *AccountQuery {
+	query := (&AccountClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := t.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(travel.Table, travel.FieldID, id),
+			sqlgraph.To(account.Table, account.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, travel.AccountTravelTable, travel.AccountTravelColumn),
+		)
+		fromV = sqlgraph.Neighbors(t.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *TravelClient) Hooks() []Hook {
 	hooks := c.hooks.Travel
@@ -1338,6 +1387,22 @@ func (c *TravelExtendClient) GetX(ctx context.Context, id int) *TravelExtend {
 		panic(err)
 	}
 	return obj
+}
+
+// QueryTravel queries the travel edge of a TravelExtend.
+func (c *TravelExtendClient) QueryTravel(te *TravelExtend) *TravelQuery {
+	query := (&TravelClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := te.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(travelextend.Table, travelextend.FieldID, id),
+			sqlgraph.To(travel.Table, travel.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, travelextend.TravelTable, travelextend.TravelColumn),
+		)
+		fromV = sqlgraph.Neighbors(te.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
 }
 
 // Hooks returns the client hooks.

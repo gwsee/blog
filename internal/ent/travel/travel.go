@@ -5,6 +5,7 @@ package travel
 import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 )
 
 const (
@@ -42,8 +43,26 @@ const (
 	FieldThumbNum = "thumb_num"
 	// FieldCollectNum holds the string denoting the collect_num field in the database.
 	FieldCollectNum = "collect_num"
+	// EdgeTravelExtend holds the string denoting the travel_extend edge name in mutations.
+	EdgeTravelExtend = "travel_extend"
+	// EdgeAccountTravel holds the string denoting the account_travel edge name in mutations.
+	EdgeAccountTravel = "account_travel"
 	// Table holds the table name of the travel in the database.
 	Table = "travel"
+	// TravelExtendTable is the table that holds the travel_extend relation/edge.
+	TravelExtendTable = "travel_extend"
+	// TravelExtendInverseTable is the table name for the TravelExtend entity.
+	// It exists in this package in order to avoid circular dependency with the "travelextend" package.
+	TravelExtendInverseTable = "travel_extend"
+	// TravelExtendColumn is the table column denoting the travel_extend relation/edge.
+	TravelExtendColumn = "travel_travel_extend"
+	// AccountTravelTable is the table that holds the account_travel relation/edge.
+	AccountTravelTable = "travel"
+	// AccountTravelInverseTable is the table name for the Account entity.
+	// It exists in this package in order to avoid circular dependency with the "account" package.
+	AccountTravelInverseTable = "account"
+	// AccountTravelColumn is the table column denoting the account_travel relation/edge.
+	AccountTravelColumn = "account_travel_account"
 )
 
 // Columns holds all SQL columns for travel fields.
@@ -66,10 +85,21 @@ var Columns = []string{
 	FieldCollectNum,
 }
 
+// ForeignKeys holds the SQL foreign-keys that are owned by the "travel"
+// table and are not defined as standalone fields in the schema.
+var ForeignKeys = []string{
+	"account_travel_account",
+}
+
 // ValidColumn reports if the column name is valid (part of the table columns).
 func ValidColumn(column string) bool {
 	for i := range Columns {
 		if column == Columns[i] {
+			return true
+		}
+	}
+	for i := range ForeignKeys {
+		if column == ForeignKeys[i] {
 			return true
 		}
 	}
@@ -186,4 +216,39 @@ func ByThumbNum(opts ...sql.OrderTermOption) OrderOption {
 // ByCollectNum orders the results by the collect_num field.
 func ByCollectNum(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldCollectNum, opts...).ToFunc()
+}
+
+// ByTravelExtendCount orders the results by travel_extend count.
+func ByTravelExtendCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newTravelExtendStep(), opts...)
+	}
+}
+
+// ByTravelExtend orders the results by travel_extend terms.
+func ByTravelExtend(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newTravelExtendStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+
+// ByAccountTravelField orders the results by account_travel field.
+func ByAccountTravelField(field string, opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newAccountTravelStep(), sql.OrderByField(field, opts...))
+	}
+}
+func newTravelExtendStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(TravelExtendInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, TravelExtendTable, TravelExtendColumn),
+	)
+}
+func newAccountTravelStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(AccountTravelInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2O, true, AccountTravelTable, AccountTravelColumn),
+	)
 }

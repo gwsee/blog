@@ -38,7 +38,7 @@ type FilesExtend struct {
 	// 文件来源表的ID
 	FromID int `json:"from_id,omitempty"`
 	// 是否隐藏
-	IsHidden     int8 `json:"is_hidden,omitempty"`
+	IsHidden     bool `json:"is_hidden,omitempty"`
 	selectValues sql.SelectValues
 }
 
@@ -47,7 +47,9 @@ func (*FilesExtend) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case filesextend.FieldID, filesextend.FieldCreatedAt, filesextend.FieldCreatedBy, filesextend.FieldUpdatedAt, filesextend.FieldUpdatedBy, filesextend.FieldDeletedAt, filesextend.FieldDeletedBy, filesextend.FieldUserID, filesextend.FieldFromID, filesextend.FieldIsHidden:
+		case filesextend.FieldIsHidden:
+			values[i] = new(sql.NullBool)
+		case filesextend.FieldID, filesextend.FieldCreatedAt, filesextend.FieldCreatedBy, filesextend.FieldUpdatedAt, filesextend.FieldUpdatedBy, filesextend.FieldDeletedAt, filesextend.FieldDeletedBy, filesextend.FieldUserID, filesextend.FieldFromID:
 			values[i] = new(sql.NullInt64)
 		case filesextend.FieldFileID, filesextend.FieldFrom:
 			values[i] = new(sql.NullString)
@@ -133,10 +135,10 @@ func (fe *FilesExtend) assignValues(columns []string, values []any) error {
 				fe.FromID = int(value.Int64)
 			}
 		case filesextend.FieldIsHidden:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
+			if value, ok := values[i].(*sql.NullBool); !ok {
 				return fmt.Errorf("unexpected type %T for field is_hidden", values[i])
 			} else if value.Valid {
-				fe.IsHidden = int8(value.Int64)
+				fe.IsHidden = value.Bool
 			}
 		default:
 			fe.selectValues.Set(columns[i], values[i])

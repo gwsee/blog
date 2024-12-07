@@ -30,12 +30,12 @@ service Travel {
 			body: "*"
 		};
 	};
-	rpc Thumb(global.ID) returns (global.Empty){
+	rpc Thumb(global.Action) returns (global.Empty){
 		option (google.api.http) = {
 			body: "*"
 		};
 	};
-	rpc Collect(global.ID) returns (global.Empty){
+	rpc Collect(global.Action) returns (global.Empty){
 		option (google.api.http) = {
 			body: "*"
 		};

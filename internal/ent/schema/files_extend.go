@@ -7,6 +7,7 @@ import (
 	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/field"
+	"entgo.io/ent/schema/index"
 )
 
 type FilesExtend struct {
@@ -23,10 +24,14 @@ func (FilesExtend) Fields() []ent.Field {
 		field.Int("user_id").Default(0).Comment("所属的用户"),
 		field.String("from").Comment("文件来源的表"),   //account-avatar;blog;travel;project
 		field.Int("from_id").Comment("文件来源表的ID"), //account-avatar;blog;travel;project
-		field.Int8("is_hidden").Comment("是否隐藏"),
+		field.Bool("is_hidden").Comment("是否隐藏"),
 	}
 }
-
+func (FilesExtend) Indexes() []ent.Index {
+	return []ent.Index{
+		index.Fields("file_id", "user_id", "from").Unique(),
+	}
+}
 func (FilesExtend) Mixin() []ent.Mixin {
 	return []ent.Mixin{
 		mixin.Time{},

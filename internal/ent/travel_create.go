@@ -3,7 +3,9 @@
 package ent
 
 import (
+	"blog/internal/ent/account"
 	"blog/internal/ent/travel"
+	"blog/internal/ent/travelextend"
 	"context"
 	"errors"
 	"fmt"
@@ -179,6 +181,40 @@ func (tc *TravelCreate) SetCollectNum(i int) *TravelCreate {
 func (tc *TravelCreate) SetID(i int) *TravelCreate {
 	tc.mutation.SetID(i)
 	return tc
+}
+
+// AddTravelExtendIDs adds the "travel_extend" edge to the TravelExtend entity by IDs.
+func (tc *TravelCreate) AddTravelExtendIDs(ids ...int) *TravelCreate {
+	tc.mutation.AddTravelExtendIDs(ids...)
+	return tc
+}
+
+// AddTravelExtend adds the "travel_extend" edges to the TravelExtend entity.
+func (tc *TravelCreate) AddTravelExtend(t ...*TravelExtend) *TravelCreate {
+	ids := make([]int, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return tc.AddTravelExtendIDs(ids...)
+}
+
+// SetAccountTravelID sets the "account_travel" edge to the Account entity by ID.
+func (tc *TravelCreate) SetAccountTravelID(id int) *TravelCreate {
+	tc.mutation.SetAccountTravelID(id)
+	return tc
+}
+
+// SetNillableAccountTravelID sets the "account_travel" edge to the Account entity by ID if the given value is not nil.
+func (tc *TravelCreate) SetNillableAccountTravelID(id *int) *TravelCreate {
+	if id != nil {
+		tc = tc.SetAccountTravelID(*id)
+	}
+	return tc
+}
+
+// SetAccountTravel sets the "account_travel" edge to the Account entity.
+func (tc *TravelCreate) SetAccountTravel(a *Account) *TravelCreate {
+	return tc.SetAccountTravelID(a.ID)
 }
 
 // Mutation returns the TravelMutation object of the builder.
@@ -407,6 +443,39 @@ func (tc *TravelCreate) createSpec() (*Travel, *sqlgraph.CreateSpec) {
 	if value, ok := tc.mutation.CollectNum(); ok {
 		_spec.SetField(travel.FieldCollectNum, field.TypeInt, value)
 		_node.CollectNum = value
+	}
+	if nodes := tc.mutation.TravelExtendIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   travel.TravelExtendTable,
+			Columns: []string{travel.TravelExtendColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(travelextend.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := tc.mutation.AccountTravelIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   travel.AccountTravelTable,
+			Columns: []string{travel.AccountTravelColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(account.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_node.account_travel_account = &nodes[0]
+		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec
 }

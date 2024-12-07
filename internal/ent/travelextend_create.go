@@ -3,6 +3,7 @@
 package ent
 
 import (
+	"blog/internal/ent/travel"
 	"blog/internal/ent/travelextend"
 	"context"
 	"errors"
@@ -127,6 +128,25 @@ func (tec *TravelExtendCreate) SetIsThumb(b bool) *TravelExtendCreate {
 func (tec *TravelExtendCreate) SetIsCollect(b bool) *TravelExtendCreate {
 	tec.mutation.SetIsCollect(b)
 	return tec
+}
+
+// SetTravelID sets the "travel" edge to the Travel entity by ID.
+func (tec *TravelExtendCreate) SetTravelID(id int) *TravelExtendCreate {
+	tec.mutation.SetTravelID(id)
+	return tec
+}
+
+// SetNillableTravelID sets the "travel" edge to the Travel entity by ID if the given value is not nil.
+func (tec *TravelExtendCreate) SetNillableTravelID(id *int) *TravelExtendCreate {
+	if id != nil {
+		tec = tec.SetTravelID(*id)
+	}
+	return tec
+}
+
+// SetTravel sets the "travel" edge to the Travel entity.
+func (tec *TravelExtendCreate) SetTravel(t *Travel) *TravelExtendCreate {
+	return tec.SetTravelID(t.ID)
 }
 
 // Mutation returns the TravelExtendMutation object of the builder.
@@ -296,6 +316,23 @@ func (tec *TravelExtendCreate) createSpec() (*TravelExtend, *sqlgraph.CreateSpec
 	if value, ok := tec.mutation.IsCollect(); ok {
 		_spec.SetField(travelextend.FieldIsCollect, field.TypeBool, value)
 		_node.IsCollect = value
+	}
+	if nodes := tec.mutation.TravelIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   travelextend.TravelTable,
+			Columns: []string{travelextend.TravelColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(travel.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_node.travel_travel_extend = &nodes[0]
+		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec
 }

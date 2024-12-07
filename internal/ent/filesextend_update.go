@@ -174,23 +174,16 @@ func (feu *FilesExtendUpdate) AddFromID(i int) *FilesExtendUpdate {
 }
 
 // SetIsHidden sets the "is_hidden" field.
-func (feu *FilesExtendUpdate) SetIsHidden(i int8) *FilesExtendUpdate {
-	feu.mutation.ResetIsHidden()
-	feu.mutation.SetIsHidden(i)
+func (feu *FilesExtendUpdate) SetIsHidden(b bool) *FilesExtendUpdate {
+	feu.mutation.SetIsHidden(b)
 	return feu
 }
 
 // SetNillableIsHidden sets the "is_hidden" field if the given value is not nil.
-func (feu *FilesExtendUpdate) SetNillableIsHidden(i *int8) *FilesExtendUpdate {
-	if i != nil {
-		feu.SetIsHidden(*i)
+func (feu *FilesExtendUpdate) SetNillableIsHidden(b *bool) *FilesExtendUpdate {
+	if b != nil {
+		feu.SetIsHidden(*b)
 	}
-	return feu
-}
-
-// AddIsHidden adds i to the "is_hidden" field.
-func (feu *FilesExtendUpdate) AddIsHidden(i int8) *FilesExtendUpdate {
-	feu.mutation.AddIsHidden(i)
 	return feu
 }
 
@@ -293,10 +286,7 @@ func (feu *FilesExtendUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.AddField(filesextend.FieldFromID, field.TypeInt, value)
 	}
 	if value, ok := feu.mutation.IsHidden(); ok {
-		_spec.SetField(filesextend.FieldIsHidden, field.TypeInt8, value)
-	}
-	if value, ok := feu.mutation.AddedIsHidden(); ok {
-		_spec.AddField(filesextend.FieldIsHidden, field.TypeInt8, value)
+		_spec.SetField(filesextend.FieldIsHidden, field.TypeBool, value)
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, feu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -465,23 +455,16 @@ func (feuo *FilesExtendUpdateOne) AddFromID(i int) *FilesExtendUpdateOne {
 }
 
 // SetIsHidden sets the "is_hidden" field.
-func (feuo *FilesExtendUpdateOne) SetIsHidden(i int8) *FilesExtendUpdateOne {
-	feuo.mutation.ResetIsHidden()
-	feuo.mutation.SetIsHidden(i)
+func (feuo *FilesExtendUpdateOne) SetIsHidden(b bool) *FilesExtendUpdateOne {
+	feuo.mutation.SetIsHidden(b)
 	return feuo
 }
 
 // SetNillableIsHidden sets the "is_hidden" field if the given value is not nil.
-func (feuo *FilesExtendUpdateOne) SetNillableIsHidden(i *int8) *FilesExtendUpdateOne {
-	if i != nil {
-		feuo.SetIsHidden(*i)
+func (feuo *FilesExtendUpdateOne) SetNillableIsHidden(b *bool) *FilesExtendUpdateOne {
+	if b != nil {
+		feuo.SetIsHidden(*b)
 	}
-	return feuo
-}
-
-// AddIsHidden adds i to the "is_hidden" field.
-func (feuo *FilesExtendUpdateOne) AddIsHidden(i int8) *FilesExtendUpdateOne {
-	feuo.mutation.AddIsHidden(i)
 	return feuo
 }
 
@@ -614,10 +597,7 @@ func (feuo *FilesExtendUpdateOne) sqlSave(ctx context.Context) (_node *FilesExte
 		_spec.AddField(filesextend.FieldFromID, field.TypeInt, value)
 	}
 	if value, ok := feuo.mutation.IsHidden(); ok {
-		_spec.SetField(filesextend.FieldIsHidden, field.TypeInt8, value)
-	}
-	if value, ok := feuo.mutation.AddedIsHidden(); ok {
-		_spec.AddField(filesextend.FieldIsHidden, field.TypeInt8, value)
+		_spec.SetField(filesextend.FieldIsHidden, field.TypeBool, value)
 	}
 	_node = &FilesExtend{config: feuo.config}
 	_spec.Assign = _node.assignValues

@@ -146,8 +146,8 @@ func (fec *FilesExtendCreate) SetFromID(i int) *FilesExtendCreate {
 }
 
 // SetIsHidden sets the "is_hidden" field.
-func (fec *FilesExtendCreate) SetIsHidden(i int8) *FilesExtendCreate {
-	fec.mutation.SetIsHidden(i)
+func (fec *FilesExtendCreate) SetIsHidden(b bool) *FilesExtendCreate {
+	fec.mutation.SetIsHidden(b)
 	return fec
 }
 
@@ -343,7 +343,7 @@ func (fec *FilesExtendCreate) createSpec() (*FilesExtend, *sqlgraph.CreateSpec) 
 		_node.FromID = value
 	}
 	if value, ok := fec.mutation.IsHidden(); ok {
-		_spec.SetField(filesextend.FieldIsHidden, field.TypeInt8, value)
+		_spec.SetField(filesextend.FieldIsHidden, field.TypeBool, value)
 		_node.IsHidden = value
 	}
 	return _node, _spec
@@ -531,7 +531,7 @@ func (u *FilesExtendUpsert) AddFromID(v int) *FilesExtendUpsert {
 }
 
 // SetIsHidden sets the "is_hidden" field.
-func (u *FilesExtendUpsert) SetIsHidden(v int8) *FilesExtendUpsert {
+func (u *FilesExtendUpsert) SetIsHidden(v bool) *FilesExtendUpsert {
 	u.Set(filesextend.FieldIsHidden, v)
 	return u
 }
@@ -539,12 +539,6 @@ func (u *FilesExtendUpsert) SetIsHidden(v int8) *FilesExtendUpsert {
 // UpdateIsHidden sets the "is_hidden" field to the value that was provided on create.
 func (u *FilesExtendUpsert) UpdateIsHidden() *FilesExtendUpsert {
 	u.SetExcluded(filesextend.FieldIsHidden)
-	return u
-}
-
-// AddIsHidden adds v to the "is_hidden" field.
-func (u *FilesExtendUpsert) AddIsHidden(v int8) *FilesExtendUpsert {
-	u.Add(filesextend.FieldIsHidden, v)
 	return u
 }
 
@@ -757,16 +751,9 @@ func (u *FilesExtendUpsertOne) UpdateFromID() *FilesExtendUpsertOne {
 }
 
 // SetIsHidden sets the "is_hidden" field.
-func (u *FilesExtendUpsertOne) SetIsHidden(v int8) *FilesExtendUpsertOne {
+func (u *FilesExtendUpsertOne) SetIsHidden(v bool) *FilesExtendUpsertOne {
 	return u.Update(func(s *FilesExtendUpsert) {
 		s.SetIsHidden(v)
-	})
-}
-
-// AddIsHidden adds v to the "is_hidden" field.
-func (u *FilesExtendUpsertOne) AddIsHidden(v int8) *FilesExtendUpsertOne {
-	return u.Update(func(s *FilesExtendUpsert) {
-		s.AddIsHidden(v)
 	})
 }
 
@@ -1152,16 +1139,9 @@ func (u *FilesExtendUpsertBulk) UpdateFromID() *FilesExtendUpsertBulk {
 }
 
 // SetIsHidden sets the "is_hidden" field.
-func (u *FilesExtendUpsertBulk) SetIsHidden(v int8) *FilesExtendUpsertBulk {
+func (u *FilesExtendUpsertBulk) SetIsHidden(v bool) *FilesExtendUpsertBulk {
 	return u.Update(func(s *FilesExtendUpsert) {
 		s.SetIsHidden(v)
-	})
-}
-
-// AddIsHidden adds v to the "is_hidden" field.
-func (u *FilesExtendUpsertBulk) AddIsHidden(v int8) *FilesExtendUpsertBulk {
-	return u.Update(func(s *FilesExtendUpsert) {
-		s.AddIsHidden(v)
 	})
 }
 

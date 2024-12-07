@@ -44,8 +44,29 @@ type Account struct {
 	// 博客数量
 	BlogNum int `json:"blog_num,omitempty"`
 	// 状态:0失效,1正常
-	Status       int8 `json:"status,omitempty"`
+	Status int8 `json:"status,omitempty"`
+	// Edges holds the relations/edges for other nodes in the graph.
+	// The values are being populated by the AccountQuery when eager-loading is set.
+	Edges        AccountEdges `json:"edges"`
 	selectValues sql.SelectValues
+}
+
+// AccountEdges holds the relations/edges for other nodes in the graph.
+type AccountEdges struct {
+	// TravelAccount holds the value of the travel_account edge.
+	TravelAccount []*Travel `json:"travel_account,omitempty"`
+	// loadedTypes holds the information for reporting if a
+	// type was loaded (or requested) in eager-loading or not.
+	loadedTypes [1]bool
+}
+
+// TravelAccountOrErr returns the TravelAccount value or an error if the edge
+// was not loaded in eager-loading.
+func (e AccountEdges) TravelAccountOrErr() ([]*Travel, error) {
+	if e.loadedTypes[0] {
+		return e.TravelAccount, nil
+	}
+	return nil, &NotLoadedError{edge: "travel_account"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -173,6 +194,11 @@ func (a *Account) assignValues(columns []string, values []any) error {
 // This includes values selected through modifiers, order, etc.
 func (a *Account) Value(name string) (ent.Value, error) {
 	return a.selectValues.Get(name)
+}
+
+// QueryTravelAccount queries the "travel_account" edge of the Account entity.
+func (a *Account) QueryTravelAccount() *TravelQuery {
+	return NewAccountClient(a.config).QueryTravelAccount(a)
 }
 
 // Update returns a builder for updating this Account.

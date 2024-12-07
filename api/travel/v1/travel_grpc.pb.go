@@ -36,8 +36,8 @@ type TravelClient interface {
 	DeleteTravel(ctx context.Context, in *global.ID, opts ...grpc.CallOption) (*global.Empty, error)
 	GetTravel(ctx context.Context, in *global.ID, opts ...grpc.CallOption) (*GetTravelReply, error)
 	ListTravel(ctx context.Context, in *ListTravelRequest, opts ...grpc.CallOption) (*ListTravelReply, error)
-	Thumb(ctx context.Context, in *global.ID, opts ...grpc.CallOption) (*global.Empty, error)
-	Collect(ctx context.Context, in *global.ID, opts ...grpc.CallOption) (*global.Empty, error)
+	Thumb(ctx context.Context, in *global.Action, opts ...grpc.CallOption) (*global.Empty, error)
+	Collect(ctx context.Context, in *global.Action, opts ...grpc.CallOption) (*global.Empty, error)
 }
 
 type travelClient struct {
@@ -88,7 +88,7 @@ func (c *travelClient) ListTravel(ctx context.Context, in *ListTravelRequest, op
 	return out, nil
 }
 
-func (c *travelClient) Thumb(ctx context.Context, in *global.ID, opts ...grpc.CallOption) (*global.Empty, error) {
+func (c *travelClient) Thumb(ctx context.Context, in *global.Action, opts ...grpc.CallOption) (*global.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(global.Empty)
 	err := c.cc.Invoke(ctx, Travel_Thumb_FullMethodName, in, out, cOpts...)
@@ -98,7 +98,7 @@ func (c *travelClient) Thumb(ctx context.Context, in *global.ID, opts ...grpc.Ca
 	return out, nil
 }
 
-func (c *travelClient) Collect(ctx context.Context, in *global.ID, opts ...grpc.CallOption) (*global.Empty, error) {
+func (c *travelClient) Collect(ctx context.Context, in *global.Action, opts ...grpc.CallOption) (*global.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(global.Empty)
 	err := c.cc.Invoke(ctx, Travel_Collect_FullMethodName, in, out, cOpts...)
@@ -116,8 +116,8 @@ type TravelServer interface {
 	DeleteTravel(context.Context, *global.ID) (*global.Empty, error)
 	GetTravel(context.Context, *global.ID) (*GetTravelReply, error)
 	ListTravel(context.Context, *ListTravelRequest) (*ListTravelReply, error)
-	Thumb(context.Context, *global.ID) (*global.Empty, error)
-	Collect(context.Context, *global.ID) (*global.Empty, error)
+	Thumb(context.Context, *global.Action) (*global.Empty, error)
+	Collect(context.Context, *global.Action) (*global.Empty, error)
 	mustEmbedUnimplementedTravelServer()
 }
 
@@ -140,10 +140,10 @@ func (UnimplementedTravelServer) GetTravel(context.Context, *global.ID) (*GetTra
 func (UnimplementedTravelServer) ListTravel(context.Context, *ListTravelRequest) (*ListTravelReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListTravel not implemented")
 }
-func (UnimplementedTravelServer) Thumb(context.Context, *global.ID) (*global.Empty, error) {
+func (UnimplementedTravelServer) Thumb(context.Context, *global.Action) (*global.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Thumb not implemented")
 }
-func (UnimplementedTravelServer) Collect(context.Context, *global.ID) (*global.Empty, error) {
+func (UnimplementedTravelServer) Collect(context.Context, *global.Action) (*global.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Collect not implemented")
 }
 func (UnimplementedTravelServer) mustEmbedUnimplementedTravelServer() {}
@@ -240,7 +240,7 @@ func _Travel_ListTravel_Handler(srv interface{}, ctx context.Context, dec func(i
 }
 
 func _Travel_Thumb_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(global.ID)
+	in := new(global.Action)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -252,13 +252,13 @@ func _Travel_Thumb_Handler(srv interface{}, ctx context.Context, dec func(interf
 		FullMethod: Travel_Thumb_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TravelServer).Thumb(ctx, req.(*global.ID))
+		return srv.(TravelServer).Thumb(ctx, req.(*global.Action))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Travel_Collect_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(global.ID)
+	in := new(global.Action)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -270,7 +270,7 @@ func _Travel_Collect_Handler(srv interface{}, ctx context.Context, dec func(inte
 		FullMethod: Travel_Collect_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TravelServer).Collect(ctx, req.(*global.ID))
+		return srv.(TravelServer).Collect(ctx, req.(*global.Action))
 	}
 	return interceptor(ctx, in, info, handler)
 }

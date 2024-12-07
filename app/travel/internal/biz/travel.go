@@ -1,46 +1,81 @@
 package biz
 
 import (
+	"blog/api/global"
 	"context"
 
-	v1 "blog/app/travel/api/helloworld/v1"
-
-	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/log"
 )
 
-var (
-	// ErrUserNotFound is user not found.
-	ErrUserNotFound = errors.NotFound(v1.ErrorReason_USER_NOT_FOUND.String(), "user not found")
-)
-
-// Greeter is a Greeter model.
-type Greeter struct {
-	Hello string
+// Travel is a Travel model.
+type Travel struct {
+	TravelBase
+	TravelAccount
+	TravelExtend
 }
 
-// GreeterRepo is a Greater repo.
-type GreeterRepo interface {
-	Save(context.Context, *Greeter) (*Greeter, error)
-	Update(context.Context, *Greeter) (*Greeter, error)
-	FindByID(context.Context, int64) (*Greeter, error)
-	ListByHello(context.Context, string) ([]*Greeter, error)
-	ListAll(context.Context) ([]*Greeter, error)
+type TravelBase struct {
+	Id          int
+	Title       string
+	IsHidden    bool
+	Description string
+	Video       string
+	Photos      []string
+	AccountId   int
+	CreatedAt   int64
+	UpdatedAt   int64
 }
 
-// GreeterUsecase is a Greeter usecase.
-type GreeterUsecase struct {
-	repo GreeterRepo
+type TravelAccount struct {
+	Nickname string
+	Avatar   string
+}
+
+type TravelExtend struct {
+	IsThumb    bool
+	ThumbNum   int
+	IsCollect  bool
+	CollectNum int
+	BrowseNum  int
+}
+type TravelDo struct {
+	Id        int
+	AccountId int
+	Do        bool //是否收藏 或者 是否点赞
+}
+type TravelQuery struct {
+	*global.PageInfo
+	Title       string
+	AccountId   int64 //当前登陆人ID
+	Description string
+	My          bool
+	MyCollect   bool
+	MyThumb     bool
+	Sort        string
+}
+
+// TravelRepo is a Greater repo.
+type TravelRepo interface {
+	Save(context.Context, *TravelBase) error
+	Delete(context.Context, *TravelBase) error
+	Thumb(context.Context, *TravelDo) error
+	Collect(context.Context, *TravelDo) error
+	Get(context.Context, *TravelBase) (*Travel, error)
+	List(context.Context, *TravelQuery) (int64, []*Travel, error)
+}
+
+// TravelUsecase is a Travel usecase.
+type TravelUsecase struct {
+	repo TravelRepo
 	log  *log.Helper
 }
 
-// NewGreeterUsecase new a Greeter usecase.
-func NewGreeterUsecase(repo GreeterRepo, logger log.Logger) *GreeterUsecase {
-	return &GreeterUsecase{repo: repo, log: log.NewHelper(logger)}
+// NewTravelUsecase new a Travel usecase.
+func NewTravelUsecase(repo TravelRepo, logger log.Logger) *TravelUsecase {
+	return &TravelUsecase{repo: repo, log: log.NewHelper(logger)}
 }
 
-// CreateGreeter creates a Greeter, and returns the new Greeter.
-func (uc *GreeterUsecase) CreateGreeter(ctx context.Context, g *Greeter) (*Greeter, error) {
-	uc.log.WithContext(ctx).Infof("CreateGreeter: %v", g.Hello)
-	return uc.repo.Save(ctx, g)
+// CreateTravel creates a Travel, and returns the new Travel.
+func (uc *TravelUsecase) CreateTravel(ctx context.Context, g *Travel) (*Travel, error) {
+
 }

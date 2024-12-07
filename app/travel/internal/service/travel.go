@@ -1,29 +1,18 @@
 package service
 
 import (
-	"context"
-
-	v1 "blog/app/travel/api/helloworld/v1"
+	"blog/api/travel/v1"
 	"blog/app/travel/internal/biz"
 )
 
-// GreeterService is a greeter service.
-type GreeterService struct {
-	v1.UnimplementedGreeterServer
+// TravelService is a travel service.
+type TravelService struct {
+	v1.UnimplementedTravelServer
 
-	uc *biz.GreeterUsecase
+	uc *biz.TravelUsecase
 }
 
-// NewGreeterService new a greeter service.
-func NewGreeterService(uc *biz.GreeterUsecase) *GreeterService {
-	return &GreeterService{uc: uc}
-}
-
-// SayHello implements helloworld.GreeterServer.
-func (s *GreeterService) SayHello(ctx context.Context, in *v1.HelloRequest) (*v1.HelloReply, error) {
-	g, err := s.uc.CreateGreeter(ctx, &biz.Greeter{Hello: in.Name})
-	if err != nil {
-		return nil, err
-	}
-	return &v1.HelloReply{Message: "Hello " + g.Hello}, nil
+// NewTravelService new a travel service.
+func NewTravelService(uc *biz.TravelUsecase) *TravelService {
+	return &TravelService{uc: uc}
 }

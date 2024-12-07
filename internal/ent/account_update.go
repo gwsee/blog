@@ -5,6 +5,7 @@ package ent
 import (
 	"blog/internal/ent/account"
 	"blog/internal/ent/predicate"
+	"blog/internal/ent/travel"
 	"context"
 	"errors"
 	"fmt"
@@ -229,9 +230,45 @@ func (au *AccountUpdate) AddStatus(i int8) *AccountUpdate {
 	return au
 }
 
+// AddTravelAccountIDs adds the "travel_account" edge to the Travel entity by IDs.
+func (au *AccountUpdate) AddTravelAccountIDs(ids ...int) *AccountUpdate {
+	au.mutation.AddTravelAccountIDs(ids...)
+	return au
+}
+
+// AddTravelAccount adds the "travel_account" edges to the Travel entity.
+func (au *AccountUpdate) AddTravelAccount(t ...*Travel) *AccountUpdate {
+	ids := make([]int, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return au.AddTravelAccountIDs(ids...)
+}
+
 // Mutation returns the AccountMutation object of the builder.
 func (au *AccountUpdate) Mutation() *AccountMutation {
 	return au.mutation
+}
+
+// ClearTravelAccount clears all "travel_account" edges to the Travel entity.
+func (au *AccountUpdate) ClearTravelAccount() *AccountUpdate {
+	au.mutation.ClearTravelAccount()
+	return au
+}
+
+// RemoveTravelAccountIDs removes the "travel_account" edge to Travel entities by IDs.
+func (au *AccountUpdate) RemoveTravelAccountIDs(ids ...int) *AccountUpdate {
+	au.mutation.RemoveTravelAccountIDs(ids...)
+	return au
+}
+
+// RemoveTravelAccount removes "travel_account" edges to Travel entities.
+func (au *AccountUpdate) RemoveTravelAccount(t ...*Travel) *AccountUpdate {
+	ids := make([]int, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return au.RemoveTravelAccountIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -361,6 +398,51 @@ func (au *AccountUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := au.mutation.AddedStatus(); ok {
 		_spec.AddField(account.FieldStatus, field.TypeInt8, value)
+	}
+	if au.mutation.TravelAccountCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   account.TravelAccountTable,
+			Columns: []string{account.TravelAccountColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(travel.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := au.mutation.RemovedTravelAccountIDs(); len(nodes) > 0 && !au.mutation.TravelAccountCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   account.TravelAccountTable,
+			Columns: []string{account.TravelAccountColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(travel.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := au.mutation.TravelAccountIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   account.TravelAccountTable,
+			Columns: []string{account.TravelAccountColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(travel.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, au.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -584,9 +666,45 @@ func (auo *AccountUpdateOne) AddStatus(i int8) *AccountUpdateOne {
 	return auo
 }
 
+// AddTravelAccountIDs adds the "travel_account" edge to the Travel entity by IDs.
+func (auo *AccountUpdateOne) AddTravelAccountIDs(ids ...int) *AccountUpdateOne {
+	auo.mutation.AddTravelAccountIDs(ids...)
+	return auo
+}
+
+// AddTravelAccount adds the "travel_account" edges to the Travel entity.
+func (auo *AccountUpdateOne) AddTravelAccount(t ...*Travel) *AccountUpdateOne {
+	ids := make([]int, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return auo.AddTravelAccountIDs(ids...)
+}
+
 // Mutation returns the AccountMutation object of the builder.
 func (auo *AccountUpdateOne) Mutation() *AccountMutation {
 	return auo.mutation
+}
+
+// ClearTravelAccount clears all "travel_account" edges to the Travel entity.
+func (auo *AccountUpdateOne) ClearTravelAccount() *AccountUpdateOne {
+	auo.mutation.ClearTravelAccount()
+	return auo
+}
+
+// RemoveTravelAccountIDs removes the "travel_account" edge to Travel entities by IDs.
+func (auo *AccountUpdateOne) RemoveTravelAccountIDs(ids ...int) *AccountUpdateOne {
+	auo.mutation.RemoveTravelAccountIDs(ids...)
+	return auo
+}
+
+// RemoveTravelAccount removes "travel_account" edges to Travel entities.
+func (auo *AccountUpdateOne) RemoveTravelAccount(t ...*Travel) *AccountUpdateOne {
+	ids := make([]int, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return auo.RemoveTravelAccountIDs(ids...)
 }
 
 // Where appends a list predicates to the AccountUpdate builder.
@@ -746,6 +864,51 @@ func (auo *AccountUpdateOne) sqlSave(ctx context.Context) (_node *Account, err e
 	}
 	if value, ok := auo.mutation.AddedStatus(); ok {
 		_spec.AddField(account.FieldStatus, field.TypeInt8, value)
+	}
+	if auo.mutation.TravelAccountCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   account.TravelAccountTable,
+			Columns: []string{account.TravelAccountColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(travel.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := auo.mutation.RemovedTravelAccountIDs(); len(nodes) > 0 && !auo.mutation.TravelAccountCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   account.TravelAccountTable,
+			Columns: []string{account.TravelAccountColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(travel.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := auo.mutation.TravelAccountIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   account.TravelAccountTable,
+			Columns: []string{account.TravelAccountColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(travel.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	_node = &Account{config: auo.config}
 	_spec.Assign = _node.assignValues

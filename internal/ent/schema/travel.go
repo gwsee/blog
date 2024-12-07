@@ -6,6 +6,7 @@ import (
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema"
+	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 )
 
@@ -40,6 +41,12 @@ func (Travel) Mixin() []ent.Mixin {
 	return []ent.Mixin{
 		mixin.Time{},
 		mixin.SoftDelete{},
+	}
+}
+func (Travel) Edges() []ent.Edge {
+	return []ent.Edge{
+		edge.To("travel_extend", TravelExtend.Type),
+		edge.From("account_travel", Account.Type).Ref("travel_account").Unique(),
 	}
 }
 func (Travel) Annotations() []schema.Annotation {

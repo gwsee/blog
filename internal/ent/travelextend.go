@@ -3,6 +3,7 @@
 package ent
 
 import (
+	"blog/internal/ent/travel"
 	"blog/internal/ent/travelextend"
 	"fmt"
 	"strings"
@@ -35,8 +36,32 @@ type TravelExtend struct {
 	// 是否点赞
 	IsThumb bool `json:"is_thumb,omitempty"`
 	// 收藏量
-	IsCollect    bool `json:"is_collect,omitempty"`
-	selectValues sql.SelectValues
+	IsCollect bool `json:"is_collect,omitempty"`
+	// Edges holds the relations/edges for other nodes in the graph.
+	// The values are being populated by the TravelExtendQuery when eager-loading is set.
+	Edges                TravelExtendEdges `json:"edges"`
+	travel_travel_extend *int
+	selectValues         sql.SelectValues
+}
+
+// TravelExtendEdges holds the relations/edges for other nodes in the graph.
+type TravelExtendEdges struct {
+	// Travel holds the value of the travel edge.
+	Travel *Travel `json:"travel,omitempty"`
+	// loadedTypes holds the information for reporting if a
+	// type was loaded (or requested) in eager-loading or not.
+	loadedTypes [1]bool
+}
+
+// TravelOrErr returns the Travel value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e TravelExtendEdges) TravelOrErr() (*Travel, error) {
+	if e.Travel != nil {
+		return e.Travel, nil
+	} else if e.loadedTypes[0] {
+		return nil, &NotFoundError{label: travel.Label}
+	}
+	return nil, &NotLoadedError{edge: "travel"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -47,6 +72,8 @@ func (*TravelExtend) scanValues(columns []string) ([]any, error) {
 		case travelextend.FieldIsThumb, travelextend.FieldIsCollect:
 			values[i] = new(sql.NullBool)
 		case travelextend.FieldID, travelextend.FieldCreatedAt, travelextend.FieldCreatedBy, travelextend.FieldUpdatedAt, travelextend.FieldUpdatedBy, travelextend.FieldDeletedAt, travelextend.FieldDeletedBy, travelextend.FieldAccountID, travelextend.FieldTravelID:
+			values[i] = new(sql.NullInt64)
+		case travelextend.ForeignKeys[0]: // travel_travel_extend
 			values[i] = new(sql.NullInt64)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -129,6 +156,13 @@ func (te *TravelExtend) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				te.IsCollect = value.Bool
 			}
+		case travelextend.ForeignKeys[0]:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for edge-field travel_travel_extend", value)
+			} else if value.Valid {
+				te.travel_travel_extend = new(int)
+				*te.travel_travel_extend = int(value.Int64)
+			}
 		default:
 			te.selectValues.Set(columns[i], values[i])
 		}
@@ -140,6 +174,11 @@ func (te *TravelExtend) assignValues(columns []string, values []any) error {
 // This includes values selected through modifiers, order, etc.
 func (te *TravelExtend) Value(name string) (ent.Value, error) {
 	return te.selectValues.Get(name)
+}
+
+// QueryTravel queries the "travel" edge of the TravelExtend entity.
+func (te *TravelExtend) QueryTravel() *TravelQuery {
+	return NewTravelExtendClient(te.config).QueryTravel(te)
 }
 
 // Update returns a builder for updating this TravelExtend.

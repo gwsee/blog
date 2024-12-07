@@ -75,7 +75,7 @@ func (o *blogsRepo) UpdateBlogs(ctx context.Context, data *biz.Blogs) error {
 			err = tx.Commit()
 		}
 	}()
-	_, err = tx.Blogs.UpdateOneID(int(data.Id)).
+	_, err = tx.Blogs.UpdateOneID(int(data.Id)).Where(blogs.AccountIDEQ(int(data.AccountId))).
 		SetTitle(data.Title).
 		SetDescription(data.Description).
 		SetIsHidden(int8(data.IsHidden)).
@@ -104,7 +104,7 @@ func (o *blogsRepo) DeleteBlogs(ctx context.Context, data *biz.Blogs) error {
 			err = tx.Commit()
 		}
 	}()
-	row, err := tx.Blogs.Delete().Where(blogs.ID(int(data.Id))).Where(blogs.AccountIDEQ(int(data.AccountId))).Exec(ctx)
+	row, err := tx.Blogs.Delete().Where(blogs.IDEQ(int(data.Id))).Where(blogs.AccountIDEQ(int(data.AccountId))).Exec(ctx)
 	if err != nil {
 		return err
 	}

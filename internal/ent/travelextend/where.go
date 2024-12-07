@@ -6,6 +6,7 @@ import (
 	"blog/internal/ent/predicate"
 
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 )
 
 // ID filters vertices based on their ID field.
@@ -441,6 +442,29 @@ func IsCollectEQ(v bool) predicate.TravelExtend {
 // IsCollectNEQ applies the NEQ predicate on the "is_collect" field.
 func IsCollectNEQ(v bool) predicate.TravelExtend {
 	return predicate.TravelExtend(sql.FieldNEQ(FieldIsCollect, v))
+}
+
+// HasTravel applies the HasEdge predicate on the "travel" edge.
+func HasTravel() predicate.TravelExtend {
+	return predicate.TravelExtend(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, TravelTable, TravelColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasTravelWith applies the HasEdge predicate on the "travel" edge with a given conditions (other predicates).
+func HasTravelWith(preds ...predicate.Travel) predicate.TravelExtend {
+	return predicate.TravelExtend(func(s *sql.Selector) {
+		step := newTravelStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
 }
 
 // And groups predicates with the AND operator between them.

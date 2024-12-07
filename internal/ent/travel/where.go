@@ -6,6 +6,7 @@ import (
 	"blog/internal/ent/predicate"
 
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 )
 
 // ID filters vertices based on their ID field.
@@ -726,6 +727,52 @@ func CollectNumLT(v int) predicate.Travel {
 // CollectNumLTE applies the LTE predicate on the "collect_num" field.
 func CollectNumLTE(v int) predicate.Travel {
 	return predicate.Travel(sql.FieldLTE(FieldCollectNum, v))
+}
+
+// HasTravelExtend applies the HasEdge predicate on the "travel_extend" edge.
+func HasTravelExtend() predicate.Travel {
+	return predicate.Travel(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, TravelExtendTable, TravelExtendColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasTravelExtendWith applies the HasEdge predicate on the "travel_extend" edge with a given conditions (other predicates).
+func HasTravelExtendWith(preds ...predicate.TravelExtend) predicate.Travel {
+	return predicate.Travel(func(s *sql.Selector) {
+		step := newTravelExtendStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasAccountTravel applies the HasEdge predicate on the "account_travel" edge.
+func HasAccountTravel() predicate.Travel {
+	return predicate.Travel(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, AccountTravelTable, AccountTravelColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasAccountTravelWith applies the HasEdge predicate on the "account_travel" edge with a given conditions (other predicates).
+func HasAccountTravelWith(preds ...predicate.Account) predicate.Travel {
+	return predicate.Travel(func(s *sql.Selector) {
+		step := newAccountTravelStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
 }
 
 // And groups predicates with the AND operator between them.

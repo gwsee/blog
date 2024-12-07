@@ -4,6 +4,7 @@ package ent
 
 import (
 	"blog/internal/ent/predicate"
+	"blog/internal/ent/travel"
 	"blog/internal/ent/travelextend"
 	"context"
 	"errors"
@@ -173,9 +174,34 @@ func (teu *TravelExtendUpdate) SetNillableIsCollect(b *bool) *TravelExtendUpdate
 	return teu
 }
 
+// SetTravelID sets the "travel" edge to the Travel entity by ID.
+func (teu *TravelExtendUpdate) SetTravelID(id int) *TravelExtendUpdate {
+	teu.mutation.SetTravelID(id)
+	return teu
+}
+
+// SetNillableTravelID sets the "travel" edge to the Travel entity by ID if the given value is not nil.
+func (teu *TravelExtendUpdate) SetNillableTravelID(id *int) *TravelExtendUpdate {
+	if id != nil {
+		teu = teu.SetTravelID(*id)
+	}
+	return teu
+}
+
+// SetTravel sets the "travel" edge to the Travel entity.
+func (teu *TravelExtendUpdate) SetTravel(t *Travel) *TravelExtendUpdate {
+	return teu.SetTravelID(t.ID)
+}
+
 // Mutation returns the TravelExtendMutation object of the builder.
 func (teu *TravelExtendUpdate) Mutation() *TravelExtendMutation {
 	return teu.mutation
+}
+
+// ClearTravel clears the "travel" edge to the Travel entity.
+func (teu *TravelExtendUpdate) ClearTravel() *TravelExtendUpdate {
+	teu.mutation.ClearTravel()
+	return teu
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -283,6 +309,35 @@ func (teu *TravelExtendUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := teu.mutation.IsCollect(); ok {
 		_spec.SetField(travelextend.FieldIsCollect, field.TypeBool, value)
+	}
+	if teu.mutation.TravelCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   travelextend.TravelTable,
+			Columns: []string{travelextend.TravelColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(travel.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := teu.mutation.TravelIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   travelextend.TravelTable,
+			Columns: []string{travelextend.TravelColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(travel.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, teu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -450,9 +505,34 @@ func (teuo *TravelExtendUpdateOne) SetNillableIsCollect(b *bool) *TravelExtendUp
 	return teuo
 }
 
+// SetTravelID sets the "travel" edge to the Travel entity by ID.
+func (teuo *TravelExtendUpdateOne) SetTravelID(id int) *TravelExtendUpdateOne {
+	teuo.mutation.SetTravelID(id)
+	return teuo
+}
+
+// SetNillableTravelID sets the "travel" edge to the Travel entity by ID if the given value is not nil.
+func (teuo *TravelExtendUpdateOne) SetNillableTravelID(id *int) *TravelExtendUpdateOne {
+	if id != nil {
+		teuo = teuo.SetTravelID(*id)
+	}
+	return teuo
+}
+
+// SetTravel sets the "travel" edge to the Travel entity.
+func (teuo *TravelExtendUpdateOne) SetTravel(t *Travel) *TravelExtendUpdateOne {
+	return teuo.SetTravelID(t.ID)
+}
+
 // Mutation returns the TravelExtendMutation object of the builder.
 func (teuo *TravelExtendUpdateOne) Mutation() *TravelExtendMutation {
 	return teuo.mutation
+}
+
+// ClearTravel clears the "travel" edge to the Travel entity.
+func (teuo *TravelExtendUpdateOne) ClearTravel() *TravelExtendUpdateOne {
+	teuo.mutation.ClearTravel()
+	return teuo
 }
 
 // Where appends a list predicates to the TravelExtendUpdate builder.
@@ -590,6 +670,35 @@ func (teuo *TravelExtendUpdateOne) sqlSave(ctx context.Context) (_node *TravelEx
 	}
 	if value, ok := teuo.mutation.IsCollect(); ok {
 		_spec.SetField(travelextend.FieldIsCollect, field.TypeBool, value)
+	}
+	if teuo.mutation.TravelCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   travelextend.TravelTable,
+			Columns: []string{travelextend.TravelColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(travel.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := teuo.mutation.TravelIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   travelextend.TravelTable,
+			Columns: []string{travelextend.TravelColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(travel.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	_node = &TravelExtend{config: teuo.config}
 	_spec.Assign = _node.assignValues

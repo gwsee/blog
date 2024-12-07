@@ -3,6 +3,7 @@
 package ent
 
 import (
+	"blog/internal/ent/account"
 	"blog/internal/ent/travel"
 	"encoding/json"
 	"fmt"
@@ -47,8 +48,43 @@ type Travel struct {
 	// 点赞量
 	ThumbNum int `json:"thumb_num,omitempty"`
 	// 收藏量
-	CollectNum   int `json:"collect_num,omitempty"`
-	selectValues sql.SelectValues
+	CollectNum int `json:"collect_num,omitempty"`
+	// Edges holds the relations/edges for other nodes in the graph.
+	// The values are being populated by the TravelQuery when eager-loading is set.
+	Edges                  TravelEdges `json:"edges"`
+	account_travel_account *int
+	selectValues           sql.SelectValues
+}
+
+// TravelEdges holds the relations/edges for other nodes in the graph.
+type TravelEdges struct {
+	// TravelExtend holds the value of the travel_extend edge.
+	TravelExtend []*TravelExtend `json:"travel_extend,omitempty"`
+	// AccountTravel holds the value of the account_travel edge.
+	AccountTravel *Account `json:"account_travel,omitempty"`
+	// loadedTypes holds the information for reporting if a
+	// type was loaded (or requested) in eager-loading or not.
+	loadedTypes [2]bool
+}
+
+// TravelExtendOrErr returns the TravelExtend value or an error if the edge
+// was not loaded in eager-loading.
+func (e TravelEdges) TravelExtendOrErr() ([]*TravelExtend, error) {
+	if e.loadedTypes[0] {
+		return e.TravelExtend, nil
+	}
+	return nil, &NotLoadedError{edge: "travel_extend"}
+}
+
+// AccountTravelOrErr returns the AccountTravel value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e TravelEdges) AccountTravelOrErr() (*Account, error) {
+	if e.AccountTravel != nil {
+		return e.AccountTravel, nil
+	} else if e.loadedTypes[1] {
+		return nil, &NotFoundError{label: account.Label}
+	}
+	return nil, &NotLoadedError{edge: "account_travel"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -64,6 +100,8 @@ func (*Travel) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullInt64)
 		case travel.FieldTitle, travel.FieldDescription, travel.FieldVideo:
 			values[i] = new(sql.NullString)
+		case travel.ForeignKeys[0]: // account_travel_account
+			values[i] = new(sql.NullInt64)
 		default:
 			values[i] = new(sql.UnknownType)
 		}
@@ -177,6 +215,13 @@ func (t *Travel) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				t.CollectNum = int(value.Int64)
 			}
+		case travel.ForeignKeys[0]:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for edge-field account_travel_account", value)
+			} else if value.Valid {
+				t.account_travel_account = new(int)
+				*t.account_travel_account = int(value.Int64)
+			}
 		default:
 			t.selectValues.Set(columns[i], values[i])
 		}
@@ -188,6 +233,16 @@ func (t *Travel) assignValues(columns []string, values []any) error {
 // This includes values selected through modifiers, order, etc.
 func (t *Travel) Value(name string) (ent.Value, error) {
 	return t.selectValues.Get(name)
+}
+
+// QueryTravelExtend queries the "travel_extend" edge of the Travel entity.
+func (t *Travel) QueryTravelExtend() *TravelExtendQuery {
+	return NewTravelClient(t.config).QueryTravelExtend(t)
+}
+
+// QueryAccountTravel queries the "account_travel" edge of the Travel entity.
+func (t *Travel) QueryAccountTravel() *AccountQuery {
+	return NewTravelClient(t.config).QueryAccountTravel(t)
 }
 
 // Update returns a builder for updating this Travel.

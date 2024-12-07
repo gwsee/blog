@@ -3,10 +3,10 @@
 
 openapi: 3.0.3
 info:
-    title: User API
+    title: Travel API
     version: 0.0.1
 paths: {}
 components:
     schemas: {}
 tags:
-    - name: User
+    - name: Travel

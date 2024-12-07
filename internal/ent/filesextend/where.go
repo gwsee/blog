@@ -104,7 +104,7 @@ func FromID(v int) predicate.FilesExtend {
 }
 
 // IsHidden applies equality check predicate on the "is_hidden" field. It's identical to IsHiddenEQ.
-func IsHidden(v int8) predicate.FilesExtend {
+func IsHidden(v bool) predicate.FilesExtend {
 	return predicate.FilesExtend(sql.FieldEQ(FieldIsHidden, v))
 }
 
@@ -559,43 +559,13 @@ func FromIDLTE(v int) predicate.FilesExtend {
 }
 
 // IsHiddenEQ applies the EQ predicate on the "is_hidden" field.
-func IsHiddenEQ(v int8) predicate.FilesExtend {
+func IsHiddenEQ(v bool) predicate.FilesExtend {
 	return predicate.FilesExtend(sql.FieldEQ(FieldIsHidden, v))
 }
 
 // IsHiddenNEQ applies the NEQ predicate on the "is_hidden" field.
-func IsHiddenNEQ(v int8) predicate.FilesExtend {
+func IsHiddenNEQ(v bool) predicate.FilesExtend {
 	return predicate.FilesExtend(sql.FieldNEQ(FieldIsHidden, v))
-}
-
-// IsHiddenIn applies the In predicate on the "is_hidden" field.
-func IsHiddenIn(vs ...int8) predicate.FilesExtend {
-	return predicate.FilesExtend(sql.FieldIn(FieldIsHidden, vs...))
-}
-
-// IsHiddenNotIn applies the NotIn predicate on the "is_hidden" field.
-func IsHiddenNotIn(vs ...int8) predicate.FilesExtend {
-	return predicate.FilesExtend(sql.FieldNotIn(FieldIsHidden, vs...))
-}
-
-// IsHiddenGT applies the GT predicate on the "is_hidden" field.
-func IsHiddenGT(v int8) predicate.FilesExtend {
-	return predicate.FilesExtend(sql.FieldGT(FieldIsHidden, v))
-}
-
-// IsHiddenGTE applies the GTE predicate on the "is_hidden" field.
-func IsHiddenGTE(v int8) predicate.FilesExtend {
-	return predicate.FilesExtend(sql.FieldGTE(FieldIsHidden, v))
-}
-
-// IsHiddenLT applies the LT predicate on the "is_hidden" field.
-func IsHiddenLT(v int8) predicate.FilesExtend {
-	return predicate.FilesExtend(sql.FieldLT(FieldIsHidden, v))
-}
-
-// IsHiddenLTE applies the LTE predicate on the "is_hidden" field.
-func IsHiddenLTE(v int8) predicate.FilesExtend {
-	return predicate.FilesExtend(sql.FieldLTE(FieldIsHidden, v))
 }
 
 // And groups predicates with the AND operator between them.

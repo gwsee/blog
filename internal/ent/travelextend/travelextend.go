@@ -5,6 +5,7 @@ package travelextend
 import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 )
 
 const (
@@ -32,8 +33,17 @@ const (
 	FieldIsThumb = "is_thumb"
 	// FieldIsCollect holds the string denoting the is_collect field in the database.
 	FieldIsCollect = "is_collect"
+	// EdgeTravel holds the string denoting the travel edge name in mutations.
+	EdgeTravel = "travel"
 	// Table holds the table name of the travelextend in the database.
 	Table = "travel_extend"
+	// TravelTable is the table that holds the travel relation/edge.
+	TravelTable = "travel_extend"
+	// TravelInverseTable is the table name for the Travel entity.
+	// It exists in this package in order to avoid circular dependency with the "travel" package.
+	TravelInverseTable = "travel"
+	// TravelColumn is the table column denoting the travel relation/edge.
+	TravelColumn = "travel_travel_extend"
 )
 
 // Columns holds all SQL columns for travelextend fields.
@@ -51,10 +61,21 @@ var Columns = []string{
 	FieldIsCollect,
 }
 
+// ForeignKeys holds the SQL foreign-keys that are owned by the "travel_extend"
+// table and are not defined as standalone fields in the schema.
+var ForeignKeys = []string{
+	"travel_travel_extend",
+}
+
 // ValidColumn reports if the column name is valid (part of the table columns).
 func ValidColumn(column string) bool {
 	for i := range Columns {
 		if column == Columns[i] {
+			return true
+		}
+	}
+	for i := range ForeignKeys {
+		if column == ForeignKeys[i] {
 			return true
 		}
 	}
@@ -143,4 +164,18 @@ func ByIsThumb(opts ...sql.OrderTermOption) OrderOption {
 // ByIsCollect orders the results by the is_collect field.
 func ByIsCollect(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldIsCollect, opts...).ToFunc()
+}
+
+// ByTravelField orders the results by travel field.
+func ByTravelField(field string, opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newTravelStep(), sql.OrderByField(field, opts...))
+	}
+}
+func newTravelStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(TravelInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2O, true, TravelTable, TravelColumn),
+	)
 }

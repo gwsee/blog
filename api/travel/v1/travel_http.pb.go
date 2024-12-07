@@ -28,12 +28,12 @@ const OperationTravelSaveTravel = "/api.travel.v1.Travel/SaveTravel"
 const OperationTravelThumb = "/api.travel.v1.Travel/Thumb"
 
 type TravelHTTPServer interface {
-	Collect(context.Context, *global.ID) (*global.Empty, error)
+	Collect(context.Context, *global.Action) (*global.Empty, error)
 	DeleteTravel(context.Context, *global.ID) (*global.Empty, error)
 	GetTravel(context.Context, *global.ID) (*GetTravelReply, error)
 	ListTravel(context.Context, *ListTravelRequest) (*ListTravelReply, error)
 	SaveTravel(context.Context, *SaveTravelRequest) (*global.Empty, error)
-	Thumb(context.Context, *global.ID) (*global.Empty, error)
+	Thumb(context.Context, *global.Action) (*global.Empty, error)
 }
 
 func RegisterTravelHTTPServer(s *http.Server, srv TravelHTTPServer) {
@@ -136,7 +136,7 @@ func _Travel_ListTravel0_HTTP_Handler(srv TravelHTTPServer) func(ctx http.Contex
 
 func _Travel_Thumb0_HTTP_Handler(srv TravelHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in global.ID
+		var in global.Action
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
@@ -145,7 +145,7 @@ func _Travel_Thumb0_HTTP_Handler(srv TravelHTTPServer) func(ctx http.Context) er
 		}
 		http.SetOperation(ctx, OperationTravelThumb)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.Thumb(ctx, req.(*global.ID))
+			return srv.Thumb(ctx, req.(*global.Action))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
@@ -158,7 +158,7 @@ func _Travel_Thumb0_HTTP_Handler(srv TravelHTTPServer) func(ctx http.Context) er
 
 func _Travel_Collect0_HTTP_Handler(srv TravelHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in global.ID
+		var in global.Action
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
@@ -167,7 +167,7 @@ func _Travel_Collect0_HTTP_Handler(srv TravelHTTPServer) func(ctx http.Context) 
 		}
 		http.SetOperation(ctx, OperationTravelCollect)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.Collect(ctx, req.(*global.ID))
+			return srv.Collect(ctx, req.(*global.Action))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
@@ -179,12 +179,12 @@ func _Travel_Collect0_HTTP_Handler(srv TravelHTTPServer) func(ctx http.Context) 
 }
 
 type TravelHTTPClient interface {
-	Collect(ctx context.Context, req *global.ID, opts ...http.CallOption) (rsp *global.Empty, err error)
+	Collect(ctx context.Context, req *global.Action, opts ...http.CallOption) (rsp *global.Empty, err error)
 	DeleteTravel(ctx context.Context, req *global.ID, opts ...http.CallOption) (rsp *global.Empty, err error)
 	GetTravel(ctx context.Context, req *global.ID, opts ...http.CallOption) (rsp *GetTravelReply, err error)
 	ListTravel(ctx context.Context, req *ListTravelRequest, opts ...http.CallOption) (rsp *ListTravelReply, err error)
 	SaveTravel(ctx context.Context, req *SaveTravelRequest, opts ...http.CallOption) (rsp *global.Empty, err error)
-	Thumb(ctx context.Context, req *global.ID, opts ...http.CallOption) (rsp *global.Empty, err error)
+	Thumb(ctx context.Context, req *global.Action, opts ...http.CallOption) (rsp *global.Empty, err error)
 }
 
 type TravelHTTPClientImpl struct {
@@ -195,7 +195,7 @@ func NewTravelHTTPClient(client *http.Client) TravelHTTPClient {
 	return &TravelHTTPClientImpl{client}
 }
 
-func (c *TravelHTTPClientImpl) Collect(ctx context.Context, in *global.ID, opts ...http.CallOption) (*global.Empty, error) {
+func (c *TravelHTTPClientImpl) Collect(ctx context.Context, in *global.Action, opts ...http.CallOption) (*global.Empty, error) {
 	var out global.Empty
 	pattern := "/api.travel.v1.Travel/Collect"
 	path := binding.EncodeURL(pattern, in, false)
@@ -260,7 +260,7 @@ func (c *TravelHTTPClientImpl) SaveTravel(ctx context.Context, in *SaveTravelReq
 	return &out, nil
 }
 
-func (c *TravelHTTPClientImpl) Thumb(ctx context.Context, in *global.ID, opts ...http.CallOption) (*global.Empty, error) {
+func (c *TravelHTTPClientImpl) Thumb(ctx context.Context, in *global.Action, opts ...http.CallOption) (*global.Empty, error) {
 	var out global.Empty
 	pattern := "/api.travel.v1.Travel/Thumb"
 	path := binding.EncodeURL(pattern, in, false)

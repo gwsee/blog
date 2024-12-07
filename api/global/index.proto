@@ -16,3 +16,8 @@ message ID {
 message IDStr {
   string id = 1;
 }
+
+message Action {
+  int64 id = 1;
+  bool do =2;
+}

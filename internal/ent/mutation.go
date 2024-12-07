@@ -49,35 +49,38 @@ const (
 // AccountMutation represents an operation that mutates the Account nodes in the graph.
 type AccountMutation struct {
 	config
-	op            Op
-	typ           string
-	id            *int
-	created_at    *int64
-	addcreated_at *int64
-	created_by    *int64
-	addcreated_by *int64
-	updated_at    *int64
-	addupdated_at *int64
-	updated_by    *int64
-	addupdated_by *int64
-	deleted_at    *int64
-	adddeleted_at *int64
-	deleted_by    *int64
-	adddeleted_by *int64
-	nickname      *string
-	account       *string
-	password      *string
-	email         *string
-	description   *string
-	avatar        *string
-	blog_num      *int
-	addblog_num   *int
-	status        *int8
-	addstatus     *int8
-	clearedFields map[string]struct{}
-	done          bool
-	oldValue      func(context.Context) (*Account, error)
-	predicates    []predicate.Account
+	op                    Op
+	typ                   string
+	id                    *int
+	created_at            *int64
+	addcreated_at         *int64
+	created_by            *int64
+	addcreated_by         *int64
+	updated_at            *int64
+	addupdated_at         *int64
+	updated_by            *int64
+	addupdated_by         *int64
+	deleted_at            *int64
+	adddeleted_at         *int64
+	deleted_by            *int64
+	adddeleted_by         *int64
+	nickname              *string
+	account               *string
+	password              *string
+	email                 *string
+	description           *string
+	avatar                *string
+	blog_num              *int
+	addblog_num           *int
+	status                *int8
+	addstatus             *int8
+	clearedFields         map[string]struct{}
+	travel_account        map[int]struct{}
+	removedtravel_account map[int]struct{}
+	clearedtravel_account bool
+	done                  bool
+	oldValue              func(context.Context) (*Account, error)
+	predicates            []predicate.Account
 }
 
 var _ ent.Mutation = (*AccountMutation)(nil)
@@ -848,6 +851,60 @@ func (m *AccountMutation) ResetStatus() {
 	m.addstatus = nil
 }
 
+// AddTravelAccountIDs adds the "travel_account" edge to the Travel entity by ids.
+func (m *AccountMutation) AddTravelAccountIDs(ids ...int) {
+	if m.travel_account == nil {
+		m.travel_account = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.travel_account[ids[i]] = struct{}{}
+	}
+}
+
+// ClearTravelAccount clears the "travel_account" edge to the Travel entity.
+func (m *AccountMutation) ClearTravelAccount() {
+	m.clearedtravel_account = true
+}
+
+// TravelAccountCleared reports if the "travel_account" edge to the Travel entity was cleared.
+func (m *AccountMutation) TravelAccountCleared() bool {
+	return m.clearedtravel_account
+}
+
+// RemoveTravelAccountIDs removes the "travel_account" edge to the Travel entity by IDs.
+func (m *AccountMutation) RemoveTravelAccountIDs(ids ...int) {
+	if m.removedtravel_account == nil {
+		m.removedtravel_account = make(map[int]struct{})
+	}
+	for i := range ids {
+		delete(m.travel_account, ids[i])
+		m.removedtravel_account[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedTravelAccount returns the removed IDs of the "travel_account" edge to the Travel entity.
+func (m *AccountMutation) RemovedTravelAccountIDs() (ids []int) {
+	for id := range m.removedtravel_account {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// TravelAccountIDs returns the "travel_account" edge IDs in the mutation.
+func (m *AccountMutation) TravelAccountIDs() (ids []int) {
+	for id := range m.travel_account {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetTravelAccount resets all changes to the "travel_account" edge.
+func (m *AccountMutation) ResetTravelAccount() {
+	m.travel_account = nil
+	m.clearedtravel_account = false
+	m.removedtravel_account = nil
+}
+
 // Where appends a list predicates to the AccountMutation builder.
 func (m *AccountMutation) Where(ps ...predicate.Account) {
 	m.predicates = append(m.predicates, ps...)
@@ -1301,49 +1358,85 @@ func (m *AccountMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *AccountMutation) AddedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
+	if m.travel_account != nil {
+		edges = append(edges, account.EdgeTravelAccount)
+	}
 	return edges
 }
 
 // AddedIDs returns all IDs (to other nodes) that were added for the given edge
 // name in this mutation.
 func (m *AccountMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case account.EdgeTravelAccount:
+		ids := make([]ent.Value, 0, len(m.travel_account))
+		for id := range m.travel_account {
+			ids = append(ids, id)
+		}
+		return ids
+	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *AccountMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
+	if m.removedtravel_account != nil {
+		edges = append(edges, account.EdgeTravelAccount)
+	}
 	return edges
 }
 
 // RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
 // the given name in this mutation.
 func (m *AccountMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	case account.EdgeTravelAccount:
+		ids := make([]ent.Value, 0, len(m.removedtravel_account))
+		for id := range m.removedtravel_account {
+			ids = append(ids, id)
+		}
+		return ids
+	}
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *AccountMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
+	if m.clearedtravel_account {
+		edges = append(edges, account.EdgeTravelAccount)
+	}
 	return edges
 }
 
 // EdgeCleared returns a boolean which indicates if the edge with the given name
 // was cleared in this mutation.
 func (m *AccountMutation) EdgeCleared(name string) bool {
+	switch name {
+	case account.EdgeTravelAccount:
+		return m.clearedtravel_account
+	}
 	return false
 }
 
 // ClearEdge clears the value of the edge with the given name. It returns an error
 // if that edge is not defined in the schema.
 func (m *AccountMutation) ClearEdge(name string) error {
+	switch name {
+	}
 	return fmt.Errorf("unknown Account unique edge %s", name)
 }
 
 // ResetEdge resets all changes to the edge with the given name in this mutation.
 // It returns an error if the edge is not defined in the schema.
 func (m *AccountMutation) ResetEdge(name string) error {
+	switch name {
+	case account.EdgeTravelAccount:
+		m.ResetTravelAccount()
+		return nil
+	}
 	return fmt.Errorf("unknown Account edge %s", name)
 }
 
@@ -5500,8 +5593,7 @@ type FilesExtendMutation struct {
 	from          *string
 	from_id       *int
 	addfrom_id    *int
-	is_hidden     *int8
-	addis_hidden  *int8
+	is_hidden     *bool
 	clearedFields map[string]struct{}
 	done          bool
 	oldValue      func(context.Context) (*FilesExtend, error)
@@ -6133,13 +6225,12 @@ func (m *FilesExtendMutation) ResetFromID() {
 }
 
 // SetIsHidden sets the "is_hidden" field.
-func (m *FilesExtendMutation) SetIsHidden(i int8) {
-	m.is_hidden = &i
-	m.addis_hidden = nil
+func (m *FilesExtendMutation) SetIsHidden(b bool) {
+	m.is_hidden = &b
 }
 
 // IsHidden returns the value of the "is_hidden" field in the mutation.
-func (m *FilesExtendMutation) IsHidden() (r int8, exists bool) {
+func (m *FilesExtendMutation) IsHidden() (r bool, exists bool) {
 	v := m.is_hidden
 	if v == nil {
 		return
@@ -6150,7 +6241,7 @@ func (m *FilesExtendMutation) IsHidden() (r int8, exists bool) {
 // OldIsHidden returns the old "is_hidden" field's value of the FilesExtend entity.
 // If the FilesExtend object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *FilesExtendMutation) OldIsHidden(ctx context.Context) (v int8, err error) {
+func (m *FilesExtendMutation) OldIsHidden(ctx context.Context) (v bool, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldIsHidden is only allowed on UpdateOne operations")
 	}
@@ -6164,28 +6255,9 @@ func (m *FilesExtendMutation) OldIsHidden(ctx context.Context) (v int8, err erro
 	return oldValue.IsHidden, nil
 }
 
-// AddIsHidden adds i to the "is_hidden" field.
-func (m *FilesExtendMutation) AddIsHidden(i int8) {
-	if m.addis_hidden != nil {
-		*m.addis_hidden += i
-	} else {
-		m.addis_hidden = &i
-	}
-}
-
-// AddedIsHidden returns the value that was added to the "is_hidden" field in this mutation.
-func (m *FilesExtendMutation) AddedIsHidden() (r int8, exists bool) {
-	v := m.addis_hidden
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
 // ResetIsHidden resets all changes to the "is_hidden" field.
 func (m *FilesExtendMutation) ResetIsHidden() {
 	m.is_hidden = nil
-	m.addis_hidden = nil
 }
 
 // Where appends a list predicates to the FilesExtendMutation builder.
@@ -6397,7 +6469,7 @@ func (m *FilesExtendMutation) SetField(name string, value ent.Value) error {
 		m.SetFromID(v)
 		return nil
 	case filesextend.FieldIsHidden:
-		v, ok := value.(int8)
+		v, ok := value.(bool)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -6435,9 +6507,6 @@ func (m *FilesExtendMutation) AddedFields() []string {
 	if m.addfrom_id != nil {
 		fields = append(fields, filesextend.FieldFromID)
 	}
-	if m.addis_hidden != nil {
-		fields = append(fields, filesextend.FieldIsHidden)
-	}
 	return fields
 }
 
@@ -6462,8 +6531,6 @@ func (m *FilesExtendMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedUserID()
 	case filesextend.FieldFromID:
 		return m.AddedFromID()
-	case filesextend.FieldIsHidden:
-		return m.AddedIsHidden()
 	}
 	return nil, false
 }
@@ -6528,13 +6595,6 @@ func (m *FilesExtendMutation) AddField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddFromID(v)
-		return nil
-	case filesextend.FieldIsHidden:
-		v, ok := value.(int8)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddIsHidden(v)
 		return nil
 	}
 	return fmt.Errorf("unknown FilesExtend numeric field %s", name)
@@ -6651,39 +6711,44 @@ func (m *FilesExtendMutation) ResetEdge(name string) error {
 // TravelMutation represents an operation that mutates the Travel nodes in the graph.
 type TravelMutation struct {
 	config
-	op             Op
-	typ            string
-	id             *int
-	created_at     *int64
-	addcreated_at  *int64
-	created_by     *int64
-	addcreated_by  *int64
-	updated_at     *int64
-	addupdated_at  *int64
-	updated_by     *int64
-	addupdated_by  *int64
-	deleted_at     *int64
-	adddeleted_at  *int64
-	deleted_by     *int64
-	adddeleted_by  *int64
-	title          *string
-	description    *string
-	video          *string
-	is_hidden      *bool
-	account_id     *int
-	addaccount_id  *int
-	photos         *[]string
-	appendphotos   []string
-	browse_num     *int
-	addbrowse_num  *int
-	thumb_num      *int
-	addthumb_num   *int
-	collect_num    *int
-	addcollect_num *int
-	clearedFields  map[string]struct{}
-	done           bool
-	oldValue       func(context.Context) (*Travel, error)
-	predicates     []predicate.Travel
+	op                    Op
+	typ                   string
+	id                    *int
+	created_at            *int64
+	addcreated_at         *int64
+	created_by            *int64
+	addcreated_by         *int64
+	updated_at            *int64
+	addupdated_at         *int64
+	updated_by            *int64
+	addupdated_by         *int64
+	deleted_at            *int64
+	adddeleted_at         *int64
+	deleted_by            *int64
+	adddeleted_by         *int64
+	title                 *string
+	description           *string
+	video                 *string
+	is_hidden             *bool
+	account_id            *int
+	addaccount_id         *int
+	photos                *[]string
+	appendphotos          []string
+	browse_num            *int
+	addbrowse_num         *int
+	thumb_num             *int
+	addthumb_num          *int
+	collect_num           *int
+	addcollect_num        *int
+	clearedFields         map[string]struct{}
+	travel_extend         map[int]struct{}
+	removedtravel_extend  map[int]struct{}
+	clearedtravel_extend  bool
+	account_travel        *int
+	clearedaccount_travel bool
+	done                  bool
+	oldValue              func(context.Context) (*Travel, error)
+	predicates            []predicate.Travel
 }
 
 var _ ent.Mutation = (*TravelMutation)(nil)
@@ -7545,6 +7610,99 @@ func (m *TravelMutation) ResetCollectNum() {
 	m.addcollect_num = nil
 }
 
+// AddTravelExtendIDs adds the "travel_extend" edge to the TravelExtend entity by ids.
+func (m *TravelMutation) AddTravelExtendIDs(ids ...int) {
+	if m.travel_extend == nil {
+		m.travel_extend = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.travel_extend[ids[i]] = struct{}{}
+	}
+}
+
+// ClearTravelExtend clears the "travel_extend" edge to the TravelExtend entity.
+func (m *TravelMutation) ClearTravelExtend() {
+	m.clearedtravel_extend = true
+}
+
+// TravelExtendCleared reports if the "travel_extend" edge to the TravelExtend entity was cleared.
+func (m *TravelMutation) TravelExtendCleared() bool {
+	return m.clearedtravel_extend
+}
+
+// RemoveTravelExtendIDs removes the "travel_extend" edge to the TravelExtend entity by IDs.
+func (m *TravelMutation) RemoveTravelExtendIDs(ids ...int) {
+	if m.removedtravel_extend == nil {
+		m.removedtravel_extend = make(map[int]struct{})
+	}
+	for i := range ids {
+		delete(m.travel_extend, ids[i])
+		m.removedtravel_extend[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedTravelExtend returns the removed IDs of the "travel_extend" edge to the TravelExtend entity.
+func (m *TravelMutation) RemovedTravelExtendIDs() (ids []int) {
+	for id := range m.removedtravel_extend {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// TravelExtendIDs returns the "travel_extend" edge IDs in the mutation.
+func (m *TravelMutation) TravelExtendIDs() (ids []int) {
+	for id := range m.travel_extend {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetTravelExtend resets all changes to the "travel_extend" edge.
+func (m *TravelMutation) ResetTravelExtend() {
+	m.travel_extend = nil
+	m.clearedtravel_extend = false
+	m.removedtravel_extend = nil
+}
+
+// SetAccountTravelID sets the "account_travel" edge to the Account entity by id.
+func (m *TravelMutation) SetAccountTravelID(id int) {
+	m.account_travel = &id
+}
+
+// ClearAccountTravel clears the "account_travel" edge to the Account entity.
+func (m *TravelMutation) ClearAccountTravel() {
+	m.clearedaccount_travel = true
+}
+
+// AccountTravelCleared reports if the "account_travel" edge to the Account entity was cleared.
+func (m *TravelMutation) AccountTravelCleared() bool {
+	return m.clearedaccount_travel
+}
+
+// AccountTravelID returns the "account_travel" edge ID in the mutation.
+func (m *TravelMutation) AccountTravelID() (id int, exists bool) {
+	if m.account_travel != nil {
+		return *m.account_travel, true
+	}
+	return
+}
+
+// AccountTravelIDs returns the "account_travel" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// AccountTravelID instead. It exists only for internal usage by the builders.
+func (m *TravelMutation) AccountTravelIDs() (ids []int) {
+	if id := m.account_travel; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetAccountTravel resets all changes to the "account_travel" edge.
+func (m *TravelMutation) ResetAccountTravel() {
+	m.account_travel = nil
+	m.clearedaccount_travel = false
+}
+
 // Where appends a list predicates to the TravelMutation builder.
 func (m *TravelMutation) Where(ps ...predicate.Travel) {
 	m.predicates = append(m.predicates, ps...)
@@ -8039,49 +8197,103 @@ func (m *TravelMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *TravelMutation) AddedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 2)
+	if m.travel_extend != nil {
+		edges = append(edges, travel.EdgeTravelExtend)
+	}
+	if m.account_travel != nil {
+		edges = append(edges, travel.EdgeAccountTravel)
+	}
 	return edges
 }
 
 // AddedIDs returns all IDs (to other nodes) that were added for the given edge
 // name in this mutation.
 func (m *TravelMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case travel.EdgeTravelExtend:
+		ids := make([]ent.Value, 0, len(m.travel_extend))
+		for id := range m.travel_extend {
+			ids = append(ids, id)
+		}
+		return ids
+	case travel.EdgeAccountTravel:
+		if id := m.account_travel; id != nil {
+			return []ent.Value{*id}
+		}
+	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *TravelMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 2)
+	if m.removedtravel_extend != nil {
+		edges = append(edges, travel.EdgeTravelExtend)
+	}
 	return edges
 }
 
 // RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
 // the given name in this mutation.
 func (m *TravelMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	case travel.EdgeTravelExtend:
+		ids := make([]ent.Value, 0, len(m.removedtravel_extend))
+		for id := range m.removedtravel_extend {
+			ids = append(ids, id)
+		}
+		return ids
+	}
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *TravelMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 2)
+	if m.clearedtravel_extend {
+		edges = append(edges, travel.EdgeTravelExtend)
+	}
+	if m.clearedaccount_travel {
+		edges = append(edges, travel.EdgeAccountTravel)
+	}
 	return edges
 }
 
 // EdgeCleared returns a boolean which indicates if the edge with the given name
 // was cleared in this mutation.
 func (m *TravelMutation) EdgeCleared(name string) bool {
+	switch name {
+	case travel.EdgeTravelExtend:
+		return m.clearedtravel_extend
+	case travel.EdgeAccountTravel:
+		return m.clearedaccount_travel
+	}
 	return false
 }
 
 // ClearEdge clears the value of the edge with the given name. It returns an error
 // if that edge is not defined in the schema.
 func (m *TravelMutation) ClearEdge(name string) error {
+	switch name {
+	case travel.EdgeAccountTravel:
+		m.ClearAccountTravel()
+		return nil
+	}
 	return fmt.Errorf("unknown Travel unique edge %s", name)
 }
 
 // ResetEdge resets all changes to the edge with the given name in this mutation.
 // It returns an error if the edge is not defined in the schema.
 func (m *TravelMutation) ResetEdge(name string) error {
+	switch name {
+	case travel.EdgeTravelExtend:
+		m.ResetTravelExtend()
+		return nil
+	case travel.EdgeAccountTravel:
+		m.ResetAccountTravel()
+		return nil
+	}
 	return fmt.Errorf("unknown Travel edge %s", name)
 }
 
@@ -8110,6 +8322,8 @@ type TravelExtendMutation struct {
 	is_thumb      *bool
 	is_collect    *bool
 	clearedFields map[string]struct{}
+	travel        *int
+	clearedtravel bool
 	done          bool
 	oldValue      func(context.Context) (*TravelExtend, error)
 	predicates    []predicate.TravelExtend
@@ -8733,6 +8947,45 @@ func (m *TravelExtendMutation) ResetIsCollect() {
 	m.is_collect = nil
 }
 
+// SetTravelID sets the "travel" edge to the Travel entity by id.
+func (m *TravelExtendMutation) SetTravelID(id int) {
+	m.travel = &id
+}
+
+// ClearTravel clears the "travel" edge to the Travel entity.
+func (m *TravelExtendMutation) ClearTravel() {
+	m.clearedtravel = true
+}
+
+// TravelCleared reports if the "travel" edge to the Travel entity was cleared.
+func (m *TravelExtendMutation) TravelCleared() bool {
+	return m.clearedtravel
+}
+
+// TravelID returns the "travel" edge ID in the mutation.
+func (m *TravelExtendMutation) TravelID() (id int, exists bool) {
+	if m.travel != nil {
+		return *m.travel, true
+	}
+	return
+}
+
+// TravelIDs returns the "travel" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// TravelID instead. It exists only for internal usage by the builders.
+func (m *TravelExtendMutation) TravelIDs() (ids []int) {
+	if id := m.travel; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetTravel resets all changes to the "travel" edge.
+func (m *TravelExtendMutation) ResetTravel() {
+	m.travel = nil
+	m.clearedtravel = false
+}
+
 // Where appends a list predicates to the TravelExtendMutation builder.
 func (m *TravelExtendMutation) Where(ps ...predicate.TravelExtend) {
 	m.predicates = append(m.predicates, ps...)
@@ -9118,19 +9371,28 @@ func (m *TravelExtendMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *TravelExtendMutation) AddedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
+	if m.travel != nil {
+		edges = append(edges, travelextend.EdgeTravel)
+	}
 	return edges
 }
 
 // AddedIDs returns all IDs (to other nodes) that were added for the given edge
 // name in this mutation.
 func (m *TravelExtendMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case travelextend.EdgeTravel:
+		if id := m.travel; id != nil {
+			return []ent.Value{*id}
+		}
+	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *TravelExtendMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
 	return edges
 }
 
@@ -9142,25 +9404,42 @@ func (m *TravelExtendMutation) RemovedIDs(name string) []ent.Value {
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *TravelExtendMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
+	if m.clearedtravel {
+		edges = append(edges, travelextend.EdgeTravel)
+	}
 	return edges
 }
 
 // EdgeCleared returns a boolean which indicates if the edge with the given name
 // was cleared in this mutation.
 func (m *TravelExtendMutation) EdgeCleared(name string) bool {
+	switch name {
+	case travelextend.EdgeTravel:
+		return m.clearedtravel
+	}
 	return false
 }
 
 // ClearEdge clears the value of the edge with the given name. It returns an error
 // if that edge is not defined in the schema.
 func (m *TravelExtendMutation) ClearEdge(name string) error {
+	switch name {
+	case travelextend.EdgeTravel:
+		m.ClearTravel()
+		return nil
+	}
 	return fmt.Errorf("unknown TravelExtend unique edge %s", name)
 }
 
 // ResetEdge resets all changes to the edge with the given name in this mutation.
 // It returns an error if the edge is not defined in the schema.
 func (m *TravelExtendMutation) ResetEdge(name string) error {
+	switch name {
+	case travelextend.EdgeTravel:
+		m.ResetTravel()
+		return nil
+	}
 	return fmt.Errorf("unknown TravelExtend edge %s", name)
 }
 

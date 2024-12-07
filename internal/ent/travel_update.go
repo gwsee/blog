@@ -3,8 +3,10 @@
 package ent
 
 import (
+	"blog/internal/ent/account"
 	"blog/internal/ent/predicate"
 	"blog/internal/ent/travel"
+	"blog/internal/ent/travelextend"
 	"context"
 	"errors"
 	"fmt"
@@ -256,9 +258,70 @@ func (tu *TravelUpdate) AddCollectNum(i int) *TravelUpdate {
 	return tu
 }
 
+// AddTravelExtendIDs adds the "travel_extend" edge to the TravelExtend entity by IDs.
+func (tu *TravelUpdate) AddTravelExtendIDs(ids ...int) *TravelUpdate {
+	tu.mutation.AddTravelExtendIDs(ids...)
+	return tu
+}
+
+// AddTravelExtend adds the "travel_extend" edges to the TravelExtend entity.
+func (tu *TravelUpdate) AddTravelExtend(t ...*TravelExtend) *TravelUpdate {
+	ids := make([]int, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return tu.AddTravelExtendIDs(ids...)
+}
+
+// SetAccountTravelID sets the "account_travel" edge to the Account entity by ID.
+func (tu *TravelUpdate) SetAccountTravelID(id int) *TravelUpdate {
+	tu.mutation.SetAccountTravelID(id)
+	return tu
+}
+
+// SetNillableAccountTravelID sets the "account_travel" edge to the Account entity by ID if the given value is not nil.
+func (tu *TravelUpdate) SetNillableAccountTravelID(id *int) *TravelUpdate {
+	if id != nil {
+		tu = tu.SetAccountTravelID(*id)
+	}
+	return tu
+}
+
+// SetAccountTravel sets the "account_travel" edge to the Account entity.
+func (tu *TravelUpdate) SetAccountTravel(a *Account) *TravelUpdate {
+	return tu.SetAccountTravelID(a.ID)
+}
+
 // Mutation returns the TravelMutation object of the builder.
 func (tu *TravelUpdate) Mutation() *TravelMutation {
 	return tu.mutation
+}
+
+// ClearTravelExtend clears all "travel_extend" edges to the TravelExtend entity.
+func (tu *TravelUpdate) ClearTravelExtend() *TravelUpdate {
+	tu.mutation.ClearTravelExtend()
+	return tu
+}
+
+// RemoveTravelExtendIDs removes the "travel_extend" edge to TravelExtend entities by IDs.
+func (tu *TravelUpdate) RemoveTravelExtendIDs(ids ...int) *TravelUpdate {
+	tu.mutation.RemoveTravelExtendIDs(ids...)
+	return tu
+}
+
+// RemoveTravelExtend removes "travel_extend" edges to TravelExtend entities.
+func (tu *TravelUpdate) RemoveTravelExtend(t ...*TravelExtend) *TravelUpdate {
+	ids := make([]int, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return tu.RemoveTravelExtendIDs(ids...)
+}
+
+// ClearAccountTravel clears the "account_travel" edge to the Account entity.
+func (tu *TravelUpdate) ClearAccountTravel() *TravelUpdate {
+	tu.mutation.ClearAccountTravel()
+	return tu
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -402,6 +465,80 @@ func (tu *TravelUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := tu.mutation.AddedCollectNum(); ok {
 		_spec.AddField(travel.FieldCollectNum, field.TypeInt, value)
+	}
+	if tu.mutation.TravelExtendCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   travel.TravelExtendTable,
+			Columns: []string{travel.TravelExtendColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(travelextend.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := tu.mutation.RemovedTravelExtendIDs(); len(nodes) > 0 && !tu.mutation.TravelExtendCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   travel.TravelExtendTable,
+			Columns: []string{travel.TravelExtendColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(travelextend.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := tu.mutation.TravelExtendIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   travel.TravelExtendTable,
+			Columns: []string{travel.TravelExtendColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(travelextend.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if tu.mutation.AccountTravelCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   travel.AccountTravelTable,
+			Columns: []string{travel.AccountTravelColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(account.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := tu.mutation.AccountTravelIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   travel.AccountTravelTable,
+			Columns: []string{travel.AccountTravelColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(account.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, tu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -651,9 +788,70 @@ func (tuo *TravelUpdateOne) AddCollectNum(i int) *TravelUpdateOne {
 	return tuo
 }
 
+// AddTravelExtendIDs adds the "travel_extend" edge to the TravelExtend entity by IDs.
+func (tuo *TravelUpdateOne) AddTravelExtendIDs(ids ...int) *TravelUpdateOne {
+	tuo.mutation.AddTravelExtendIDs(ids...)
+	return tuo
+}
+
+// AddTravelExtend adds the "travel_extend" edges to the TravelExtend entity.
+func (tuo *TravelUpdateOne) AddTravelExtend(t ...*TravelExtend) *TravelUpdateOne {
+	ids := make([]int, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return tuo.AddTravelExtendIDs(ids...)
+}
+
+// SetAccountTravelID sets the "account_travel" edge to the Account entity by ID.
+func (tuo *TravelUpdateOne) SetAccountTravelID(id int) *TravelUpdateOne {
+	tuo.mutation.SetAccountTravelID(id)
+	return tuo
+}
+
+// SetNillableAccountTravelID sets the "account_travel" edge to the Account entity by ID if the given value is not nil.
+func (tuo *TravelUpdateOne) SetNillableAccountTravelID(id *int) *TravelUpdateOne {
+	if id != nil {
+		tuo = tuo.SetAccountTravelID(*id)
+	}
+	return tuo
+}
+
+// SetAccountTravel sets the "account_travel" edge to the Account entity.
+func (tuo *TravelUpdateOne) SetAccountTravel(a *Account) *TravelUpdateOne {
+	return tuo.SetAccountTravelID(a.ID)
+}
+
 // Mutation returns the TravelMutation object of the builder.
 func (tuo *TravelUpdateOne) Mutation() *TravelMutation {
 	return tuo.mutation
+}
+
+// ClearTravelExtend clears all "travel_extend" edges to the TravelExtend entity.
+func (tuo *TravelUpdateOne) ClearTravelExtend() *TravelUpdateOne {
+	tuo.mutation.ClearTravelExtend()
+	return tuo
+}
+
+// RemoveTravelExtendIDs removes the "travel_extend" edge to TravelExtend entities by IDs.
+func (tuo *TravelUpdateOne) RemoveTravelExtendIDs(ids ...int) *TravelUpdateOne {
+	tuo.mutation.RemoveTravelExtendIDs(ids...)
+	return tuo
+}
+
+// RemoveTravelExtend removes "travel_extend" edges to TravelExtend entities.
+func (tuo *TravelUpdateOne) RemoveTravelExtend(t ...*TravelExtend) *TravelUpdateOne {
+	ids := make([]int, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return tuo.RemoveTravelExtendIDs(ids...)
+}
+
+// ClearAccountTravel clears the "account_travel" edge to the Account entity.
+func (tuo *TravelUpdateOne) ClearAccountTravel() *TravelUpdateOne {
+	tuo.mutation.ClearAccountTravel()
+	return tuo
 }
 
 // Where appends a list predicates to the TravelUpdate builder.
@@ -827,6 +1025,80 @@ func (tuo *TravelUpdateOne) sqlSave(ctx context.Context) (_node *Travel, err err
 	}
 	if value, ok := tuo.mutation.AddedCollectNum(); ok {
 		_spec.AddField(travel.FieldCollectNum, field.TypeInt, value)
+	}
+	if tuo.mutation.TravelExtendCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   travel.TravelExtendTable,
+			Columns: []string{travel.TravelExtendColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(travelextend.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := tuo.mutation.RemovedTravelExtendIDs(); len(nodes) > 0 && !tuo.mutation.TravelExtendCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   travel.TravelExtendTable,
+			Columns: []string{travel.TravelExtendColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(travelextend.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := tuo.mutation.TravelExtendIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   travel.TravelExtendTable,
+			Columns: []string{travel.TravelExtendColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(travelextend.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if tuo.mutation.AccountTravelCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   travel.AccountTravelTable,
+			Columns: []string{travel.AccountTravelColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(account.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := tuo.mutation.AccountTravelIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   travel.AccountTravelTable,
+			Columns: []string{travel.AccountTravelColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(account.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	_node = &Travel{config: tuo.config}
 	_spec.Assign = _node.assignValues

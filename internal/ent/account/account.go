@@ -5,6 +5,7 @@ package account
 import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 )
 
 const (
@@ -40,8 +41,17 @@ const (
 	FieldBlogNum = "blog_num"
 	// FieldStatus holds the string denoting the status field in the database.
 	FieldStatus = "status"
+	// EdgeTravelAccount holds the string denoting the travel_account edge name in mutations.
+	EdgeTravelAccount = "travel_account"
 	// Table holds the table name of the account in the database.
 	Table = "account"
+	// TravelAccountTable is the table that holds the travel_account relation/edge.
+	TravelAccountTable = "travel"
+	// TravelAccountInverseTable is the table name for the Travel entity.
+	// It exists in this package in order to avoid circular dependency with the "travel" package.
+	TravelAccountInverseTable = "travel"
+	// TravelAccountColumn is the table column denoting the travel_account relation/edge.
+	TravelAccountColumn = "account_travel_account"
 )
 
 // Columns holds all SQL columns for account fields.
@@ -191,4 +201,25 @@ func ByBlogNum(opts ...sql.OrderTermOption) OrderOption {
 // ByStatus orders the results by the status field.
 func ByStatus(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldStatus, opts...).ToFunc()
+}
+
+// ByTravelAccountCount orders the results by travel_account count.
+func ByTravelAccountCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newTravelAccountStep(), opts...)
+	}
+}
+
+// ByTravelAccount orders the results by travel_account terms.
+func ByTravelAccount(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newTravelAccountStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+func newTravelAccountStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(TravelAccountInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, TravelAccountTable, TravelAccountColumn),
+	)
 }

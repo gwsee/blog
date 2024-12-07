@@ -6,6 +6,7 @@ import (
 	"blog/internal/ent/predicate"
 
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 )
 
 // ID filters vertices based on their ID field.
@@ -831,6 +832,29 @@ func StatusLT(v int8) predicate.Account {
 // StatusLTE applies the LTE predicate on the "status" field.
 func StatusLTE(v int8) predicate.Account {
 	return predicate.Account(sql.FieldLTE(FieldStatus, v))
+}
+
+// HasTravelAccount applies the HasEdge predicate on the "travel_account" edge.
+func HasTravelAccount() predicate.Account {
+	return predicate.Account(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, TravelAccountTable, TravelAccountColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasTravelAccountWith applies the HasEdge predicate on the "travel_account" edge with a given conditions (other predicates).
+func HasTravelAccountWith(preds ...predicate.Travel) predicate.Account {
+	return predicate.Account(func(s *sql.Selector) {
+		step := newTravelAccountStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
 }
 
 // And groups predicates with the AND operator between them.
