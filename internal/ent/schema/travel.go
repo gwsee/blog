@@ -28,6 +28,8 @@ func (Travel) Fields() []ent.Field {
 			SchemaType(map[string]string{
 				dialect.MySQL: "varchar(200)",
 			}),
+		field.Bool("is_hidden").Default(false).Comment("是否隐藏:0否,1是"),
+		field.Int("account_id").Positive().Comment("账户ID"),
 		field.JSON("photos", []string{}).Comment("旅行的照片"),
 		field.Int("browse_num").Comment("浏览量"),
 		field.Int("thumb_num").Comment("点赞量"),

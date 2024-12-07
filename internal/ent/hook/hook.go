@@ -20,30 +20,6 @@ func (f AccountFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, err
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AccountMutation", m)
 }
 
-// The AccountExperienceFunc type is an adapter to allow the use of ordinary
-// function as AccountExperience mutator.
-type AccountExperienceFunc func(context.Context, *ent.AccountExperienceMutation) (ent.Value, error)
-
-// Mutate calls f(ctx, m).
-func (f AccountExperienceFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	if mv, ok := m.(*ent.AccountExperienceMutation); ok {
-		return f(ctx, mv)
-	}
-	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AccountExperienceMutation", m)
-}
-
-// The AccountProjectFunc type is an adapter to allow the use of ordinary
-// function as AccountProject mutator.
-type AccountProjectFunc func(context.Context, *ent.AccountProjectMutation) (ent.Value, error)
-
-// Mutate calls f(ctx, m).
-func (f AccountProjectFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	if mv, ok := m.(*ent.AccountProjectMutation); ok {
-		return f(ctx, mv)
-	}
-	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AccountProjectMutation", m)
-}
-
 // The BlogsFunc type is an adapter to allow the use of ordinary
 // function as Blogs mutator.
 type BlogsFunc func(context.Context, *ent.BlogsMutation) (ent.Value, error)
@@ -138,6 +114,30 @@ func (f UserFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error)
 		return f(ctx, mv)
 	}
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.UserMutation", m)
+}
+
+// The UserExperienceFunc type is an adapter to allow the use of ordinary
+// function as UserExperience mutator.
+type UserExperienceFunc func(context.Context, *ent.UserExperienceMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f UserExperienceFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.UserExperienceMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.UserExperienceMutation", m)
+}
+
+// The UserProjectFunc type is an adapter to allow the use of ordinary
+// function as UserProject mutator.
+type UserProjectFunc func(context.Context, *ent.UserProjectMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f UserProjectFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.UserProjectMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.UserProjectMutation", m)
 }
 
 // Condition is a hook condition function.

@@ -93,14 +93,14 @@ func UserID(v int) predicate.FilesExtend {
 	return predicate.FilesExtend(sql.FieldEQ(FieldUserID, v))
 }
 
-// Filename applies equality check predicate on the "filename" field. It's identical to FilenameEQ.
-func Filename(v string) predicate.FilesExtend {
-	return predicate.FilesExtend(sql.FieldEQ(FieldFilename, v))
-}
-
 // From applies equality check predicate on the "from" field. It's identical to FromEQ.
 func From(v string) predicate.FilesExtend {
 	return predicate.FilesExtend(sql.FieldEQ(FieldFrom, v))
+}
+
+// FromID applies equality check predicate on the "from_id" field. It's identical to FromIDEQ.
+func FromID(v int) predicate.FilesExtend {
+	return predicate.FilesExtend(sql.FieldEQ(FieldFromID, v))
 }
 
 // IsHidden applies equality check predicate on the "is_hidden" field. It's identical to IsHiddenEQ.
@@ -453,71 +453,6 @@ func UserIDLTE(v int) predicate.FilesExtend {
 	return predicate.FilesExtend(sql.FieldLTE(FieldUserID, v))
 }
 
-// FilenameEQ applies the EQ predicate on the "filename" field.
-func FilenameEQ(v string) predicate.FilesExtend {
-	return predicate.FilesExtend(sql.FieldEQ(FieldFilename, v))
-}
-
-// FilenameNEQ applies the NEQ predicate on the "filename" field.
-func FilenameNEQ(v string) predicate.FilesExtend {
-	return predicate.FilesExtend(sql.FieldNEQ(FieldFilename, v))
-}
-
-// FilenameIn applies the In predicate on the "filename" field.
-func FilenameIn(vs ...string) predicate.FilesExtend {
-	return predicate.FilesExtend(sql.FieldIn(FieldFilename, vs...))
-}
-
-// FilenameNotIn applies the NotIn predicate on the "filename" field.
-func FilenameNotIn(vs ...string) predicate.FilesExtend {
-	return predicate.FilesExtend(sql.FieldNotIn(FieldFilename, vs...))
-}
-
-// FilenameGT applies the GT predicate on the "filename" field.
-func FilenameGT(v string) predicate.FilesExtend {
-	return predicate.FilesExtend(sql.FieldGT(FieldFilename, v))
-}
-
-// FilenameGTE applies the GTE predicate on the "filename" field.
-func FilenameGTE(v string) predicate.FilesExtend {
-	return predicate.FilesExtend(sql.FieldGTE(FieldFilename, v))
-}
-
-// FilenameLT applies the LT predicate on the "filename" field.
-func FilenameLT(v string) predicate.FilesExtend {
-	return predicate.FilesExtend(sql.FieldLT(FieldFilename, v))
-}
-
-// FilenameLTE applies the LTE predicate on the "filename" field.
-func FilenameLTE(v string) predicate.FilesExtend {
-	return predicate.FilesExtend(sql.FieldLTE(FieldFilename, v))
-}
-
-// FilenameContains applies the Contains predicate on the "filename" field.
-func FilenameContains(v string) predicate.FilesExtend {
-	return predicate.FilesExtend(sql.FieldContains(FieldFilename, v))
-}
-
-// FilenameHasPrefix applies the HasPrefix predicate on the "filename" field.
-func FilenameHasPrefix(v string) predicate.FilesExtend {
-	return predicate.FilesExtend(sql.FieldHasPrefix(FieldFilename, v))
-}
-
-// FilenameHasSuffix applies the HasSuffix predicate on the "filename" field.
-func FilenameHasSuffix(v string) predicate.FilesExtend {
-	return predicate.FilesExtend(sql.FieldHasSuffix(FieldFilename, v))
-}
-
-// FilenameEqualFold applies the EqualFold predicate on the "filename" field.
-func FilenameEqualFold(v string) predicate.FilesExtend {
-	return predicate.FilesExtend(sql.FieldEqualFold(FieldFilename, v))
-}
-
-// FilenameContainsFold applies the ContainsFold predicate on the "filename" field.
-func FilenameContainsFold(v string) predicate.FilesExtend {
-	return predicate.FilesExtend(sql.FieldContainsFold(FieldFilename, v))
-}
-
 // FromEQ applies the EQ predicate on the "from" field.
 func FromEQ(v string) predicate.FilesExtend {
 	return predicate.FilesExtend(sql.FieldEQ(FieldFrom, v))
@@ -581,6 +516,46 @@ func FromEqualFold(v string) predicate.FilesExtend {
 // FromContainsFold applies the ContainsFold predicate on the "from" field.
 func FromContainsFold(v string) predicate.FilesExtend {
 	return predicate.FilesExtend(sql.FieldContainsFold(FieldFrom, v))
+}
+
+// FromIDEQ applies the EQ predicate on the "from_id" field.
+func FromIDEQ(v int) predicate.FilesExtend {
+	return predicate.FilesExtend(sql.FieldEQ(FieldFromID, v))
+}
+
+// FromIDNEQ applies the NEQ predicate on the "from_id" field.
+func FromIDNEQ(v int) predicate.FilesExtend {
+	return predicate.FilesExtend(sql.FieldNEQ(FieldFromID, v))
+}
+
+// FromIDIn applies the In predicate on the "from_id" field.
+func FromIDIn(vs ...int) predicate.FilesExtend {
+	return predicate.FilesExtend(sql.FieldIn(FieldFromID, vs...))
+}
+
+// FromIDNotIn applies the NotIn predicate on the "from_id" field.
+func FromIDNotIn(vs ...int) predicate.FilesExtend {
+	return predicate.FilesExtend(sql.FieldNotIn(FieldFromID, vs...))
+}
+
+// FromIDGT applies the GT predicate on the "from_id" field.
+func FromIDGT(v int) predicate.FilesExtend {
+	return predicate.FilesExtend(sql.FieldGT(FieldFromID, v))
+}
+
+// FromIDGTE applies the GTE predicate on the "from_id" field.
+func FromIDGTE(v int) predicate.FilesExtend {
+	return predicate.FilesExtend(sql.FieldGTE(FieldFromID, v))
+}
+
+// FromIDLT applies the LT predicate on the "from_id" field.
+func FromIDLT(v int) predicate.FilesExtend {
+	return predicate.FilesExtend(sql.FieldLT(FieldFromID, v))
+}
+
+// FromIDLTE applies the LTE predicate on the "from_id" field.
+func FromIDLTE(v int) predicate.FilesExtend {
+	return predicate.FilesExtend(sql.FieldLTE(FieldFromID, v))
 }
 
 // IsHiddenEQ applies the EQ predicate on the "is_hidden" field.

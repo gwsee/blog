@@ -9,11 +9,11 @@ import (
 	"entgo.io/ent/schema/field"
 )
 
-type AccountProject struct {
+type UserProject struct {
 	ent.Schema
 }
 
-func (AccountProject) Fields() []ent.Field {
+func (UserProject) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int("id").Unique().Positive().Comment("ID"),
 		field.Int("user_id").Comment("用户ID"),
@@ -36,15 +36,15 @@ func (AccountProject) Fields() []ent.Field {
 		field.JSON("photos", []string{}).Comment("项目照片"),
 	}
 }
-func (AccountProject) Mixin() []ent.Mixin {
+func (UserProject) Mixin() []ent.Mixin {
 	return []ent.Mixin{
 		mixin.Time{},
 		mixin.SoftDelete{},
 	}
 }
-func (AccountProject) Annotations() []schema.Annotation {
+func (UserProject) Annotations() []schema.Annotation {
 	return []schema.Annotation{
-		entsql.Annotation{Table: "account_project"},
+		entsql.Annotation{Table: "user_project"},
 		entsql.WithComments(true),
 		schema.Comment("项目表"),
 	}

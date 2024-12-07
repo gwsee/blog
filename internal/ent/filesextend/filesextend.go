@@ -28,10 +28,10 @@ const (
 	FieldFileID = "file_id"
 	// FieldUserID holds the string denoting the user_id field in the database.
 	FieldUserID = "user_id"
-	// FieldFilename holds the string denoting the filename field in the database.
-	FieldFilename = "filename"
 	// FieldFrom holds the string denoting the from field in the database.
 	FieldFrom = "from"
+	// FieldFromID holds the string denoting the from_id field in the database.
+	FieldFromID = "from_id"
 	// FieldIsHidden holds the string denoting the is_hidden field in the database.
 	FieldIsHidden = "is_hidden"
 	// Table holds the table name of the filesextend in the database.
@@ -49,8 +49,8 @@ var Columns = []string{
 	FieldDeletedBy,
 	FieldFileID,
 	FieldUserID,
-	FieldFilename,
 	FieldFrom,
+	FieldFromID,
 	FieldIsHidden,
 }
 
@@ -90,8 +90,6 @@ var (
 	DefaultFileID string
 	// DefaultUserID holds the default value on creation for the "user_id" field.
 	DefaultUserID int
-	// DefaultFilename holds the default value on creation for the "filename" field.
-	DefaultFilename string
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
 	IDValidator func(int) error
 )
@@ -144,14 +142,14 @@ func ByUserID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldUserID, opts...).ToFunc()
 }
 
-// ByFilename orders the results by the filename field.
-func ByFilename(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldFilename, opts...).ToFunc()
-}
-
 // ByFrom orders the results by the from field.
 func ByFrom(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldFrom, opts...).ToFunc()
+}
+
+// ByFromID orders the results by the from_id field.
+func ByFromID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldFromID, opts...).ToFunc()
 }
 
 // ByIsHidden orders the results by the is_hidden field.

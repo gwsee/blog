@@ -98,6 +98,16 @@ func Video(v string) predicate.Travel {
 	return predicate.Travel(sql.FieldEQ(FieldVideo, v))
 }
 
+// IsHidden applies equality check predicate on the "is_hidden" field. It's identical to IsHiddenEQ.
+func IsHidden(v bool) predicate.Travel {
+	return predicate.Travel(sql.FieldEQ(FieldIsHidden, v))
+}
+
+// AccountID applies equality check predicate on the "account_id" field. It's identical to AccountIDEQ.
+func AccountID(v int) predicate.Travel {
+	return predicate.Travel(sql.FieldEQ(FieldAccountID, v))
+}
+
 // BrowseNum applies equality check predicate on the "browse_num" field. It's identical to BrowseNumEQ.
 func BrowseNum(v int) predicate.Travel {
 	return predicate.Travel(sql.FieldEQ(FieldBrowseNum, v))
@@ -546,6 +556,56 @@ func VideoEqualFold(v string) predicate.Travel {
 // VideoContainsFold applies the ContainsFold predicate on the "video" field.
 func VideoContainsFold(v string) predicate.Travel {
 	return predicate.Travel(sql.FieldContainsFold(FieldVideo, v))
+}
+
+// IsHiddenEQ applies the EQ predicate on the "is_hidden" field.
+func IsHiddenEQ(v bool) predicate.Travel {
+	return predicate.Travel(sql.FieldEQ(FieldIsHidden, v))
+}
+
+// IsHiddenNEQ applies the NEQ predicate on the "is_hidden" field.
+func IsHiddenNEQ(v bool) predicate.Travel {
+	return predicate.Travel(sql.FieldNEQ(FieldIsHidden, v))
+}
+
+// AccountIDEQ applies the EQ predicate on the "account_id" field.
+func AccountIDEQ(v int) predicate.Travel {
+	return predicate.Travel(sql.FieldEQ(FieldAccountID, v))
+}
+
+// AccountIDNEQ applies the NEQ predicate on the "account_id" field.
+func AccountIDNEQ(v int) predicate.Travel {
+	return predicate.Travel(sql.FieldNEQ(FieldAccountID, v))
+}
+
+// AccountIDIn applies the In predicate on the "account_id" field.
+func AccountIDIn(vs ...int) predicate.Travel {
+	return predicate.Travel(sql.FieldIn(FieldAccountID, vs...))
+}
+
+// AccountIDNotIn applies the NotIn predicate on the "account_id" field.
+func AccountIDNotIn(vs ...int) predicate.Travel {
+	return predicate.Travel(sql.FieldNotIn(FieldAccountID, vs...))
+}
+
+// AccountIDGT applies the GT predicate on the "account_id" field.
+func AccountIDGT(v int) predicate.Travel {
+	return predicate.Travel(sql.FieldGT(FieldAccountID, v))
+}
+
+// AccountIDGTE applies the GTE predicate on the "account_id" field.
+func AccountIDGTE(v int) predicate.Travel {
+	return predicate.Travel(sql.FieldGTE(FieldAccountID, v))
+}
+
+// AccountIDLT applies the LT predicate on the "account_id" field.
+func AccountIDLT(v int) predicate.Travel {
+	return predicate.Travel(sql.FieldLT(FieldAccountID, v))
+}
+
+// AccountIDLTE applies the LTE predicate on the "account_id" field.
+func AccountIDLTE(v int) predicate.Travel {
+	return predicate.Travel(sql.FieldLTE(FieldAccountID, v))
 }
 
 // BrowseNumEQ applies the EQ predicate on the "browse_num" field.

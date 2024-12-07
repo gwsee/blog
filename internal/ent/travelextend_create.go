@@ -216,6 +216,11 @@ func (tec *TravelExtendCreate) check() error {
 	if _, ok := tec.mutation.AccountID(); !ok {
 		return &ValidationError{Name: "account_id", err: errors.New(`ent: missing required field "TravelExtend.account_id"`)}
 	}
+	if v, ok := tec.mutation.AccountID(); ok {
+		if err := travelextend.AccountIDValidator(v); err != nil {
+			return &ValidationError{Name: "account_id", err: fmt.Errorf(`ent: validator failed for field "TravelExtend.account_id": %w`, err)}
+		}
+	}
 	if _, ok := tec.mutation.TravelID(); !ok {
 		return &ValidationError{Name: "travel_id", err: errors.New(`ent: missing required field "TravelExtend.travel_id"`)}
 	}

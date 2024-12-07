@@ -83,6 +83,11 @@ func DeletedBy(v int64) predicate.Account {
 	return predicate.Account(sql.FieldEQ(FieldDeletedBy, v))
 }
 
+// Nickname applies equality check predicate on the "nickname" field. It's identical to NicknameEQ.
+func Nickname(v string) predicate.Account {
+	return predicate.Account(sql.FieldEQ(FieldNickname, v))
+}
+
 // Account applies equality check predicate on the "account" field. It's identical to AccountEQ.
 func Account(v string) predicate.Account {
 	return predicate.Account(sql.FieldEQ(FieldAccount, v))
@@ -101,11 +106,6 @@ func Email(v string) predicate.Account {
 // Description applies equality check predicate on the "description" field. It's identical to DescriptionEQ.
 func Description(v string) predicate.Account {
 	return predicate.Account(sql.FieldEQ(FieldDescription, v))
-}
-
-// Nickname applies equality check predicate on the "nickname" field. It's identical to NicknameEQ.
-func Nickname(v string) predicate.Account {
-	return predicate.Account(sql.FieldEQ(FieldNickname, v))
 }
 
 // Avatar applies equality check predicate on the "avatar" field. It's identical to AvatarEQ.
@@ -361,6 +361,71 @@ func DeletedByLT(v int64) predicate.Account {
 // DeletedByLTE applies the LTE predicate on the "deleted_by" field.
 func DeletedByLTE(v int64) predicate.Account {
 	return predicate.Account(sql.FieldLTE(FieldDeletedBy, v))
+}
+
+// NicknameEQ applies the EQ predicate on the "nickname" field.
+func NicknameEQ(v string) predicate.Account {
+	return predicate.Account(sql.FieldEQ(FieldNickname, v))
+}
+
+// NicknameNEQ applies the NEQ predicate on the "nickname" field.
+func NicknameNEQ(v string) predicate.Account {
+	return predicate.Account(sql.FieldNEQ(FieldNickname, v))
+}
+
+// NicknameIn applies the In predicate on the "nickname" field.
+func NicknameIn(vs ...string) predicate.Account {
+	return predicate.Account(sql.FieldIn(FieldNickname, vs...))
+}
+
+// NicknameNotIn applies the NotIn predicate on the "nickname" field.
+func NicknameNotIn(vs ...string) predicate.Account {
+	return predicate.Account(sql.FieldNotIn(FieldNickname, vs...))
+}
+
+// NicknameGT applies the GT predicate on the "nickname" field.
+func NicknameGT(v string) predicate.Account {
+	return predicate.Account(sql.FieldGT(FieldNickname, v))
+}
+
+// NicknameGTE applies the GTE predicate on the "nickname" field.
+func NicknameGTE(v string) predicate.Account {
+	return predicate.Account(sql.FieldGTE(FieldNickname, v))
+}
+
+// NicknameLT applies the LT predicate on the "nickname" field.
+func NicknameLT(v string) predicate.Account {
+	return predicate.Account(sql.FieldLT(FieldNickname, v))
+}
+
+// NicknameLTE applies the LTE predicate on the "nickname" field.
+func NicknameLTE(v string) predicate.Account {
+	return predicate.Account(sql.FieldLTE(FieldNickname, v))
+}
+
+// NicknameContains applies the Contains predicate on the "nickname" field.
+func NicknameContains(v string) predicate.Account {
+	return predicate.Account(sql.FieldContains(FieldNickname, v))
+}
+
+// NicknameHasPrefix applies the HasPrefix predicate on the "nickname" field.
+func NicknameHasPrefix(v string) predicate.Account {
+	return predicate.Account(sql.FieldHasPrefix(FieldNickname, v))
+}
+
+// NicknameHasSuffix applies the HasSuffix predicate on the "nickname" field.
+func NicknameHasSuffix(v string) predicate.Account {
+	return predicate.Account(sql.FieldHasSuffix(FieldNickname, v))
+}
+
+// NicknameEqualFold applies the EqualFold predicate on the "nickname" field.
+func NicknameEqualFold(v string) predicate.Account {
+	return predicate.Account(sql.FieldEqualFold(FieldNickname, v))
+}
+
+// NicknameContainsFold applies the ContainsFold predicate on the "nickname" field.
+func NicknameContainsFold(v string) predicate.Account {
+	return predicate.Account(sql.FieldContainsFold(FieldNickname, v))
 }
 
 // AccountEQ applies the EQ predicate on the "account" field.
@@ -621,71 +686,6 @@ func DescriptionEqualFold(v string) predicate.Account {
 // DescriptionContainsFold applies the ContainsFold predicate on the "description" field.
 func DescriptionContainsFold(v string) predicate.Account {
 	return predicate.Account(sql.FieldContainsFold(FieldDescription, v))
-}
-
-// NicknameEQ applies the EQ predicate on the "nickname" field.
-func NicknameEQ(v string) predicate.Account {
-	return predicate.Account(sql.FieldEQ(FieldNickname, v))
-}
-
-// NicknameNEQ applies the NEQ predicate on the "nickname" field.
-func NicknameNEQ(v string) predicate.Account {
-	return predicate.Account(sql.FieldNEQ(FieldNickname, v))
-}
-
-// NicknameIn applies the In predicate on the "nickname" field.
-func NicknameIn(vs ...string) predicate.Account {
-	return predicate.Account(sql.FieldIn(FieldNickname, vs...))
-}
-
-// NicknameNotIn applies the NotIn predicate on the "nickname" field.
-func NicknameNotIn(vs ...string) predicate.Account {
-	return predicate.Account(sql.FieldNotIn(FieldNickname, vs...))
-}
-
-// NicknameGT applies the GT predicate on the "nickname" field.
-func NicknameGT(v string) predicate.Account {
-	return predicate.Account(sql.FieldGT(FieldNickname, v))
-}
-
-// NicknameGTE applies the GTE predicate on the "nickname" field.
-func NicknameGTE(v string) predicate.Account {
-	return predicate.Account(sql.FieldGTE(FieldNickname, v))
-}
-
-// NicknameLT applies the LT predicate on the "nickname" field.
-func NicknameLT(v string) predicate.Account {
-	return predicate.Account(sql.FieldLT(FieldNickname, v))
-}
-
-// NicknameLTE applies the LTE predicate on the "nickname" field.
-func NicknameLTE(v string) predicate.Account {
-	return predicate.Account(sql.FieldLTE(FieldNickname, v))
-}
-
-// NicknameContains applies the Contains predicate on the "nickname" field.
-func NicknameContains(v string) predicate.Account {
-	return predicate.Account(sql.FieldContains(FieldNickname, v))
-}
-
-// NicknameHasPrefix applies the HasPrefix predicate on the "nickname" field.
-func NicknameHasPrefix(v string) predicate.Account {
-	return predicate.Account(sql.FieldHasPrefix(FieldNickname, v))
-}
-
-// NicknameHasSuffix applies the HasSuffix predicate on the "nickname" field.
-func NicknameHasSuffix(v string) predicate.Account {
-	return predicate.Account(sql.FieldHasSuffix(FieldNickname, v))
-}
-
-// NicknameEqualFold applies the EqualFold predicate on the "nickname" field.
-func NicknameEqualFold(v string) predicate.Account {
-	return predicate.Account(sql.FieldEqualFold(FieldNickname, v))
-}
-
-// NicknameContainsFold applies the ContainsFold predicate on the "nickname" field.
-func NicknameContainsFold(v string) predicate.Account {
-	return predicate.Account(sql.FieldContainsFold(FieldNickname, v))
 }
 
 // AvatarEQ applies the EQ predicate on the "avatar" field.

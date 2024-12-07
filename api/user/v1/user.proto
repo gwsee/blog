@@ -10,6 +10,7 @@ import "api/global/index.proto";
 import "third_party/google/api/annotations.proto";
 
 service User {
+	//个人信息管理
 	rpc SaveUser (SaveUserRequest) returns (global.Empty){
 		option (google.api.http) = {
 			body: "*"
@@ -20,7 +21,7 @@ service User {
 			body: "*"
 		};
 	};
-
+	//项目管理
 	rpc SaveProject (SaveProjectRequest) returns (global.Empty){
 		option (google.api.http) = {
 			body: "*"
@@ -42,6 +43,7 @@ service User {
 		};
 	};
 
+	//工作经验管理
 	rpc SaveExperience (SaveExperienceRequest) returns (global.Empty){
 		option (google.api.http) = {
 			body: "*"
@@ -170,6 +172,7 @@ message SaveUserRequest {
 	string professional = 5;//职称
 	repeated string skills = 6;//技能
 	string description = 7;//个人简介
+	string address = 8;//工作地址
 }
 
 message GetUserReply {
@@ -180,7 +183,8 @@ message GetUserReply {
 	string professional = 5;//职称
 	repeated string skills = 6;//技能
 	string description = 7;//个人简介
-	int64 createdAt=8;//创建时间
-	int64 updatedAt=9;//编辑时间
+	string address = 8;//工作地址
+	int64 createdAt=9;//创建时间
+	int64 updatedAt=10;//编辑时间
 }
 

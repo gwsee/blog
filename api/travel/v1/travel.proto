@@ -8,7 +8,7 @@ option java_package = "api.travel.v1";
 import "api/global/index.proto";
 import "api/global/page.proto";
 import "third_party/google/api/annotations.proto";
-
+import "api/account/v1/account.proto";
 service Travel {
 	rpc SaveTravel (SaveTravelRequest) returns (global.Empty){
 		option (google.api.http) = {
@@ -30,12 +30,12 @@ service Travel {
 			body: "*"
 		};
 	};
-	rpc Thumb(global.ID) returns (GetTravelReply){
+	rpc Thumb(global.ID) returns (global.Empty){
 		option (google.api.http) = {
 			body: "*"
 		};
 	};
-	rpc Collect(global.ID) returns (GetTravelReply){
+	rpc Collect(global.ID) returns (global.Empty){
 		option (google.api.http) = {
 			body: "*"
 		};
@@ -46,22 +46,28 @@ service Travel {
 message SaveTravelRequest {
 	int64 id = 1;//ID 没有就是新增
 	string title = 2;//标题
-	string description = 3;//描述
-	string video = 4;//视频地址
-	repeated string photo =5;//照片
+	bool isHidden = 3;//是否隐藏
+	string description = 4;//描述
+	string video = 5;//视频地址
+	repeated string photo =6;//照片
 }
 
 message GetTravelReply {
 	int64 id = 1;//ID
 	string title = 2;//标题
-	string description = 3;//描述
-	string video = 4;//视频地址
-	repeated string photos =5;//照片
-	int64 browseNum =6;//浏览量
-	int64 thumbNum =7;//点赞量
-	int64 collectNum =8;//收藏量
-	int64 createdAt=9;//创建时间
-	int64 updatedAt=10;//编辑时间
+	bool isHidden = 3;//是否隐藏
+	string description = 4;//描述
+	string video = 5;//视频地址
+	repeated string photos =6;//照片
+	int64 browseNum =7;//浏览量
+	int64 thumbNum =8;//点赞量
+	bool isThumb = 9;//是否点赞
+	int64 collectNum =10;//收藏量
+	bool isCollect = 11;//是否收藏
+	int64 accountId = 12; //所属账户ID
+	account.v1.AccountInfoReply account = 13;
+	int64 createdAt=14;//创建时间
+	int64 updatedAt=15;//编辑时间
 }
 
 message ListTravelRequest {
@@ -69,6 +75,9 @@ message ListTravelRequest {
 	string title =2 ;//标题
 	string description = 3;//描述
 	bool my = 4;//是否只查看自己的
+	bool myCollect = 5; //是否只查看我收藏的
+	bool myThumb = 6;//是否只查看我点赞的
+	string sort = 7;//默认按照创建时间倒叙
 }
 message ListTravelReply {
 	repeated ListTravel list = 1;
@@ -82,6 +91,11 @@ message ListTravel {
 	string photo =5;//照片--第一个作为数据显示
 	int64 browseNum =6;//浏览量
 	int64 thumbNum =7;//点赞量
-	int64 collectNum =8;//收藏量
-	int64 createdAt=9;//创建时间
+	bool isThumb = 8;//是否点赞
+	int64 collectNum =9;//收藏量
+	bool isCollect = 10;//是否收藏
+	int64 accountId = 11; //所属账户ID
+	account.v1.AccountInfoReply account = 12;
+	int64 createdAt=13;//创建时间
+	int64 updatedAt=14;//编辑时间
 }

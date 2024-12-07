@@ -21,8 +21,8 @@ func (FilesExtend) Fields() []ent.Field {
 				dialect.MySQL: "varchar(200)",
 			}),
 		field.Int("user_id").Default(0).Comment("所属的用户"),
-		field.String("filename").Default("").Comment("文件名称"),
-		field.String("from").Comment("文件来源的表"), //account-avatar;blog;travel;project
+		field.String("from").Comment("文件来源的表"),   //account-avatar;blog;travel;project
+		field.Int("from_id").Comment("文件来源表的ID"), //account-avatar;blog;travel;project
 		field.Int8("is_hidden").Comment("是否隐藏"),
 	}
 }

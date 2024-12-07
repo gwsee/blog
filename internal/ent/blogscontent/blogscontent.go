@@ -13,6 +13,8 @@ const (
 	FieldID = "id"
 	// FieldContent holds the string denoting the content field in the database.
 	FieldContent = "content"
+	// FieldFiles holds the string denoting the files field in the database.
+	FieldFiles = "files"
 	// Table holds the table name of the blogscontent in the database.
 	Table = "blogs_content"
 )
@@ -21,6 +23,7 @@ const (
 var Columns = []string{
 	FieldID,
 	FieldContent,
+	FieldFiles,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).

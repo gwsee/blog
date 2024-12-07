@@ -4,8 +4,6 @@ package ent
 
 import (
 	"blog/internal/ent/account"
-	"blog/internal/ent/accountexperience"
-	"blog/internal/ent/accountproject"
 	"blog/internal/ent/blogs"
 	"blog/internal/ent/blogscomment"
 	"blog/internal/ent/blogscontent"
@@ -14,6 +12,8 @@ import (
 	"blog/internal/ent/travel"
 	"blog/internal/ent/travelextend"
 	"blog/internal/ent/user"
+	"blog/internal/ent/userexperience"
+	"blog/internal/ent/userproject"
 	"context"
 	"errors"
 	"fmt"
@@ -83,17 +83,17 @@ var (
 func checkColumn(table, column string) error {
 	initCheck.Do(func() {
 		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
-			account.Table:           account.ValidColumn,
-			accountexperience.Table: accountexperience.ValidColumn,
-			accountproject.Table:    accountproject.ValidColumn,
-			blogs.Table:             blogs.ValidColumn,
-			blogscomment.Table:      blogscomment.ValidColumn,
-			blogscontent.Table:      blogscontent.ValidColumn,
-			files.Table:             files.ValidColumn,
-			filesextend.Table:       filesextend.ValidColumn,
-			travel.Table:            travel.ValidColumn,
-			travelextend.Table:      travelextend.ValidColumn,
-			user.Table:              user.ValidColumn,
+			account.Table:        account.ValidColumn,
+			blogs.Table:          blogs.ValidColumn,
+			blogscomment.Table:   blogscomment.ValidColumn,
+			blogscontent.Table:   blogscontent.ValidColumn,
+			files.Table:          files.ValidColumn,
+			filesextend.Table:    filesextend.ValidColumn,
+			travel.Table:         travel.ValidColumn,
+			travelextend.Table:   travelextend.ValidColumn,
+			user.Table:           user.ValidColumn,
+			userexperience.Table: userexperience.ValidColumn,
+			userproject.Table:    userproject.ValidColumn,
 		})
 	})
 	return columnCheck(table, column)

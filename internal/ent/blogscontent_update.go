@@ -11,6 +11,7 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
+	"entgo.io/ent/dialect/sql/sqljson"
 	"entgo.io/ent/schema/field"
 )
 
@@ -38,6 +39,18 @@ func (bcu *BlogsContentUpdate) SetNillableContent(s *string) *BlogsContentUpdate
 	if s != nil {
 		bcu.SetContent(*s)
 	}
+	return bcu
+}
+
+// SetFiles sets the "files" field.
+func (bcu *BlogsContentUpdate) SetFiles(s []string) *BlogsContentUpdate {
+	bcu.mutation.SetFiles(s)
+	return bcu
+}
+
+// AppendFiles appends s to the "files" field.
+func (bcu *BlogsContentUpdate) AppendFiles(s []string) *BlogsContentUpdate {
+	bcu.mutation.AppendFiles(s)
 	return bcu
 }
 
@@ -98,6 +111,14 @@ func (bcu *BlogsContentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := bcu.mutation.Content(); ok {
 		_spec.SetField(blogscontent.FieldContent, field.TypeString, value)
 	}
+	if value, ok := bcu.mutation.Files(); ok {
+		_spec.SetField(blogscontent.FieldFiles, field.TypeJSON, value)
+	}
+	if value, ok := bcu.mutation.AppendedFiles(); ok {
+		_spec.AddModifier(func(u *sql.UpdateBuilder) {
+			sqljson.Append(u, blogscontent.FieldFiles, value)
+		})
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, bcu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{blogscontent.Label}
@@ -129,6 +150,18 @@ func (bcuo *BlogsContentUpdateOne) SetNillableContent(s *string) *BlogsContentUp
 	if s != nil {
 		bcuo.SetContent(*s)
 	}
+	return bcuo
+}
+
+// SetFiles sets the "files" field.
+func (bcuo *BlogsContentUpdateOne) SetFiles(s []string) *BlogsContentUpdateOne {
+	bcuo.mutation.SetFiles(s)
+	return bcuo
+}
+
+// AppendFiles appends s to the "files" field.
+func (bcuo *BlogsContentUpdateOne) AppendFiles(s []string) *BlogsContentUpdateOne {
+	bcuo.mutation.AppendFiles(s)
 	return bcuo
 }
 
@@ -218,6 +251,14 @@ func (bcuo *BlogsContentUpdateOne) sqlSave(ctx context.Context) (_node *BlogsCon
 	}
 	if value, ok := bcuo.mutation.Content(); ok {
 		_spec.SetField(blogscontent.FieldContent, field.TypeString, value)
+	}
+	if value, ok := bcuo.mutation.Files(); ok {
+		_spec.SetField(blogscontent.FieldFiles, field.TypeJSON, value)
+	}
+	if value, ok := bcuo.mutation.AppendedFiles(); ok {
+		_spec.AddModifier(func(u *sql.UpdateBuilder) {
+			sqljson.Append(u, blogscontent.FieldFiles, value)
+		})
 	}
 	_node = &BlogsContent{config: bcuo.config}
 	_spec.Assign = _node.assignValues

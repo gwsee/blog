@@ -8,8 +8,6 @@ import (
 
 	"blog/internal/ent"
 	"blog/internal/ent/account"
-	"blog/internal/ent/accountexperience"
-	"blog/internal/ent/accountproject"
 	"blog/internal/ent/blogs"
 	"blog/internal/ent/blogscomment"
 	"blog/internal/ent/blogscontent"
@@ -19,6 +17,8 @@ import (
 	"blog/internal/ent/travel"
 	"blog/internal/ent/travelextend"
 	"blog/internal/ent/user"
+	"blog/internal/ent/userexperience"
+	"blog/internal/ent/userproject"
 
 	"entgo.io/ent/dialect/sql"
 )
@@ -104,60 +104,6 @@ func (f TraverseAccount) Traverse(ctx context.Context, q ent.Query) error {
 		return f(ctx, q)
 	}
 	return fmt.Errorf("unexpected query type %T. expect *ent.AccountQuery", q)
-}
-
-// The AccountExperienceFunc type is an adapter to allow the use of ordinary function as a Querier.
-type AccountExperienceFunc func(context.Context, *ent.AccountExperienceQuery) (ent.Value, error)
-
-// Query calls f(ctx, q).
-func (f AccountExperienceFunc) Query(ctx context.Context, q ent.Query) (ent.Value, error) {
-	if q, ok := q.(*ent.AccountExperienceQuery); ok {
-		return f(ctx, q)
-	}
-	return nil, fmt.Errorf("unexpected query type %T. expect *ent.AccountExperienceQuery", q)
-}
-
-// The TraverseAccountExperience type is an adapter to allow the use of ordinary function as Traverser.
-type TraverseAccountExperience func(context.Context, *ent.AccountExperienceQuery) error
-
-// Intercept is a dummy implementation of Intercept that returns the next Querier in the pipeline.
-func (f TraverseAccountExperience) Intercept(next ent.Querier) ent.Querier {
-	return next
-}
-
-// Traverse calls f(ctx, q).
-func (f TraverseAccountExperience) Traverse(ctx context.Context, q ent.Query) error {
-	if q, ok := q.(*ent.AccountExperienceQuery); ok {
-		return f(ctx, q)
-	}
-	return fmt.Errorf("unexpected query type %T. expect *ent.AccountExperienceQuery", q)
-}
-
-// The AccountProjectFunc type is an adapter to allow the use of ordinary function as a Querier.
-type AccountProjectFunc func(context.Context, *ent.AccountProjectQuery) (ent.Value, error)
-
-// Query calls f(ctx, q).
-func (f AccountProjectFunc) Query(ctx context.Context, q ent.Query) (ent.Value, error) {
-	if q, ok := q.(*ent.AccountProjectQuery); ok {
-		return f(ctx, q)
-	}
-	return nil, fmt.Errorf("unexpected query type %T. expect *ent.AccountProjectQuery", q)
-}
-
-// The TraverseAccountProject type is an adapter to allow the use of ordinary function as Traverser.
-type TraverseAccountProject func(context.Context, *ent.AccountProjectQuery) error
-
-// Intercept is a dummy implementation of Intercept that returns the next Querier in the pipeline.
-func (f TraverseAccountProject) Intercept(next ent.Querier) ent.Querier {
-	return next
-}
-
-// Traverse calls f(ctx, q).
-func (f TraverseAccountProject) Traverse(ctx context.Context, q ent.Query) error {
-	if q, ok := q.(*ent.AccountProjectQuery); ok {
-		return f(ctx, q)
-	}
-	return fmt.Errorf("unexpected query type %T. expect *ent.AccountProjectQuery", q)
 }
 
 // The BlogsFunc type is an adapter to allow the use of ordinary function as a Querier.
@@ -376,15 +322,65 @@ func (f TraverseUser) Traverse(ctx context.Context, q ent.Query) error {
 	return fmt.Errorf("unexpected query type %T. expect *ent.UserQuery", q)
 }
 
+// The UserExperienceFunc type is an adapter to allow the use of ordinary function as a Querier.
+type UserExperienceFunc func(context.Context, *ent.UserExperienceQuery) (ent.Value, error)
+
+// Query calls f(ctx, q).
+func (f UserExperienceFunc) Query(ctx context.Context, q ent.Query) (ent.Value, error) {
+	if q, ok := q.(*ent.UserExperienceQuery); ok {
+		return f(ctx, q)
+	}
+	return nil, fmt.Errorf("unexpected query type %T. expect *ent.UserExperienceQuery", q)
+}
+
+// The TraverseUserExperience type is an adapter to allow the use of ordinary function as Traverser.
+type TraverseUserExperience func(context.Context, *ent.UserExperienceQuery) error
+
+// Intercept is a dummy implementation of Intercept that returns the next Querier in the pipeline.
+func (f TraverseUserExperience) Intercept(next ent.Querier) ent.Querier {
+	return next
+}
+
+// Traverse calls f(ctx, q).
+func (f TraverseUserExperience) Traverse(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.UserExperienceQuery); ok {
+		return f(ctx, q)
+	}
+	return fmt.Errorf("unexpected query type %T. expect *ent.UserExperienceQuery", q)
+}
+
+// The UserProjectFunc type is an adapter to allow the use of ordinary function as a Querier.
+type UserProjectFunc func(context.Context, *ent.UserProjectQuery) (ent.Value, error)
+
+// Query calls f(ctx, q).
+func (f UserProjectFunc) Query(ctx context.Context, q ent.Query) (ent.Value, error) {
+	if q, ok := q.(*ent.UserProjectQuery); ok {
+		return f(ctx, q)
+	}
+	return nil, fmt.Errorf("unexpected query type %T. expect *ent.UserProjectQuery", q)
+}
+
+// The TraverseUserProject type is an adapter to allow the use of ordinary function as Traverser.
+type TraverseUserProject func(context.Context, *ent.UserProjectQuery) error
+
+// Intercept is a dummy implementation of Intercept that returns the next Querier in the pipeline.
+func (f TraverseUserProject) Intercept(next ent.Querier) ent.Querier {
+	return next
+}
+
+// Traverse calls f(ctx, q).
+func (f TraverseUserProject) Traverse(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.UserProjectQuery); ok {
+		return f(ctx, q)
+	}
+	return fmt.Errorf("unexpected query type %T. expect *ent.UserProjectQuery", q)
+}
+
 // NewQuery returns the generic Query interface for the given typed query.
 func NewQuery(q ent.Query) (Query, error) {
 	switch q := q.(type) {
 	case *ent.AccountQuery:
 		return &query[*ent.AccountQuery, predicate.Account, account.OrderOption]{typ: ent.TypeAccount, tq: q}, nil
-	case *ent.AccountExperienceQuery:
-		return &query[*ent.AccountExperienceQuery, predicate.AccountExperience, accountexperience.OrderOption]{typ: ent.TypeAccountExperience, tq: q}, nil
-	case *ent.AccountProjectQuery:
-		return &query[*ent.AccountProjectQuery, predicate.AccountProject, accountproject.OrderOption]{typ: ent.TypeAccountProject, tq: q}, nil
 	case *ent.BlogsQuery:
 		return &query[*ent.BlogsQuery, predicate.Blogs, blogs.OrderOption]{typ: ent.TypeBlogs, tq: q}, nil
 	case *ent.BlogsCommentQuery:
@@ -401,6 +397,10 @@ func NewQuery(q ent.Query) (Query, error) {
 		return &query[*ent.TravelExtendQuery, predicate.TravelExtend, travelextend.OrderOption]{typ: ent.TypeTravelExtend, tq: q}, nil
 	case *ent.UserQuery:
 		return &query[*ent.UserQuery, predicate.User, user.OrderOption]{typ: ent.TypeUser, tq: q}, nil
+	case *ent.UserExperienceQuery:
+		return &query[*ent.UserExperienceQuery, predicate.UserExperience, userexperience.OrderOption]{typ: ent.TypeUserExperience, tq: q}, nil
+	case *ent.UserProjectQuery:
+		return &query[*ent.UserProjectQuery, predicate.UserProject, userproject.OrderOption]{typ: ent.TypeUserProject, tq: q}, nil
 	default:
 		return nil, fmt.Errorf("unknown query type %T", q)
 	}

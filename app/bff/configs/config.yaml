@@ -1,9 +1,9 @@
 server:
   http:
-    addr: 0.0.0.0:7999
+    addr: 0.0.0.0:1000
     timeout: 1s
   grpc:
-    addr: 0.0.0.0:8999
+    addr: 0.0.0.0:1001
     timeout: 1s
 data:
   database:

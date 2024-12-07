@@ -3,7 +3,7 @@
 package ent
 
 import (
-	"blog/internal/ent/accountexperience"
+	"blog/internal/ent/userexperience"
 	"encoding/json"
 	"fmt"
 	"strings"
@@ -13,7 +13,7 @@ import (
 )
 
 // 经历表
-type AccountExperience struct {
+type UserExperience struct {
 	config `json:"-"`
 	// ID of the ent.
 	// ID
@@ -54,15 +54,15 @@ type AccountExperience struct {
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
-func (*AccountExperience) scanValues(columns []string) ([]any, error) {
+func (*UserExperience) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case accountexperience.FieldSkills:
+		case userexperience.FieldSkills:
 			values[i] = new([]byte)
-		case accountexperience.FieldID, accountexperience.FieldCreatedAt, accountexperience.FieldCreatedBy, accountexperience.FieldUpdatedAt, accountexperience.FieldUpdatedBy, accountexperience.FieldDeletedAt, accountexperience.FieldDeletedBy, accountexperience.FieldUserID, accountexperience.FieldStart, accountexperience.FieldEnd:
+		case userexperience.FieldID, userexperience.FieldCreatedAt, userexperience.FieldCreatedBy, userexperience.FieldUpdatedAt, userexperience.FieldUpdatedBy, userexperience.FieldDeletedAt, userexperience.FieldDeletedBy, userexperience.FieldUserID, userexperience.FieldStart, userexperience.FieldEnd:
 			values[i] = new(sql.NullInt64)
-		case accountexperience.FieldCompany, accountexperience.FieldRole, accountexperience.FieldLocation, accountexperience.FieldDescription, accountexperience.FieldResponsibilities, accountexperience.FieldAchievements:
+		case userexperience.FieldCompany, userexperience.FieldRole, userexperience.FieldLocation, userexperience.FieldDescription, userexperience.FieldResponsibilities, userexperience.FieldAchievements:
 			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -72,203 +72,203 @@ func (*AccountExperience) scanValues(columns []string) ([]any, error) {
 }
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
-// to the AccountExperience fields.
-func (ae *AccountExperience) assignValues(columns []string, values []any) error {
+// to the UserExperience fields.
+func (ue *UserExperience) assignValues(columns []string, values []any) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
 	for i := range columns {
 		switch columns[i] {
-		case accountexperience.FieldID:
+		case userexperience.FieldID:
 			value, ok := values[i].(*sql.NullInt64)
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			ae.ID = int(value.Int64)
-		case accountexperience.FieldCreatedAt:
+			ue.ID = int(value.Int64)
+		case userexperience.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field created_at", values[i])
 			} else if value.Valid {
-				ae.CreatedAt = value.Int64
+				ue.CreatedAt = value.Int64
 			}
-		case accountexperience.FieldCreatedBy:
+		case userexperience.FieldCreatedBy:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field created_by", values[i])
 			} else if value.Valid {
-				ae.CreatedBy = value.Int64
+				ue.CreatedBy = value.Int64
 			}
-		case accountexperience.FieldUpdatedAt:
+		case userexperience.FieldUpdatedAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
 			} else if value.Valid {
-				ae.UpdatedAt = value.Int64
+				ue.UpdatedAt = value.Int64
 			}
-		case accountexperience.FieldUpdatedBy:
+		case userexperience.FieldUpdatedBy:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field updated_by", values[i])
 			} else if value.Valid {
-				ae.UpdatedBy = value.Int64
+				ue.UpdatedBy = value.Int64
 			}
-		case accountexperience.FieldDeletedAt:
+		case userexperience.FieldDeletedAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field deleted_at", values[i])
 			} else if value.Valid {
-				ae.DeletedAt = value.Int64
+				ue.DeletedAt = value.Int64
 			}
-		case accountexperience.FieldDeletedBy:
+		case userexperience.FieldDeletedBy:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field deleted_by", values[i])
 			} else if value.Valid {
-				ae.DeletedBy = value.Int64
+				ue.DeletedBy = value.Int64
 			}
-		case accountexperience.FieldUserID:
+		case userexperience.FieldUserID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field user_id", values[i])
 			} else if value.Valid {
-				ae.UserID = int(value.Int64)
+				ue.UserID = int(value.Int64)
 			}
-		case accountexperience.FieldCompany:
+		case userexperience.FieldCompany:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field company", values[i])
 			} else if value.Valid {
-				ae.Company = value.String
+				ue.Company = value.String
 			}
-		case accountexperience.FieldRole:
+		case userexperience.FieldRole:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field role", values[i])
 			} else if value.Valid {
-				ae.Role = value.String
+				ue.Role = value.String
 			}
-		case accountexperience.FieldLocation:
+		case userexperience.FieldLocation:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field location", values[i])
 			} else if value.Valid {
-				ae.Location = value.String
+				ue.Location = value.String
 			}
-		case accountexperience.FieldStart:
+		case userexperience.FieldStart:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field start", values[i])
 			} else if value.Valid {
-				ae.Start = value.Int64
+				ue.Start = value.Int64
 			}
-		case accountexperience.FieldEnd:
+		case userexperience.FieldEnd:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field end", values[i])
 			} else if value.Valid {
-				ae.End = value.Int64
+				ue.End = value.Int64
 			}
-		case accountexperience.FieldDescription:
+		case userexperience.FieldDescription:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field description", values[i])
 			} else if value.Valid {
-				ae.Description = value.String
+				ue.Description = value.String
 			}
-		case accountexperience.FieldResponsibilities:
+		case userexperience.FieldResponsibilities:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field responsibilities", values[i])
 			} else if value.Valid {
-				ae.Responsibilities = value.String
+				ue.Responsibilities = value.String
 			}
-		case accountexperience.FieldAchievements:
+		case userexperience.FieldAchievements:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field achievements", values[i])
 			} else if value.Valid {
-				ae.Achievements = value.String
+				ue.Achievements = value.String
 			}
-		case accountexperience.FieldSkills:
+		case userexperience.FieldSkills:
 			if value, ok := values[i].(*[]byte); !ok {
 				return fmt.Errorf("unexpected type %T for field skills", values[i])
 			} else if value != nil && len(*value) > 0 {
-				if err := json.Unmarshal(*value, &ae.Skills); err != nil {
+				if err := json.Unmarshal(*value, &ue.Skills); err != nil {
 					return fmt.Errorf("unmarshal field skills: %w", err)
 				}
 			}
 		default:
-			ae.selectValues.Set(columns[i], values[i])
+			ue.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
 }
 
-// Value returns the ent.Value that was dynamically selected and assigned to the AccountExperience.
+// Value returns the ent.Value that was dynamically selected and assigned to the UserExperience.
 // This includes values selected through modifiers, order, etc.
-func (ae *AccountExperience) Value(name string) (ent.Value, error) {
-	return ae.selectValues.Get(name)
+func (ue *UserExperience) Value(name string) (ent.Value, error) {
+	return ue.selectValues.Get(name)
 }
 
-// Update returns a builder for updating this AccountExperience.
-// Note that you need to call AccountExperience.Unwrap() before calling this method if this AccountExperience
+// Update returns a builder for updating this UserExperience.
+// Note that you need to call UserExperience.Unwrap() before calling this method if this UserExperience
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (ae *AccountExperience) Update() *AccountExperienceUpdateOne {
-	return NewAccountExperienceClient(ae.config).UpdateOne(ae)
+func (ue *UserExperience) Update() *UserExperienceUpdateOne {
+	return NewUserExperienceClient(ue.config).UpdateOne(ue)
 }
 
-// Unwrap unwraps the AccountExperience entity that was returned from a transaction after it was closed,
+// Unwrap unwraps the UserExperience entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
-func (ae *AccountExperience) Unwrap() *AccountExperience {
-	_tx, ok := ae.config.driver.(*txDriver)
+func (ue *UserExperience) Unwrap() *UserExperience {
+	_tx, ok := ue.config.driver.(*txDriver)
 	if !ok {
-		panic("ent: AccountExperience is not a transactional entity")
+		panic("ent: UserExperience is not a transactional entity")
 	}
-	ae.config.driver = _tx.drv
-	return ae
+	ue.config.driver = _tx.drv
+	return ue
 }
 
 // String implements the fmt.Stringer.
-func (ae *AccountExperience) String() string {
+func (ue *UserExperience) String() string {
 	var builder strings.Builder
-	builder.WriteString("AccountExperience(")
-	builder.WriteString(fmt.Sprintf("id=%v, ", ae.ID))
+	builder.WriteString("UserExperience(")
+	builder.WriteString(fmt.Sprintf("id=%v, ", ue.ID))
 	builder.WriteString("created_at=")
-	builder.WriteString(fmt.Sprintf("%v", ae.CreatedAt))
+	builder.WriteString(fmt.Sprintf("%v", ue.CreatedAt))
 	builder.WriteString(", ")
 	builder.WriteString("created_by=")
-	builder.WriteString(fmt.Sprintf("%v", ae.CreatedBy))
+	builder.WriteString(fmt.Sprintf("%v", ue.CreatedBy))
 	builder.WriteString(", ")
 	builder.WriteString("updated_at=")
-	builder.WriteString(fmt.Sprintf("%v", ae.UpdatedAt))
+	builder.WriteString(fmt.Sprintf("%v", ue.UpdatedAt))
 	builder.WriteString(", ")
 	builder.WriteString("updated_by=")
-	builder.WriteString(fmt.Sprintf("%v", ae.UpdatedBy))
+	builder.WriteString(fmt.Sprintf("%v", ue.UpdatedBy))
 	builder.WriteString(", ")
 	builder.WriteString("deleted_at=")
-	builder.WriteString(fmt.Sprintf("%v", ae.DeletedAt))
+	builder.WriteString(fmt.Sprintf("%v", ue.DeletedAt))
 	builder.WriteString(", ")
 	builder.WriteString("deleted_by=")
-	builder.WriteString(fmt.Sprintf("%v", ae.DeletedBy))
+	builder.WriteString(fmt.Sprintf("%v", ue.DeletedBy))
 	builder.WriteString(", ")
 	builder.WriteString("user_id=")
-	builder.WriteString(fmt.Sprintf("%v", ae.UserID))
+	builder.WriteString(fmt.Sprintf("%v", ue.UserID))
 	builder.WriteString(", ")
 	builder.WriteString("company=")
-	builder.WriteString(ae.Company)
+	builder.WriteString(ue.Company)
 	builder.WriteString(", ")
 	builder.WriteString("role=")
-	builder.WriteString(ae.Role)
+	builder.WriteString(ue.Role)
 	builder.WriteString(", ")
 	builder.WriteString("location=")
-	builder.WriteString(ae.Location)
+	builder.WriteString(ue.Location)
 	builder.WriteString(", ")
 	builder.WriteString("start=")
-	builder.WriteString(fmt.Sprintf("%v", ae.Start))
+	builder.WriteString(fmt.Sprintf("%v", ue.Start))
 	builder.WriteString(", ")
 	builder.WriteString("end=")
-	builder.WriteString(fmt.Sprintf("%v", ae.End))
+	builder.WriteString(fmt.Sprintf("%v", ue.End))
 	builder.WriteString(", ")
 	builder.WriteString("description=")
-	builder.WriteString(ae.Description)
+	builder.WriteString(ue.Description)
 	builder.WriteString(", ")
 	builder.WriteString("responsibilities=")
-	builder.WriteString(ae.Responsibilities)
+	builder.WriteString(ue.Responsibilities)
 	builder.WriteString(", ")
 	builder.WriteString("achievements=")
-	builder.WriteString(ae.Achievements)
+	builder.WriteString(ue.Achievements)
 	builder.WriteString(", ")
 	builder.WriteString("skills=")
-	builder.WriteString(fmt.Sprintf("%v", ae.Skills))
+	builder.WriteString(fmt.Sprintf("%v", ue.Skills))
 	builder.WriteByte(')')
 	return builder.String()
 }
 
-// AccountExperiences is a parsable slice of AccountExperience.
-type AccountExperiences []*AccountExperience
+// UserExperiences is a parsable slice of UserExperience.
+type UserExperiences []*UserExperience

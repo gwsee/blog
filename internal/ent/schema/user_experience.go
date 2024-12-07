@@ -9,11 +9,11 @@ import (
 	"entgo.io/ent/schema/field"
 )
 
-type AccountExperience struct {
+type UserExperience struct {
 	ent.Schema
 }
 
-func (AccountExperience) Fields() []ent.Field {
+func (UserExperience) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int("id").Unique().Positive().Comment("ID"),
 		field.Int("user_id").Comment("用户ID"),
@@ -46,15 +46,15 @@ func (AccountExperience) Fields() []ent.Field {
 		field.JSON("skills", []string{}).Comment("使用技能"),
 	}
 }
-func (AccountExperience) Mixin() []ent.Mixin {
+func (UserExperience) Mixin() []ent.Mixin {
 	return []ent.Mixin{
 		mixin.Time{},
 		mixin.SoftDelete{},
 	}
 }
-func (AccountExperience) Annotations() []schema.Annotation {
+func (UserExperience) Annotations() []schema.Annotation {
 	return []schema.Annotation{
-		entsql.Annotation{Table: "account_experience"},
+		entsql.Annotation{Table: "user_experience"},
 		entsql.WithComments(true),
 		schema.Comment("经历表"),
 	}

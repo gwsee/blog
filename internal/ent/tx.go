@@ -16,10 +16,6 @@ type Tx struct {
 	config
 	// Account is the client for interacting with the Account builders.
 	Account *AccountClient
-	// AccountExperience is the client for interacting with the AccountExperience builders.
-	AccountExperience *AccountExperienceClient
-	// AccountProject is the client for interacting with the AccountProject builders.
-	AccountProject *AccountProjectClient
 	// Blogs is the client for interacting with the Blogs builders.
 	Blogs *BlogsClient
 	// BlogsComment is the client for interacting with the BlogsComment builders.
@@ -36,6 +32,10 @@ type Tx struct {
 	TravelExtend *TravelExtendClient
 	// User is the client for interacting with the User builders.
 	User *UserClient
+	// UserExperience is the client for interacting with the UserExperience builders.
+	UserExperience *UserExperienceClient
+	// UserProject is the client for interacting with the UserProject builders.
+	UserProject *UserProjectClient
 
 	// lazily loaded.
 	client     *Client
@@ -168,8 +168,6 @@ func (tx *Tx) Client() *Client {
 
 func (tx *Tx) init() {
 	tx.Account = NewAccountClient(tx.config)
-	tx.AccountExperience = NewAccountExperienceClient(tx.config)
-	tx.AccountProject = NewAccountProjectClient(tx.config)
 	tx.Blogs = NewBlogsClient(tx.config)
 	tx.BlogsComment = NewBlogsCommentClient(tx.config)
 	tx.BlogsContent = NewBlogsContentClient(tx.config)
@@ -178,6 +176,8 @@ func (tx *Tx) init() {
 	tx.Travel = NewTravelClient(tx.config)
 	tx.TravelExtend = NewTravelExtendClient(tx.config)
 	tx.User = NewUserClient(tx.config)
+	tx.UserExperience = NewUserExperienceClient(tx.config)
+	tx.UserProject = NewUserProjectClient(tx.config)
 }
 
 // txDriver wraps the given dialect.Tx with a nop dialect.Driver implementation.

@@ -131,6 +131,26 @@ func (tc *TravelCreate) SetVideo(s string) *TravelCreate {
 	return tc
 }
 
+// SetIsHidden sets the "is_hidden" field.
+func (tc *TravelCreate) SetIsHidden(b bool) *TravelCreate {
+	tc.mutation.SetIsHidden(b)
+	return tc
+}
+
+// SetNillableIsHidden sets the "is_hidden" field if the given value is not nil.
+func (tc *TravelCreate) SetNillableIsHidden(b *bool) *TravelCreate {
+	if b != nil {
+		tc.SetIsHidden(*b)
+	}
+	return tc
+}
+
+// SetAccountID sets the "account_id" field.
+func (tc *TravelCreate) SetAccountID(i int) *TravelCreate {
+	tc.mutation.SetAccountID(i)
+	return tc
+}
+
 // SetPhotos sets the "photos" field.
 func (tc *TravelCreate) SetPhotos(s []string) *TravelCreate {
 	tc.mutation.SetPhotos(s)
@@ -226,6 +246,10 @@ func (tc *TravelCreate) defaults() error {
 		v := travel.DefaultTitle
 		tc.mutation.SetTitle(v)
 	}
+	if _, ok := tc.mutation.IsHidden(); !ok {
+		v := travel.DefaultIsHidden
+		tc.mutation.SetIsHidden(v)
+	}
 	return nil
 }
 
@@ -266,6 +290,17 @@ func (tc *TravelCreate) check() error {
 	if v, ok := tc.mutation.Video(); ok {
 		if err := travel.VideoValidator(v); err != nil {
 			return &ValidationError{Name: "video", err: fmt.Errorf(`ent: validator failed for field "Travel.video": %w`, err)}
+		}
+	}
+	if _, ok := tc.mutation.IsHidden(); !ok {
+		return &ValidationError{Name: "is_hidden", err: errors.New(`ent: missing required field "Travel.is_hidden"`)}
+	}
+	if _, ok := tc.mutation.AccountID(); !ok {
+		return &ValidationError{Name: "account_id", err: errors.New(`ent: missing required field "Travel.account_id"`)}
+	}
+	if v, ok := tc.mutation.AccountID(); ok {
+		if err := travel.AccountIDValidator(v); err != nil {
+			return &ValidationError{Name: "account_id", err: fmt.Errorf(`ent: validator failed for field "Travel.account_id": %w`, err)}
 		}
 	}
 	if _, ok := tc.mutation.Photos(); !ok {
@@ -348,6 +383,14 @@ func (tc *TravelCreate) createSpec() (*Travel, *sqlgraph.CreateSpec) {
 	if value, ok := tc.mutation.Video(); ok {
 		_spec.SetField(travel.FieldVideo, field.TypeString, value)
 		_node.Video = value
+	}
+	if value, ok := tc.mutation.IsHidden(); ok {
+		_spec.SetField(travel.FieldIsHidden, field.TypeBool, value)
+		_node.IsHidden = value
+	}
+	if value, ok := tc.mutation.AccountID(); ok {
+		_spec.SetField(travel.FieldAccountID, field.TypeInt, value)
+		_node.AccountID = value
 	}
 	if value, ok := tc.mutation.Photos(); ok {
 		_spec.SetField(travel.FieldPhotos, field.TypeJSON, value)
@@ -522,6 +565,36 @@ func (u *TravelUpsert) SetVideo(v string) *TravelUpsert {
 // UpdateVideo sets the "video" field to the value that was provided on create.
 func (u *TravelUpsert) UpdateVideo() *TravelUpsert {
 	u.SetExcluded(travel.FieldVideo)
+	return u
+}
+
+// SetIsHidden sets the "is_hidden" field.
+func (u *TravelUpsert) SetIsHidden(v bool) *TravelUpsert {
+	u.Set(travel.FieldIsHidden, v)
+	return u
+}
+
+// UpdateIsHidden sets the "is_hidden" field to the value that was provided on create.
+func (u *TravelUpsert) UpdateIsHidden() *TravelUpsert {
+	u.SetExcluded(travel.FieldIsHidden)
+	return u
+}
+
+// SetAccountID sets the "account_id" field.
+func (u *TravelUpsert) SetAccountID(v int) *TravelUpsert {
+	u.Set(travel.FieldAccountID, v)
+	return u
+}
+
+// UpdateAccountID sets the "account_id" field to the value that was provided on create.
+func (u *TravelUpsert) UpdateAccountID() *TravelUpsert {
+	u.SetExcluded(travel.FieldAccountID)
+	return u
+}
+
+// AddAccountID adds v to the "account_id" field.
+func (u *TravelUpsert) AddAccountID(v int) *TravelUpsert {
+	u.Add(travel.FieldAccountID, v)
 	return u
 }
 
@@ -768,6 +841,41 @@ func (u *TravelUpsertOne) SetVideo(v string) *TravelUpsertOne {
 func (u *TravelUpsertOne) UpdateVideo() *TravelUpsertOne {
 	return u.Update(func(s *TravelUpsert) {
 		s.UpdateVideo()
+	})
+}
+
+// SetIsHidden sets the "is_hidden" field.
+func (u *TravelUpsertOne) SetIsHidden(v bool) *TravelUpsertOne {
+	return u.Update(func(s *TravelUpsert) {
+		s.SetIsHidden(v)
+	})
+}
+
+// UpdateIsHidden sets the "is_hidden" field to the value that was provided on create.
+func (u *TravelUpsertOne) UpdateIsHidden() *TravelUpsertOne {
+	return u.Update(func(s *TravelUpsert) {
+		s.UpdateIsHidden()
+	})
+}
+
+// SetAccountID sets the "account_id" field.
+func (u *TravelUpsertOne) SetAccountID(v int) *TravelUpsertOne {
+	return u.Update(func(s *TravelUpsert) {
+		s.SetAccountID(v)
+	})
+}
+
+// AddAccountID adds v to the "account_id" field.
+func (u *TravelUpsertOne) AddAccountID(v int) *TravelUpsertOne {
+	return u.Update(func(s *TravelUpsert) {
+		s.AddAccountID(v)
+	})
+}
+
+// UpdateAccountID sets the "account_id" field to the value that was provided on create.
+func (u *TravelUpsertOne) UpdateAccountID() *TravelUpsertOne {
+	return u.Update(func(s *TravelUpsert) {
+		s.UpdateAccountID()
 	})
 }
 
@@ -1191,6 +1299,41 @@ func (u *TravelUpsertBulk) SetVideo(v string) *TravelUpsertBulk {
 func (u *TravelUpsertBulk) UpdateVideo() *TravelUpsertBulk {
 	return u.Update(func(s *TravelUpsert) {
 		s.UpdateVideo()
+	})
+}
+
+// SetIsHidden sets the "is_hidden" field.
+func (u *TravelUpsertBulk) SetIsHidden(v bool) *TravelUpsertBulk {
+	return u.Update(func(s *TravelUpsert) {
+		s.SetIsHidden(v)
+	})
+}
+
+// UpdateIsHidden sets the "is_hidden" field to the value that was provided on create.
+func (u *TravelUpsertBulk) UpdateIsHidden() *TravelUpsertBulk {
+	return u.Update(func(s *TravelUpsert) {
+		s.UpdateIsHidden()
+	})
+}
+
+// SetAccountID sets the "account_id" field.
+func (u *TravelUpsertBulk) SetAccountID(v int) *TravelUpsertBulk {
+	return u.Update(func(s *TravelUpsert) {
+		s.SetAccountID(v)
+	})
+}
+
+// AddAccountID adds v to the "account_id" field.
+func (u *TravelUpsertBulk) AddAccountID(v int) *TravelUpsertBulk {
+	return u.Update(func(s *TravelUpsert) {
+		s.AddAccountID(v)
+	})
+}
+
+// UpdateAccountID sets the "account_id" field to the value that was provided on create.
+func (u *TravelUpsertBulk) UpdateAccountID() *TravelUpsertBulk {
+	return u.Update(func(s *TravelUpsert) {
+		s.UpdateAccountID()
 	})
 }
 

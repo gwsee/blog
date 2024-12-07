@@ -3,7 +3,7 @@
 package ent
 
 import (
-	"blog/internal/ent/accountproject"
+	"blog/internal/ent/userproject"
 	"encoding/json"
 	"fmt"
 	"strings"
@@ -13,7 +13,7 @@ import (
 )
 
 // 项目表
-type AccountProject struct {
+type UserProject struct {
 	config `json:"-"`
 	// ID of the ent.
 	// ID
@@ -52,15 +52,15 @@ type AccountProject struct {
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
-func (*AccountProject) scanValues(columns []string) ([]any, error) {
+func (*UserProject) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case accountproject.FieldSkills, accountproject.FieldPhotos:
+		case userproject.FieldSkills, userproject.FieldPhotos:
 			values[i] = new([]byte)
-		case accountproject.FieldID, accountproject.FieldCreatedAt, accountproject.FieldCreatedBy, accountproject.FieldUpdatedAt, accountproject.FieldUpdatedBy, accountproject.FieldDeletedAt, accountproject.FieldDeletedBy, accountproject.FieldUserID, accountproject.FieldExperienceID, accountproject.FieldStart, accountproject.FieldEnd:
+		case userproject.FieldID, userproject.FieldCreatedAt, userproject.FieldCreatedBy, userproject.FieldUpdatedAt, userproject.FieldUpdatedBy, userproject.FieldDeletedAt, userproject.FieldDeletedBy, userproject.FieldUserID, userproject.FieldExperienceID, userproject.FieldStart, userproject.FieldEnd:
 			values[i] = new(sql.NullInt64)
-		case accountproject.FieldTitle, accountproject.FieldDescription, accountproject.FieldLink:
+		case userproject.FieldTitle, userproject.FieldDescription, userproject.FieldLink:
 			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -70,196 +70,196 @@ func (*AccountProject) scanValues(columns []string) ([]any, error) {
 }
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
-// to the AccountProject fields.
-func (ap *AccountProject) assignValues(columns []string, values []any) error {
+// to the UserProject fields.
+func (up *UserProject) assignValues(columns []string, values []any) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
 	for i := range columns {
 		switch columns[i] {
-		case accountproject.FieldID:
+		case userproject.FieldID:
 			value, ok := values[i].(*sql.NullInt64)
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			ap.ID = int(value.Int64)
-		case accountproject.FieldCreatedAt:
+			up.ID = int(value.Int64)
+		case userproject.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field created_at", values[i])
 			} else if value.Valid {
-				ap.CreatedAt = value.Int64
+				up.CreatedAt = value.Int64
 			}
-		case accountproject.FieldCreatedBy:
+		case userproject.FieldCreatedBy:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field created_by", values[i])
 			} else if value.Valid {
-				ap.CreatedBy = value.Int64
+				up.CreatedBy = value.Int64
 			}
-		case accountproject.FieldUpdatedAt:
+		case userproject.FieldUpdatedAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
 			} else if value.Valid {
-				ap.UpdatedAt = value.Int64
+				up.UpdatedAt = value.Int64
 			}
-		case accountproject.FieldUpdatedBy:
+		case userproject.FieldUpdatedBy:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field updated_by", values[i])
 			} else if value.Valid {
-				ap.UpdatedBy = value.Int64
+				up.UpdatedBy = value.Int64
 			}
-		case accountproject.FieldDeletedAt:
+		case userproject.FieldDeletedAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field deleted_at", values[i])
 			} else if value.Valid {
-				ap.DeletedAt = value.Int64
+				up.DeletedAt = value.Int64
 			}
-		case accountproject.FieldDeletedBy:
+		case userproject.FieldDeletedBy:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field deleted_by", values[i])
 			} else if value.Valid {
-				ap.DeletedBy = value.Int64
+				up.DeletedBy = value.Int64
 			}
-		case accountproject.FieldUserID:
+		case userproject.FieldUserID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field user_id", values[i])
 			} else if value.Valid {
-				ap.UserID = int(value.Int64)
+				up.UserID = int(value.Int64)
 			}
-		case accountproject.FieldExperienceID:
+		case userproject.FieldExperienceID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field experience_id", values[i])
 			} else if value.Valid {
-				ap.ExperienceID = int(value.Int64)
+				up.ExperienceID = int(value.Int64)
 			}
-		case accountproject.FieldTitle:
+		case userproject.FieldTitle:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field title", values[i])
 			} else if value.Valid {
-				ap.Title = value.String
+				up.Title = value.String
 			}
-		case accountproject.FieldDescription:
+		case userproject.FieldDescription:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field description", values[i])
 			} else if value.Valid {
-				ap.Description = value.String
+				up.Description = value.String
 			}
-		case accountproject.FieldSkills:
+		case userproject.FieldSkills:
 			if value, ok := values[i].(*[]byte); !ok {
 				return fmt.Errorf("unexpected type %T for field skills", values[i])
 			} else if value != nil && len(*value) > 0 {
-				if err := json.Unmarshal(*value, &ap.Skills); err != nil {
+				if err := json.Unmarshal(*value, &up.Skills); err != nil {
 					return fmt.Errorf("unmarshal field skills: %w", err)
 				}
 			}
-		case accountproject.FieldStart:
+		case userproject.FieldStart:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field start", values[i])
 			} else if value.Valid {
-				ap.Start = value.Int64
+				up.Start = value.Int64
 			}
-		case accountproject.FieldEnd:
+		case userproject.FieldEnd:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field end", values[i])
 			} else if value.Valid {
-				ap.End = value.Int64
+				up.End = value.Int64
 			}
-		case accountproject.FieldLink:
+		case userproject.FieldLink:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field link", values[i])
 			} else if value.Valid {
-				ap.Link = value.String
+				up.Link = value.String
 			}
-		case accountproject.FieldPhotos:
+		case userproject.FieldPhotos:
 			if value, ok := values[i].(*[]byte); !ok {
 				return fmt.Errorf("unexpected type %T for field photos", values[i])
 			} else if value != nil && len(*value) > 0 {
-				if err := json.Unmarshal(*value, &ap.Photos); err != nil {
+				if err := json.Unmarshal(*value, &up.Photos); err != nil {
 					return fmt.Errorf("unmarshal field photos: %w", err)
 				}
 			}
 		default:
-			ap.selectValues.Set(columns[i], values[i])
+			up.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
 }
 
-// Value returns the ent.Value that was dynamically selected and assigned to the AccountProject.
+// Value returns the ent.Value that was dynamically selected and assigned to the UserProject.
 // This includes values selected through modifiers, order, etc.
-func (ap *AccountProject) Value(name string) (ent.Value, error) {
-	return ap.selectValues.Get(name)
+func (up *UserProject) Value(name string) (ent.Value, error) {
+	return up.selectValues.Get(name)
 }
 
-// Update returns a builder for updating this AccountProject.
-// Note that you need to call AccountProject.Unwrap() before calling this method if this AccountProject
+// Update returns a builder for updating this UserProject.
+// Note that you need to call UserProject.Unwrap() before calling this method if this UserProject
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (ap *AccountProject) Update() *AccountProjectUpdateOne {
-	return NewAccountProjectClient(ap.config).UpdateOne(ap)
+func (up *UserProject) Update() *UserProjectUpdateOne {
+	return NewUserProjectClient(up.config).UpdateOne(up)
 }
 
-// Unwrap unwraps the AccountProject entity that was returned from a transaction after it was closed,
+// Unwrap unwraps the UserProject entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
-func (ap *AccountProject) Unwrap() *AccountProject {
-	_tx, ok := ap.config.driver.(*txDriver)
+func (up *UserProject) Unwrap() *UserProject {
+	_tx, ok := up.config.driver.(*txDriver)
 	if !ok {
-		panic("ent: AccountProject is not a transactional entity")
+		panic("ent: UserProject is not a transactional entity")
 	}
-	ap.config.driver = _tx.drv
-	return ap
+	up.config.driver = _tx.drv
+	return up
 }
 
 // String implements the fmt.Stringer.
-func (ap *AccountProject) String() string {
+func (up *UserProject) String() string {
 	var builder strings.Builder
-	builder.WriteString("AccountProject(")
-	builder.WriteString(fmt.Sprintf("id=%v, ", ap.ID))
+	builder.WriteString("UserProject(")
+	builder.WriteString(fmt.Sprintf("id=%v, ", up.ID))
 	builder.WriteString("created_at=")
-	builder.WriteString(fmt.Sprintf("%v", ap.CreatedAt))
+	builder.WriteString(fmt.Sprintf("%v", up.CreatedAt))
 	builder.WriteString(", ")
 	builder.WriteString("created_by=")
-	builder.WriteString(fmt.Sprintf("%v", ap.CreatedBy))
+	builder.WriteString(fmt.Sprintf("%v", up.CreatedBy))
 	builder.WriteString(", ")
 	builder.WriteString("updated_at=")
-	builder.WriteString(fmt.Sprintf("%v", ap.UpdatedAt))
+	builder.WriteString(fmt.Sprintf("%v", up.UpdatedAt))
 	builder.WriteString(", ")
 	builder.WriteString("updated_by=")
-	builder.WriteString(fmt.Sprintf("%v", ap.UpdatedBy))
+	builder.WriteString(fmt.Sprintf("%v", up.UpdatedBy))
 	builder.WriteString(", ")
 	builder.WriteString("deleted_at=")
-	builder.WriteString(fmt.Sprintf("%v", ap.DeletedAt))
+	builder.WriteString(fmt.Sprintf("%v", up.DeletedAt))
 	builder.WriteString(", ")
 	builder.WriteString("deleted_by=")
-	builder.WriteString(fmt.Sprintf("%v", ap.DeletedBy))
+	builder.WriteString(fmt.Sprintf("%v", up.DeletedBy))
 	builder.WriteString(", ")
 	builder.WriteString("user_id=")
-	builder.WriteString(fmt.Sprintf("%v", ap.UserID))
+	builder.WriteString(fmt.Sprintf("%v", up.UserID))
 	builder.WriteString(", ")
 	builder.WriteString("experience_id=")
-	builder.WriteString(fmt.Sprintf("%v", ap.ExperienceID))
+	builder.WriteString(fmt.Sprintf("%v", up.ExperienceID))
 	builder.WriteString(", ")
 	builder.WriteString("title=")
-	builder.WriteString(ap.Title)
+	builder.WriteString(up.Title)
 	builder.WriteString(", ")
 	builder.WriteString("description=")
-	builder.WriteString(ap.Description)
+	builder.WriteString(up.Description)
 	builder.WriteString(", ")
 	builder.WriteString("skills=")
-	builder.WriteString(fmt.Sprintf("%v", ap.Skills))
+	builder.WriteString(fmt.Sprintf("%v", up.Skills))
 	builder.WriteString(", ")
 	builder.WriteString("start=")
-	builder.WriteString(fmt.Sprintf("%v", ap.Start))
+	builder.WriteString(fmt.Sprintf("%v", up.Start))
 	builder.WriteString(", ")
 	builder.WriteString("end=")
-	builder.WriteString(fmt.Sprintf("%v", ap.End))
+	builder.WriteString(fmt.Sprintf("%v", up.End))
 	builder.WriteString(", ")
 	builder.WriteString("link=")
-	builder.WriteString(ap.Link)
+	builder.WriteString(up.Link)
 	builder.WriteString(", ")
 	builder.WriteString("photos=")
-	builder.WriteString(fmt.Sprintf("%v", ap.Photos))
+	builder.WriteString(fmt.Sprintf("%v", up.Photos))
 	builder.WriteByte(')')
 	return builder.String()
 }
 
-// AccountProjects is a parsable slice of AccountProject.
-type AccountProjects []*AccountProject
+// UserProjects is a parsable slice of UserProject.
+type UserProjects []*UserProject

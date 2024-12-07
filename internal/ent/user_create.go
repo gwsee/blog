@@ -119,20 +119,6 @@ func (uc *UserCreate) SetNillableName(s *string) *UserCreate {
 	return uc
 }
 
-// SetEmail sets the "email" field.
-func (uc *UserCreate) SetEmail(s string) *UserCreate {
-	uc.mutation.SetEmail(s)
-	return uc
-}
-
-// SetNillableEmail sets the "email" field if the given value is not nil.
-func (uc *UserCreate) SetNillableEmail(s *string) *UserCreate {
-	if s != nil {
-		uc.SetEmail(*s)
-	}
-	return uc
-}
-
 // SetAvatar sets the "avatar" field.
 func (uc *UserCreate) SetAvatar(s string) *UserCreate {
 	uc.mutation.SetAvatar(s)
@@ -147,6 +133,20 @@ func (uc *UserCreate) SetNillableAvatar(s *string) *UserCreate {
 	return uc
 }
 
+// SetEmail sets the "email" field.
+func (uc *UserCreate) SetEmail(s string) *UserCreate {
+	uc.mutation.SetEmail(s)
+	return uc
+}
+
+// SetNillableEmail sets the "email" field if the given value is not nil.
+func (uc *UserCreate) SetNillableEmail(s *string) *UserCreate {
+	if s != nil {
+		uc.SetEmail(*s)
+	}
+	return uc
+}
+
 // SetProfessional sets the "professional" field.
 func (uc *UserCreate) SetProfessional(s string) *UserCreate {
 	uc.mutation.SetProfessional(s)
@@ -157,6 +157,20 @@ func (uc *UserCreate) SetProfessional(s string) *UserCreate {
 func (uc *UserCreate) SetNillableProfessional(s *string) *UserCreate {
 	if s != nil {
 		uc.SetProfessional(*s)
+	}
+	return uc
+}
+
+// SetAddress sets the "address" field.
+func (uc *UserCreate) SetAddress(s string) *UserCreate {
+	uc.mutation.SetAddress(s)
+	return uc
+}
+
+// SetNillableAddress sets the "address" field if the given value is not nil.
+func (uc *UserCreate) SetNillableAddress(s *string) *UserCreate {
+	if s != nil {
+		uc.SetAddress(*s)
 	}
 	return uc
 }
@@ -244,17 +258,21 @@ func (uc *UserCreate) defaults() error {
 		v := user.DefaultName
 		uc.mutation.SetName(v)
 	}
-	if _, ok := uc.mutation.Email(); !ok {
-		v := user.DefaultEmail
-		uc.mutation.SetEmail(v)
-	}
 	if _, ok := uc.mutation.Avatar(); !ok {
 		v := user.DefaultAvatar
 		uc.mutation.SetAvatar(v)
 	}
+	if _, ok := uc.mutation.Email(); !ok {
+		v := user.DefaultEmail
+		uc.mutation.SetEmail(v)
+	}
 	if _, ok := uc.mutation.Professional(); !ok {
 		v := user.DefaultProfessional
 		uc.mutation.SetProfessional(v)
+	}
+	if _, ok := uc.mutation.Address(); !ok {
+		v := user.DefaultAddress
+		uc.mutation.SetAddress(v)
 	}
 	return nil
 }
@@ -282,14 +300,17 @@ func (uc *UserCreate) check() error {
 	if _, ok := uc.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "User.name"`)}
 	}
-	if _, ok := uc.mutation.Email(); !ok {
-		return &ValidationError{Name: "email", err: errors.New(`ent: missing required field "User.email"`)}
-	}
 	if _, ok := uc.mutation.Avatar(); !ok {
 		return &ValidationError{Name: "avatar", err: errors.New(`ent: missing required field "User.avatar"`)}
 	}
+	if _, ok := uc.mutation.Email(); !ok {
+		return &ValidationError{Name: "email", err: errors.New(`ent: missing required field "User.email"`)}
+	}
 	if _, ok := uc.mutation.Professional(); !ok {
 		return &ValidationError{Name: "professional", err: errors.New(`ent: missing required field "User.professional"`)}
+	}
+	if _, ok := uc.mutation.Address(); !ok {
+		return &ValidationError{Name: "address", err: errors.New(`ent: missing required field "User.address"`)}
 	}
 	if _, ok := uc.mutation.Skills(); !ok {
 		return &ValidationError{Name: "skills", err: errors.New(`ent: missing required field "User.skills"`)}
@@ -300,6 +321,11 @@ func (uc *UserCreate) check() error {
 	if v, ok := uc.mutation.Description(); ok {
 		if err := user.DescriptionValidator(v); err != nil {
 			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "User.description": %w`, err)}
+		}
+	}
+	if v, ok := uc.mutation.ID(); ok {
+		if err := user.IDValidator(v); err != nil {
+			return &ValidationError{Name: "id", err: fmt.Errorf(`ent: validator failed for field "User.id": %w`, err)}
 		}
 	}
 	return nil
@@ -363,17 +389,21 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		_spec.SetField(user.FieldName, field.TypeString, value)
 		_node.Name = value
 	}
-	if value, ok := uc.mutation.Email(); ok {
-		_spec.SetField(user.FieldEmail, field.TypeString, value)
-		_node.Email = value
-	}
 	if value, ok := uc.mutation.Avatar(); ok {
 		_spec.SetField(user.FieldAvatar, field.TypeString, value)
 		_node.Avatar = value
 	}
+	if value, ok := uc.mutation.Email(); ok {
+		_spec.SetField(user.FieldEmail, field.TypeString, value)
+		_node.Email = value
+	}
 	if value, ok := uc.mutation.Professional(); ok {
 		_spec.SetField(user.FieldProfessional, field.TypeString, value)
 		_node.Professional = value
+	}
+	if value, ok := uc.mutation.Address(); ok {
+		_spec.SetField(user.FieldAddress, field.TypeString, value)
+		_node.Address = value
 	}
 	if value, ok := uc.mutation.Skills(); ok {
 		_spec.SetField(user.FieldSkills, field.TypeJSON, value)
@@ -519,18 +549,6 @@ func (u *UserUpsert) UpdateName() *UserUpsert {
 	return u
 }
 
-// SetEmail sets the "email" field.
-func (u *UserUpsert) SetEmail(v string) *UserUpsert {
-	u.Set(user.FieldEmail, v)
-	return u
-}
-
-// UpdateEmail sets the "email" field to the value that was provided on create.
-func (u *UserUpsert) UpdateEmail() *UserUpsert {
-	u.SetExcluded(user.FieldEmail)
-	return u
-}
-
 // SetAvatar sets the "avatar" field.
 func (u *UserUpsert) SetAvatar(v string) *UserUpsert {
 	u.Set(user.FieldAvatar, v)
@@ -543,6 +561,18 @@ func (u *UserUpsert) UpdateAvatar() *UserUpsert {
 	return u
 }
 
+// SetEmail sets the "email" field.
+func (u *UserUpsert) SetEmail(v string) *UserUpsert {
+	u.Set(user.FieldEmail, v)
+	return u
+}
+
+// UpdateEmail sets the "email" field to the value that was provided on create.
+func (u *UserUpsert) UpdateEmail() *UserUpsert {
+	u.SetExcluded(user.FieldEmail)
+	return u
+}
+
 // SetProfessional sets the "professional" field.
 func (u *UserUpsert) SetProfessional(v string) *UserUpsert {
 	u.Set(user.FieldProfessional, v)
@@ -552,6 +582,18 @@ func (u *UserUpsert) SetProfessional(v string) *UserUpsert {
 // UpdateProfessional sets the "professional" field to the value that was provided on create.
 func (u *UserUpsert) UpdateProfessional() *UserUpsert {
 	u.SetExcluded(user.FieldProfessional)
+	return u
+}
+
+// SetAddress sets the "address" field.
+func (u *UserUpsert) SetAddress(v string) *UserUpsert {
+	u.Set(user.FieldAddress, v)
+	return u
+}
+
+// UpdateAddress sets the "address" field to the value that was provided on create.
+func (u *UserUpsert) UpdateAddress() *UserUpsert {
+	u.SetExcluded(user.FieldAddress)
 	return u
 }
 
@@ -731,20 +773,6 @@ func (u *UserUpsertOne) UpdateName() *UserUpsertOne {
 	})
 }
 
-// SetEmail sets the "email" field.
-func (u *UserUpsertOne) SetEmail(v string) *UserUpsertOne {
-	return u.Update(func(s *UserUpsert) {
-		s.SetEmail(v)
-	})
-}
-
-// UpdateEmail sets the "email" field to the value that was provided on create.
-func (u *UserUpsertOne) UpdateEmail() *UserUpsertOne {
-	return u.Update(func(s *UserUpsert) {
-		s.UpdateEmail()
-	})
-}
-
 // SetAvatar sets the "avatar" field.
 func (u *UserUpsertOne) SetAvatar(v string) *UserUpsertOne {
 	return u.Update(func(s *UserUpsert) {
@@ -759,6 +787,20 @@ func (u *UserUpsertOne) UpdateAvatar() *UserUpsertOne {
 	})
 }
 
+// SetEmail sets the "email" field.
+func (u *UserUpsertOne) SetEmail(v string) *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.SetEmail(v)
+	})
+}
+
+// UpdateEmail sets the "email" field to the value that was provided on create.
+func (u *UserUpsertOne) UpdateEmail() *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdateEmail()
+	})
+}
+
 // SetProfessional sets the "professional" field.
 func (u *UserUpsertOne) SetProfessional(v string) *UserUpsertOne {
 	return u.Update(func(s *UserUpsert) {
@@ -770,6 +812,20 @@ func (u *UserUpsertOne) SetProfessional(v string) *UserUpsertOne {
 func (u *UserUpsertOne) UpdateProfessional() *UserUpsertOne {
 	return u.Update(func(s *UserUpsert) {
 		s.UpdateProfessional()
+	})
+}
+
+// SetAddress sets the "address" field.
+func (u *UserUpsertOne) SetAddress(v string) *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.SetAddress(v)
+	})
+}
+
+// UpdateAddress sets the "address" field to the value that was provided on create.
+func (u *UserUpsertOne) UpdateAddress() *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdateAddress()
 	})
 }
 
@@ -1119,20 +1175,6 @@ func (u *UserUpsertBulk) UpdateName() *UserUpsertBulk {
 	})
 }
 
-// SetEmail sets the "email" field.
-func (u *UserUpsertBulk) SetEmail(v string) *UserUpsertBulk {
-	return u.Update(func(s *UserUpsert) {
-		s.SetEmail(v)
-	})
-}
-
-// UpdateEmail sets the "email" field to the value that was provided on create.
-func (u *UserUpsertBulk) UpdateEmail() *UserUpsertBulk {
-	return u.Update(func(s *UserUpsert) {
-		s.UpdateEmail()
-	})
-}
-
 // SetAvatar sets the "avatar" field.
 func (u *UserUpsertBulk) SetAvatar(v string) *UserUpsertBulk {
 	return u.Update(func(s *UserUpsert) {
@@ -1147,6 +1189,20 @@ func (u *UserUpsertBulk) UpdateAvatar() *UserUpsertBulk {
 	})
 }
 
+// SetEmail sets the "email" field.
+func (u *UserUpsertBulk) SetEmail(v string) *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.SetEmail(v)
+	})
+}
+
+// UpdateEmail sets the "email" field to the value that was provided on create.
+func (u *UserUpsertBulk) UpdateEmail() *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdateEmail()
+	})
+}
+
 // SetProfessional sets the "professional" field.
 func (u *UserUpsertBulk) SetProfessional(v string) *UserUpsertBulk {
 	return u.Update(func(s *UserUpsert) {
@@ -1158,6 +1214,20 @@ func (u *UserUpsertBulk) SetProfessional(v string) *UserUpsertBulk {
 func (u *UserUpsertBulk) UpdateProfessional() *UserUpsertBulk {
 	return u.Update(func(s *UserUpsert) {
 		s.UpdateProfessional()
+	})
+}
+
+// SetAddress sets the "address" field.
+func (u *UserUpsertBulk) SetAddress(v string) *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.SetAddress(v)
+	})
+}
+
+// UpdateAddress sets the "address" field to the value that was provided on create.
+func (u *UserUpsertBulk) UpdateAddress() *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdateAddress()
 	})
 }
 

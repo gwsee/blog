@@ -24,6 +24,8 @@ const (
 	FieldDeletedAt = "deleted_at"
 	// FieldDeletedBy holds the string denoting the deleted_by field in the database.
 	FieldDeletedBy = "deleted_by"
+	// FieldNickname holds the string denoting the nickname field in the database.
+	FieldNickname = "nickname"
 	// FieldAccount holds the string denoting the account field in the database.
 	FieldAccount = "account"
 	// FieldPassword holds the string denoting the password field in the database.
@@ -32,8 +34,6 @@ const (
 	FieldEmail = "email"
 	// FieldDescription holds the string denoting the description field in the database.
 	FieldDescription = "description"
-	// FieldNickname holds the string denoting the nickname field in the database.
-	FieldNickname = "nickname"
 	// FieldAvatar holds the string denoting the avatar field in the database.
 	FieldAvatar = "avatar"
 	// FieldBlogNum holds the string denoting the blog_num field in the database.
@@ -53,11 +53,11 @@ var Columns = []string{
 	FieldUpdatedBy,
 	FieldDeletedAt,
 	FieldDeletedBy,
+	FieldNickname,
 	FieldAccount,
 	FieldPassword,
 	FieldEmail,
 	FieldDescription,
-	FieldNickname,
 	FieldAvatar,
 	FieldBlogNum,
 	FieldStatus,
@@ -95,6 +95,8 @@ var (
 	DefaultDeletedAt int64
 	// DefaultDeletedBy holds the default value on creation for the "deleted_by" field.
 	DefaultDeletedBy int64
+	// DefaultNickname holds the default value on creation for the "nickname" field.
+	DefaultNickname string
 	// AccountValidator is a validator for the "account" field. It is called by the builders before save.
 	AccountValidator func(string) error
 	// PasswordValidator is a validator for the "password" field. It is called by the builders before save.
@@ -103,8 +105,6 @@ var (
 	DefaultEmail string
 	// DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
 	DescriptionValidator func(string) error
-	// DefaultNickname holds the default value on creation for the "nickname" field.
-	DefaultNickname string
 	// DefaultAvatar holds the default value on creation for the "avatar" field.
 	DefaultAvatar string
 	// DefaultBlogNum holds the default value on creation for the "blog_num" field.
@@ -153,6 +153,11 @@ func ByDeletedBy(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldDeletedBy, opts...).ToFunc()
 }
 
+// ByNickname orders the results by the nickname field.
+func ByNickname(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldNickname, opts...).ToFunc()
+}
+
 // ByAccount orders the results by the account field.
 func ByAccount(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldAccount, opts...).ToFunc()
@@ -171,11 +176,6 @@ func ByEmail(opts ...sql.OrderTermOption) OrderOption {
 // ByDescription orders the results by the description field.
 func ByDescription(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldDescription, opts...).ToFunc()
-}
-
-// ByNickname orders the results by the nickname field.
-func ByNickname(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldNickname, opts...).ToFunc()
 }
 
 // ByAvatar orders the results by the avatar field.

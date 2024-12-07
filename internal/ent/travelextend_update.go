@@ -220,7 +220,20 @@ func (teu *TravelExtendUpdate) defaults() error {
 	return nil
 }
 
+// check runs all checks and user-defined validators on the builder.
+func (teu *TravelExtendUpdate) check() error {
+	if v, ok := teu.mutation.AccountID(); ok {
+		if err := travelextend.AccountIDValidator(v); err != nil {
+			return &ValidationError{Name: "account_id", err: fmt.Errorf(`ent: validator failed for field "TravelExtend.account_id": %w`, err)}
+		}
+	}
+	return nil
+}
+
 func (teu *TravelExtendUpdate) sqlSave(ctx context.Context) (n int, err error) {
+	if err := teu.check(); err != nil {
+		return n, err
+	}
 	_spec := sqlgraph.NewUpdateSpec(travelextend.Table, travelextend.Columns, sqlgraph.NewFieldSpec(travelextend.FieldID, field.TypeInt))
 	if ps := teu.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
@@ -497,7 +510,20 @@ func (teuo *TravelExtendUpdateOne) defaults() error {
 	return nil
 }
 
+// check runs all checks and user-defined validators on the builder.
+func (teuo *TravelExtendUpdateOne) check() error {
+	if v, ok := teuo.mutation.AccountID(); ok {
+		if err := travelextend.AccountIDValidator(v); err != nil {
+			return &ValidationError{Name: "account_id", err: fmt.Errorf(`ent: validator failed for field "TravelExtend.account_id": %w`, err)}
+		}
+	}
+	return nil
+}
+
 func (teuo *TravelExtendUpdateOne) sqlSave(ctx context.Context) (_node *TravelExtend, err error) {
+	if err := teuo.check(); err != nil {
+		return _node, err
+	}
 	_spec := sqlgraph.NewUpdateSpec(travelextend.Table, travelextend.Columns, sqlgraph.NewFieldSpec(travelextend.FieldID, field.TypeInt))
 	id, ok := teuo.mutation.ID()
 	if !ok {

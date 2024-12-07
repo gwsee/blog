@@ -4,6 +4,7 @@ package ent
 
 import (
 	"blog/internal/ent/blogscontent"
+	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -18,7 +19,9 @@ type BlogsContent struct {
 	// 博客ID
 	ID int `json:"id,omitempty"`
 	// 内容
-	Content      string `json:"content,omitempty"`
+	Content string `json:"content,omitempty"`
+	// 博客内容可以关联的文件
+	Files        []string `json:"files,omitempty"`
 	selectValues sql.SelectValues
 }
 
@@ -27,6 +30,8 @@ func (*BlogsContent) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
+		case blogscontent.FieldFiles:
+			values[i] = new([]byte)
 		case blogscontent.FieldID:
 			values[i] = new(sql.NullInt64)
 		case blogscontent.FieldContent:
@@ -57,6 +62,14 @@ func (bc *BlogsContent) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field content", values[i])
 			} else if value.Valid {
 				bc.Content = value.String
+			}
+		case blogscontent.FieldFiles:
+			if value, ok := values[i].(*[]byte); !ok {
+				return fmt.Errorf("unexpected type %T for field files", values[i])
+			} else if value != nil && len(*value) > 0 {
+				if err := json.Unmarshal(*value, &bc.Files); err != nil {
+					return fmt.Errorf("unmarshal field files: %w", err)
+				}
 			}
 		default:
 			bc.selectValues.Set(columns[i], values[i])
@@ -96,6 +109,9 @@ func (bc *BlogsContent) String() string {
 	builder.WriteString(fmt.Sprintf("id=%v, ", bc.ID))
 	builder.WriteString("content=")
 	builder.WriteString(bc.Content)
+	builder.WriteString(", ")
+	builder.WriteString("files=")
+	builder.WriteString(fmt.Sprintf("%v", bc.Files))
 	builder.WriteByte(')')
 	return builder.String()
 }

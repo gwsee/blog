@@ -36,6 +36,10 @@ type Travel struct {
 	Description string `json:"description,omitempty"`
 	// 旅行视频
 	Video string `json:"video,omitempty"`
+	// 是否隐藏:0否,1是
+	IsHidden bool `json:"is_hidden,omitempty"`
+	// 账户ID
+	AccountID int `json:"account_id,omitempty"`
 	// 旅行的照片
 	Photos []string `json:"photos,omitempty"`
 	// 浏览量
@@ -54,7 +58,9 @@ func (*Travel) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case travel.FieldPhotos:
 			values[i] = new([]byte)
-		case travel.FieldID, travel.FieldCreatedAt, travel.FieldCreatedBy, travel.FieldUpdatedAt, travel.FieldUpdatedBy, travel.FieldDeletedAt, travel.FieldDeletedBy, travel.FieldBrowseNum, travel.FieldThumbNum, travel.FieldCollectNum:
+		case travel.FieldIsHidden:
+			values[i] = new(sql.NullBool)
+		case travel.FieldID, travel.FieldCreatedAt, travel.FieldCreatedBy, travel.FieldUpdatedAt, travel.FieldUpdatedBy, travel.FieldDeletedAt, travel.FieldDeletedBy, travel.FieldAccountID, travel.FieldBrowseNum, travel.FieldThumbNum, travel.FieldCollectNum:
 			values[i] = new(sql.NullInt64)
 		case travel.FieldTitle, travel.FieldDescription, travel.FieldVideo:
 			values[i] = new(sql.NullString)
@@ -132,6 +138,18 @@ func (t *Travel) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field video", values[i])
 			} else if value.Valid {
 				t.Video = value.String
+			}
+		case travel.FieldIsHidden:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field is_hidden", values[i])
+			} else if value.Valid {
+				t.IsHidden = value.Bool
+			}
+		case travel.FieldAccountID:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field account_id", values[i])
+			} else if value.Valid {
+				t.AccountID = int(value.Int64)
 			}
 		case travel.FieldPhotos:
 			if value, ok := values[i].(*[]byte); !ok {
@@ -221,6 +239,12 @@ func (t *Travel) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("video=")
 	builder.WriteString(t.Video)
+	builder.WriteString(", ")
+	builder.WriteString("is_hidden=")
+	builder.WriteString(fmt.Sprintf("%v", t.IsHidden))
+	builder.WriteString(", ")
+	builder.WriteString("account_id=")
+	builder.WriteString(fmt.Sprintf("%v", t.AccountID))
 	builder.WriteString(", ")
 	builder.WriteString("photos=")
 	builder.WriteString(fmt.Sprintf("%v", t.Photos))

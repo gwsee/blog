@@ -14,38 +14,9 @@
           <a-form-item name="name" label="姓名" :rules="[{ required: true }]">
             <a-input v-model:value="formState.name" />
           </a-form-item>
-          <a-form-item name="nickname" label="昵称" :rules="[{ required: true }]">
-            <a-input v-model:value="formState.nickname" />
-          </a-form-item>
-          <a-form-item name="title" label="职称" :rules="[{ required: true }]">
-            <a-input v-model:value="formState.title" />
-          </a-form-item>
-
-          <a-form-item name="bio" label="个人经历" :rules="[{ required: true }]">
-            <a-textarea v-model:value="formState.bio" :rows="4" />
-          </a-form-item>
-
           <a-form-item name="email" label="邮箱" :rules="[{ required: true, type: 'email' }]">
             <a-input v-model:value="formState.email" />
           </a-form-item>
-
-          <a-form-item name="location" label="地址">
-            <a-input v-model:value="formState.location" />
-          </a-form-item>
-
-          <a-form-item name="skills" label="技能">
-            <a-select
-                v-model:value="formState.skills"
-                mode="tags"
-                style="width: 100%"
-                placeholder="Enter skills"
-            >
-              <a-select-option v-for="skill in predefinedSkills" :key="skill" :value="skill">
-                {{ skill }}
-              </a-select-option>
-            </a-select>
-          </a-form-item>
-
           <a-form-item name="avatar" label="头像">
             <a-upload
                 v-model:fileList="fileList"
@@ -64,6 +35,29 @@
               </div>
             </a-upload>
           </a-form-item>
+
+          <a-form-item name="professional" label="职称" :rules="[{ required: true }]">
+            <a-input v-model:value="formState.professional" />
+          </a-form-item>
+          <a-form-item name="skills" label="技能">
+            <a-select
+                v-model:value="formState.skills"
+                mode="tags"
+                style="width: 100%"
+                placeholder="Enter skills"
+            >
+              <a-select-option v-for="skill in predefinedSkills" :key="skill" :value="skill">
+                {{ skill }}
+              </a-select-option>
+            </a-select>
+          </a-form-item>
+          <a-form-item name="description" label="个人经历" :rules="[{ required: true }]">
+            <a-textarea v-model:value="formState.description" :rows="4" />
+          </a-form-item>
+          <a-form-item name="address" label="地址">
+            <a-input v-model:value="formState.address" />
+          </a-form-item>
+
         </a-card>
         <a-card title="工作经历">
           <template #extra>

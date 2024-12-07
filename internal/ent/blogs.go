@@ -41,9 +41,7 @@ type Blogs struct {
 	// 标签
 	Tags []string `json:"tags,omitempty"`
 	// 封面
-	Cover string `json:"cover,omitempty"`
-	// 博客内容可以关联的文件
-	Files        []string `json:"files,omitempty"`
+	Cover        string `json:"cover,omitempty"`
 	selectValues sql.SelectValues
 }
 
@@ -52,7 +50,7 @@ func (*Blogs) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case blogs.FieldTags, blogs.FieldFiles:
+		case blogs.FieldTags:
 			values[i] = new([]byte)
 		case blogs.FieldID, blogs.FieldCreatedAt, blogs.FieldCreatedBy, blogs.FieldUpdatedAt, blogs.FieldUpdatedBy, blogs.FieldDeletedAt, blogs.FieldDeletedBy, blogs.FieldAccountID, blogs.FieldIsHidden:
 			values[i] = new(sql.NullInt64)
@@ -153,14 +151,6 @@ func (b *Blogs) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				b.Cover = value.String
 			}
-		case blogs.FieldFiles:
-			if value, ok := values[i].(*[]byte); !ok {
-				return fmt.Errorf("unexpected type %T for field files", values[i])
-			} else if value != nil && len(*value) > 0 {
-				if err := json.Unmarshal(*value, &b.Files); err != nil {
-					return fmt.Errorf("unmarshal field files: %w", err)
-				}
-			}
 		default:
 			b.selectValues.Set(columns[i], values[i])
 		}
@@ -232,9 +222,6 @@ func (b *Blogs) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("cover=")
 	builder.WriteString(b.Cover)
-	builder.WriteString(", ")
-	builder.WriteString("files=")
-	builder.WriteString(fmt.Sprintf("%v", b.Files))
 	builder.WriteByte(')')
 	return builder.String()
 }

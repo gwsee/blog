@@ -105,6 +105,20 @@ func (ac *AccountCreate) SetNillableDeletedBy(i *int64) *AccountCreate {
 	return ac
 }
 
+// SetNickname sets the "nickname" field.
+func (ac *AccountCreate) SetNickname(s string) *AccountCreate {
+	ac.mutation.SetNickname(s)
+	return ac
+}
+
+// SetNillableNickname sets the "nickname" field if the given value is not nil.
+func (ac *AccountCreate) SetNillableNickname(s *string) *AccountCreate {
+	if s != nil {
+		ac.SetNickname(*s)
+	}
+	return ac
+}
+
 // SetAccount sets the "account" field.
 func (ac *AccountCreate) SetAccount(s string) *AccountCreate {
 	ac.mutation.SetAccount(s)
@@ -134,20 +148,6 @@ func (ac *AccountCreate) SetNillableEmail(s *string) *AccountCreate {
 // SetDescription sets the "description" field.
 func (ac *AccountCreate) SetDescription(s string) *AccountCreate {
 	ac.mutation.SetDescription(s)
-	return ac
-}
-
-// SetNickname sets the "nickname" field.
-func (ac *AccountCreate) SetNickname(s string) *AccountCreate {
-	ac.mutation.SetNickname(s)
-	return ac
-}
-
-// SetNillableNickname sets the "nickname" field if the given value is not nil.
-func (ac *AccountCreate) SetNillableNickname(s *string) *AccountCreate {
-	if s != nil {
-		ac.SetNickname(*s)
-	}
 	return ac
 }
 
@@ -260,13 +260,13 @@ func (ac *AccountCreate) defaults() error {
 		v := account.DefaultDeletedBy
 		ac.mutation.SetDeletedBy(v)
 	}
-	if _, ok := ac.mutation.Email(); !ok {
-		v := account.DefaultEmail
-		ac.mutation.SetEmail(v)
-	}
 	if _, ok := ac.mutation.Nickname(); !ok {
 		v := account.DefaultNickname
 		ac.mutation.SetNickname(v)
+	}
+	if _, ok := ac.mutation.Email(); !ok {
+		v := account.DefaultEmail
+		ac.mutation.SetEmail(v)
 	}
 	if _, ok := ac.mutation.Avatar(); !ok {
 		v := account.DefaultAvatar
@@ -303,6 +303,9 @@ func (ac *AccountCreate) check() error {
 	if _, ok := ac.mutation.DeletedBy(); !ok {
 		return &ValidationError{Name: "deleted_by", err: errors.New(`ent: missing required field "Account.deleted_by"`)}
 	}
+	if _, ok := ac.mutation.Nickname(); !ok {
+		return &ValidationError{Name: "nickname", err: errors.New(`ent: missing required field "Account.nickname"`)}
+	}
 	if _, ok := ac.mutation.Account(); !ok {
 		return &ValidationError{Name: "account", err: errors.New(`ent: missing required field "Account.account"`)}
 	}
@@ -329,9 +332,6 @@ func (ac *AccountCreate) check() error {
 		if err := account.DescriptionValidator(v); err != nil {
 			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Account.description": %w`, err)}
 		}
-	}
-	if _, ok := ac.mutation.Nickname(); !ok {
-		return &ValidationError{Name: "nickname", err: errors.New(`ent: missing required field "Account.nickname"`)}
 	}
 	if _, ok := ac.mutation.Avatar(); !ok {
 		return &ValidationError{Name: "avatar", err: errors.New(`ent: missing required field "Account.avatar"`)}
@@ -404,6 +404,10 @@ func (ac *AccountCreate) createSpec() (*Account, *sqlgraph.CreateSpec) {
 		_spec.SetField(account.FieldDeletedBy, field.TypeInt64, value)
 		_node.DeletedBy = value
 	}
+	if value, ok := ac.mutation.Nickname(); ok {
+		_spec.SetField(account.FieldNickname, field.TypeString, value)
+		_node.Nickname = value
+	}
 	if value, ok := ac.mutation.Account(); ok {
 		_spec.SetField(account.FieldAccount, field.TypeString, value)
 		_node.Account = value
@@ -419,10 +423,6 @@ func (ac *AccountCreate) createSpec() (*Account, *sqlgraph.CreateSpec) {
 	if value, ok := ac.mutation.Description(); ok {
 		_spec.SetField(account.FieldDescription, field.TypeString, value)
 		_node.Description = value
-	}
-	if value, ok := ac.mutation.Nickname(); ok {
-		_spec.SetField(account.FieldNickname, field.TypeString, value)
-		_node.Nickname = value
 	}
 	if value, ok := ac.mutation.Avatar(); ok {
 		_spec.SetField(account.FieldAvatar, field.TypeString, value)
@@ -560,6 +560,18 @@ func (u *AccountUpsert) AddDeletedBy(v int64) *AccountUpsert {
 	return u
 }
 
+// SetNickname sets the "nickname" field.
+func (u *AccountUpsert) SetNickname(v string) *AccountUpsert {
+	u.Set(account.FieldNickname, v)
+	return u
+}
+
+// UpdateNickname sets the "nickname" field to the value that was provided on create.
+func (u *AccountUpsert) UpdateNickname() *AccountUpsert {
+	u.SetExcluded(account.FieldNickname)
+	return u
+}
+
 // SetAccount sets the "account" field.
 func (u *AccountUpsert) SetAccount(v string) *AccountUpsert {
 	u.Set(account.FieldAccount, v)
@@ -605,18 +617,6 @@ func (u *AccountUpsert) SetDescription(v string) *AccountUpsert {
 // UpdateDescription sets the "description" field to the value that was provided on create.
 func (u *AccountUpsert) UpdateDescription() *AccountUpsert {
 	u.SetExcluded(account.FieldDescription)
-	return u
-}
-
-// SetNickname sets the "nickname" field.
-func (u *AccountUpsert) SetNickname(v string) *AccountUpsert {
-	u.Set(account.FieldNickname, v)
-	return u
-}
-
-// UpdateNickname sets the "nickname" field to the value that was provided on create.
-func (u *AccountUpsert) UpdateNickname() *AccountUpsert {
-	u.SetExcluded(account.FieldNickname)
 	return u
 }
 
@@ -806,6 +806,20 @@ func (u *AccountUpsertOne) UpdateDeletedBy() *AccountUpsertOne {
 	})
 }
 
+// SetNickname sets the "nickname" field.
+func (u *AccountUpsertOne) SetNickname(v string) *AccountUpsertOne {
+	return u.Update(func(s *AccountUpsert) {
+		s.SetNickname(v)
+	})
+}
+
+// UpdateNickname sets the "nickname" field to the value that was provided on create.
+func (u *AccountUpsertOne) UpdateNickname() *AccountUpsertOne {
+	return u.Update(func(s *AccountUpsert) {
+		s.UpdateNickname()
+	})
+}
+
 // SetAccount sets the "account" field.
 func (u *AccountUpsertOne) SetAccount(v string) *AccountUpsertOne {
 	return u.Update(func(s *AccountUpsert) {
@@ -859,20 +873,6 @@ func (u *AccountUpsertOne) SetDescription(v string) *AccountUpsertOne {
 func (u *AccountUpsertOne) UpdateDescription() *AccountUpsertOne {
 	return u.Update(func(s *AccountUpsert) {
 		s.UpdateDescription()
-	})
-}
-
-// SetNickname sets the "nickname" field.
-func (u *AccountUpsertOne) SetNickname(v string) *AccountUpsertOne {
-	return u.Update(func(s *AccountUpsert) {
-		s.SetNickname(v)
-	})
-}
-
-// UpdateNickname sets the "nickname" field to the value that was provided on create.
-func (u *AccountUpsertOne) UpdateNickname() *AccountUpsertOne {
-	return u.Update(func(s *AccountUpsert) {
-		s.UpdateNickname()
 	})
 }
 
@@ -1236,6 +1236,20 @@ func (u *AccountUpsertBulk) UpdateDeletedBy() *AccountUpsertBulk {
 	})
 }
 
+// SetNickname sets the "nickname" field.
+func (u *AccountUpsertBulk) SetNickname(v string) *AccountUpsertBulk {
+	return u.Update(func(s *AccountUpsert) {
+		s.SetNickname(v)
+	})
+}
+
+// UpdateNickname sets the "nickname" field to the value that was provided on create.
+func (u *AccountUpsertBulk) UpdateNickname() *AccountUpsertBulk {
+	return u.Update(func(s *AccountUpsert) {
+		s.UpdateNickname()
+	})
+}
+
 // SetAccount sets the "account" field.
 func (u *AccountUpsertBulk) SetAccount(v string) *AccountUpsertBulk {
 	return u.Update(func(s *AccountUpsert) {
@@ -1289,20 +1303,6 @@ func (u *AccountUpsertBulk) SetDescription(v string) *AccountUpsertBulk {
 func (u *AccountUpsertBulk) UpdateDescription() *AccountUpsertBulk {
 	return u.Update(func(s *AccountUpsert) {
 		s.UpdateDescription()
-	})
-}
-
-// SetNickname sets the "nickname" field.
-func (u *AccountUpsertBulk) SetNickname(v string) *AccountUpsertBulk {
-	return u.Update(func(s *AccountUpsert) {
-		s.SetNickname(v)
-	})
-}
-
-// UpdateNickname sets the "nickname" field to the value that was provided on create.
-func (u *AccountUpsertBulk) UpdateNickname() *AccountUpsertBulk {
-	return u.Update(func(s *AccountUpsert) {
-		s.UpdateNickname()
 	})
 }
 

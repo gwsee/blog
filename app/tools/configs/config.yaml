@@ -1,9 +1,9 @@
 server:
   http:
-    addr: 0.0.0.0:7999
+    addr: 0.0.0.0:998
     timeout: 1s
   grpc:
-    addr: 0.0.0.0:8999
+    addr: 0.0.0.0:999
     timeout: 1s
 data:
   database:
@@ -22,4 +22,4 @@ trace:
 etcd:
   Hosts:
     - 47.100.14.57:2379
-  Key: tools.bff.rpc
+  Key: app.tools.rpc

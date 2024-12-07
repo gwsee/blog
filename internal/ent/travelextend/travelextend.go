@@ -83,6 +83,8 @@ var (
 	DefaultDeletedAt int64
 	// DefaultDeletedBy holds the default value on creation for the "deleted_by" field.
 	DefaultDeletedBy int64
+	// AccountIDValidator is a validator for the "account_id" field. It is called by the builders before save.
+	AccountIDValidator func(int) error
 )
 
 // OrderOption defines the ordering options for the TravelExtend queries.

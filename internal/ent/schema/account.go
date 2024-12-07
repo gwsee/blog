@@ -16,6 +16,7 @@ type Account struct {
 func (Account) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int("id").Unique().Positive().Comment("账户ID"),
+		field.String("nickname").Default("好运连连").Comment("昵称"),
 		field.String("account").Unique().NotEmpty().Comment("账户").
 			SchemaType(map[string]string{
 				dialect.MySQL: "varchar(100)",
@@ -32,7 +33,6 @@ func (Account) Fields() []ent.Field {
 			SchemaType(map[string]string{
 				dialect.MySQL: "tinytext",
 			}),
-		field.String("nickname").Default("好运连连").Comment("昵称"),
 		field.String("avatar").Default("").Comment("头像"),
 		field.Int("blog_num").Default(0).Comment("博客数量"),
 		field.Int8("status").Default(1).Comment("状态:0失效,1正常").

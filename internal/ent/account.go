@@ -29,6 +29,8 @@ type Account struct {
 	DeletedAt int64 `json:"deleted_at,omitempty"`
 	// 删除人
 	DeletedBy int64 `json:"deleted_by,omitempty"`
+	// 昵称
+	Nickname string `json:"nickname,omitempty"`
 	// 账户
 	Account string `json:"account,omitempty"`
 	// 密码
@@ -37,8 +39,6 @@ type Account struct {
 	Email string `json:"email,omitempty"`
 	// 想说啥?
 	Description string `json:"description,omitempty"`
-	// 昵称
-	Nickname string `json:"nickname,omitempty"`
 	// 头像
 	Avatar string `json:"avatar,omitempty"`
 	// 博客数量
@@ -55,7 +55,7 @@ func (*Account) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case account.FieldID, account.FieldCreatedAt, account.FieldCreatedBy, account.FieldUpdatedAt, account.FieldUpdatedBy, account.FieldDeletedAt, account.FieldDeletedBy, account.FieldBlogNum, account.FieldStatus:
 			values[i] = new(sql.NullInt64)
-		case account.FieldAccount, account.FieldPassword, account.FieldEmail, account.FieldDescription, account.FieldNickname, account.FieldAvatar:
+		case account.FieldNickname, account.FieldAccount, account.FieldPassword, account.FieldEmail, account.FieldDescription, account.FieldAvatar:
 			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -114,6 +114,12 @@ func (a *Account) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				a.DeletedBy = value.Int64
 			}
+		case account.FieldNickname:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field nickname", values[i])
+			} else if value.Valid {
+				a.Nickname = value.String
+			}
 		case account.FieldAccount:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field account", values[i])
@@ -137,12 +143,6 @@ func (a *Account) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field description", values[i])
 			} else if value.Valid {
 				a.Description = value.String
-			}
-		case account.FieldNickname:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field nickname", values[i])
-			} else if value.Valid {
-				a.Nickname = value.String
 			}
 		case account.FieldAvatar:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -216,6 +216,9 @@ func (a *Account) String() string {
 	builder.WriteString("deleted_by=")
 	builder.WriteString(fmt.Sprintf("%v", a.DeletedBy))
 	builder.WriteString(", ")
+	builder.WriteString("nickname=")
+	builder.WriteString(a.Nickname)
+	builder.WriteString(", ")
 	builder.WriteString("account=")
 	builder.WriteString(a.Account)
 	builder.WriteString(", ")
@@ -227,9 +230,6 @@ func (a *Account) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("description=")
 	builder.WriteString(a.Description)
-	builder.WriteString(", ")
-	builder.WriteString("nickname=")
-	builder.WriteString(a.Nickname)
 	builder.WriteString(", ")
 	builder.WriteString("avatar=")
 	builder.WriteString(a.Avatar)

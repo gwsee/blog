@@ -27,6 +27,12 @@ func (bcc *BlogsContentCreate) SetContent(s string) *BlogsContentCreate {
 	return bcc
 }
 
+// SetFiles sets the "files" field.
+func (bcc *BlogsContentCreate) SetFiles(s []string) *BlogsContentCreate {
+	bcc.mutation.SetFiles(s)
+	return bcc
+}
+
 // SetID sets the "id" field.
 func (bcc *BlogsContentCreate) SetID(i int) *BlogsContentCreate {
 	bcc.mutation.SetID(i)
@@ -75,6 +81,9 @@ func (bcc *BlogsContentCreate) check() error {
 			return &ValidationError{Name: "content", err: fmt.Errorf(`ent: validator failed for field "BlogsContent.content": %w`, err)}
 		}
 	}
+	if _, ok := bcc.mutation.Files(); !ok {
+		return &ValidationError{Name: "files", err: errors.New(`ent: missing required field "BlogsContent.files"`)}
+	}
 	return nil
 }
 
@@ -111,6 +120,10 @@ func (bcc *BlogsContentCreate) createSpec() (*BlogsContent, *sqlgraph.CreateSpec
 	if value, ok := bcc.mutation.Content(); ok {
 		_spec.SetField(blogscontent.FieldContent, field.TypeString, value)
 		_node.Content = value
+	}
+	if value, ok := bcc.mutation.Files(); ok {
+		_spec.SetField(blogscontent.FieldFiles, field.TypeJSON, value)
+		_node.Files = value
 	}
 	return _node, _spec
 }
@@ -176,6 +189,18 @@ func (u *BlogsContentUpsert) UpdateContent() *BlogsContentUpsert {
 	return u
 }
 
+// SetFiles sets the "files" field.
+func (u *BlogsContentUpsert) SetFiles(v []string) *BlogsContentUpsert {
+	u.Set(blogscontent.FieldFiles, v)
+	return u
+}
+
+// UpdateFiles sets the "files" field to the value that was provided on create.
+func (u *BlogsContentUpsert) UpdateFiles() *BlogsContentUpsert {
+	u.SetExcluded(blogscontent.FieldFiles)
+	return u
+}
+
 // UpdateNewValues updates the mutable fields using the new values that were set on create except the ID field.
 // Using this option is equivalent to using:
 //
@@ -235,6 +260,20 @@ func (u *BlogsContentUpsertOne) SetContent(v string) *BlogsContentUpsertOne {
 func (u *BlogsContentUpsertOne) UpdateContent() *BlogsContentUpsertOne {
 	return u.Update(func(s *BlogsContentUpsert) {
 		s.UpdateContent()
+	})
+}
+
+// SetFiles sets the "files" field.
+func (u *BlogsContentUpsertOne) SetFiles(v []string) *BlogsContentUpsertOne {
+	return u.Update(func(s *BlogsContentUpsert) {
+		s.SetFiles(v)
+	})
+}
+
+// UpdateFiles sets the "files" field to the value that was provided on create.
+func (u *BlogsContentUpsertOne) UpdateFiles() *BlogsContentUpsertOne {
+	return u.Update(func(s *BlogsContentUpsert) {
+		s.UpdateFiles()
 	})
 }
 
@@ -462,6 +501,20 @@ func (u *BlogsContentUpsertBulk) SetContent(v string) *BlogsContentUpsertBulk {
 func (u *BlogsContentUpsertBulk) UpdateContent() *BlogsContentUpsertBulk {
 	return u.Update(func(s *BlogsContentUpsert) {
 		s.UpdateContent()
+	})
+}
+
+// SetFiles sets the "files" field.
+func (u *BlogsContentUpsertBulk) SetFiles(v []string) *BlogsContentUpsertBulk {
+	return u.Update(func(s *BlogsContentUpsert) {
+		s.SetFiles(v)
+	})
+}
+
+// UpdateFiles sets the "files" field to the value that was provided on create.
+func (u *BlogsContentUpsertBulk) UpdateFiles() *BlogsContentUpsertBulk {
+	return u.Update(func(s *BlogsContentUpsert) {
+		s.UpdateFiles()
 	})
 }
 

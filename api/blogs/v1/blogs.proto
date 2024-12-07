@@ -42,9 +42,10 @@ message CreateBlogsRequest {
 	string title  = 1; //标题
 	string description = 2; //描述
 	int64 isHidden = 3; //是否隐藏
-	repeated string Tags = 4;//标签
+	repeated string tags = 4;//标签
 	string cover = 5;//封面
 	string content = 6; //内容
+	repeated string files = 7; //关联的文件
 }
 
 message UpdateBlogsRequest {
@@ -55,6 +56,7 @@ message UpdateBlogsRequest {
 	repeated string tags = 5;//标签
 	string cover = 6; //封面
 	string content = 7; //内容
+	repeated string files = 8; //关联的文件
 }
 
 message BlogsHeader {
@@ -72,6 +74,7 @@ message BlogsHeader {
 message GetBlogsReply {
 	BlogsHeader header = 1; //头部内容
 	string content = 2;//主内容
+	repeated string files =3; //关联的文件内容
 }
 
 message ListBlogsRequest {

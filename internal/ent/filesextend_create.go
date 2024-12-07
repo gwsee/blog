@@ -133,23 +133,15 @@ func (fec *FilesExtendCreate) SetNillableUserID(i *int) *FilesExtendCreate {
 	return fec
 }
 
-// SetFilename sets the "filename" field.
-func (fec *FilesExtendCreate) SetFilename(s string) *FilesExtendCreate {
-	fec.mutation.SetFilename(s)
-	return fec
-}
-
-// SetNillableFilename sets the "filename" field if the given value is not nil.
-func (fec *FilesExtendCreate) SetNillableFilename(s *string) *FilesExtendCreate {
-	if s != nil {
-		fec.SetFilename(*s)
-	}
-	return fec
-}
-
 // SetFrom sets the "from" field.
 func (fec *FilesExtendCreate) SetFrom(s string) *FilesExtendCreate {
 	fec.mutation.SetFrom(s)
+	return fec
+}
+
+// SetFromID sets the "from_id" field.
+func (fec *FilesExtendCreate) SetFromID(i int) *FilesExtendCreate {
+	fec.mutation.SetFromID(i)
 	return fec
 }
 
@@ -234,10 +226,6 @@ func (fec *FilesExtendCreate) defaults() error {
 		v := filesextend.DefaultUserID
 		fec.mutation.SetUserID(v)
 	}
-	if _, ok := fec.mutation.Filename(); !ok {
-		v := filesextend.DefaultFilename
-		fec.mutation.SetFilename(v)
-	}
 	return nil
 }
 
@@ -267,11 +255,11 @@ func (fec *FilesExtendCreate) check() error {
 	if _, ok := fec.mutation.UserID(); !ok {
 		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "FilesExtend.user_id"`)}
 	}
-	if _, ok := fec.mutation.Filename(); !ok {
-		return &ValidationError{Name: "filename", err: errors.New(`ent: missing required field "FilesExtend.filename"`)}
-	}
 	if _, ok := fec.mutation.From(); !ok {
 		return &ValidationError{Name: "from", err: errors.New(`ent: missing required field "FilesExtend.from"`)}
+	}
+	if _, ok := fec.mutation.FromID(); !ok {
+		return &ValidationError{Name: "from_id", err: errors.New(`ent: missing required field "FilesExtend.from_id"`)}
 	}
 	if _, ok := fec.mutation.IsHidden(); !ok {
 		return &ValidationError{Name: "is_hidden", err: errors.New(`ent: missing required field "FilesExtend.is_hidden"`)}
@@ -346,13 +334,13 @@ func (fec *FilesExtendCreate) createSpec() (*FilesExtend, *sqlgraph.CreateSpec) 
 		_spec.SetField(filesextend.FieldUserID, field.TypeInt, value)
 		_node.UserID = value
 	}
-	if value, ok := fec.mutation.Filename(); ok {
-		_spec.SetField(filesextend.FieldFilename, field.TypeString, value)
-		_node.Filename = value
-	}
 	if value, ok := fec.mutation.From(); ok {
 		_spec.SetField(filesextend.FieldFrom, field.TypeString, value)
 		_node.From = value
+	}
+	if value, ok := fec.mutation.FromID(); ok {
+		_spec.SetField(filesextend.FieldFromID, field.TypeInt, value)
+		_node.FromID = value
 	}
 	if value, ok := fec.mutation.IsHidden(); ok {
 		_spec.SetField(filesextend.FieldIsHidden, field.TypeInt8, value)
@@ -512,18 +500,6 @@ func (u *FilesExtendUpsert) AddUserID(v int) *FilesExtendUpsert {
 	return u
 }
 
-// SetFilename sets the "filename" field.
-func (u *FilesExtendUpsert) SetFilename(v string) *FilesExtendUpsert {
-	u.Set(filesextend.FieldFilename, v)
-	return u
-}
-
-// UpdateFilename sets the "filename" field to the value that was provided on create.
-func (u *FilesExtendUpsert) UpdateFilename() *FilesExtendUpsert {
-	u.SetExcluded(filesextend.FieldFilename)
-	return u
-}
-
 // SetFrom sets the "from" field.
 func (u *FilesExtendUpsert) SetFrom(v string) *FilesExtendUpsert {
 	u.Set(filesextend.FieldFrom, v)
@@ -533,6 +509,24 @@ func (u *FilesExtendUpsert) SetFrom(v string) *FilesExtendUpsert {
 // UpdateFrom sets the "from" field to the value that was provided on create.
 func (u *FilesExtendUpsert) UpdateFrom() *FilesExtendUpsert {
 	u.SetExcluded(filesextend.FieldFrom)
+	return u
+}
+
+// SetFromID sets the "from_id" field.
+func (u *FilesExtendUpsert) SetFromID(v int) *FilesExtendUpsert {
+	u.Set(filesextend.FieldFromID, v)
+	return u
+}
+
+// UpdateFromID sets the "from_id" field to the value that was provided on create.
+func (u *FilesExtendUpsert) UpdateFromID() *FilesExtendUpsert {
+	u.SetExcluded(filesextend.FieldFromID)
+	return u
+}
+
+// AddFromID adds v to the "from_id" field.
+func (u *FilesExtendUpsert) AddFromID(v int) *FilesExtendUpsert {
+	u.Add(filesextend.FieldFromID, v)
 	return u
 }
 
@@ -727,20 +721,6 @@ func (u *FilesExtendUpsertOne) UpdateUserID() *FilesExtendUpsertOne {
 	})
 }
 
-// SetFilename sets the "filename" field.
-func (u *FilesExtendUpsertOne) SetFilename(v string) *FilesExtendUpsertOne {
-	return u.Update(func(s *FilesExtendUpsert) {
-		s.SetFilename(v)
-	})
-}
-
-// UpdateFilename sets the "filename" field to the value that was provided on create.
-func (u *FilesExtendUpsertOne) UpdateFilename() *FilesExtendUpsertOne {
-	return u.Update(func(s *FilesExtendUpsert) {
-		s.UpdateFilename()
-	})
-}
-
 // SetFrom sets the "from" field.
 func (u *FilesExtendUpsertOne) SetFrom(v string) *FilesExtendUpsertOne {
 	return u.Update(func(s *FilesExtendUpsert) {
@@ -752,6 +732,27 @@ func (u *FilesExtendUpsertOne) SetFrom(v string) *FilesExtendUpsertOne {
 func (u *FilesExtendUpsertOne) UpdateFrom() *FilesExtendUpsertOne {
 	return u.Update(func(s *FilesExtendUpsert) {
 		s.UpdateFrom()
+	})
+}
+
+// SetFromID sets the "from_id" field.
+func (u *FilesExtendUpsertOne) SetFromID(v int) *FilesExtendUpsertOne {
+	return u.Update(func(s *FilesExtendUpsert) {
+		s.SetFromID(v)
+	})
+}
+
+// AddFromID adds v to the "from_id" field.
+func (u *FilesExtendUpsertOne) AddFromID(v int) *FilesExtendUpsertOne {
+	return u.Update(func(s *FilesExtendUpsert) {
+		s.AddFromID(v)
+	})
+}
+
+// UpdateFromID sets the "from_id" field to the value that was provided on create.
+func (u *FilesExtendUpsertOne) UpdateFromID() *FilesExtendUpsertOne {
+	return u.Update(func(s *FilesExtendUpsert) {
+		s.UpdateFromID()
 	})
 }
 
@@ -1115,20 +1116,6 @@ func (u *FilesExtendUpsertBulk) UpdateUserID() *FilesExtendUpsertBulk {
 	})
 }
 
-// SetFilename sets the "filename" field.
-func (u *FilesExtendUpsertBulk) SetFilename(v string) *FilesExtendUpsertBulk {
-	return u.Update(func(s *FilesExtendUpsert) {
-		s.SetFilename(v)
-	})
-}
-
-// UpdateFilename sets the "filename" field to the value that was provided on create.
-func (u *FilesExtendUpsertBulk) UpdateFilename() *FilesExtendUpsertBulk {
-	return u.Update(func(s *FilesExtendUpsert) {
-		s.UpdateFilename()
-	})
-}
-
 // SetFrom sets the "from" field.
 func (u *FilesExtendUpsertBulk) SetFrom(v string) *FilesExtendUpsertBulk {
 	return u.Update(func(s *FilesExtendUpsert) {
@@ -1140,6 +1127,27 @@ func (u *FilesExtendUpsertBulk) SetFrom(v string) *FilesExtendUpsertBulk {
 func (u *FilesExtendUpsertBulk) UpdateFrom() *FilesExtendUpsertBulk {
 	return u.Update(func(s *FilesExtendUpsert) {
 		s.UpdateFrom()
+	})
+}
+
+// SetFromID sets the "from_id" field.
+func (u *FilesExtendUpsertBulk) SetFromID(v int) *FilesExtendUpsertBulk {
+	return u.Update(func(s *FilesExtendUpsert) {
+		s.SetFromID(v)
+	})
+}
+
+// AddFromID adds v to the "from_id" field.
+func (u *FilesExtendUpsertBulk) AddFromID(v int) *FilesExtendUpsertBulk {
+	return u.Update(func(s *FilesExtendUpsert) {
+		s.AddFromID(v)
+	})
+}
+
+// UpdateFromID sets the "from_id" field to the value that was provided on create.
+func (u *FilesExtendUpsertBulk) UpdateFromID() *FilesExtendUpsertBulk {
+	return u.Update(func(s *FilesExtendUpsert) {
+		s.UpdateFromID()
 	})
 }
 

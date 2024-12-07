@@ -138,20 +138,6 @@ func (feu *FilesExtendUpdate) AddUserID(i int) *FilesExtendUpdate {
 	return feu
 }
 
-// SetFilename sets the "filename" field.
-func (feu *FilesExtendUpdate) SetFilename(s string) *FilesExtendUpdate {
-	feu.mutation.SetFilename(s)
-	return feu
-}
-
-// SetNillableFilename sets the "filename" field if the given value is not nil.
-func (feu *FilesExtendUpdate) SetNillableFilename(s *string) *FilesExtendUpdate {
-	if s != nil {
-		feu.SetFilename(*s)
-	}
-	return feu
-}
-
 // SetFrom sets the "from" field.
 func (feu *FilesExtendUpdate) SetFrom(s string) *FilesExtendUpdate {
 	feu.mutation.SetFrom(s)
@@ -163,6 +149,27 @@ func (feu *FilesExtendUpdate) SetNillableFrom(s *string) *FilesExtendUpdate {
 	if s != nil {
 		feu.SetFrom(*s)
 	}
+	return feu
+}
+
+// SetFromID sets the "from_id" field.
+func (feu *FilesExtendUpdate) SetFromID(i int) *FilesExtendUpdate {
+	feu.mutation.ResetFromID()
+	feu.mutation.SetFromID(i)
+	return feu
+}
+
+// SetNillableFromID sets the "from_id" field if the given value is not nil.
+func (feu *FilesExtendUpdate) SetNillableFromID(i *int) *FilesExtendUpdate {
+	if i != nil {
+		feu.SetFromID(*i)
+	}
+	return feu
+}
+
+// AddFromID adds i to the "from_id" field.
+func (feu *FilesExtendUpdate) AddFromID(i int) *FilesExtendUpdate {
+	feu.mutation.AddFromID(i)
 	return feu
 }
 
@@ -276,11 +283,14 @@ func (feu *FilesExtendUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := feu.mutation.AddedUserID(); ok {
 		_spec.AddField(filesextend.FieldUserID, field.TypeInt, value)
 	}
-	if value, ok := feu.mutation.Filename(); ok {
-		_spec.SetField(filesextend.FieldFilename, field.TypeString, value)
-	}
 	if value, ok := feu.mutation.From(); ok {
 		_spec.SetField(filesextend.FieldFrom, field.TypeString, value)
+	}
+	if value, ok := feu.mutation.FromID(); ok {
+		_spec.SetField(filesextend.FieldFromID, field.TypeInt, value)
+	}
+	if value, ok := feu.mutation.AddedFromID(); ok {
+		_spec.AddField(filesextend.FieldFromID, field.TypeInt, value)
 	}
 	if value, ok := feu.mutation.IsHidden(); ok {
 		_spec.SetField(filesextend.FieldIsHidden, field.TypeInt8, value)
@@ -419,20 +429,6 @@ func (feuo *FilesExtendUpdateOne) AddUserID(i int) *FilesExtendUpdateOne {
 	return feuo
 }
 
-// SetFilename sets the "filename" field.
-func (feuo *FilesExtendUpdateOne) SetFilename(s string) *FilesExtendUpdateOne {
-	feuo.mutation.SetFilename(s)
-	return feuo
-}
-
-// SetNillableFilename sets the "filename" field if the given value is not nil.
-func (feuo *FilesExtendUpdateOne) SetNillableFilename(s *string) *FilesExtendUpdateOne {
-	if s != nil {
-		feuo.SetFilename(*s)
-	}
-	return feuo
-}
-
 // SetFrom sets the "from" field.
 func (feuo *FilesExtendUpdateOne) SetFrom(s string) *FilesExtendUpdateOne {
 	feuo.mutation.SetFrom(s)
@@ -444,6 +440,27 @@ func (feuo *FilesExtendUpdateOne) SetNillableFrom(s *string) *FilesExtendUpdateO
 	if s != nil {
 		feuo.SetFrom(*s)
 	}
+	return feuo
+}
+
+// SetFromID sets the "from_id" field.
+func (feuo *FilesExtendUpdateOne) SetFromID(i int) *FilesExtendUpdateOne {
+	feuo.mutation.ResetFromID()
+	feuo.mutation.SetFromID(i)
+	return feuo
+}
+
+// SetNillableFromID sets the "from_id" field if the given value is not nil.
+func (feuo *FilesExtendUpdateOne) SetNillableFromID(i *int) *FilesExtendUpdateOne {
+	if i != nil {
+		feuo.SetFromID(*i)
+	}
+	return feuo
+}
+
+// AddFromID adds i to the "from_id" field.
+func (feuo *FilesExtendUpdateOne) AddFromID(i int) *FilesExtendUpdateOne {
+	feuo.mutation.AddFromID(i)
 	return feuo
 }
 
@@ -587,11 +604,14 @@ func (feuo *FilesExtendUpdateOne) sqlSave(ctx context.Context) (_node *FilesExte
 	if value, ok := feuo.mutation.AddedUserID(); ok {
 		_spec.AddField(filesextend.FieldUserID, field.TypeInt, value)
 	}
-	if value, ok := feuo.mutation.Filename(); ok {
-		_spec.SetField(filesextend.FieldFilename, field.TypeString, value)
-	}
 	if value, ok := feuo.mutation.From(); ok {
 		_spec.SetField(filesextend.FieldFrom, field.TypeString, value)
+	}
+	if value, ok := feuo.mutation.FromID(); ok {
+		_spec.SetField(filesextend.FieldFromID, field.TypeInt, value)
+	}
+	if value, ok := feuo.mutation.AddedFromID(); ok {
+		_spec.AddField(filesextend.FieldFromID, field.TypeInt, value)
 	}
 	if value, ok := feuo.mutation.IsHidden(); ok {
 		_spec.SetField(filesextend.FieldIsHidden, field.TypeInt8, value)

@@ -118,20 +118,6 @@ func (uu *UserUpdate) SetNillableName(s *string) *UserUpdate {
 	return uu
 }
 
-// SetEmail sets the "email" field.
-func (uu *UserUpdate) SetEmail(s string) *UserUpdate {
-	uu.mutation.SetEmail(s)
-	return uu
-}
-
-// SetNillableEmail sets the "email" field if the given value is not nil.
-func (uu *UserUpdate) SetNillableEmail(s *string) *UserUpdate {
-	if s != nil {
-		uu.SetEmail(*s)
-	}
-	return uu
-}
-
 // SetAvatar sets the "avatar" field.
 func (uu *UserUpdate) SetAvatar(s string) *UserUpdate {
 	uu.mutation.SetAvatar(s)
@@ -146,6 +132,20 @@ func (uu *UserUpdate) SetNillableAvatar(s *string) *UserUpdate {
 	return uu
 }
 
+// SetEmail sets the "email" field.
+func (uu *UserUpdate) SetEmail(s string) *UserUpdate {
+	uu.mutation.SetEmail(s)
+	return uu
+}
+
+// SetNillableEmail sets the "email" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableEmail(s *string) *UserUpdate {
+	if s != nil {
+		uu.SetEmail(*s)
+	}
+	return uu
+}
+
 // SetProfessional sets the "professional" field.
 func (uu *UserUpdate) SetProfessional(s string) *UserUpdate {
 	uu.mutation.SetProfessional(s)
@@ -156,6 +156,20 @@ func (uu *UserUpdate) SetProfessional(s string) *UserUpdate {
 func (uu *UserUpdate) SetNillableProfessional(s *string) *UserUpdate {
 	if s != nil {
 		uu.SetProfessional(*s)
+	}
+	return uu
+}
+
+// SetAddress sets the "address" field.
+func (uu *UserUpdate) SetAddress(s string) *UserUpdate {
+	uu.mutation.SetAddress(s)
+	return uu
+}
+
+// SetNillableAddress sets the "address" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableAddress(s *string) *UserUpdate {
+	if s != nil {
+		uu.SetAddress(*s)
 	}
 	return uu
 }
@@ -282,14 +296,17 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := uu.mutation.Name(); ok {
 		_spec.SetField(user.FieldName, field.TypeString, value)
 	}
-	if value, ok := uu.mutation.Email(); ok {
-		_spec.SetField(user.FieldEmail, field.TypeString, value)
-	}
 	if value, ok := uu.mutation.Avatar(); ok {
 		_spec.SetField(user.FieldAvatar, field.TypeString, value)
 	}
+	if value, ok := uu.mutation.Email(); ok {
+		_spec.SetField(user.FieldEmail, field.TypeString, value)
+	}
 	if value, ok := uu.mutation.Professional(); ok {
 		_spec.SetField(user.FieldProfessional, field.TypeString, value)
+	}
+	if value, ok := uu.mutation.Address(); ok {
+		_spec.SetField(user.FieldAddress, field.TypeString, value)
 	}
 	if value, ok := uu.mutation.Skills(); ok {
 		_spec.SetField(user.FieldSkills, field.TypeJSON, value)
@@ -412,20 +429,6 @@ func (uuo *UserUpdateOne) SetNillableName(s *string) *UserUpdateOne {
 	return uuo
 }
 
-// SetEmail sets the "email" field.
-func (uuo *UserUpdateOne) SetEmail(s string) *UserUpdateOne {
-	uuo.mutation.SetEmail(s)
-	return uuo
-}
-
-// SetNillableEmail sets the "email" field if the given value is not nil.
-func (uuo *UserUpdateOne) SetNillableEmail(s *string) *UserUpdateOne {
-	if s != nil {
-		uuo.SetEmail(*s)
-	}
-	return uuo
-}
-
 // SetAvatar sets the "avatar" field.
 func (uuo *UserUpdateOne) SetAvatar(s string) *UserUpdateOne {
 	uuo.mutation.SetAvatar(s)
@@ -440,6 +443,20 @@ func (uuo *UserUpdateOne) SetNillableAvatar(s *string) *UserUpdateOne {
 	return uuo
 }
 
+// SetEmail sets the "email" field.
+func (uuo *UserUpdateOne) SetEmail(s string) *UserUpdateOne {
+	uuo.mutation.SetEmail(s)
+	return uuo
+}
+
+// SetNillableEmail sets the "email" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableEmail(s *string) *UserUpdateOne {
+	if s != nil {
+		uuo.SetEmail(*s)
+	}
+	return uuo
+}
+
 // SetProfessional sets the "professional" field.
 func (uuo *UserUpdateOne) SetProfessional(s string) *UserUpdateOne {
 	uuo.mutation.SetProfessional(s)
@@ -450,6 +467,20 @@ func (uuo *UserUpdateOne) SetProfessional(s string) *UserUpdateOne {
 func (uuo *UserUpdateOne) SetNillableProfessional(s *string) *UserUpdateOne {
 	if s != nil {
 		uuo.SetProfessional(*s)
+	}
+	return uuo
+}
+
+// SetAddress sets the "address" field.
+func (uuo *UserUpdateOne) SetAddress(s string) *UserUpdateOne {
+	uuo.mutation.SetAddress(s)
+	return uuo
+}
+
+// SetNillableAddress sets the "address" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableAddress(s *string) *UserUpdateOne {
+	if s != nil {
+		uuo.SetAddress(*s)
 	}
 	return uuo
 }
@@ -606,14 +637,17 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 	if value, ok := uuo.mutation.Name(); ok {
 		_spec.SetField(user.FieldName, field.TypeString, value)
 	}
-	if value, ok := uuo.mutation.Email(); ok {
-		_spec.SetField(user.FieldEmail, field.TypeString, value)
-	}
 	if value, ok := uuo.mutation.Avatar(); ok {
 		_spec.SetField(user.FieldAvatar, field.TypeString, value)
 	}
+	if value, ok := uuo.mutation.Email(); ok {
+		_spec.SetField(user.FieldEmail, field.TypeString, value)
+	}
 	if value, ok := uuo.mutation.Professional(); ok {
 		_spec.SetField(user.FieldProfessional, field.TypeString, value)
+	}
+	if value, ok := uuo.mutation.Address(); ok {
+		_spec.SetField(user.FieldAddress, field.TypeString, value)
 	}
 	if value, ok := uuo.mutation.Skills(); ok {
 		_spec.SetField(user.FieldSkills, field.TypeJSON, value)

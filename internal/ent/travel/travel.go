@@ -30,6 +30,10 @@ const (
 	FieldDescription = "description"
 	// FieldVideo holds the string denoting the video field in the database.
 	FieldVideo = "video"
+	// FieldIsHidden holds the string denoting the is_hidden field in the database.
+	FieldIsHidden = "is_hidden"
+	// FieldAccountID holds the string denoting the account_id field in the database.
+	FieldAccountID = "account_id"
 	// FieldPhotos holds the string denoting the photos field in the database.
 	FieldPhotos = "photos"
 	// FieldBrowseNum holds the string denoting the browse_num field in the database.
@@ -54,6 +58,8 @@ var Columns = []string{
 	FieldTitle,
 	FieldDescription,
 	FieldVideo,
+	FieldIsHidden,
+	FieldAccountID,
 	FieldPhotos,
 	FieldBrowseNum,
 	FieldThumbNum,
@@ -98,6 +104,10 @@ var (
 	DescriptionValidator func(string) error
 	// VideoValidator is a validator for the "video" field. It is called by the builders before save.
 	VideoValidator func(string) error
+	// DefaultIsHidden holds the default value on creation for the "is_hidden" field.
+	DefaultIsHidden bool
+	// AccountIDValidator is a validator for the "account_id" field. It is called by the builders before save.
+	AccountIDValidator func(int) error
 )
 
 // OrderOption defines the ordering options for the Travel queries.
@@ -151,6 +161,16 @@ func ByDescription(opts ...sql.OrderTermOption) OrderOption {
 // ByVideo orders the results by the video field.
 func ByVideo(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldVideo, opts...).ToFunc()
+}
+
+// ByIsHidden orders the results by the is_hidden field.
+func ByIsHidden(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldIsHidden, opts...).ToFunc()
+}
+
+// ByAccountID orders the results by the account_id field.
+func ByAccountID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldAccountID, opts...).ToFunc()
 }
 
 // ByBrowseNum orders the results by the browse_num field.

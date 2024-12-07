@@ -26,12 +26,14 @@ const (
 	FieldDeletedBy = "deleted_by"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
-	// FieldEmail holds the string denoting the email field in the database.
-	FieldEmail = "email"
 	// FieldAvatar holds the string denoting the avatar field in the database.
 	FieldAvatar = "avatar"
+	// FieldEmail holds the string denoting the email field in the database.
+	FieldEmail = "email"
 	// FieldProfessional holds the string denoting the professional field in the database.
 	FieldProfessional = "professional"
+	// FieldAddress holds the string denoting the address field in the database.
+	FieldAddress = "address"
 	// FieldSkills holds the string denoting the skills field in the database.
 	FieldSkills = "skills"
 	// FieldDescription holds the string denoting the description field in the database.
@@ -50,9 +52,10 @@ var Columns = []string{
 	FieldDeletedAt,
 	FieldDeletedBy,
 	FieldName,
-	FieldEmail,
 	FieldAvatar,
+	FieldEmail,
 	FieldProfessional,
+	FieldAddress,
 	FieldSkills,
 	FieldDescription,
 }
@@ -91,14 +94,18 @@ var (
 	DefaultDeletedBy int64
 	// DefaultName holds the default value on creation for the "name" field.
 	DefaultName string
-	// DefaultEmail holds the default value on creation for the "email" field.
-	DefaultEmail string
 	// DefaultAvatar holds the default value on creation for the "avatar" field.
 	DefaultAvatar string
+	// DefaultEmail holds the default value on creation for the "email" field.
+	DefaultEmail string
 	// DefaultProfessional holds the default value on creation for the "professional" field.
 	DefaultProfessional string
+	// DefaultAddress holds the default value on creation for the "address" field.
+	DefaultAddress string
 	// DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
 	DescriptionValidator func(string) error
+	// IDValidator is a validator for the "id" field. It is called by the builders before save.
+	IDValidator func(int) error
 )
 
 // OrderOption defines the ordering options for the User queries.
@@ -144,19 +151,24 @@ func ByName(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldName, opts...).ToFunc()
 }
 
-// ByEmail orders the results by the email field.
-func ByEmail(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldEmail, opts...).ToFunc()
-}
-
 // ByAvatar orders the results by the avatar field.
 func ByAvatar(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldAvatar, opts...).ToFunc()
 }
 
+// ByEmail orders the results by the email field.
+func ByEmail(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldEmail, opts...).ToFunc()
+}
+
 // ByProfessional orders the results by the professional field.
 func ByProfessional(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldProfessional, opts...).ToFunc()
+}
+
+// ByAddress orders the results by the address field.
+func ByAddress(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldAddress, opts...).ToFunc()
 }
 
 // ByDescription orders the results by the description field.

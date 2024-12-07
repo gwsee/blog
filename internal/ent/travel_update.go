@@ -146,6 +146,41 @@ func (tu *TravelUpdate) SetNillableVideo(s *string) *TravelUpdate {
 	return tu
 }
 
+// SetIsHidden sets the "is_hidden" field.
+func (tu *TravelUpdate) SetIsHidden(b bool) *TravelUpdate {
+	tu.mutation.SetIsHidden(b)
+	return tu
+}
+
+// SetNillableIsHidden sets the "is_hidden" field if the given value is not nil.
+func (tu *TravelUpdate) SetNillableIsHidden(b *bool) *TravelUpdate {
+	if b != nil {
+		tu.SetIsHidden(*b)
+	}
+	return tu
+}
+
+// SetAccountID sets the "account_id" field.
+func (tu *TravelUpdate) SetAccountID(i int) *TravelUpdate {
+	tu.mutation.ResetAccountID()
+	tu.mutation.SetAccountID(i)
+	return tu
+}
+
+// SetNillableAccountID sets the "account_id" field if the given value is not nil.
+func (tu *TravelUpdate) SetNillableAccountID(i *int) *TravelUpdate {
+	if i != nil {
+		tu.SetAccountID(*i)
+	}
+	return tu
+}
+
+// AddAccountID adds i to the "account_id" field.
+func (tu *TravelUpdate) AddAccountID(i int) *TravelUpdate {
+	tu.mutation.AddAccountID(i)
+	return tu
+}
+
 // SetPhotos sets the "photos" field.
 func (tu *TravelUpdate) SetPhotos(s []string) *TravelUpdate {
 	tu.mutation.SetPhotos(s)
@@ -280,6 +315,11 @@ func (tu *TravelUpdate) check() error {
 			return &ValidationError{Name: "video", err: fmt.Errorf(`ent: validator failed for field "Travel.video": %w`, err)}
 		}
 	}
+	if v, ok := tu.mutation.AccountID(); ok {
+		if err := travel.AccountIDValidator(v); err != nil {
+			return &ValidationError{Name: "account_id", err: fmt.Errorf(`ent: validator failed for field "Travel.account_id": %w`, err)}
+		}
+	}
 	return nil
 }
 
@@ -327,6 +367,15 @@ func (tu *TravelUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := tu.mutation.Video(); ok {
 		_spec.SetField(travel.FieldVideo, field.TypeString, value)
+	}
+	if value, ok := tu.mutation.IsHidden(); ok {
+		_spec.SetField(travel.FieldIsHidden, field.TypeBool, value)
+	}
+	if value, ok := tu.mutation.AccountID(); ok {
+		_spec.SetField(travel.FieldAccountID, field.TypeInt, value)
+	}
+	if value, ok := tu.mutation.AddedAccountID(); ok {
+		_spec.AddField(travel.FieldAccountID, field.TypeInt, value)
 	}
 	if value, ok := tu.mutation.Photos(); ok {
 		_spec.SetField(travel.FieldPhotos, field.TypeJSON, value)
@@ -492,6 +541,41 @@ func (tuo *TravelUpdateOne) SetNillableVideo(s *string) *TravelUpdateOne {
 	return tuo
 }
 
+// SetIsHidden sets the "is_hidden" field.
+func (tuo *TravelUpdateOne) SetIsHidden(b bool) *TravelUpdateOne {
+	tuo.mutation.SetIsHidden(b)
+	return tuo
+}
+
+// SetNillableIsHidden sets the "is_hidden" field if the given value is not nil.
+func (tuo *TravelUpdateOne) SetNillableIsHidden(b *bool) *TravelUpdateOne {
+	if b != nil {
+		tuo.SetIsHidden(*b)
+	}
+	return tuo
+}
+
+// SetAccountID sets the "account_id" field.
+func (tuo *TravelUpdateOne) SetAccountID(i int) *TravelUpdateOne {
+	tuo.mutation.ResetAccountID()
+	tuo.mutation.SetAccountID(i)
+	return tuo
+}
+
+// SetNillableAccountID sets the "account_id" field if the given value is not nil.
+func (tuo *TravelUpdateOne) SetNillableAccountID(i *int) *TravelUpdateOne {
+	if i != nil {
+		tuo.SetAccountID(*i)
+	}
+	return tuo
+}
+
+// AddAccountID adds i to the "account_id" field.
+func (tuo *TravelUpdateOne) AddAccountID(i int) *TravelUpdateOne {
+	tuo.mutation.AddAccountID(i)
+	return tuo
+}
+
 // SetPhotos sets the "photos" field.
 func (tuo *TravelUpdateOne) SetPhotos(s []string) *TravelUpdateOne {
 	tuo.mutation.SetPhotos(s)
@@ -639,6 +723,11 @@ func (tuo *TravelUpdateOne) check() error {
 			return &ValidationError{Name: "video", err: fmt.Errorf(`ent: validator failed for field "Travel.video": %w`, err)}
 		}
 	}
+	if v, ok := tuo.mutation.AccountID(); ok {
+		if err := travel.AccountIDValidator(v); err != nil {
+			return &ValidationError{Name: "account_id", err: fmt.Errorf(`ent: validator failed for field "Travel.account_id": %w`, err)}
+		}
+	}
 	return nil
 }
 
@@ -703,6 +792,15 @@ func (tuo *TravelUpdateOne) sqlSave(ctx context.Context) (_node *Travel, err err
 	}
 	if value, ok := tuo.mutation.Video(); ok {
 		_spec.SetField(travel.FieldVideo, field.TypeString, value)
+	}
+	if value, ok := tuo.mutation.IsHidden(); ok {
+		_spec.SetField(travel.FieldIsHidden, field.TypeBool, value)
+	}
+	if value, ok := tuo.mutation.AccountID(); ok {
+		_spec.SetField(travel.FieldAccountID, field.TypeInt, value)
+	}
+	if value, ok := tuo.mutation.AddedAccountID(); ok {
+		_spec.AddField(travel.FieldAccountID, field.TypeInt, value)
 	}
 	if value, ok := tuo.mutation.Photos(); ok {
 		_spec.SetField(travel.FieldPhotos, field.TypeJSON, value)

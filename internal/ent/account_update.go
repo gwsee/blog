@@ -103,6 +103,20 @@ func (au *AccountUpdate) AddDeletedBy(i int64) *AccountUpdate {
 	return au
 }
 
+// SetNickname sets the "nickname" field.
+func (au *AccountUpdate) SetNickname(s string) *AccountUpdate {
+	au.mutation.SetNickname(s)
+	return au
+}
+
+// SetNillableNickname sets the "nickname" field if the given value is not nil.
+func (au *AccountUpdate) SetNillableNickname(s *string) *AccountUpdate {
+	if s != nil {
+		au.SetNickname(*s)
+	}
+	return au
+}
+
 // SetAccount sets the "account" field.
 func (au *AccountUpdate) SetAccount(s string) *AccountUpdate {
 	au.mutation.SetAccount(s)
@@ -155,20 +169,6 @@ func (au *AccountUpdate) SetDescription(s string) *AccountUpdate {
 func (au *AccountUpdate) SetNillableDescription(s *string) *AccountUpdate {
 	if s != nil {
 		au.SetDescription(*s)
-	}
-	return au
-}
-
-// SetNickname sets the "nickname" field.
-func (au *AccountUpdate) SetNickname(s string) *AccountUpdate {
-	au.mutation.SetNickname(s)
-	return au
-}
-
-// SetNillableNickname sets the "nickname" field if the given value is not nil.
-func (au *AccountUpdate) SetNillableNickname(s *string) *AccountUpdate {
-	if s != nil {
-		au.SetNickname(*s)
 	}
 	return au
 }
@@ -332,6 +332,9 @@ func (au *AccountUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := au.mutation.AddedDeletedBy(); ok {
 		_spec.AddField(account.FieldDeletedBy, field.TypeInt64, value)
 	}
+	if value, ok := au.mutation.Nickname(); ok {
+		_spec.SetField(account.FieldNickname, field.TypeString, value)
+	}
 	if value, ok := au.mutation.Account(); ok {
 		_spec.SetField(account.FieldAccount, field.TypeString, value)
 	}
@@ -343,9 +346,6 @@ func (au *AccountUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := au.mutation.Description(); ok {
 		_spec.SetField(account.FieldDescription, field.TypeString, value)
-	}
-	if value, ok := au.mutation.Nickname(); ok {
-		_spec.SetField(account.FieldNickname, field.TypeString, value)
 	}
 	if value, ok := au.mutation.Avatar(); ok {
 		_spec.SetField(account.FieldAvatar, field.TypeString, value)
@@ -458,6 +458,20 @@ func (auo *AccountUpdateOne) AddDeletedBy(i int64) *AccountUpdateOne {
 	return auo
 }
 
+// SetNickname sets the "nickname" field.
+func (auo *AccountUpdateOne) SetNickname(s string) *AccountUpdateOne {
+	auo.mutation.SetNickname(s)
+	return auo
+}
+
+// SetNillableNickname sets the "nickname" field if the given value is not nil.
+func (auo *AccountUpdateOne) SetNillableNickname(s *string) *AccountUpdateOne {
+	if s != nil {
+		auo.SetNickname(*s)
+	}
+	return auo
+}
+
 // SetAccount sets the "account" field.
 func (auo *AccountUpdateOne) SetAccount(s string) *AccountUpdateOne {
 	auo.mutation.SetAccount(s)
@@ -510,20 +524,6 @@ func (auo *AccountUpdateOne) SetDescription(s string) *AccountUpdateOne {
 func (auo *AccountUpdateOne) SetNillableDescription(s *string) *AccountUpdateOne {
 	if s != nil {
 		auo.SetDescription(*s)
-	}
-	return auo
-}
-
-// SetNickname sets the "nickname" field.
-func (auo *AccountUpdateOne) SetNickname(s string) *AccountUpdateOne {
-	auo.mutation.SetNickname(s)
-	return auo
-}
-
-// SetNillableNickname sets the "nickname" field if the given value is not nil.
-func (auo *AccountUpdateOne) SetNillableNickname(s *string) *AccountUpdateOne {
-	if s != nil {
-		auo.SetNickname(*s)
 	}
 	return auo
 }
@@ -717,6 +717,9 @@ func (auo *AccountUpdateOne) sqlSave(ctx context.Context) (_node *Account, err e
 	if value, ok := auo.mutation.AddedDeletedBy(); ok {
 		_spec.AddField(account.FieldDeletedBy, field.TypeInt64, value)
 	}
+	if value, ok := auo.mutation.Nickname(); ok {
+		_spec.SetField(account.FieldNickname, field.TypeString, value)
+	}
 	if value, ok := auo.mutation.Account(); ok {
 		_spec.SetField(account.FieldAccount, field.TypeString, value)
 	}
@@ -728,9 +731,6 @@ func (auo *AccountUpdateOne) sqlSave(ctx context.Context) (_node *Account, err e
 	}
 	if value, ok := auo.mutation.Description(); ok {
 		_spec.SetField(account.FieldDescription, field.TypeString, value)
-	}
-	if value, ok := auo.mutation.Nickname(); ok {
-		_spec.SetField(account.FieldNickname, field.TypeString, value)
 	}
 	if value, ok := auo.mutation.Avatar(); ok {
 		_spec.SetField(account.FieldAvatar, field.TypeString, value)

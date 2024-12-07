@@ -33,10 +33,10 @@ type FilesExtend struct {
 	FileID string `json:"file_id,omitempty"`
 	// 所属的用户
 	UserID int `json:"user_id,omitempty"`
-	// 文件名称
-	Filename string `json:"filename,omitempty"`
 	// 文件来源的表
 	From string `json:"from,omitempty"`
+	// 文件来源表的ID
+	FromID int `json:"from_id,omitempty"`
 	// 是否隐藏
 	IsHidden     int8 `json:"is_hidden,omitempty"`
 	selectValues sql.SelectValues
@@ -47,9 +47,9 @@ func (*FilesExtend) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case filesextend.FieldID, filesextend.FieldCreatedAt, filesextend.FieldCreatedBy, filesextend.FieldUpdatedAt, filesextend.FieldUpdatedBy, filesextend.FieldDeletedAt, filesextend.FieldDeletedBy, filesextend.FieldUserID, filesextend.FieldIsHidden:
+		case filesextend.FieldID, filesextend.FieldCreatedAt, filesextend.FieldCreatedBy, filesextend.FieldUpdatedAt, filesextend.FieldUpdatedBy, filesextend.FieldDeletedAt, filesextend.FieldDeletedBy, filesextend.FieldUserID, filesextend.FieldFromID, filesextend.FieldIsHidden:
 			values[i] = new(sql.NullInt64)
-		case filesextend.FieldFileID, filesextend.FieldFilename, filesextend.FieldFrom:
+		case filesextend.FieldFileID, filesextend.FieldFrom:
 			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -120,17 +120,17 @@ func (fe *FilesExtend) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				fe.UserID = int(value.Int64)
 			}
-		case filesextend.FieldFilename:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field filename", values[i])
-			} else if value.Valid {
-				fe.Filename = value.String
-			}
 		case filesextend.FieldFrom:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field from", values[i])
 			} else if value.Valid {
 				fe.From = value.String
+			}
+		case filesextend.FieldFromID:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field from_id", values[i])
+			} else if value.Valid {
+				fe.FromID = int(value.Int64)
 			}
 		case filesextend.FieldIsHidden:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -198,11 +198,11 @@ func (fe *FilesExtend) String() string {
 	builder.WriteString("user_id=")
 	builder.WriteString(fmt.Sprintf("%v", fe.UserID))
 	builder.WriteString(", ")
-	builder.WriteString("filename=")
-	builder.WriteString(fe.Filename)
-	builder.WriteString(", ")
 	builder.WriteString("from=")
 	builder.WriteString(fe.From)
+	builder.WriteString(", ")
+	builder.WriteString("from_id=")
+	builder.WriteString(fmt.Sprintf("%v", fe.FromID))
 	builder.WriteString(", ")
 	builder.WriteString("is_hidden=")
 	builder.WriteString(fmt.Sprintf("%v", fe.IsHidden))
