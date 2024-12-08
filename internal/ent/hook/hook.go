@@ -80,28 +80,28 @@ func (f FilesExtendFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value,
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.FilesExtendMutation", m)
 }
 
-// The TravelFunc type is an adapter to allow the use of ordinary
-// function as Travel mutator.
-type TravelFunc func(context.Context, *ent.TravelMutation) (ent.Value, error)
+// The TravelExtendsFunc type is an adapter to allow the use of ordinary
+// function as TravelExtends mutator.
+type TravelExtendsFunc func(context.Context, *ent.TravelExtendsMutation) (ent.Value, error)
 
 // Mutate calls f(ctx, m).
-func (f TravelFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	if mv, ok := m.(*ent.TravelMutation); ok {
+func (f TravelExtendsFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.TravelExtendsMutation); ok {
 		return f(ctx, mv)
 	}
-	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.TravelMutation", m)
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.TravelExtendsMutation", m)
 }
 
-// The TravelExtendFunc type is an adapter to allow the use of ordinary
-// function as TravelExtend mutator.
-type TravelExtendFunc func(context.Context, *ent.TravelExtendMutation) (ent.Value, error)
+// The TravelsFunc type is an adapter to allow the use of ordinary
+// function as Travels mutator.
+type TravelsFunc func(context.Context, *ent.TravelsMutation) (ent.Value, error)
 
 // Mutate calls f(ctx, m).
-func (f TravelExtendFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	if mv, ok := m.(*ent.TravelExtendMutation); ok {
+func (f TravelsFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.TravelsMutation); ok {
 		return f(ctx, mv)
 	}
-	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.TravelExtendMutation", m)
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.TravelsMutation", m)
 }
 
 // The UserFunc type is an adapter to allow the use of ordinary

@@ -10,11 +10,11 @@ import (
 	"entgo.io/ent/schema/field"
 )
 
-type Travel struct {
+type Travels struct {
 	ent.Schema
 }
 
-func (Travel) Fields() []ent.Field {
+func (Travels) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int("id").Unique().Comment("旅行记录的ID"),
 		field.String("title").Default("").Comment("标题").
@@ -37,21 +37,21 @@ func (Travel) Fields() []ent.Field {
 		field.Int("collect_num").Comment("收藏量"),
 	}
 }
-func (Travel) Mixin() []ent.Mixin {
+func (Travels) Mixin() []ent.Mixin {
 	return []ent.Mixin{
 		mixin.Time{},
 		mixin.SoftDelete{},
 	}
 }
-func (Travel) Edges() []ent.Edge {
+func (Travels) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("travel_extend", TravelExtend.Type),
-		edge.From("account_travel", Account.Type).Ref("travel_account").Unique(),
+		edge.To("travel_extends", TravelExtends.Type),
+		edge.From("account_travels", Account.Type).Ref("travels").Unique(),
 	}
 }
-func (Travel) Annotations() []schema.Annotation {
+func (Travels) Annotations() []schema.Annotation {
 	return []schema.Annotation{
-		entsql.Annotation{Table: "travel"},
+		entsql.Annotation{Table: "travels"},
 		entsql.WithComments(true),
 		schema.Comment("旅行"),
 	}

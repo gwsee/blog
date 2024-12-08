@@ -184,7 +184,9 @@ message GetUserReply {
 	repeated string skills = 6;//技能
 	string description = 7;//个人简介
 	string address = 8;//工作地址
-	int64 createdAt=9;//创建时间
-	int64 updatedAt=10;//编辑时间
+	int64 experience = 9; //经历数
+	int64 project = 10; //项目数
+	int64 createdAt=11;//创建时间
+	int64 updatedAt=12;//编辑时间
 }
 

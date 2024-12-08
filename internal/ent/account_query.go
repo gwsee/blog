@@ -5,7 +5,7 @@ package ent
 import (
 	"blog/internal/ent/account"
 	"blog/internal/ent/predicate"
-	"blog/internal/ent/travel"
+	"blog/internal/ent/travels"
 	"context"
 	"database/sql/driver"
 	"fmt"
@@ -20,11 +20,11 @@ import (
 // AccountQuery is the builder for querying Account entities.
 type AccountQuery struct {
 	config
-	ctx               *QueryContext
-	order             []account.OrderOption
-	inters            []Interceptor
-	predicates        []predicate.Account
-	withTravelAccount *TravelQuery
+	ctx         *QueryContext
+	order       []account.OrderOption
+	inters      []Interceptor
+	predicates  []predicate.Account
+	withTravels *TravelsQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -61,9 +61,9 @@ func (aq *AccountQuery) Order(o ...account.OrderOption) *AccountQuery {
 	return aq
 }
 
-// QueryTravelAccount chains the current query on the "travel_account" edge.
-func (aq *AccountQuery) QueryTravelAccount() *TravelQuery {
-	query := (&TravelClient{config: aq.config}).Query()
+// QueryTravels chains the current query on the "travels" edge.
+func (aq *AccountQuery) QueryTravels() *TravelsQuery {
+	query := (&TravelsClient{config: aq.config}).Query()
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := aq.prepareQuery(ctx); err != nil {
 			return nil, err
@@ -74,8 +74,8 @@ func (aq *AccountQuery) QueryTravelAccount() *TravelQuery {
 		}
 		step := sqlgraph.NewStep(
 			sqlgraph.From(account.Table, account.FieldID, selector),
-			sqlgraph.To(travel.Table, travel.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, account.TravelAccountTable, account.TravelAccountColumn),
+			sqlgraph.To(travels.Table, travels.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, account.TravelsTable, account.TravelsColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(aq.driver.Dialect(), step)
 		return fromU, nil
@@ -270,26 +270,26 @@ func (aq *AccountQuery) Clone() *AccountQuery {
 		return nil
 	}
 	return &AccountQuery{
-		config:            aq.config,
-		ctx:               aq.ctx.Clone(),
-		order:             append([]account.OrderOption{}, aq.order...),
-		inters:            append([]Interceptor{}, aq.inters...),
-		predicates:        append([]predicate.Account{}, aq.predicates...),
-		withTravelAccount: aq.withTravelAccount.Clone(),
+		config:      aq.config,
+		ctx:         aq.ctx.Clone(),
+		order:       append([]account.OrderOption{}, aq.order...),
+		inters:      append([]Interceptor{}, aq.inters...),
+		predicates:  append([]predicate.Account{}, aq.predicates...),
+		withTravels: aq.withTravels.Clone(),
 		// clone intermediate query.
 		sql:  aq.sql.Clone(),
 		path: aq.path,
 	}
 }
 
-// WithTravelAccount tells the query-builder to eager-load the nodes that are connected to
-// the "travel_account" edge. The optional arguments are used to configure the query builder of the edge.
-func (aq *AccountQuery) WithTravelAccount(opts ...func(*TravelQuery)) *AccountQuery {
-	query := (&TravelClient{config: aq.config}).Query()
+// WithTravels tells the query-builder to eager-load the nodes that are connected to
+// the "travels" edge. The optional arguments are used to configure the query builder of the edge.
+func (aq *AccountQuery) WithTravels(opts ...func(*TravelsQuery)) *AccountQuery {
+	query := (&TravelsClient{config: aq.config}).Query()
 	for _, opt := range opts {
 		opt(query)
 	}
-	aq.withTravelAccount = query
+	aq.withTravels = query
 	return aq
 }
 
@@ -372,7 +372,7 @@ func (aq *AccountQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Acco
 		nodes       = []*Account{}
 		_spec       = aq.querySpec()
 		loadedTypes = [1]bool{
-			aq.withTravelAccount != nil,
+			aq.withTravels != nil,
 		}
 	)
 	_spec.ScanValues = func(columns []string) ([]any, error) {
@@ -393,17 +393,17 @@ func (aq *AccountQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Acco
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
-	if query := aq.withTravelAccount; query != nil {
-		if err := aq.loadTravelAccount(ctx, query, nodes,
-			func(n *Account) { n.Edges.TravelAccount = []*Travel{} },
-			func(n *Account, e *Travel) { n.Edges.TravelAccount = append(n.Edges.TravelAccount, e) }); err != nil {
+	if query := aq.withTravels; query != nil {
+		if err := aq.loadTravels(ctx, query, nodes,
+			func(n *Account) { n.Edges.Travels = []*Travels{} },
+			func(n *Account, e *Travels) { n.Edges.Travels = append(n.Edges.Travels, e) }); err != nil {
 			return nil, err
 		}
 	}
 	return nodes, nil
 }
 
-func (aq *AccountQuery) loadTravelAccount(ctx context.Context, query *TravelQuery, nodes []*Account, init func(*Account), assign func(*Account, *Travel)) error {
+func (aq *AccountQuery) loadTravels(ctx context.Context, query *TravelsQuery, nodes []*Account, init func(*Account), assign func(*Account, *Travels)) error {
 	fks := make([]driver.Value, 0, len(nodes))
 	nodeids := make(map[int]*Account)
 	for i := range nodes {
@@ -414,21 +414,21 @@ func (aq *AccountQuery) loadTravelAccount(ctx context.Context, query *TravelQuer
 		}
 	}
 	query.withFKs = true
-	query.Where(predicate.Travel(func(s *sql.Selector) {
-		s.Where(sql.InValues(s.C(account.TravelAccountColumn), fks...))
+	query.Where(predicate.Travels(func(s *sql.Selector) {
+		s.Where(sql.InValues(s.C(account.TravelsColumn), fks...))
 	}))
 	neighbors, err := query.All(ctx)
 	if err != nil {
 		return err
 	}
 	for _, n := range neighbors {
-		fk := n.account_travel_account
+		fk := n.account_travels
 		if fk == nil {
-			return fmt.Errorf(`foreign-key "account_travel_account" is nil for node %v`, n.ID)
+			return fmt.Errorf(`foreign-key "account_travels" is nil for node %v`, n.ID)
 		}
 		node, ok := nodeids[*fk]
 		if !ok {
-			return fmt.Errorf(`unexpected referenced foreign-key "account_travel_account" returned %v for node %v`, *fk, n.ID)
+			return fmt.Errorf(`unexpected referenced foreign-key "account_travels" returned %v for node %v`, *fk, n.ID)
 		}
 		assign(node, n)
 	}

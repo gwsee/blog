@@ -4,7 +4,7 @@ package ent
 
 import (
 	"blog/internal/ent/predicate"
-	"blog/internal/ent/travel"
+	"blog/internal/ent/travels"
 	"context"
 
 	"entgo.io/ent/dialect/sql"
@@ -12,26 +12,26 @@ import (
 	"entgo.io/ent/schema/field"
 )
 
-// TravelDelete is the builder for deleting a Travel entity.
-type TravelDelete struct {
+// TravelsDelete is the builder for deleting a Travels entity.
+type TravelsDelete struct {
 	config
 	hooks    []Hook
-	mutation *TravelMutation
+	mutation *TravelsMutation
 }
 
-// Where appends a list predicates to the TravelDelete builder.
-func (td *TravelDelete) Where(ps ...predicate.Travel) *TravelDelete {
+// Where appends a list predicates to the TravelsDelete builder.
+func (td *TravelsDelete) Where(ps ...predicate.Travels) *TravelsDelete {
 	td.mutation.Where(ps...)
 	return td
 }
 
 // Exec executes the deletion query and returns how many vertices were deleted.
-func (td *TravelDelete) Exec(ctx context.Context) (int, error) {
+func (td *TravelsDelete) Exec(ctx context.Context) (int, error) {
 	return withHooks(ctx, td.sqlExec, td.mutation, td.hooks)
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (td *TravelDelete) ExecX(ctx context.Context) int {
+func (td *TravelsDelete) ExecX(ctx context.Context) int {
 	n, err := td.Exec(ctx)
 	if err != nil {
 		panic(err)
@@ -39,8 +39,8 @@ func (td *TravelDelete) ExecX(ctx context.Context) int {
 	return n
 }
 
-func (td *TravelDelete) sqlExec(ctx context.Context) (int, error) {
-	_spec := sqlgraph.NewDeleteSpec(travel.Table, sqlgraph.NewFieldSpec(travel.FieldID, field.TypeInt))
+func (td *TravelsDelete) sqlExec(ctx context.Context) (int, error) {
+	_spec := sqlgraph.NewDeleteSpec(travels.Table, sqlgraph.NewFieldSpec(travels.FieldID, field.TypeInt))
 	if ps := td.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -56,32 +56,32 @@ func (td *TravelDelete) sqlExec(ctx context.Context) (int, error) {
 	return affected, err
 }
 
-// TravelDeleteOne is the builder for deleting a single Travel entity.
-type TravelDeleteOne struct {
-	td *TravelDelete
+// TravelsDeleteOne is the builder for deleting a single Travels entity.
+type TravelsDeleteOne struct {
+	td *TravelsDelete
 }
 
-// Where appends a list predicates to the TravelDelete builder.
-func (tdo *TravelDeleteOne) Where(ps ...predicate.Travel) *TravelDeleteOne {
+// Where appends a list predicates to the TravelsDelete builder.
+func (tdo *TravelsDeleteOne) Where(ps ...predicate.Travels) *TravelsDeleteOne {
 	tdo.td.mutation.Where(ps...)
 	return tdo
 }
 
 // Exec executes the deletion query.
-func (tdo *TravelDeleteOne) Exec(ctx context.Context) error {
+func (tdo *TravelsDeleteOne) Exec(ctx context.Context) error {
 	n, err := tdo.td.Exec(ctx)
 	switch {
 	case err != nil:
 		return err
 	case n == 0:
-		return &NotFoundError{travel.Label}
+		return &NotFoundError{travels.Label}
 	default:
 		return nil
 	}
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (tdo *TravelDeleteOne) ExecX(ctx context.Context) {
+func (tdo *TravelsDeleteOne) ExecX(ctx context.Context) {
 	if err := tdo.Exec(ctx); err != nil {
 		panic(err)
 	}

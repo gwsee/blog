@@ -4,7 +4,7 @@ package ent
 
 import (
 	"blog/internal/ent/predicate"
-	"blog/internal/ent/travelextend"
+	"blog/internal/ent/travelextends"
 	"context"
 
 	"entgo.io/ent/dialect/sql"
@@ -12,26 +12,26 @@ import (
 	"entgo.io/ent/schema/field"
 )
 
-// TravelExtendDelete is the builder for deleting a TravelExtend entity.
-type TravelExtendDelete struct {
+// TravelExtendsDelete is the builder for deleting a TravelExtends entity.
+type TravelExtendsDelete struct {
 	config
 	hooks    []Hook
-	mutation *TravelExtendMutation
+	mutation *TravelExtendsMutation
 }
 
-// Where appends a list predicates to the TravelExtendDelete builder.
-func (ted *TravelExtendDelete) Where(ps ...predicate.TravelExtend) *TravelExtendDelete {
+// Where appends a list predicates to the TravelExtendsDelete builder.
+func (ted *TravelExtendsDelete) Where(ps ...predicate.TravelExtends) *TravelExtendsDelete {
 	ted.mutation.Where(ps...)
 	return ted
 }
 
 // Exec executes the deletion query and returns how many vertices were deleted.
-func (ted *TravelExtendDelete) Exec(ctx context.Context) (int, error) {
+func (ted *TravelExtendsDelete) Exec(ctx context.Context) (int, error) {
 	return withHooks(ctx, ted.sqlExec, ted.mutation, ted.hooks)
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (ted *TravelExtendDelete) ExecX(ctx context.Context) int {
+func (ted *TravelExtendsDelete) ExecX(ctx context.Context) int {
 	n, err := ted.Exec(ctx)
 	if err != nil {
 		panic(err)
@@ -39,8 +39,8 @@ func (ted *TravelExtendDelete) ExecX(ctx context.Context) int {
 	return n
 }
 
-func (ted *TravelExtendDelete) sqlExec(ctx context.Context) (int, error) {
-	_spec := sqlgraph.NewDeleteSpec(travelextend.Table, sqlgraph.NewFieldSpec(travelextend.FieldID, field.TypeInt))
+func (ted *TravelExtendsDelete) sqlExec(ctx context.Context) (int, error) {
+	_spec := sqlgraph.NewDeleteSpec(travelextends.Table, sqlgraph.NewFieldSpec(travelextends.FieldID, field.TypeInt))
 	if ps := ted.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -56,32 +56,32 @@ func (ted *TravelExtendDelete) sqlExec(ctx context.Context) (int, error) {
 	return affected, err
 }
 
-// TravelExtendDeleteOne is the builder for deleting a single TravelExtend entity.
-type TravelExtendDeleteOne struct {
-	ted *TravelExtendDelete
+// TravelExtendsDeleteOne is the builder for deleting a single TravelExtends entity.
+type TravelExtendsDeleteOne struct {
+	ted *TravelExtendsDelete
 }
 
-// Where appends a list predicates to the TravelExtendDelete builder.
-func (tedo *TravelExtendDeleteOne) Where(ps ...predicate.TravelExtend) *TravelExtendDeleteOne {
+// Where appends a list predicates to the TravelExtendsDelete builder.
+func (tedo *TravelExtendsDeleteOne) Where(ps ...predicate.TravelExtends) *TravelExtendsDeleteOne {
 	tedo.ted.mutation.Where(ps...)
 	return tedo
 }
 
 // Exec executes the deletion query.
-func (tedo *TravelExtendDeleteOne) Exec(ctx context.Context) error {
+func (tedo *TravelExtendsDeleteOne) Exec(ctx context.Context) error {
 	n, err := tedo.ted.Exec(ctx)
 	switch {
 	case err != nil:
 		return err
 	case n == 0:
-		return &NotFoundError{travelextend.Label}
+		return &NotFoundError{travelextends.Label}
 	default:
 		return nil
 	}
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (tedo *TravelExtendDeleteOne) ExecX(ctx context.Context) {
+func (tedo *TravelExtendsDeleteOne) ExecX(ctx context.Context) {
 	if err := tedo.Exec(ctx); err != nil {
 		panic(err)
 	}

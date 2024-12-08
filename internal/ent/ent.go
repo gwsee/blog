@@ -9,8 +9,8 @@ import (
 	"blog/internal/ent/blogscontent"
 	"blog/internal/ent/files"
 	"blog/internal/ent/filesextend"
-	"blog/internal/ent/travel"
-	"blog/internal/ent/travelextend"
+	"blog/internal/ent/travelextends"
+	"blog/internal/ent/travels"
 	"blog/internal/ent/user"
 	"blog/internal/ent/userexperience"
 	"blog/internal/ent/userproject"
@@ -89,8 +89,8 @@ func checkColumn(table, column string) error {
 			blogscontent.Table:   blogscontent.ValidColumn,
 			files.Table:          files.ValidColumn,
 			filesextend.Table:    filesextend.ValidColumn,
-			travel.Table:         travel.ValidColumn,
-			travelextend.Table:   travelextend.ValidColumn,
+			travelextends.Table:  travelextends.ValidColumn,
+			travels.Table:        travels.ValidColumn,
 			user.Table:           user.ValidColumn,
 			userexperience.Table: userexperience.ValidColumn,
 			userproject.Table:    userproject.ValidColumn,

@@ -43,7 +43,11 @@ type User struct {
 	// 技能
 	Skills []string `json:"skills,omitempty"`
 	// 个人简介
-	Description  string `json:"description,omitempty"`
+	Description string `json:"description,omitempty"`
+	// 经历数
+	Experience int `json:"experience,omitempty"`
+	// 项目数
+	Project      int `json:"project,omitempty"`
 	selectValues sql.SelectValues
 }
 
@@ -54,7 +58,7 @@ func (*User) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case user.FieldSkills:
 			values[i] = new([]byte)
-		case user.FieldID, user.FieldCreatedAt, user.FieldCreatedBy, user.FieldUpdatedAt, user.FieldUpdatedBy, user.FieldDeletedAt, user.FieldDeletedBy:
+		case user.FieldID, user.FieldCreatedAt, user.FieldCreatedBy, user.FieldUpdatedAt, user.FieldUpdatedBy, user.FieldDeletedAt, user.FieldDeletedBy, user.FieldExperience, user.FieldProject:
 			values[i] = new(sql.NullInt64)
 		case user.FieldName, user.FieldAvatar, user.FieldEmail, user.FieldProfessional, user.FieldAddress, user.FieldDescription:
 			values[i] = new(sql.NullString)
@@ -159,6 +163,18 @@ func (u *User) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				u.Description = value.String
 			}
+		case user.FieldExperience:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field experience", values[i])
+			} else if value.Valid {
+				u.Experience = int(value.Int64)
+			}
+		case user.FieldProject:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field project", values[i])
+			} else if value.Valid {
+				u.Project = int(value.Int64)
+			}
 		default:
 			u.selectValues.Set(columns[i], values[i])
 		}
@@ -233,6 +249,12 @@ func (u *User) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("description=")
 	builder.WriteString(u.Description)
+	builder.WriteString(", ")
+	builder.WriteString("experience=")
+	builder.WriteString(fmt.Sprintf("%v", u.Experience))
+	builder.WriteString(", ")
+	builder.WriteString("project=")
+	builder.WriteString(fmt.Sprintf("%v", u.Project))
 	builder.WriteByte(')')
 	return builder.String()
 }

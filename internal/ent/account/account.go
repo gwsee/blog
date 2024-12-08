@@ -41,17 +41,17 @@ const (
 	FieldBlogNum = "blog_num"
 	// FieldStatus holds the string denoting the status field in the database.
 	FieldStatus = "status"
-	// EdgeTravelAccount holds the string denoting the travel_account edge name in mutations.
-	EdgeTravelAccount = "travel_account"
+	// EdgeTravels holds the string denoting the travels edge name in mutations.
+	EdgeTravels = "travels"
 	// Table holds the table name of the account in the database.
 	Table = "account"
-	// TravelAccountTable is the table that holds the travel_account relation/edge.
-	TravelAccountTable = "travel"
-	// TravelAccountInverseTable is the table name for the Travel entity.
-	// It exists in this package in order to avoid circular dependency with the "travel" package.
-	TravelAccountInverseTable = "travel"
-	// TravelAccountColumn is the table column denoting the travel_account relation/edge.
-	TravelAccountColumn = "account_travel_account"
+	// TravelsTable is the table that holds the travels relation/edge.
+	TravelsTable = "travels"
+	// TravelsInverseTable is the table name for the Travels entity.
+	// It exists in this package in order to avoid circular dependency with the "travels" package.
+	TravelsInverseTable = "travels"
+	// TravelsColumn is the table column denoting the travels relation/edge.
+	TravelsColumn = "account_travels"
 )
 
 // Columns holds all SQL columns for account fields.
@@ -89,8 +89,7 @@ func ValidColumn(column string) bool {
 //
 //	import _ "blog/internal/ent/runtime"
 var (
-	Hooks        [3]ent.Hook
-	Interceptors [1]ent.Interceptor
+	Hooks [3]ent.Hook
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
 	DefaultCreatedAt int64
 	// DefaultCreatedBy holds the default value on creation for the "created_by" field.
@@ -203,23 +202,23 @@ func ByStatus(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldStatus, opts...).ToFunc()
 }
 
-// ByTravelAccountCount orders the results by travel_account count.
-func ByTravelAccountCount(opts ...sql.OrderTermOption) OrderOption {
+// ByTravelsCount orders the results by travels count.
+func ByTravelsCount(opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborsCount(s, newTravelAccountStep(), opts...)
+		sqlgraph.OrderByNeighborsCount(s, newTravelsStep(), opts...)
 	}
 }
 
-// ByTravelAccount orders the results by travel_account terms.
-func ByTravelAccount(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+// ByTravels orders the results by travels terms.
+func ByTravels(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborTerms(s, newTravelAccountStep(), append([]sql.OrderTerm{term}, terms...)...)
+		sqlgraph.OrderByNeighborTerms(s, newTravelsStep(), append([]sql.OrderTerm{term}, terms...)...)
 	}
 }
-func newTravelAccountStep() *sqlgraph.Step {
+func newTravelsStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
-		sqlgraph.To(TravelAccountInverseTable, FieldID),
-		sqlgraph.Edge(sqlgraph.O2M, false, TravelAccountTable, TravelAccountColumn),
+		sqlgraph.To(TravelsInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, TravelsTable, TravelsColumn),
 	)
 }

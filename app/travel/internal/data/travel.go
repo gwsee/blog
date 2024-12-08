@@ -4,8 +4,8 @@ import (
 	"blog/internal/ent"
 	"blog/internal/ent/account"
 	"blog/internal/ent/filesextend"
-	"blog/internal/ent/travel"
-	"blog/internal/ent/travelextend"
+	"blog/internal/ent/travelextends"
+	"blog/internal/ent/travels"
 	"context"
 	"errors"
 
@@ -39,19 +39,19 @@ func (r *travelRepo) Save(ctx context.Context, g *biz.TravelBase) (err error) {
 			err = tx.Commit()
 		}
 	}()
-	var travelObj *ent.Travel
+	var travelObj *ent.Travels
 	if g.Id == 0 {
-		travelObj, err = tx.Travel.Create().SetTitle(g.Title).SetDescription(g.Description).SetVideo(g.Video).
+		travelObj, err = tx.Travels.Create().SetTitle(g.Title).SetDescription(g.Description).SetVideo(g.Video).
 			SetIsHidden(g.IsHidden).SetAccountID(int(g.AccountId)).SetPhotos(g.Photos).Save(ctx)
 	} else {
-		travelObj, err = tx.Travel.UpdateOneID(int(g.Id)).SetTitle(g.Title).SetDescription(g.Description).SetVideo(g.Video).
+		travelObj, err = tx.Travels.UpdateOneID(int(g.Id)).SetTitle(g.Title).SetDescription(g.Description).SetVideo(g.Video).
 			SetIsHidden(g.IsHidden).SetAccountID(int(g.AccountId)).SetPhotos(g.Photos).Save(ctx)
 	}
 	if err != nil {
 		return
 	}
 
-	_, err = tx.FilesExtend.Delete().Where(filesextend.FromEQ(travel.Table),
+	_, err = tx.FilesExtend.Delete().Where(filesextend.FromEQ(travels.Table),
 		filesextend.FromIDEQ(int(travelObj.ID)), filesextend.FileIDNotIn(g.Photos...)).Exec(ctx)
 	if err != nil {
 		return
@@ -59,7 +59,7 @@ func (r *travelRepo) Save(ctx context.Context, g *biz.TravelBase) (err error) {
 	var builders []*ent.FilesExtendCreate
 	for _, v := range g.Photos {
 		builders = append(builders, tx.FilesExtend.Create().
-			SetFileID(v).SetFrom(travel.Table).SetFromID(travelObj.ID).SetUserID(int(g.AccountId)).
+			SetFileID(v).SetFrom(travels.Table).SetFromID(travelObj.ID).SetUserID(int(g.AccountId)).
 			SetIsHidden(g.IsHidden).SetDeletedAt(0),
 		)
 	}
@@ -81,14 +81,14 @@ func (r *travelRepo) Delete(ctx context.Context, g *biz.TravelBase) (err error) 
 			err = tx.Commit()
 		}
 	}()
-	row, err := tx.Travel.Delete().Where(travel.IDEQ(int(g.Id)), travel.AccountIDEQ(int(g.AccountId))).Exec(ctx)
+	row, err := tx.Travels.Delete().Where(travels.IDEQ(int(g.Id)), travels.AccountIDEQ(int(g.AccountId))).Exec(ctx)
 	if err != nil {
 		return err
 	}
 	if row == 0 {
 		return errors.New("travel not found")
 	}
-	_, err = tx.FilesExtend.Delete().Where(filesextend.FromEQ(travel.Table),
+	_, err = tx.FilesExtend.Delete().Where(filesextend.FromEQ(travels.Table),
 		filesextend.FromIDEQ(int(g.Id))).Exec(ctx)
 	return
 }
@@ -104,9 +104,9 @@ func (r *travelRepo) Thumb(ctx context.Context, g *biz.TravelDo) (err error) {
 			err = tx.Commit()
 		}
 	}()
-	id, err := tx.TravelExtend.Create().SetAccountID(int(g.AccountId)).SetTravelID(int(g.Id)).
+	id, err := tx.TravelExtends.Create().SetAccountID(int(g.AccountId)).SetTravelID(int(g.Id)).
 		SetIsThumb(g.Do).
-		OnConflictColumns(travelextend.FieldAccountID, travelextend.FieldTravelID).
+		OnConflictColumns(travelextends.FieldAccountID, travelextends.FieldTravelID).
 		UpdateIsThumb().ID(ctx)
 	if err != nil {
 		return
@@ -118,7 +118,7 @@ func (r *travelRepo) Thumb(ctx context.Context, g *biz.TravelDo) (err error) {
 	if !g.Do {
 		i = -1
 	}
-	_, err = tx.Travel.UpdateOneID(int(g.Id)).AddThumbNum(i).Save(ctx)
+	_, err = tx.Travels.UpdateOneID(int(g.Id)).AddThumbNum(i).Save(ctx)
 	return
 }
 func (r *travelRepo) Collect(ctx context.Context, g *biz.TravelDo) (err error) {
@@ -133,9 +133,9 @@ func (r *travelRepo) Collect(ctx context.Context, g *biz.TravelDo) (err error) {
 			err = tx.Commit()
 		}
 	}()
-	id, err := tx.TravelExtend.Create().SetAccountID(int(g.AccountId)).SetTravelID(int(g.Id)).
+	id, err := tx.TravelExtends.Create().SetAccountID(int(g.AccountId)).SetTravelID(int(g.Id)).
 		SetIsCollect(g.Do).
-		OnConflictColumns(travelextend.FieldAccountID, travelextend.FieldTravelID).
+		OnConflictColumns(travelextends.FieldAccountID, travelextends.FieldTravelID).
 		UpdateIsCollect().
 		ID(ctx)
 	if err != nil {
@@ -148,14 +148,14 @@ func (r *travelRepo) Collect(ctx context.Context, g *biz.TravelDo) (err error) {
 	if !g.Do {
 		i = -1
 	}
-	_, err = tx.Travel.UpdateOneID(int(g.Id)).AddCollectNum(i).Save(ctx)
+	_, err = tx.Travels.UpdateOneID(int(g.Id)).AddCollectNum(i).Save(ctx)
 	return
 }
 
 func (r *travelRepo) Get(ctx context.Context, g *biz.TravelBase) (resp *biz.Travel, err error) {
-	info, err := r.data.db.Travel.Query().Where(travel.IDEQ(int(g.Id))).
-		Where(travel.Or(travel.AccountIDEQ(int(g.AccountId)), travel.IsHidden(false))).
-		WithAccountTravel(func(query *ent.AccountQuery) {
+	info, err := r.data.db.Travels.Query().Where(travels.IDEQ(int(g.Id))).
+		Where(travels.Or(travels.AccountIDEQ(int(g.AccountId)), travels.IsHidden(false))).
+		WithAccountTravels(func(query *ent.AccountQuery) {
 			query.Select(account.FieldNickname, account.FieldAvatar)
 		}).
 		Only(ctx)
@@ -181,14 +181,14 @@ func (r *travelRepo) Get(ctx context.Context, g *biz.TravelBase) (resp *biz.Trav
 			CollectNum: info.CollectNum,
 		},
 	}
-	if info.Edges.AccountTravel != nil {
-		resp.Nickname = info.Edges.AccountTravel.Nickname
-		resp.Avatar = info.Edges.AccountTravel.Avatar
+	if info.Edges.AccountTravels != nil {
+		resp.Nickname = info.Edges.AccountTravels.Nickname
+		resp.Avatar = info.Edges.AccountTravels.Avatar
 	}
 	if g.AccountId == 0 {
 		return
 	}
-	extend, err := r.data.db.TravelExtend.Query().Where(travelextend.TravelIDEQ(info.ID), travelextend.AccountIDEQ(int(g.AccountId))).Only(ctx)
+	extend, err := r.data.db.TravelExtends.Query().Where(travelextends.TravelIDEQ(info.ID), travelextends.AccountIDEQ(int(g.AccountId))).Only(ctx)
 	if err != nil {
 		return resp, nil
 	}
@@ -198,28 +198,28 @@ func (r *travelRepo) Get(ctx context.Context, g *biz.TravelBase) (resp *biz.Trav
 }
 
 func (r *travelRepo) List(ctx context.Context, g *biz.TravelQuery) (int64, []*biz.Travel, error) {
-	tx := r.data.db.Travel.Query().Where(travel.Or(travel.AccountIDEQ(int(g.AccountId)), travel.IsHidden(false)))
-	tx.WithAccountTravel(func(query *ent.AccountQuery) {
+	tx := r.data.db.Travels.Query().Where(travels.Or(travels.AccountIDEQ(int(g.AccountId)), travels.IsHidden(false)))
+	tx.WithAccountTravels(func(query *ent.AccountQuery) {
 		query.Select(account.FieldNickname, account.FieldAvatar)
 	})
 	if g.My {
-		tx.Where(travel.AccountIDEQ(int(g.AccountId)))
+		tx.Where(travels.AccountIDEQ(int(g.AccountId)))
 	}
 	if g.MyThumb && g.AccountId > 0 {
-		tx.WithTravelExtend(func(query *ent.TravelExtendQuery) {
-			query.Select(travelextend.FieldIsThumb).Where(travelextend.AccountIDEQ(int(g.AccountId)), travelextend.IsThumbEQ(true))
+		tx.WithTravelExtends(func(query *ent.TravelExtendsQuery) {
+			query.Select(travelextends.FieldIsThumb).Where(travelextends.AccountIDEQ(int(g.AccountId)), travelextends.IsThumbEQ(true))
 		})
 	}
 	if g.MyCollect && g.AccountId > 0 {
-		tx.WithTravelExtend(func(query *ent.TravelExtendQuery) {
-			query.Select(travelextend.FieldIsCollect).Where(travelextend.AccountIDEQ(int(g.AccountId)), travelextend.IsCollectEQ(true))
+		tx.WithTravelExtends(func(query *ent.TravelExtendsQuery) {
+			query.Select(travelextends.FieldIsCollect).Where(travelextends.AccountIDEQ(int(g.AccountId)), travelextends.IsCollectEQ(true))
 		})
 	}
 	if len(g.Title) > 0 {
-		tx.Where(travel.TitleContains(g.Title))
+		tx.Where(travels.TitleContains(g.Title))
 	}
 	if len(g.Description) > 0 {
-		tx.Where(travel.DescriptionContains(g.Description))
+		tx.Where(travels.DescriptionContains(g.Description))
 	}
 	if len(g.Sort) > 0 {
 		tx = tx.Order(ent.Desc(g.Sort))
@@ -231,10 +231,10 @@ func (r *travelRepo) List(ctx context.Context, g *biz.TravelQuery) (int64, []*bi
 	if total == 0 {
 		return 0, []*biz.Travel{}, nil
 	}
-	tx = tx.Order(ent.Desc(travel.FieldID))
+	tx = tx.Order(ent.Desc(travels.FieldID))
 	resp := make([]*biz.Travel, 0, g.GetPageSize())
-	err = tx.Select(travel.FieldID, travel.FieldTitle, travel.FieldDescription, travel.FieldVideo, travel.FieldPhotos, travel.FieldBrowseNum,
-		travel.FieldThumbNum, travel.FieldCollectNum, travel.FieldAccountID, travel.FieldCreatedAt, travel.FieldCreatedAt,
+	err = tx.Select(travels.FieldID, travels.FieldTitle, travels.FieldDescription, travels.FieldVideo, travels.FieldPhotos, travels.FieldBrowseNum,
+		travels.FieldThumbNum, travels.FieldCollectNum, travels.FieldAccountID, travels.FieldCreatedAt, travels.FieldCreatedAt,
 	).Scan(ctx, &resp)
 	return int64(total), resp, err
 }

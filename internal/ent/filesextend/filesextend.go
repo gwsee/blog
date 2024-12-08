@@ -70,8 +70,7 @@ func ValidColumn(column string) bool {
 //
 //	import _ "blog/internal/ent/runtime"
 var (
-	Hooks        [3]ent.Hook
-	Interceptors [1]ent.Interceptor
+	Hooks [3]ent.Hook
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
 	DefaultCreatedAt int64
 	// DefaultCreatedBy holds the default value on creation for the "created_by" field.

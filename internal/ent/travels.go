@@ -4,7 +4,7 @@ package ent
 
 import (
 	"blog/internal/ent/account"
-	"blog/internal/ent/travel"
+	"blog/internal/ent/travels"
 	"encoding/json"
 	"fmt"
 	"strings"
@@ -14,7 +14,7 @@ import (
 )
 
 // 旅行
-type Travel struct {
+type Travels struct {
 	config `json:"-"`
 	// ID of the ent.
 	// 旅行记录的ID
@@ -50,57 +50,57 @@ type Travel struct {
 	// 收藏量
 	CollectNum int `json:"collect_num,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
-	// The values are being populated by the TravelQuery when eager-loading is set.
-	Edges                  TravelEdges `json:"edges"`
-	account_travel_account *int
-	selectValues           sql.SelectValues
+	// The values are being populated by the TravelsQuery when eager-loading is set.
+	Edges           TravelsEdges `json:"edges"`
+	account_travels *int
+	selectValues    sql.SelectValues
 }
 
-// TravelEdges holds the relations/edges for other nodes in the graph.
-type TravelEdges struct {
-	// TravelExtend holds the value of the travel_extend edge.
-	TravelExtend []*TravelExtend `json:"travel_extend,omitempty"`
-	// AccountTravel holds the value of the account_travel edge.
-	AccountTravel *Account `json:"account_travel,omitempty"`
+// TravelsEdges holds the relations/edges for other nodes in the graph.
+type TravelsEdges struct {
+	// TravelExtends holds the value of the travel_extends edge.
+	TravelExtends []*TravelExtends `json:"travel_extends,omitempty"`
+	// AccountTravels holds the value of the account_travels edge.
+	AccountTravels *Account `json:"account_travels,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [2]bool
 }
 
-// TravelExtendOrErr returns the TravelExtend value or an error if the edge
+// TravelExtendsOrErr returns the TravelExtends value or an error if the edge
 // was not loaded in eager-loading.
-func (e TravelEdges) TravelExtendOrErr() ([]*TravelExtend, error) {
+func (e TravelsEdges) TravelExtendsOrErr() ([]*TravelExtends, error) {
 	if e.loadedTypes[0] {
-		return e.TravelExtend, nil
+		return e.TravelExtends, nil
 	}
-	return nil, &NotLoadedError{edge: "travel_extend"}
+	return nil, &NotLoadedError{edge: "travel_extends"}
 }
 
-// AccountTravelOrErr returns the AccountTravel value or an error if the edge
+// AccountTravelsOrErr returns the AccountTravels value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
-func (e TravelEdges) AccountTravelOrErr() (*Account, error) {
-	if e.AccountTravel != nil {
-		return e.AccountTravel, nil
+func (e TravelsEdges) AccountTravelsOrErr() (*Account, error) {
+	if e.AccountTravels != nil {
+		return e.AccountTravels, nil
 	} else if e.loadedTypes[1] {
 		return nil, &NotFoundError{label: account.Label}
 	}
-	return nil, &NotLoadedError{edge: "account_travel"}
+	return nil, &NotLoadedError{edge: "account_travels"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
-func (*Travel) scanValues(columns []string) ([]any, error) {
+func (*Travels) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case travel.FieldPhotos:
+		case travels.FieldPhotos:
 			values[i] = new([]byte)
-		case travel.FieldIsHidden:
+		case travels.FieldIsHidden:
 			values[i] = new(sql.NullBool)
-		case travel.FieldID, travel.FieldCreatedAt, travel.FieldCreatedBy, travel.FieldUpdatedAt, travel.FieldUpdatedBy, travel.FieldDeletedAt, travel.FieldDeletedBy, travel.FieldAccountID, travel.FieldBrowseNum, travel.FieldThumbNum, travel.FieldCollectNum:
+		case travels.FieldID, travels.FieldCreatedAt, travels.FieldCreatedBy, travels.FieldUpdatedAt, travels.FieldUpdatedBy, travels.FieldDeletedAt, travels.FieldDeletedBy, travels.FieldAccountID, travels.FieldBrowseNum, travels.FieldThumbNum, travels.FieldCollectNum:
 			values[i] = new(sql.NullInt64)
-		case travel.FieldTitle, travel.FieldDescription, travel.FieldVideo:
+		case travels.FieldTitle, travels.FieldDescription, travels.FieldVideo:
 			values[i] = new(sql.NullString)
-		case travel.ForeignKeys[0]: // account_travel_account
+		case travels.ForeignKeys[0]: // account_travels
 			values[i] = new(sql.NullInt64)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -110,86 +110,86 @@ func (*Travel) scanValues(columns []string) ([]any, error) {
 }
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
-// to the Travel fields.
-func (t *Travel) assignValues(columns []string, values []any) error {
+// to the Travels fields.
+func (t *Travels) assignValues(columns []string, values []any) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
 	for i := range columns {
 		switch columns[i] {
-		case travel.FieldID:
+		case travels.FieldID:
 			value, ok := values[i].(*sql.NullInt64)
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
 			t.ID = int(value.Int64)
-		case travel.FieldCreatedAt:
+		case travels.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field created_at", values[i])
 			} else if value.Valid {
 				t.CreatedAt = value.Int64
 			}
-		case travel.FieldCreatedBy:
+		case travels.FieldCreatedBy:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field created_by", values[i])
 			} else if value.Valid {
 				t.CreatedBy = value.Int64
 			}
-		case travel.FieldUpdatedAt:
+		case travels.FieldUpdatedAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
 			} else if value.Valid {
 				t.UpdatedAt = value.Int64
 			}
-		case travel.FieldUpdatedBy:
+		case travels.FieldUpdatedBy:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field updated_by", values[i])
 			} else if value.Valid {
 				t.UpdatedBy = value.Int64
 			}
-		case travel.FieldDeletedAt:
+		case travels.FieldDeletedAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field deleted_at", values[i])
 			} else if value.Valid {
 				t.DeletedAt = value.Int64
 			}
-		case travel.FieldDeletedBy:
+		case travels.FieldDeletedBy:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field deleted_by", values[i])
 			} else if value.Valid {
 				t.DeletedBy = value.Int64
 			}
-		case travel.FieldTitle:
+		case travels.FieldTitle:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field title", values[i])
 			} else if value.Valid {
 				t.Title = value.String
 			}
-		case travel.FieldDescription:
+		case travels.FieldDescription:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field description", values[i])
 			} else if value.Valid {
 				t.Description = value.String
 			}
-		case travel.FieldVideo:
+		case travels.FieldVideo:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field video", values[i])
 			} else if value.Valid {
 				t.Video = value.String
 			}
-		case travel.FieldIsHidden:
+		case travels.FieldIsHidden:
 			if value, ok := values[i].(*sql.NullBool); !ok {
 				return fmt.Errorf("unexpected type %T for field is_hidden", values[i])
 			} else if value.Valid {
 				t.IsHidden = value.Bool
 			}
-		case travel.FieldAccountID:
+		case travels.FieldAccountID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field account_id", values[i])
 			} else if value.Valid {
 				t.AccountID = int(value.Int64)
 			}
-		case travel.FieldPhotos:
+		case travels.FieldPhotos:
 			if value, ok := values[i].(*[]byte); !ok {
 				return fmt.Errorf("unexpected type %T for field photos", values[i])
 			} else if value != nil && len(*value) > 0 {
@@ -197,30 +197,30 @@ func (t *Travel) assignValues(columns []string, values []any) error {
 					return fmt.Errorf("unmarshal field photos: %w", err)
 				}
 			}
-		case travel.FieldBrowseNum:
+		case travels.FieldBrowseNum:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field browse_num", values[i])
 			} else if value.Valid {
 				t.BrowseNum = int(value.Int64)
 			}
-		case travel.FieldThumbNum:
+		case travels.FieldThumbNum:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field thumb_num", values[i])
 			} else if value.Valid {
 				t.ThumbNum = int(value.Int64)
 			}
-		case travel.FieldCollectNum:
+		case travels.FieldCollectNum:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field collect_num", values[i])
 			} else if value.Valid {
 				t.CollectNum = int(value.Int64)
 			}
-		case travel.ForeignKeys[0]:
+		case travels.ForeignKeys[0]:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for edge-field account_travel_account", value)
+				return fmt.Errorf("unexpected type %T for edge-field account_travels", value)
 			} else if value.Valid {
-				t.account_travel_account = new(int)
-				*t.account_travel_account = int(value.Int64)
+				t.account_travels = new(int)
+				*t.account_travels = int(value.Int64)
 			}
 		default:
 			t.selectValues.Set(columns[i], values[i])
@@ -229,44 +229,44 @@ func (t *Travel) assignValues(columns []string, values []any) error {
 	return nil
 }
 
-// Value returns the ent.Value that was dynamically selected and assigned to the Travel.
+// Value returns the ent.Value that was dynamically selected and assigned to the Travels.
 // This includes values selected through modifiers, order, etc.
-func (t *Travel) Value(name string) (ent.Value, error) {
+func (t *Travels) Value(name string) (ent.Value, error) {
 	return t.selectValues.Get(name)
 }
 
-// QueryTravelExtend queries the "travel_extend" edge of the Travel entity.
-func (t *Travel) QueryTravelExtend() *TravelExtendQuery {
-	return NewTravelClient(t.config).QueryTravelExtend(t)
+// QueryTravelExtends queries the "travel_extends" edge of the Travels entity.
+func (t *Travels) QueryTravelExtends() *TravelExtendsQuery {
+	return NewTravelsClient(t.config).QueryTravelExtends(t)
 }
 
-// QueryAccountTravel queries the "account_travel" edge of the Travel entity.
-func (t *Travel) QueryAccountTravel() *AccountQuery {
-	return NewTravelClient(t.config).QueryAccountTravel(t)
+// QueryAccountTravels queries the "account_travels" edge of the Travels entity.
+func (t *Travels) QueryAccountTravels() *AccountQuery {
+	return NewTravelsClient(t.config).QueryAccountTravels(t)
 }
 
-// Update returns a builder for updating this Travel.
-// Note that you need to call Travel.Unwrap() before calling this method if this Travel
+// Update returns a builder for updating this Travels.
+// Note that you need to call Travels.Unwrap() before calling this method if this Travels
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (t *Travel) Update() *TravelUpdateOne {
-	return NewTravelClient(t.config).UpdateOne(t)
+func (t *Travels) Update() *TravelsUpdateOne {
+	return NewTravelsClient(t.config).UpdateOne(t)
 }
 
-// Unwrap unwraps the Travel entity that was returned from a transaction after it was closed,
+// Unwrap unwraps the Travels entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
-func (t *Travel) Unwrap() *Travel {
+func (t *Travels) Unwrap() *Travels {
 	_tx, ok := t.config.driver.(*txDriver)
 	if !ok {
-		panic("ent: Travel is not a transactional entity")
+		panic("ent: Travels is not a transactional entity")
 	}
 	t.config.driver = _tx.drv
 	return t
 }
 
 // String implements the fmt.Stringer.
-func (t *Travel) String() string {
+func (t *Travels) String() string {
 	var builder strings.Builder
-	builder.WriteString("Travel(")
+	builder.WriteString("Travels(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", t.ID))
 	builder.WriteString("created_at=")
 	builder.WriteString(fmt.Sprintf("%v", t.CreatedAt))
@@ -316,5 +316,5 @@ func (t *Travel) String() string {
 	return builder.String()
 }
 
-// Travels is a parsable slice of Travel.
-type Travels []*Travel
+// TravelsSlice is a parsable slice of Travels.
+type TravelsSlice []*Travels

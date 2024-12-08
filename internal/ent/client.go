@@ -17,8 +17,8 @@ import (
 	"blog/internal/ent/blogscontent"
 	"blog/internal/ent/files"
 	"blog/internal/ent/filesextend"
-	"blog/internal/ent/travel"
-	"blog/internal/ent/travelextend"
+	"blog/internal/ent/travelextends"
+	"blog/internal/ent/travels"
 	"blog/internal/ent/user"
 	"blog/internal/ent/userexperience"
 	"blog/internal/ent/userproject"
@@ -48,10 +48,10 @@ type Client struct {
 	Files *FilesClient
 	// FilesExtend is the client for interacting with the FilesExtend builders.
 	FilesExtend *FilesExtendClient
-	// Travel is the client for interacting with the Travel builders.
-	Travel *TravelClient
-	// TravelExtend is the client for interacting with the TravelExtend builders.
-	TravelExtend *TravelExtendClient
+	// TravelExtends is the client for interacting with the TravelExtends builders.
+	TravelExtends *TravelExtendsClient
+	// Travels is the client for interacting with the Travels builders.
+	Travels *TravelsClient
 	// User is the client for interacting with the User builders.
 	User *UserClient
 	// UserExperience is the client for interacting with the UserExperience builders.
@@ -75,8 +75,8 @@ func (c *Client) init() {
 	c.BlogsContent = NewBlogsContentClient(c.config)
 	c.Files = NewFilesClient(c.config)
 	c.FilesExtend = NewFilesExtendClient(c.config)
-	c.Travel = NewTravelClient(c.config)
-	c.TravelExtend = NewTravelExtendClient(c.config)
+	c.TravelExtends = NewTravelExtendsClient(c.config)
+	c.Travels = NewTravelsClient(c.config)
 	c.User = NewUserClient(c.config)
 	c.UserExperience = NewUserExperienceClient(c.config)
 	c.UserProject = NewUserProjectClient(c.config)
@@ -178,8 +178,8 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		BlogsContent:   NewBlogsContentClient(cfg),
 		Files:          NewFilesClient(cfg),
 		FilesExtend:    NewFilesExtendClient(cfg),
-		Travel:         NewTravelClient(cfg),
-		TravelExtend:   NewTravelExtendClient(cfg),
+		TravelExtends:  NewTravelExtendsClient(cfg),
+		Travels:        NewTravelsClient(cfg),
 		User:           NewUserClient(cfg),
 		UserExperience: NewUserExperienceClient(cfg),
 		UserProject:    NewUserProjectClient(cfg),
@@ -208,8 +208,8 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		BlogsContent:   NewBlogsContentClient(cfg),
 		Files:          NewFilesClient(cfg),
 		FilesExtend:    NewFilesExtendClient(cfg),
-		Travel:         NewTravelClient(cfg),
-		TravelExtend:   NewTravelExtendClient(cfg),
+		TravelExtends:  NewTravelExtendsClient(cfg),
+		Travels:        NewTravelsClient(cfg),
 		User:           NewUserClient(cfg),
 		UserExperience: NewUserExperienceClient(cfg),
 		UserProject:    NewUserProjectClient(cfg),
@@ -243,7 +243,7 @@ func (c *Client) Close() error {
 func (c *Client) Use(hooks ...Hook) {
 	for _, n := range []interface{ Use(...Hook) }{
 		c.Account, c.Blogs, c.BlogsComment, c.BlogsContent, c.Files, c.FilesExtend,
-		c.Travel, c.TravelExtend, c.User, c.UserExperience, c.UserProject,
+		c.TravelExtends, c.Travels, c.User, c.UserExperience, c.UserProject,
 	} {
 		n.Use(hooks...)
 	}
@@ -254,7 +254,7 @@ func (c *Client) Use(hooks ...Hook) {
 func (c *Client) Intercept(interceptors ...Interceptor) {
 	for _, n := range []interface{ Intercept(...Interceptor) }{
 		c.Account, c.Blogs, c.BlogsComment, c.BlogsContent, c.Files, c.FilesExtend,
-		c.Travel, c.TravelExtend, c.User, c.UserExperience, c.UserProject,
+		c.TravelExtends, c.Travels, c.User, c.UserExperience, c.UserProject,
 	} {
 		n.Intercept(interceptors...)
 	}
@@ -275,10 +275,10 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.Files.mutate(ctx, m)
 	case *FilesExtendMutation:
 		return c.FilesExtend.mutate(ctx, m)
-	case *TravelMutation:
-		return c.Travel.mutate(ctx, m)
-	case *TravelExtendMutation:
-		return c.TravelExtend.mutate(ctx, m)
+	case *TravelExtendsMutation:
+		return c.TravelExtends.mutate(ctx, m)
+	case *TravelsMutation:
+		return c.Travels.mutate(ctx, m)
 	case *UserMutation:
 		return c.User.mutate(ctx, m)
 	case *UserExperienceMutation:
@@ -398,15 +398,15 @@ func (c *AccountClient) GetX(ctx context.Context, id int) *Account {
 	return obj
 }
 
-// QueryTravelAccount queries the travel_account edge of a Account.
-func (c *AccountClient) QueryTravelAccount(a *Account) *TravelQuery {
-	query := (&TravelClient{config: c.config}).Query()
+// QueryTravels queries the travels edge of a Account.
+func (c *AccountClient) QueryTravels(a *Account) *TravelsQuery {
+	query := (&TravelsClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := a.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(account.Table, account.FieldID, id),
-			sqlgraph.To(travel.Table, travel.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, account.TravelAccountTable, account.TravelAccountColumn),
+			sqlgraph.To(travels.Table, travels.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, account.TravelsTable, account.TravelsColumn),
 		)
 		fromV = sqlgraph.Neighbors(a.driver.Dialect(), step)
 		return fromV, nil
@@ -422,8 +422,7 @@ func (c *AccountClient) Hooks() []Hook {
 
 // Interceptors returns the client interceptors.
 func (c *AccountClient) Interceptors() []Interceptor {
-	inters := c.inters.Account
-	return append(inters[:len(inters):len(inters)], account.Interceptors[:]...)
+	return c.inters.Account
 }
 
 func (c *AccountClient) mutate(ctx context.Context, m *AccountMutation) (Value, error) {
@@ -557,8 +556,7 @@ func (c *BlogsClient) Hooks() []Hook {
 
 // Interceptors returns the client interceptors.
 func (c *BlogsClient) Interceptors() []Interceptor {
-	inters := c.inters.Blogs
-	return append(inters[:len(inters):len(inters)], blogs.Interceptors[:]...)
+	return c.inters.Blogs
 }
 
 func (c *BlogsClient) mutate(ctx context.Context, m *BlogsMutation) (Value, error) {
@@ -692,8 +690,7 @@ func (c *BlogsCommentClient) Hooks() []Hook {
 
 // Interceptors returns the client interceptors.
 func (c *BlogsCommentClient) Interceptors() []Interceptor {
-	inters := c.inters.BlogsComment
-	return append(inters[:len(inters):len(inters)], blogscomment.Interceptors[:]...)
+	return c.inters.BlogsComment
 }
 
 func (c *BlogsCommentClient) mutate(ctx context.Context, m *BlogsCommentMutation) (Value, error) {
@@ -960,8 +957,7 @@ func (c *FilesClient) Hooks() []Hook {
 
 // Interceptors returns the client interceptors.
 func (c *FilesClient) Interceptors() []Interceptor {
-	inters := c.inters.Files
-	return append(inters[:len(inters):len(inters)], files.Interceptors[:]...)
+	return c.inters.Files
 }
 
 func (c *FilesClient) mutate(ctx context.Context, m *FilesMutation) (Value, error) {
@@ -1095,8 +1091,7 @@ func (c *FilesExtendClient) Hooks() []Hook {
 
 // Interceptors returns the client interceptors.
 func (c *FilesExtendClient) Interceptors() []Interceptor {
-	inters := c.inters.FilesExtend
-	return append(inters[:len(inters):len(inters)], filesextend.Interceptors[:]...)
+	return c.inters.FilesExtend
 }
 
 func (c *FilesExtendClient) mutate(ctx context.Context, m *FilesExtendMutation) (Value, error) {
@@ -1114,274 +1109,107 @@ func (c *FilesExtendClient) mutate(ctx context.Context, m *FilesExtendMutation) 
 	}
 }
 
-// TravelClient is a client for the Travel schema.
-type TravelClient struct {
+// TravelExtendsClient is a client for the TravelExtends schema.
+type TravelExtendsClient struct {
 	config
 }
 
-// NewTravelClient returns a client for the Travel from the given config.
-func NewTravelClient(c config) *TravelClient {
-	return &TravelClient{config: c}
+// NewTravelExtendsClient returns a client for the TravelExtends from the given config.
+func NewTravelExtendsClient(c config) *TravelExtendsClient {
+	return &TravelExtendsClient{config: c}
 }
 
 // Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `travel.Hooks(f(g(h())))`.
-func (c *TravelClient) Use(hooks ...Hook) {
-	c.hooks.Travel = append(c.hooks.Travel, hooks...)
+// A call to `Use(f, g, h)` equals to `travelextends.Hooks(f(g(h())))`.
+func (c *TravelExtendsClient) Use(hooks ...Hook) {
+	c.hooks.TravelExtends = append(c.hooks.TravelExtends, hooks...)
 }
 
 // Intercept adds a list of query interceptors to the interceptors stack.
-// A call to `Intercept(f, g, h)` equals to `travel.Intercept(f(g(h())))`.
-func (c *TravelClient) Intercept(interceptors ...Interceptor) {
-	c.inters.Travel = append(c.inters.Travel, interceptors...)
+// A call to `Intercept(f, g, h)` equals to `travelextends.Intercept(f(g(h())))`.
+func (c *TravelExtendsClient) Intercept(interceptors ...Interceptor) {
+	c.inters.TravelExtends = append(c.inters.TravelExtends, interceptors...)
 }
 
-// Create returns a builder for creating a Travel entity.
-func (c *TravelClient) Create() *TravelCreate {
-	mutation := newTravelMutation(c.config, OpCreate)
-	return &TravelCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Create returns a builder for creating a TravelExtends entity.
+func (c *TravelExtendsClient) Create() *TravelExtendsCreate {
+	mutation := newTravelExtendsMutation(c.config, OpCreate)
+	return &TravelExtendsCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// CreateBulk returns a builder for creating a bulk of Travel entities.
-func (c *TravelClient) CreateBulk(builders ...*TravelCreate) *TravelCreateBulk {
-	return &TravelCreateBulk{config: c.config, builders: builders}
+// CreateBulk returns a builder for creating a bulk of TravelExtends entities.
+func (c *TravelExtendsClient) CreateBulk(builders ...*TravelExtendsCreate) *TravelExtendsCreateBulk {
+	return &TravelExtendsCreateBulk{config: c.config, builders: builders}
 }
 
 // MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
 // a builder and applies setFunc on it.
-func (c *TravelClient) MapCreateBulk(slice any, setFunc func(*TravelCreate, int)) *TravelCreateBulk {
+func (c *TravelExtendsClient) MapCreateBulk(slice any, setFunc func(*TravelExtendsCreate, int)) *TravelExtendsCreateBulk {
 	rv := reflect.ValueOf(slice)
 	if rv.Kind() != reflect.Slice {
-		return &TravelCreateBulk{err: fmt.Errorf("calling to TravelClient.MapCreateBulk with wrong type %T, need slice", slice)}
+		return &TravelExtendsCreateBulk{err: fmt.Errorf("calling to TravelExtendsClient.MapCreateBulk with wrong type %T, need slice", slice)}
 	}
-	builders := make([]*TravelCreate, rv.Len())
+	builders := make([]*TravelExtendsCreate, rv.Len())
 	for i := 0; i < rv.Len(); i++ {
 		builders[i] = c.Create()
 		setFunc(builders[i], i)
 	}
-	return &TravelCreateBulk{config: c.config, builders: builders}
+	return &TravelExtendsCreateBulk{config: c.config, builders: builders}
 }
 
-// Update returns an update builder for Travel.
-func (c *TravelClient) Update() *TravelUpdate {
-	mutation := newTravelMutation(c.config, OpUpdate)
-	return &TravelUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOne returns an update builder for the given entity.
-func (c *TravelClient) UpdateOne(t *Travel) *TravelUpdateOne {
-	mutation := newTravelMutation(c.config, OpUpdateOne, withTravel(t))
-	return &TravelUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOneID returns an update builder for the given id.
-func (c *TravelClient) UpdateOneID(id int) *TravelUpdateOne {
-	mutation := newTravelMutation(c.config, OpUpdateOne, withTravelID(id))
-	return &TravelUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// Delete returns a delete builder for Travel.
-func (c *TravelClient) Delete() *TravelDelete {
-	mutation := newTravelMutation(c.config, OpDelete)
-	return &TravelDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// DeleteOne returns a builder for deleting the given entity.
-func (c *TravelClient) DeleteOne(t *Travel) *TravelDeleteOne {
-	return c.DeleteOneID(t.ID)
-}
-
-// DeleteOneID returns a builder for deleting the given entity by its id.
-func (c *TravelClient) DeleteOneID(id int) *TravelDeleteOne {
-	builder := c.Delete().Where(travel.ID(id))
-	builder.mutation.id = &id
-	builder.mutation.op = OpDeleteOne
-	return &TravelDeleteOne{builder}
-}
-
-// Query returns a query builder for Travel.
-func (c *TravelClient) Query() *TravelQuery {
-	return &TravelQuery{
-		config: c.config,
-		ctx:    &QueryContext{Type: TypeTravel},
-		inters: c.Interceptors(),
-	}
-}
-
-// Get returns a Travel entity by its id.
-func (c *TravelClient) Get(ctx context.Context, id int) (*Travel, error) {
-	return c.Query().Where(travel.ID(id)).Only(ctx)
-}
-
-// GetX is like Get, but panics if an error occurs.
-func (c *TravelClient) GetX(ctx context.Context, id int) *Travel {
-	obj, err := c.Get(ctx, id)
-	if err != nil {
-		panic(err)
-	}
-	return obj
-}
-
-// QueryTravelExtend queries the travel_extend edge of a Travel.
-func (c *TravelClient) QueryTravelExtend(t *Travel) *TravelExtendQuery {
-	query := (&TravelExtendClient{config: c.config}).Query()
-	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := t.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(travel.Table, travel.FieldID, id),
-			sqlgraph.To(travelextend.Table, travelextend.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, travel.TravelExtendTable, travel.TravelExtendColumn),
-		)
-		fromV = sqlgraph.Neighbors(t.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
-// QueryAccountTravel queries the account_travel edge of a Travel.
-func (c *TravelClient) QueryAccountTravel(t *Travel) *AccountQuery {
-	query := (&AccountClient{config: c.config}).Query()
-	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := t.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(travel.Table, travel.FieldID, id),
-			sqlgraph.To(account.Table, account.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, travel.AccountTravelTable, travel.AccountTravelColumn),
-		)
-		fromV = sqlgraph.Neighbors(t.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
-// Hooks returns the client hooks.
-func (c *TravelClient) Hooks() []Hook {
-	hooks := c.hooks.Travel
-	return append(hooks[:len(hooks):len(hooks)], travel.Hooks[:]...)
-}
-
-// Interceptors returns the client interceptors.
-func (c *TravelClient) Interceptors() []Interceptor {
-	inters := c.inters.Travel
-	return append(inters[:len(inters):len(inters)], travel.Interceptors[:]...)
-}
-
-func (c *TravelClient) mutate(ctx context.Context, m *TravelMutation) (Value, error) {
-	switch m.Op() {
-	case OpCreate:
-		return (&TravelCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
-	case OpUpdate:
-		return (&TravelUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
-	case OpUpdateOne:
-		return (&TravelUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
-	case OpDelete, OpDeleteOne:
-		return (&TravelDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
-	default:
-		return nil, fmt.Errorf("ent: unknown Travel mutation op: %q", m.Op())
-	}
-}
-
-// TravelExtendClient is a client for the TravelExtend schema.
-type TravelExtendClient struct {
-	config
-}
-
-// NewTravelExtendClient returns a client for the TravelExtend from the given config.
-func NewTravelExtendClient(c config) *TravelExtendClient {
-	return &TravelExtendClient{config: c}
-}
-
-// Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `travelextend.Hooks(f(g(h())))`.
-func (c *TravelExtendClient) Use(hooks ...Hook) {
-	c.hooks.TravelExtend = append(c.hooks.TravelExtend, hooks...)
-}
-
-// Intercept adds a list of query interceptors to the interceptors stack.
-// A call to `Intercept(f, g, h)` equals to `travelextend.Intercept(f(g(h())))`.
-func (c *TravelExtendClient) Intercept(interceptors ...Interceptor) {
-	c.inters.TravelExtend = append(c.inters.TravelExtend, interceptors...)
-}
-
-// Create returns a builder for creating a TravelExtend entity.
-func (c *TravelExtendClient) Create() *TravelExtendCreate {
-	mutation := newTravelExtendMutation(c.config, OpCreate)
-	return &TravelExtendCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// CreateBulk returns a builder for creating a bulk of TravelExtend entities.
-func (c *TravelExtendClient) CreateBulk(builders ...*TravelExtendCreate) *TravelExtendCreateBulk {
-	return &TravelExtendCreateBulk{config: c.config, builders: builders}
-}
-
-// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
-// a builder and applies setFunc on it.
-func (c *TravelExtendClient) MapCreateBulk(slice any, setFunc func(*TravelExtendCreate, int)) *TravelExtendCreateBulk {
-	rv := reflect.ValueOf(slice)
-	if rv.Kind() != reflect.Slice {
-		return &TravelExtendCreateBulk{err: fmt.Errorf("calling to TravelExtendClient.MapCreateBulk with wrong type %T, need slice", slice)}
-	}
-	builders := make([]*TravelExtendCreate, rv.Len())
-	for i := 0; i < rv.Len(); i++ {
-		builders[i] = c.Create()
-		setFunc(builders[i], i)
-	}
-	return &TravelExtendCreateBulk{config: c.config, builders: builders}
-}
-
-// Update returns an update builder for TravelExtend.
-func (c *TravelExtendClient) Update() *TravelExtendUpdate {
-	mutation := newTravelExtendMutation(c.config, OpUpdate)
-	return &TravelExtendUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Update returns an update builder for TravelExtends.
+func (c *TravelExtendsClient) Update() *TravelExtendsUpdate {
+	mutation := newTravelExtendsMutation(c.config, OpUpdate)
+	return &TravelExtendsUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *TravelExtendClient) UpdateOne(te *TravelExtend) *TravelExtendUpdateOne {
-	mutation := newTravelExtendMutation(c.config, OpUpdateOne, withTravelExtend(te))
-	return &TravelExtendUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *TravelExtendsClient) UpdateOne(te *TravelExtends) *TravelExtendsUpdateOne {
+	mutation := newTravelExtendsMutation(c.config, OpUpdateOne, withTravelExtends(te))
+	return &TravelExtendsUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOneID returns an update builder for the given id.
-func (c *TravelExtendClient) UpdateOneID(id int) *TravelExtendUpdateOne {
-	mutation := newTravelExtendMutation(c.config, OpUpdateOne, withTravelExtendID(id))
-	return &TravelExtendUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *TravelExtendsClient) UpdateOneID(id int) *TravelExtendsUpdateOne {
+	mutation := newTravelExtendsMutation(c.config, OpUpdateOne, withTravelExtendsID(id))
+	return &TravelExtendsUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// Delete returns a delete builder for TravelExtend.
-func (c *TravelExtendClient) Delete() *TravelExtendDelete {
-	mutation := newTravelExtendMutation(c.config, OpDelete)
-	return &TravelExtendDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Delete returns a delete builder for TravelExtends.
+func (c *TravelExtendsClient) Delete() *TravelExtendsDelete {
+	mutation := newTravelExtendsMutation(c.config, OpDelete)
+	return &TravelExtendsDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // DeleteOne returns a builder for deleting the given entity.
-func (c *TravelExtendClient) DeleteOne(te *TravelExtend) *TravelExtendDeleteOne {
+func (c *TravelExtendsClient) DeleteOne(te *TravelExtends) *TravelExtendsDeleteOne {
 	return c.DeleteOneID(te.ID)
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
-func (c *TravelExtendClient) DeleteOneID(id int) *TravelExtendDeleteOne {
-	builder := c.Delete().Where(travelextend.ID(id))
+func (c *TravelExtendsClient) DeleteOneID(id int) *TravelExtendsDeleteOne {
+	builder := c.Delete().Where(travelextends.ID(id))
 	builder.mutation.id = &id
 	builder.mutation.op = OpDeleteOne
-	return &TravelExtendDeleteOne{builder}
+	return &TravelExtendsDeleteOne{builder}
 }
 
-// Query returns a query builder for TravelExtend.
-func (c *TravelExtendClient) Query() *TravelExtendQuery {
-	return &TravelExtendQuery{
+// Query returns a query builder for TravelExtends.
+func (c *TravelExtendsClient) Query() *TravelExtendsQuery {
+	return &TravelExtendsQuery{
 		config: c.config,
-		ctx:    &QueryContext{Type: TypeTravelExtend},
+		ctx:    &QueryContext{Type: TypeTravelExtends},
 		inters: c.Interceptors(),
 	}
 }
 
-// Get returns a TravelExtend entity by its id.
-func (c *TravelExtendClient) Get(ctx context.Context, id int) (*TravelExtend, error) {
-	return c.Query().Where(travelextend.ID(id)).Only(ctx)
+// Get returns a TravelExtends entity by its id.
+func (c *TravelExtendsClient) Get(ctx context.Context, id int) (*TravelExtends, error) {
+	return c.Query().Where(travelextends.ID(id)).Only(ctx)
 }
 
 // GetX is like Get, but panics if an error occurs.
-func (c *TravelExtendClient) GetX(ctx context.Context, id int) *TravelExtend {
+func (c *TravelExtendsClient) GetX(ctx context.Context, id int) *TravelExtends {
 	obj, err := c.Get(ctx, id)
 	if err != nil {
 		panic(err)
@@ -1389,15 +1217,15 @@ func (c *TravelExtendClient) GetX(ctx context.Context, id int) *TravelExtend {
 	return obj
 }
 
-// QueryTravel queries the travel edge of a TravelExtend.
-func (c *TravelExtendClient) QueryTravel(te *TravelExtend) *TravelQuery {
-	query := (&TravelClient{config: c.config}).Query()
+// QueryExtends queries the extends edge of a TravelExtends.
+func (c *TravelExtendsClient) QueryExtends(te *TravelExtends) *TravelsQuery {
+	query := (&TravelsClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := te.ID
 		step := sqlgraph.NewStep(
-			sqlgraph.From(travelextend.Table, travelextend.FieldID, id),
-			sqlgraph.To(travel.Table, travel.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, travelextend.TravelTable, travelextend.TravelColumn),
+			sqlgraph.From(travelextends.Table, travelextends.FieldID, id),
+			sqlgraph.To(travels.Table, travels.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, travelextends.ExtendsTable, travelextends.ExtendsColumn),
 		)
 		fromV = sqlgraph.Neighbors(te.driver.Dialect(), step)
 		return fromV, nil
@@ -1406,29 +1234,194 @@ func (c *TravelExtendClient) QueryTravel(te *TravelExtend) *TravelQuery {
 }
 
 // Hooks returns the client hooks.
-func (c *TravelExtendClient) Hooks() []Hook {
-	hooks := c.hooks.TravelExtend
-	return append(hooks[:len(hooks):len(hooks)], travelextend.Hooks[:]...)
+func (c *TravelExtendsClient) Hooks() []Hook {
+	hooks := c.hooks.TravelExtends
+	return append(hooks[:len(hooks):len(hooks)], travelextends.Hooks[:]...)
 }
 
 // Interceptors returns the client interceptors.
-func (c *TravelExtendClient) Interceptors() []Interceptor {
-	inters := c.inters.TravelExtend
-	return append(inters[:len(inters):len(inters)], travelextend.Interceptors[:]...)
+func (c *TravelExtendsClient) Interceptors() []Interceptor {
+	return c.inters.TravelExtends
 }
 
-func (c *TravelExtendClient) mutate(ctx context.Context, m *TravelExtendMutation) (Value, error) {
+func (c *TravelExtendsClient) mutate(ctx context.Context, m *TravelExtendsMutation) (Value, error) {
 	switch m.Op() {
 	case OpCreate:
-		return (&TravelExtendCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+		return (&TravelExtendsCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
 	case OpUpdate:
-		return (&TravelExtendUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+		return (&TravelExtendsUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
 	case OpUpdateOne:
-		return (&TravelExtendUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+		return (&TravelExtendsUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
 	case OpDelete, OpDeleteOne:
-		return (&TravelExtendDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+		return (&TravelExtendsDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
 	default:
-		return nil, fmt.Errorf("ent: unknown TravelExtend mutation op: %q", m.Op())
+		return nil, fmt.Errorf("ent: unknown TravelExtends mutation op: %q", m.Op())
+	}
+}
+
+// TravelsClient is a client for the Travels schema.
+type TravelsClient struct {
+	config
+}
+
+// NewTravelsClient returns a client for the Travels from the given config.
+func NewTravelsClient(c config) *TravelsClient {
+	return &TravelsClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `travels.Hooks(f(g(h())))`.
+func (c *TravelsClient) Use(hooks ...Hook) {
+	c.hooks.Travels = append(c.hooks.Travels, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `travels.Intercept(f(g(h())))`.
+func (c *TravelsClient) Intercept(interceptors ...Interceptor) {
+	c.inters.Travels = append(c.inters.Travels, interceptors...)
+}
+
+// Create returns a builder for creating a Travels entity.
+func (c *TravelsClient) Create() *TravelsCreate {
+	mutation := newTravelsMutation(c.config, OpCreate)
+	return &TravelsCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of Travels entities.
+func (c *TravelsClient) CreateBulk(builders ...*TravelsCreate) *TravelsCreateBulk {
+	return &TravelsCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *TravelsClient) MapCreateBulk(slice any, setFunc func(*TravelsCreate, int)) *TravelsCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &TravelsCreateBulk{err: fmt.Errorf("calling to TravelsClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*TravelsCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &TravelsCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for Travels.
+func (c *TravelsClient) Update() *TravelsUpdate {
+	mutation := newTravelsMutation(c.config, OpUpdate)
+	return &TravelsUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *TravelsClient) UpdateOne(t *Travels) *TravelsUpdateOne {
+	mutation := newTravelsMutation(c.config, OpUpdateOne, withTravels(t))
+	return &TravelsUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *TravelsClient) UpdateOneID(id int) *TravelsUpdateOne {
+	mutation := newTravelsMutation(c.config, OpUpdateOne, withTravelsID(id))
+	return &TravelsUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Travels.
+func (c *TravelsClient) Delete() *TravelsDelete {
+	mutation := newTravelsMutation(c.config, OpDelete)
+	return &TravelsDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *TravelsClient) DeleteOne(t *Travels) *TravelsDeleteOne {
+	return c.DeleteOneID(t.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *TravelsClient) DeleteOneID(id int) *TravelsDeleteOne {
+	builder := c.Delete().Where(travels.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &TravelsDeleteOne{builder}
+}
+
+// Query returns a query builder for Travels.
+func (c *TravelsClient) Query() *TravelsQuery {
+	return &TravelsQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeTravels},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a Travels entity by its id.
+func (c *TravelsClient) Get(ctx context.Context, id int) (*Travels, error) {
+	return c.Query().Where(travels.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *TravelsClient) GetX(ctx context.Context, id int) *Travels {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// QueryTravelExtends queries the travel_extends edge of a Travels.
+func (c *TravelsClient) QueryTravelExtends(t *Travels) *TravelExtendsQuery {
+	query := (&TravelExtendsClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := t.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(travels.Table, travels.FieldID, id),
+			sqlgraph.To(travelextends.Table, travelextends.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, travels.TravelExtendsTable, travels.TravelExtendsColumn),
+		)
+		fromV = sqlgraph.Neighbors(t.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryAccountTravels queries the account_travels edge of a Travels.
+func (c *TravelsClient) QueryAccountTravels(t *Travels) *AccountQuery {
+	query := (&AccountClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := t.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(travels.Table, travels.FieldID, id),
+			sqlgraph.To(account.Table, account.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, travels.AccountTravelsTable, travels.AccountTravelsColumn),
+		)
+		fromV = sqlgraph.Neighbors(t.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *TravelsClient) Hooks() []Hook {
+	hooks := c.hooks.Travels
+	return append(hooks[:len(hooks):len(hooks)], travels.Hooks[:]...)
+}
+
+// Interceptors returns the client interceptors.
+func (c *TravelsClient) Interceptors() []Interceptor {
+	return c.inters.Travels
+}
+
+func (c *TravelsClient) mutate(ctx context.Context, m *TravelsMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&TravelsCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&TravelsUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&TravelsUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&TravelsDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown Travels mutation op: %q", m.Op())
 	}
 }
 
@@ -1548,8 +1541,7 @@ func (c *UserClient) Hooks() []Hook {
 
 // Interceptors returns the client interceptors.
 func (c *UserClient) Interceptors() []Interceptor {
-	inters := c.inters.User
-	return append(inters[:len(inters):len(inters)], user.Interceptors[:]...)
+	return c.inters.User
 }
 
 func (c *UserClient) mutate(ctx context.Context, m *UserMutation) (Value, error) {
@@ -1683,8 +1675,7 @@ func (c *UserExperienceClient) Hooks() []Hook {
 
 // Interceptors returns the client interceptors.
 func (c *UserExperienceClient) Interceptors() []Interceptor {
-	inters := c.inters.UserExperience
-	return append(inters[:len(inters):len(inters)], userexperience.Interceptors[:]...)
+	return c.inters.UserExperience
 }
 
 func (c *UserExperienceClient) mutate(ctx context.Context, m *UserExperienceMutation) (Value, error) {
@@ -1818,8 +1809,7 @@ func (c *UserProjectClient) Hooks() []Hook {
 
 // Interceptors returns the client interceptors.
 func (c *UserProjectClient) Interceptors() []Interceptor {
-	inters := c.inters.UserProject
-	return append(inters[:len(inters):len(inters)], userproject.Interceptors[:]...)
+	return c.inters.UserProject
 }
 
 func (c *UserProjectClient) mutate(ctx context.Context, m *UserProjectMutation) (Value, error) {
@@ -1840,12 +1830,12 @@ func (c *UserProjectClient) mutate(ctx context.Context, m *UserProjectMutation) 
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		Account, Blogs, BlogsComment, BlogsContent, Files, FilesExtend, Travel,
-		TravelExtend, User, UserExperience, UserProject []ent.Hook
+		Account, Blogs, BlogsComment, BlogsContent, Files, FilesExtend, TravelExtends,
+		Travels, User, UserExperience, UserProject []ent.Hook
 	}
 	inters struct {
-		Account, Blogs, BlogsComment, BlogsContent, Files, FilesExtend, Travel,
-		TravelExtend, User, UserExperience, UserProject []ent.Interceptor
+		Account, Blogs, BlogsComment, BlogsContent, Files, FilesExtend, TravelExtends,
+		Travels, User, UserExperience, UserProject []ent.Interceptor
 	}
 )
 

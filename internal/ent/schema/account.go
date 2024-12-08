@@ -50,7 +50,7 @@ func (Account) Mixin() []ent.Mixin {
 }
 func (Account) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("travel_account", Travel.Type),
+		edge.To("travels", Travels.Type),
 	}
 }
 func (Account) Annotations() []schema.Annotation {

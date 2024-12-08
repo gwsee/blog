@@ -200,6 +200,48 @@ func (uu *UserUpdate) SetNillableDescription(s *string) *UserUpdate {
 	return uu
 }
 
+// SetExperience sets the "experience" field.
+func (uu *UserUpdate) SetExperience(i int) *UserUpdate {
+	uu.mutation.ResetExperience()
+	uu.mutation.SetExperience(i)
+	return uu
+}
+
+// SetNillableExperience sets the "experience" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableExperience(i *int) *UserUpdate {
+	if i != nil {
+		uu.SetExperience(*i)
+	}
+	return uu
+}
+
+// AddExperience adds i to the "experience" field.
+func (uu *UserUpdate) AddExperience(i int) *UserUpdate {
+	uu.mutation.AddExperience(i)
+	return uu
+}
+
+// SetProject sets the "project" field.
+func (uu *UserUpdate) SetProject(i int) *UserUpdate {
+	uu.mutation.ResetProject()
+	uu.mutation.SetProject(i)
+	return uu
+}
+
+// SetNillableProject sets the "project" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableProject(i *int) *UserUpdate {
+	if i != nil {
+		uu.SetProject(*i)
+	}
+	return uu
+}
+
+// AddProject adds i to the "project" field.
+func (uu *UserUpdate) AddProject(i int) *UserUpdate {
+	uu.mutation.AddProject(i)
+	return uu
+}
+
 // Mutation returns the UserMutation object of the builder.
 func (uu *UserUpdate) Mutation() *UserMutation {
 	return uu.mutation
@@ -318,6 +360,18 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := uu.mutation.Description(); ok {
 		_spec.SetField(user.FieldDescription, field.TypeString, value)
+	}
+	if value, ok := uu.mutation.Experience(); ok {
+		_spec.SetField(user.FieldExperience, field.TypeInt, value)
+	}
+	if value, ok := uu.mutation.AddedExperience(); ok {
+		_spec.AddField(user.FieldExperience, field.TypeInt, value)
+	}
+	if value, ok := uu.mutation.Project(); ok {
+		_spec.SetField(user.FieldProject, field.TypeInt, value)
+	}
+	if value, ok := uu.mutation.AddedProject(); ok {
+		_spec.AddField(user.FieldProject, field.TypeInt, value)
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, uu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -511,6 +565,48 @@ func (uuo *UserUpdateOne) SetNillableDescription(s *string) *UserUpdateOne {
 	return uuo
 }
 
+// SetExperience sets the "experience" field.
+func (uuo *UserUpdateOne) SetExperience(i int) *UserUpdateOne {
+	uuo.mutation.ResetExperience()
+	uuo.mutation.SetExperience(i)
+	return uuo
+}
+
+// SetNillableExperience sets the "experience" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableExperience(i *int) *UserUpdateOne {
+	if i != nil {
+		uuo.SetExperience(*i)
+	}
+	return uuo
+}
+
+// AddExperience adds i to the "experience" field.
+func (uuo *UserUpdateOne) AddExperience(i int) *UserUpdateOne {
+	uuo.mutation.AddExperience(i)
+	return uuo
+}
+
+// SetProject sets the "project" field.
+func (uuo *UserUpdateOne) SetProject(i int) *UserUpdateOne {
+	uuo.mutation.ResetProject()
+	uuo.mutation.SetProject(i)
+	return uuo
+}
+
+// SetNillableProject sets the "project" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableProject(i *int) *UserUpdateOne {
+	if i != nil {
+		uuo.SetProject(*i)
+	}
+	return uuo
+}
+
+// AddProject adds i to the "project" field.
+func (uuo *UserUpdateOne) AddProject(i int) *UserUpdateOne {
+	uuo.mutation.AddProject(i)
+	return uuo
+}
+
 // Mutation returns the UserMutation object of the builder.
 func (uuo *UserUpdateOne) Mutation() *UserMutation {
 	return uuo.mutation
@@ -659,6 +755,18 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 	}
 	if value, ok := uuo.mutation.Description(); ok {
 		_spec.SetField(user.FieldDescription, field.TypeString, value)
+	}
+	if value, ok := uuo.mutation.Experience(); ok {
+		_spec.SetField(user.FieldExperience, field.TypeInt, value)
+	}
+	if value, ok := uuo.mutation.AddedExperience(); ok {
+		_spec.AddField(user.FieldExperience, field.TypeInt, value)
+	}
+	if value, ok := uuo.mutation.Project(); ok {
+		_spec.SetField(user.FieldProject, field.TypeInt, value)
+	}
+	if value, ok := uuo.mutation.AddedProject(); ok {
+		_spec.AddField(user.FieldProject, field.TypeInt, value)
 	}
 	_node = &User{config: uuo.config}
 	_spec.Assign = _node.assignValues

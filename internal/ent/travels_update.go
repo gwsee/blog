@@ -5,8 +5,8 @@ package ent
 import (
 	"blog/internal/ent/account"
 	"blog/internal/ent/predicate"
-	"blog/internal/ent/travel"
-	"blog/internal/ent/travelextend"
+	"blog/internal/ent/travelextends"
+	"blog/internal/ent/travels"
 	"context"
 	"errors"
 	"fmt"
@@ -17,41 +17,41 @@ import (
 	"entgo.io/ent/schema/field"
 )
 
-// TravelUpdate is the builder for updating Travel entities.
-type TravelUpdate struct {
+// TravelsUpdate is the builder for updating Travels entities.
+type TravelsUpdate struct {
 	config
 	hooks    []Hook
-	mutation *TravelMutation
+	mutation *TravelsMutation
 }
 
-// Where appends a list predicates to the TravelUpdate builder.
-func (tu *TravelUpdate) Where(ps ...predicate.Travel) *TravelUpdate {
+// Where appends a list predicates to the TravelsUpdate builder.
+func (tu *TravelsUpdate) Where(ps ...predicate.Travels) *TravelsUpdate {
 	tu.mutation.Where(ps...)
 	return tu
 }
 
 // SetUpdatedAt sets the "updated_at" field.
-func (tu *TravelUpdate) SetUpdatedAt(i int64) *TravelUpdate {
+func (tu *TravelsUpdate) SetUpdatedAt(i int64) *TravelsUpdate {
 	tu.mutation.ResetUpdatedAt()
 	tu.mutation.SetUpdatedAt(i)
 	return tu
 }
 
 // AddUpdatedAt adds i to the "updated_at" field.
-func (tu *TravelUpdate) AddUpdatedAt(i int64) *TravelUpdate {
+func (tu *TravelsUpdate) AddUpdatedAt(i int64) *TravelsUpdate {
 	tu.mutation.AddUpdatedAt(i)
 	return tu
 }
 
 // SetUpdatedBy sets the "updated_by" field.
-func (tu *TravelUpdate) SetUpdatedBy(i int64) *TravelUpdate {
+func (tu *TravelsUpdate) SetUpdatedBy(i int64) *TravelsUpdate {
 	tu.mutation.ResetUpdatedBy()
 	tu.mutation.SetUpdatedBy(i)
 	return tu
 }
 
 // SetNillableUpdatedBy sets the "updated_by" field if the given value is not nil.
-func (tu *TravelUpdate) SetNillableUpdatedBy(i *int64) *TravelUpdate {
+func (tu *TravelsUpdate) SetNillableUpdatedBy(i *int64) *TravelsUpdate {
 	if i != nil {
 		tu.SetUpdatedBy(*i)
 	}
@@ -59,20 +59,20 @@ func (tu *TravelUpdate) SetNillableUpdatedBy(i *int64) *TravelUpdate {
 }
 
 // AddUpdatedBy adds i to the "updated_by" field.
-func (tu *TravelUpdate) AddUpdatedBy(i int64) *TravelUpdate {
+func (tu *TravelsUpdate) AddUpdatedBy(i int64) *TravelsUpdate {
 	tu.mutation.AddUpdatedBy(i)
 	return tu
 }
 
 // SetDeletedAt sets the "deleted_at" field.
-func (tu *TravelUpdate) SetDeletedAt(i int64) *TravelUpdate {
+func (tu *TravelsUpdate) SetDeletedAt(i int64) *TravelsUpdate {
 	tu.mutation.ResetDeletedAt()
 	tu.mutation.SetDeletedAt(i)
 	return tu
 }
 
 // SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
-func (tu *TravelUpdate) SetNillableDeletedAt(i *int64) *TravelUpdate {
+func (tu *TravelsUpdate) SetNillableDeletedAt(i *int64) *TravelsUpdate {
 	if i != nil {
 		tu.SetDeletedAt(*i)
 	}
@@ -80,20 +80,20 @@ func (tu *TravelUpdate) SetNillableDeletedAt(i *int64) *TravelUpdate {
 }
 
 // AddDeletedAt adds i to the "deleted_at" field.
-func (tu *TravelUpdate) AddDeletedAt(i int64) *TravelUpdate {
+func (tu *TravelsUpdate) AddDeletedAt(i int64) *TravelsUpdate {
 	tu.mutation.AddDeletedAt(i)
 	return tu
 }
 
 // SetDeletedBy sets the "deleted_by" field.
-func (tu *TravelUpdate) SetDeletedBy(i int64) *TravelUpdate {
+func (tu *TravelsUpdate) SetDeletedBy(i int64) *TravelsUpdate {
 	tu.mutation.ResetDeletedBy()
 	tu.mutation.SetDeletedBy(i)
 	return tu
 }
 
 // SetNillableDeletedBy sets the "deleted_by" field if the given value is not nil.
-func (tu *TravelUpdate) SetNillableDeletedBy(i *int64) *TravelUpdate {
+func (tu *TravelsUpdate) SetNillableDeletedBy(i *int64) *TravelsUpdate {
 	if i != nil {
 		tu.SetDeletedBy(*i)
 	}
@@ -101,19 +101,19 @@ func (tu *TravelUpdate) SetNillableDeletedBy(i *int64) *TravelUpdate {
 }
 
 // AddDeletedBy adds i to the "deleted_by" field.
-func (tu *TravelUpdate) AddDeletedBy(i int64) *TravelUpdate {
+func (tu *TravelsUpdate) AddDeletedBy(i int64) *TravelsUpdate {
 	tu.mutation.AddDeletedBy(i)
 	return tu
 }
 
 // SetTitle sets the "title" field.
-func (tu *TravelUpdate) SetTitle(s string) *TravelUpdate {
+func (tu *TravelsUpdate) SetTitle(s string) *TravelsUpdate {
 	tu.mutation.SetTitle(s)
 	return tu
 }
 
 // SetNillableTitle sets the "title" field if the given value is not nil.
-func (tu *TravelUpdate) SetNillableTitle(s *string) *TravelUpdate {
+func (tu *TravelsUpdate) SetNillableTitle(s *string) *TravelsUpdate {
 	if s != nil {
 		tu.SetTitle(*s)
 	}
@@ -121,13 +121,13 @@ func (tu *TravelUpdate) SetNillableTitle(s *string) *TravelUpdate {
 }
 
 // SetDescription sets the "description" field.
-func (tu *TravelUpdate) SetDescription(s string) *TravelUpdate {
+func (tu *TravelsUpdate) SetDescription(s string) *TravelsUpdate {
 	tu.mutation.SetDescription(s)
 	return tu
 }
 
 // SetNillableDescription sets the "description" field if the given value is not nil.
-func (tu *TravelUpdate) SetNillableDescription(s *string) *TravelUpdate {
+func (tu *TravelsUpdate) SetNillableDescription(s *string) *TravelsUpdate {
 	if s != nil {
 		tu.SetDescription(*s)
 	}
@@ -135,13 +135,13 @@ func (tu *TravelUpdate) SetNillableDescription(s *string) *TravelUpdate {
 }
 
 // SetVideo sets the "video" field.
-func (tu *TravelUpdate) SetVideo(s string) *TravelUpdate {
+func (tu *TravelsUpdate) SetVideo(s string) *TravelsUpdate {
 	tu.mutation.SetVideo(s)
 	return tu
 }
 
 // SetNillableVideo sets the "video" field if the given value is not nil.
-func (tu *TravelUpdate) SetNillableVideo(s *string) *TravelUpdate {
+func (tu *TravelsUpdate) SetNillableVideo(s *string) *TravelsUpdate {
 	if s != nil {
 		tu.SetVideo(*s)
 	}
@@ -149,13 +149,13 @@ func (tu *TravelUpdate) SetNillableVideo(s *string) *TravelUpdate {
 }
 
 // SetIsHidden sets the "is_hidden" field.
-func (tu *TravelUpdate) SetIsHidden(b bool) *TravelUpdate {
+func (tu *TravelsUpdate) SetIsHidden(b bool) *TravelsUpdate {
 	tu.mutation.SetIsHidden(b)
 	return tu
 }
 
 // SetNillableIsHidden sets the "is_hidden" field if the given value is not nil.
-func (tu *TravelUpdate) SetNillableIsHidden(b *bool) *TravelUpdate {
+func (tu *TravelsUpdate) SetNillableIsHidden(b *bool) *TravelsUpdate {
 	if b != nil {
 		tu.SetIsHidden(*b)
 	}
@@ -163,14 +163,14 @@ func (tu *TravelUpdate) SetNillableIsHidden(b *bool) *TravelUpdate {
 }
 
 // SetAccountID sets the "account_id" field.
-func (tu *TravelUpdate) SetAccountID(i int) *TravelUpdate {
+func (tu *TravelsUpdate) SetAccountID(i int) *TravelsUpdate {
 	tu.mutation.ResetAccountID()
 	tu.mutation.SetAccountID(i)
 	return tu
 }
 
 // SetNillableAccountID sets the "account_id" field if the given value is not nil.
-func (tu *TravelUpdate) SetNillableAccountID(i *int) *TravelUpdate {
+func (tu *TravelsUpdate) SetNillableAccountID(i *int) *TravelsUpdate {
 	if i != nil {
 		tu.SetAccountID(*i)
 	}
@@ -178,32 +178,32 @@ func (tu *TravelUpdate) SetNillableAccountID(i *int) *TravelUpdate {
 }
 
 // AddAccountID adds i to the "account_id" field.
-func (tu *TravelUpdate) AddAccountID(i int) *TravelUpdate {
+func (tu *TravelsUpdate) AddAccountID(i int) *TravelsUpdate {
 	tu.mutation.AddAccountID(i)
 	return tu
 }
 
 // SetPhotos sets the "photos" field.
-func (tu *TravelUpdate) SetPhotos(s []string) *TravelUpdate {
+func (tu *TravelsUpdate) SetPhotos(s []string) *TravelsUpdate {
 	tu.mutation.SetPhotos(s)
 	return tu
 }
 
 // AppendPhotos appends s to the "photos" field.
-func (tu *TravelUpdate) AppendPhotos(s []string) *TravelUpdate {
+func (tu *TravelsUpdate) AppendPhotos(s []string) *TravelsUpdate {
 	tu.mutation.AppendPhotos(s)
 	return tu
 }
 
 // SetBrowseNum sets the "browse_num" field.
-func (tu *TravelUpdate) SetBrowseNum(i int) *TravelUpdate {
+func (tu *TravelsUpdate) SetBrowseNum(i int) *TravelsUpdate {
 	tu.mutation.ResetBrowseNum()
 	tu.mutation.SetBrowseNum(i)
 	return tu
 }
 
 // SetNillableBrowseNum sets the "browse_num" field if the given value is not nil.
-func (tu *TravelUpdate) SetNillableBrowseNum(i *int) *TravelUpdate {
+func (tu *TravelsUpdate) SetNillableBrowseNum(i *int) *TravelsUpdate {
 	if i != nil {
 		tu.SetBrowseNum(*i)
 	}
@@ -211,20 +211,20 @@ func (tu *TravelUpdate) SetNillableBrowseNum(i *int) *TravelUpdate {
 }
 
 // AddBrowseNum adds i to the "browse_num" field.
-func (tu *TravelUpdate) AddBrowseNum(i int) *TravelUpdate {
+func (tu *TravelsUpdate) AddBrowseNum(i int) *TravelsUpdate {
 	tu.mutation.AddBrowseNum(i)
 	return tu
 }
 
 // SetThumbNum sets the "thumb_num" field.
-func (tu *TravelUpdate) SetThumbNum(i int) *TravelUpdate {
+func (tu *TravelsUpdate) SetThumbNum(i int) *TravelsUpdate {
 	tu.mutation.ResetThumbNum()
 	tu.mutation.SetThumbNum(i)
 	return tu
 }
 
 // SetNillableThumbNum sets the "thumb_num" field if the given value is not nil.
-func (tu *TravelUpdate) SetNillableThumbNum(i *int) *TravelUpdate {
+func (tu *TravelsUpdate) SetNillableThumbNum(i *int) *TravelsUpdate {
 	if i != nil {
 		tu.SetThumbNum(*i)
 	}
@@ -232,20 +232,20 @@ func (tu *TravelUpdate) SetNillableThumbNum(i *int) *TravelUpdate {
 }
 
 // AddThumbNum adds i to the "thumb_num" field.
-func (tu *TravelUpdate) AddThumbNum(i int) *TravelUpdate {
+func (tu *TravelsUpdate) AddThumbNum(i int) *TravelsUpdate {
 	tu.mutation.AddThumbNum(i)
 	return tu
 }
 
 // SetCollectNum sets the "collect_num" field.
-func (tu *TravelUpdate) SetCollectNum(i int) *TravelUpdate {
+func (tu *TravelsUpdate) SetCollectNum(i int) *TravelsUpdate {
 	tu.mutation.ResetCollectNum()
 	tu.mutation.SetCollectNum(i)
 	return tu
 }
 
 // SetNillableCollectNum sets the "collect_num" field if the given value is not nil.
-func (tu *TravelUpdate) SetNillableCollectNum(i *int) *TravelUpdate {
+func (tu *TravelsUpdate) SetNillableCollectNum(i *int) *TravelsUpdate {
 	if i != nil {
 		tu.SetCollectNum(*i)
 	}
@@ -253,19 +253,19 @@ func (tu *TravelUpdate) SetNillableCollectNum(i *int) *TravelUpdate {
 }
 
 // AddCollectNum adds i to the "collect_num" field.
-func (tu *TravelUpdate) AddCollectNum(i int) *TravelUpdate {
+func (tu *TravelsUpdate) AddCollectNum(i int) *TravelsUpdate {
 	tu.mutation.AddCollectNum(i)
 	return tu
 }
 
-// AddTravelExtendIDs adds the "travel_extend" edge to the TravelExtend entity by IDs.
-func (tu *TravelUpdate) AddTravelExtendIDs(ids ...int) *TravelUpdate {
+// AddTravelExtendIDs adds the "travel_extends" edge to the TravelExtends entity by IDs.
+func (tu *TravelsUpdate) AddTravelExtendIDs(ids ...int) *TravelsUpdate {
 	tu.mutation.AddTravelExtendIDs(ids...)
 	return tu
 }
 
-// AddTravelExtend adds the "travel_extend" edges to the TravelExtend entity.
-func (tu *TravelUpdate) AddTravelExtend(t ...*TravelExtend) *TravelUpdate {
+// AddTravelExtends adds the "travel_extends" edges to the TravelExtends entity.
+func (tu *TravelsUpdate) AddTravelExtends(t ...*TravelExtends) *TravelsUpdate {
 	ids := make([]int, len(t))
 	for i := range t {
 		ids[i] = t[i].ID
@@ -273,44 +273,44 @@ func (tu *TravelUpdate) AddTravelExtend(t ...*TravelExtend) *TravelUpdate {
 	return tu.AddTravelExtendIDs(ids...)
 }
 
-// SetAccountTravelID sets the "account_travel" edge to the Account entity by ID.
-func (tu *TravelUpdate) SetAccountTravelID(id int) *TravelUpdate {
-	tu.mutation.SetAccountTravelID(id)
+// SetAccountTravelsID sets the "account_travels" edge to the Account entity by ID.
+func (tu *TravelsUpdate) SetAccountTravelsID(id int) *TravelsUpdate {
+	tu.mutation.SetAccountTravelsID(id)
 	return tu
 }
 
-// SetNillableAccountTravelID sets the "account_travel" edge to the Account entity by ID if the given value is not nil.
-func (tu *TravelUpdate) SetNillableAccountTravelID(id *int) *TravelUpdate {
+// SetNillableAccountTravelsID sets the "account_travels" edge to the Account entity by ID if the given value is not nil.
+func (tu *TravelsUpdate) SetNillableAccountTravelsID(id *int) *TravelsUpdate {
 	if id != nil {
-		tu = tu.SetAccountTravelID(*id)
+		tu = tu.SetAccountTravelsID(*id)
 	}
 	return tu
 }
 
-// SetAccountTravel sets the "account_travel" edge to the Account entity.
-func (tu *TravelUpdate) SetAccountTravel(a *Account) *TravelUpdate {
-	return tu.SetAccountTravelID(a.ID)
+// SetAccountTravels sets the "account_travels" edge to the Account entity.
+func (tu *TravelsUpdate) SetAccountTravels(a *Account) *TravelsUpdate {
+	return tu.SetAccountTravelsID(a.ID)
 }
 
-// Mutation returns the TravelMutation object of the builder.
-func (tu *TravelUpdate) Mutation() *TravelMutation {
+// Mutation returns the TravelsMutation object of the builder.
+func (tu *TravelsUpdate) Mutation() *TravelsMutation {
 	return tu.mutation
 }
 
-// ClearTravelExtend clears all "travel_extend" edges to the TravelExtend entity.
-func (tu *TravelUpdate) ClearTravelExtend() *TravelUpdate {
-	tu.mutation.ClearTravelExtend()
+// ClearTravelExtends clears all "travel_extends" edges to the TravelExtends entity.
+func (tu *TravelsUpdate) ClearTravelExtends() *TravelsUpdate {
+	tu.mutation.ClearTravelExtends()
 	return tu
 }
 
-// RemoveTravelExtendIDs removes the "travel_extend" edge to TravelExtend entities by IDs.
-func (tu *TravelUpdate) RemoveTravelExtendIDs(ids ...int) *TravelUpdate {
+// RemoveTravelExtendIDs removes the "travel_extends" edge to TravelExtends entities by IDs.
+func (tu *TravelsUpdate) RemoveTravelExtendIDs(ids ...int) *TravelsUpdate {
 	tu.mutation.RemoveTravelExtendIDs(ids...)
 	return tu
 }
 
-// RemoveTravelExtend removes "travel_extend" edges to TravelExtend entities.
-func (tu *TravelUpdate) RemoveTravelExtend(t ...*TravelExtend) *TravelUpdate {
+// RemoveTravelExtends removes "travel_extends" edges to TravelExtends entities.
+func (tu *TravelsUpdate) RemoveTravelExtends(t ...*TravelExtends) *TravelsUpdate {
 	ids := make([]int, len(t))
 	for i := range t {
 		ids[i] = t[i].ID
@@ -318,14 +318,14 @@ func (tu *TravelUpdate) RemoveTravelExtend(t ...*TravelExtend) *TravelUpdate {
 	return tu.RemoveTravelExtendIDs(ids...)
 }
 
-// ClearAccountTravel clears the "account_travel" edge to the Account entity.
-func (tu *TravelUpdate) ClearAccountTravel() *TravelUpdate {
-	tu.mutation.ClearAccountTravel()
+// ClearAccountTravels clears the "account_travels" edge to the Account entity.
+func (tu *TravelsUpdate) ClearAccountTravels() *TravelsUpdate {
+	tu.mutation.ClearAccountTravels()
 	return tu
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
-func (tu *TravelUpdate) Save(ctx context.Context) (int, error) {
+func (tu *TravelsUpdate) Save(ctx context.Context) (int, error) {
 	if err := tu.defaults(); err != nil {
 		return 0, err
 	}
@@ -333,7 +333,7 @@ func (tu *TravelUpdate) Save(ctx context.Context) (int, error) {
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (tu *TravelUpdate) SaveX(ctx context.Context) int {
+func (tu *TravelsUpdate) SaveX(ctx context.Context) int {
 	affected, err := tu.Save(ctx)
 	if err != nil {
 		panic(err)
@@ -342,55 +342,55 @@ func (tu *TravelUpdate) SaveX(ctx context.Context) int {
 }
 
 // Exec executes the query.
-func (tu *TravelUpdate) Exec(ctx context.Context) error {
+func (tu *TravelsUpdate) Exec(ctx context.Context) error {
 	_, err := tu.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (tu *TravelUpdate) ExecX(ctx context.Context) {
+func (tu *TravelsUpdate) ExecX(ctx context.Context) {
 	if err := tu.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // defaults sets the default values of the builder before save.
-func (tu *TravelUpdate) defaults() error {
+func (tu *TravelsUpdate) defaults() error {
 	if _, ok := tu.mutation.UpdatedAt(); !ok {
-		if travel.UpdateDefaultUpdatedAt == nil {
-			return fmt.Errorf("ent: uninitialized travel.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
+		if travels.UpdateDefaultUpdatedAt == nil {
+			return fmt.Errorf("ent: uninitialized travels.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
 		}
-		v := travel.UpdateDefaultUpdatedAt()
+		v := travels.UpdateDefaultUpdatedAt()
 		tu.mutation.SetUpdatedAt(v)
 	}
 	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (tu *TravelUpdate) check() error {
+func (tu *TravelsUpdate) check() error {
 	if v, ok := tu.mutation.Description(); ok {
-		if err := travel.DescriptionValidator(v); err != nil {
-			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Travel.description": %w`, err)}
+		if err := travels.DescriptionValidator(v); err != nil {
+			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Travels.description": %w`, err)}
 		}
 	}
 	if v, ok := tu.mutation.Video(); ok {
-		if err := travel.VideoValidator(v); err != nil {
-			return &ValidationError{Name: "video", err: fmt.Errorf(`ent: validator failed for field "Travel.video": %w`, err)}
+		if err := travels.VideoValidator(v); err != nil {
+			return &ValidationError{Name: "video", err: fmt.Errorf(`ent: validator failed for field "Travels.video": %w`, err)}
 		}
 	}
 	if v, ok := tu.mutation.AccountID(); ok {
-		if err := travel.AccountIDValidator(v); err != nil {
-			return &ValidationError{Name: "account_id", err: fmt.Errorf(`ent: validator failed for field "Travel.account_id": %w`, err)}
+		if err := travels.AccountIDValidator(v); err != nil {
+			return &ValidationError{Name: "account_id", err: fmt.Errorf(`ent: validator failed for field "Travels.account_id": %w`, err)}
 		}
 	}
 	return nil
 }
 
-func (tu *TravelUpdate) sqlSave(ctx context.Context) (n int, err error) {
+func (tu *TravelsUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if err := tu.check(); err != nil {
 		return n, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(travel.Table, travel.Columns, sqlgraph.NewFieldSpec(travel.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewUpdateSpec(travels.Table, travels.Columns, sqlgraph.NewFieldSpec(travels.FieldID, field.TypeInt))
 	if ps := tu.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -399,95 +399,95 @@ func (tu *TravelUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 	}
 	if value, ok := tu.mutation.UpdatedAt(); ok {
-		_spec.SetField(travel.FieldUpdatedAt, field.TypeInt64, value)
+		_spec.SetField(travels.FieldUpdatedAt, field.TypeInt64, value)
 	}
 	if value, ok := tu.mutation.AddedUpdatedAt(); ok {
-		_spec.AddField(travel.FieldUpdatedAt, field.TypeInt64, value)
+		_spec.AddField(travels.FieldUpdatedAt, field.TypeInt64, value)
 	}
 	if value, ok := tu.mutation.UpdatedBy(); ok {
-		_spec.SetField(travel.FieldUpdatedBy, field.TypeInt64, value)
+		_spec.SetField(travels.FieldUpdatedBy, field.TypeInt64, value)
 	}
 	if value, ok := tu.mutation.AddedUpdatedBy(); ok {
-		_spec.AddField(travel.FieldUpdatedBy, field.TypeInt64, value)
+		_spec.AddField(travels.FieldUpdatedBy, field.TypeInt64, value)
 	}
 	if value, ok := tu.mutation.DeletedAt(); ok {
-		_spec.SetField(travel.FieldDeletedAt, field.TypeInt64, value)
+		_spec.SetField(travels.FieldDeletedAt, field.TypeInt64, value)
 	}
 	if value, ok := tu.mutation.AddedDeletedAt(); ok {
-		_spec.AddField(travel.FieldDeletedAt, field.TypeInt64, value)
+		_spec.AddField(travels.FieldDeletedAt, field.TypeInt64, value)
 	}
 	if value, ok := tu.mutation.DeletedBy(); ok {
-		_spec.SetField(travel.FieldDeletedBy, field.TypeInt64, value)
+		_spec.SetField(travels.FieldDeletedBy, field.TypeInt64, value)
 	}
 	if value, ok := tu.mutation.AddedDeletedBy(); ok {
-		_spec.AddField(travel.FieldDeletedBy, field.TypeInt64, value)
+		_spec.AddField(travels.FieldDeletedBy, field.TypeInt64, value)
 	}
 	if value, ok := tu.mutation.Title(); ok {
-		_spec.SetField(travel.FieldTitle, field.TypeString, value)
+		_spec.SetField(travels.FieldTitle, field.TypeString, value)
 	}
 	if value, ok := tu.mutation.Description(); ok {
-		_spec.SetField(travel.FieldDescription, field.TypeString, value)
+		_spec.SetField(travels.FieldDescription, field.TypeString, value)
 	}
 	if value, ok := tu.mutation.Video(); ok {
-		_spec.SetField(travel.FieldVideo, field.TypeString, value)
+		_spec.SetField(travels.FieldVideo, field.TypeString, value)
 	}
 	if value, ok := tu.mutation.IsHidden(); ok {
-		_spec.SetField(travel.FieldIsHidden, field.TypeBool, value)
+		_spec.SetField(travels.FieldIsHidden, field.TypeBool, value)
 	}
 	if value, ok := tu.mutation.AccountID(); ok {
-		_spec.SetField(travel.FieldAccountID, field.TypeInt, value)
+		_spec.SetField(travels.FieldAccountID, field.TypeInt, value)
 	}
 	if value, ok := tu.mutation.AddedAccountID(); ok {
-		_spec.AddField(travel.FieldAccountID, field.TypeInt, value)
+		_spec.AddField(travels.FieldAccountID, field.TypeInt, value)
 	}
 	if value, ok := tu.mutation.Photos(); ok {
-		_spec.SetField(travel.FieldPhotos, field.TypeJSON, value)
+		_spec.SetField(travels.FieldPhotos, field.TypeJSON, value)
 	}
 	if value, ok := tu.mutation.AppendedPhotos(); ok {
 		_spec.AddModifier(func(u *sql.UpdateBuilder) {
-			sqljson.Append(u, travel.FieldPhotos, value)
+			sqljson.Append(u, travels.FieldPhotos, value)
 		})
 	}
 	if value, ok := tu.mutation.BrowseNum(); ok {
-		_spec.SetField(travel.FieldBrowseNum, field.TypeInt, value)
+		_spec.SetField(travels.FieldBrowseNum, field.TypeInt, value)
 	}
 	if value, ok := tu.mutation.AddedBrowseNum(); ok {
-		_spec.AddField(travel.FieldBrowseNum, field.TypeInt, value)
+		_spec.AddField(travels.FieldBrowseNum, field.TypeInt, value)
 	}
 	if value, ok := tu.mutation.ThumbNum(); ok {
-		_spec.SetField(travel.FieldThumbNum, field.TypeInt, value)
+		_spec.SetField(travels.FieldThumbNum, field.TypeInt, value)
 	}
 	if value, ok := tu.mutation.AddedThumbNum(); ok {
-		_spec.AddField(travel.FieldThumbNum, field.TypeInt, value)
+		_spec.AddField(travels.FieldThumbNum, field.TypeInt, value)
 	}
 	if value, ok := tu.mutation.CollectNum(); ok {
-		_spec.SetField(travel.FieldCollectNum, field.TypeInt, value)
+		_spec.SetField(travels.FieldCollectNum, field.TypeInt, value)
 	}
 	if value, ok := tu.mutation.AddedCollectNum(); ok {
-		_spec.AddField(travel.FieldCollectNum, field.TypeInt, value)
+		_spec.AddField(travels.FieldCollectNum, field.TypeInt, value)
 	}
-	if tu.mutation.TravelExtendCleared() {
+	if tu.mutation.TravelExtendsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   travel.TravelExtendTable,
-			Columns: []string{travel.TravelExtendColumn},
+			Table:   travels.TravelExtendsTable,
+			Columns: []string{travels.TravelExtendsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(travelextend.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(travelextends.FieldID, field.TypeInt),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := tu.mutation.RemovedTravelExtendIDs(); len(nodes) > 0 && !tu.mutation.TravelExtendCleared() {
+	if nodes := tu.mutation.RemovedTravelExtendsIDs(); len(nodes) > 0 && !tu.mutation.TravelExtendsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   travel.TravelExtendTable,
-			Columns: []string{travel.TravelExtendColumn},
+			Table:   travels.TravelExtendsTable,
+			Columns: []string{travels.TravelExtendsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(travelextend.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(travelextends.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -495,15 +495,15 @@ func (tu *TravelUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := tu.mutation.TravelExtendIDs(); len(nodes) > 0 {
+	if nodes := tu.mutation.TravelExtendsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   travel.TravelExtendTable,
-			Columns: []string{travel.TravelExtendColumn},
+			Table:   travels.TravelExtendsTable,
+			Columns: []string{travels.TravelExtendsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(travelextend.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(travelextends.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -511,12 +511,12 @@ func (tu *TravelUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if tu.mutation.AccountTravelCleared() {
+	if tu.mutation.AccountTravelsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   travel.AccountTravelTable,
-			Columns: []string{travel.AccountTravelColumn},
+			Table:   travels.AccountTravelsTable,
+			Columns: []string{travels.AccountTravelsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(account.FieldID, field.TypeInt),
@@ -524,12 +524,12 @@ func (tu *TravelUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := tu.mutation.AccountTravelIDs(); len(nodes) > 0 {
+	if nodes := tu.mutation.AccountTravelsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   travel.AccountTravelTable,
-			Columns: []string{travel.AccountTravelColumn},
+			Table:   travels.AccountTravelsTable,
+			Columns: []string{travels.AccountTravelsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(account.FieldID, field.TypeInt),
@@ -542,7 +542,7 @@ func (tu *TravelUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, tu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
-			err = &NotFoundError{travel.Label}
+			err = &NotFoundError{travels.Label}
 		} else if sqlgraph.IsConstraintError(err) {
 			err = &ConstraintError{msg: err.Error(), wrap: err}
 		}
@@ -552,36 +552,36 @@ func (tu *TravelUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	return n, nil
 }
 
-// TravelUpdateOne is the builder for updating a single Travel entity.
-type TravelUpdateOne struct {
+// TravelsUpdateOne is the builder for updating a single Travels entity.
+type TravelsUpdateOne struct {
 	config
 	fields   []string
 	hooks    []Hook
-	mutation *TravelMutation
+	mutation *TravelsMutation
 }
 
 // SetUpdatedAt sets the "updated_at" field.
-func (tuo *TravelUpdateOne) SetUpdatedAt(i int64) *TravelUpdateOne {
+func (tuo *TravelsUpdateOne) SetUpdatedAt(i int64) *TravelsUpdateOne {
 	tuo.mutation.ResetUpdatedAt()
 	tuo.mutation.SetUpdatedAt(i)
 	return tuo
 }
 
 // AddUpdatedAt adds i to the "updated_at" field.
-func (tuo *TravelUpdateOne) AddUpdatedAt(i int64) *TravelUpdateOne {
+func (tuo *TravelsUpdateOne) AddUpdatedAt(i int64) *TravelsUpdateOne {
 	tuo.mutation.AddUpdatedAt(i)
 	return tuo
 }
 
 // SetUpdatedBy sets the "updated_by" field.
-func (tuo *TravelUpdateOne) SetUpdatedBy(i int64) *TravelUpdateOne {
+func (tuo *TravelsUpdateOne) SetUpdatedBy(i int64) *TravelsUpdateOne {
 	tuo.mutation.ResetUpdatedBy()
 	tuo.mutation.SetUpdatedBy(i)
 	return tuo
 }
 
 // SetNillableUpdatedBy sets the "updated_by" field if the given value is not nil.
-func (tuo *TravelUpdateOne) SetNillableUpdatedBy(i *int64) *TravelUpdateOne {
+func (tuo *TravelsUpdateOne) SetNillableUpdatedBy(i *int64) *TravelsUpdateOne {
 	if i != nil {
 		tuo.SetUpdatedBy(*i)
 	}
@@ -589,20 +589,20 @@ func (tuo *TravelUpdateOne) SetNillableUpdatedBy(i *int64) *TravelUpdateOne {
 }
 
 // AddUpdatedBy adds i to the "updated_by" field.
-func (tuo *TravelUpdateOne) AddUpdatedBy(i int64) *TravelUpdateOne {
+func (tuo *TravelsUpdateOne) AddUpdatedBy(i int64) *TravelsUpdateOne {
 	tuo.mutation.AddUpdatedBy(i)
 	return tuo
 }
 
 // SetDeletedAt sets the "deleted_at" field.
-func (tuo *TravelUpdateOne) SetDeletedAt(i int64) *TravelUpdateOne {
+func (tuo *TravelsUpdateOne) SetDeletedAt(i int64) *TravelsUpdateOne {
 	tuo.mutation.ResetDeletedAt()
 	tuo.mutation.SetDeletedAt(i)
 	return tuo
 }
 
 // SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
-func (tuo *TravelUpdateOne) SetNillableDeletedAt(i *int64) *TravelUpdateOne {
+func (tuo *TravelsUpdateOne) SetNillableDeletedAt(i *int64) *TravelsUpdateOne {
 	if i != nil {
 		tuo.SetDeletedAt(*i)
 	}
@@ -610,20 +610,20 @@ func (tuo *TravelUpdateOne) SetNillableDeletedAt(i *int64) *TravelUpdateOne {
 }
 
 // AddDeletedAt adds i to the "deleted_at" field.
-func (tuo *TravelUpdateOne) AddDeletedAt(i int64) *TravelUpdateOne {
+func (tuo *TravelsUpdateOne) AddDeletedAt(i int64) *TravelsUpdateOne {
 	tuo.mutation.AddDeletedAt(i)
 	return tuo
 }
 
 // SetDeletedBy sets the "deleted_by" field.
-func (tuo *TravelUpdateOne) SetDeletedBy(i int64) *TravelUpdateOne {
+func (tuo *TravelsUpdateOne) SetDeletedBy(i int64) *TravelsUpdateOne {
 	tuo.mutation.ResetDeletedBy()
 	tuo.mutation.SetDeletedBy(i)
 	return tuo
 }
 
 // SetNillableDeletedBy sets the "deleted_by" field if the given value is not nil.
-func (tuo *TravelUpdateOne) SetNillableDeletedBy(i *int64) *TravelUpdateOne {
+func (tuo *TravelsUpdateOne) SetNillableDeletedBy(i *int64) *TravelsUpdateOne {
 	if i != nil {
 		tuo.SetDeletedBy(*i)
 	}
@@ -631,19 +631,19 @@ func (tuo *TravelUpdateOne) SetNillableDeletedBy(i *int64) *TravelUpdateOne {
 }
 
 // AddDeletedBy adds i to the "deleted_by" field.
-func (tuo *TravelUpdateOne) AddDeletedBy(i int64) *TravelUpdateOne {
+func (tuo *TravelsUpdateOne) AddDeletedBy(i int64) *TravelsUpdateOne {
 	tuo.mutation.AddDeletedBy(i)
 	return tuo
 }
 
 // SetTitle sets the "title" field.
-func (tuo *TravelUpdateOne) SetTitle(s string) *TravelUpdateOne {
+func (tuo *TravelsUpdateOne) SetTitle(s string) *TravelsUpdateOne {
 	tuo.mutation.SetTitle(s)
 	return tuo
 }
 
 // SetNillableTitle sets the "title" field if the given value is not nil.
-func (tuo *TravelUpdateOne) SetNillableTitle(s *string) *TravelUpdateOne {
+func (tuo *TravelsUpdateOne) SetNillableTitle(s *string) *TravelsUpdateOne {
 	if s != nil {
 		tuo.SetTitle(*s)
 	}
@@ -651,13 +651,13 @@ func (tuo *TravelUpdateOne) SetNillableTitle(s *string) *TravelUpdateOne {
 }
 
 // SetDescription sets the "description" field.
-func (tuo *TravelUpdateOne) SetDescription(s string) *TravelUpdateOne {
+func (tuo *TravelsUpdateOne) SetDescription(s string) *TravelsUpdateOne {
 	tuo.mutation.SetDescription(s)
 	return tuo
 }
 
 // SetNillableDescription sets the "description" field if the given value is not nil.
-func (tuo *TravelUpdateOne) SetNillableDescription(s *string) *TravelUpdateOne {
+func (tuo *TravelsUpdateOne) SetNillableDescription(s *string) *TravelsUpdateOne {
 	if s != nil {
 		tuo.SetDescription(*s)
 	}
@@ -665,13 +665,13 @@ func (tuo *TravelUpdateOne) SetNillableDescription(s *string) *TravelUpdateOne {
 }
 
 // SetVideo sets the "video" field.
-func (tuo *TravelUpdateOne) SetVideo(s string) *TravelUpdateOne {
+func (tuo *TravelsUpdateOne) SetVideo(s string) *TravelsUpdateOne {
 	tuo.mutation.SetVideo(s)
 	return tuo
 }
 
 // SetNillableVideo sets the "video" field if the given value is not nil.
-func (tuo *TravelUpdateOne) SetNillableVideo(s *string) *TravelUpdateOne {
+func (tuo *TravelsUpdateOne) SetNillableVideo(s *string) *TravelsUpdateOne {
 	if s != nil {
 		tuo.SetVideo(*s)
 	}
@@ -679,13 +679,13 @@ func (tuo *TravelUpdateOne) SetNillableVideo(s *string) *TravelUpdateOne {
 }
 
 // SetIsHidden sets the "is_hidden" field.
-func (tuo *TravelUpdateOne) SetIsHidden(b bool) *TravelUpdateOne {
+func (tuo *TravelsUpdateOne) SetIsHidden(b bool) *TravelsUpdateOne {
 	tuo.mutation.SetIsHidden(b)
 	return tuo
 }
 
 // SetNillableIsHidden sets the "is_hidden" field if the given value is not nil.
-func (tuo *TravelUpdateOne) SetNillableIsHidden(b *bool) *TravelUpdateOne {
+func (tuo *TravelsUpdateOne) SetNillableIsHidden(b *bool) *TravelsUpdateOne {
 	if b != nil {
 		tuo.SetIsHidden(*b)
 	}
@@ -693,14 +693,14 @@ func (tuo *TravelUpdateOne) SetNillableIsHidden(b *bool) *TravelUpdateOne {
 }
 
 // SetAccountID sets the "account_id" field.
-func (tuo *TravelUpdateOne) SetAccountID(i int) *TravelUpdateOne {
+func (tuo *TravelsUpdateOne) SetAccountID(i int) *TravelsUpdateOne {
 	tuo.mutation.ResetAccountID()
 	tuo.mutation.SetAccountID(i)
 	return tuo
 }
 
 // SetNillableAccountID sets the "account_id" field if the given value is not nil.
-func (tuo *TravelUpdateOne) SetNillableAccountID(i *int) *TravelUpdateOne {
+func (tuo *TravelsUpdateOne) SetNillableAccountID(i *int) *TravelsUpdateOne {
 	if i != nil {
 		tuo.SetAccountID(*i)
 	}
@@ -708,32 +708,32 @@ func (tuo *TravelUpdateOne) SetNillableAccountID(i *int) *TravelUpdateOne {
 }
 
 // AddAccountID adds i to the "account_id" field.
-func (tuo *TravelUpdateOne) AddAccountID(i int) *TravelUpdateOne {
+func (tuo *TravelsUpdateOne) AddAccountID(i int) *TravelsUpdateOne {
 	tuo.mutation.AddAccountID(i)
 	return tuo
 }
 
 // SetPhotos sets the "photos" field.
-func (tuo *TravelUpdateOne) SetPhotos(s []string) *TravelUpdateOne {
+func (tuo *TravelsUpdateOne) SetPhotos(s []string) *TravelsUpdateOne {
 	tuo.mutation.SetPhotos(s)
 	return tuo
 }
 
 // AppendPhotos appends s to the "photos" field.
-func (tuo *TravelUpdateOne) AppendPhotos(s []string) *TravelUpdateOne {
+func (tuo *TravelsUpdateOne) AppendPhotos(s []string) *TravelsUpdateOne {
 	tuo.mutation.AppendPhotos(s)
 	return tuo
 }
 
 // SetBrowseNum sets the "browse_num" field.
-func (tuo *TravelUpdateOne) SetBrowseNum(i int) *TravelUpdateOne {
+func (tuo *TravelsUpdateOne) SetBrowseNum(i int) *TravelsUpdateOne {
 	tuo.mutation.ResetBrowseNum()
 	tuo.mutation.SetBrowseNum(i)
 	return tuo
 }
 
 // SetNillableBrowseNum sets the "browse_num" field if the given value is not nil.
-func (tuo *TravelUpdateOne) SetNillableBrowseNum(i *int) *TravelUpdateOne {
+func (tuo *TravelsUpdateOne) SetNillableBrowseNum(i *int) *TravelsUpdateOne {
 	if i != nil {
 		tuo.SetBrowseNum(*i)
 	}
@@ -741,20 +741,20 @@ func (tuo *TravelUpdateOne) SetNillableBrowseNum(i *int) *TravelUpdateOne {
 }
 
 // AddBrowseNum adds i to the "browse_num" field.
-func (tuo *TravelUpdateOne) AddBrowseNum(i int) *TravelUpdateOne {
+func (tuo *TravelsUpdateOne) AddBrowseNum(i int) *TravelsUpdateOne {
 	tuo.mutation.AddBrowseNum(i)
 	return tuo
 }
 
 // SetThumbNum sets the "thumb_num" field.
-func (tuo *TravelUpdateOne) SetThumbNum(i int) *TravelUpdateOne {
+func (tuo *TravelsUpdateOne) SetThumbNum(i int) *TravelsUpdateOne {
 	tuo.mutation.ResetThumbNum()
 	tuo.mutation.SetThumbNum(i)
 	return tuo
 }
 
 // SetNillableThumbNum sets the "thumb_num" field if the given value is not nil.
-func (tuo *TravelUpdateOne) SetNillableThumbNum(i *int) *TravelUpdateOne {
+func (tuo *TravelsUpdateOne) SetNillableThumbNum(i *int) *TravelsUpdateOne {
 	if i != nil {
 		tuo.SetThumbNum(*i)
 	}
@@ -762,20 +762,20 @@ func (tuo *TravelUpdateOne) SetNillableThumbNum(i *int) *TravelUpdateOne {
 }
 
 // AddThumbNum adds i to the "thumb_num" field.
-func (tuo *TravelUpdateOne) AddThumbNum(i int) *TravelUpdateOne {
+func (tuo *TravelsUpdateOne) AddThumbNum(i int) *TravelsUpdateOne {
 	tuo.mutation.AddThumbNum(i)
 	return tuo
 }
 
 // SetCollectNum sets the "collect_num" field.
-func (tuo *TravelUpdateOne) SetCollectNum(i int) *TravelUpdateOne {
+func (tuo *TravelsUpdateOne) SetCollectNum(i int) *TravelsUpdateOne {
 	tuo.mutation.ResetCollectNum()
 	tuo.mutation.SetCollectNum(i)
 	return tuo
 }
 
 // SetNillableCollectNum sets the "collect_num" field if the given value is not nil.
-func (tuo *TravelUpdateOne) SetNillableCollectNum(i *int) *TravelUpdateOne {
+func (tuo *TravelsUpdateOne) SetNillableCollectNum(i *int) *TravelsUpdateOne {
 	if i != nil {
 		tuo.SetCollectNum(*i)
 	}
@@ -783,19 +783,19 @@ func (tuo *TravelUpdateOne) SetNillableCollectNum(i *int) *TravelUpdateOne {
 }
 
 // AddCollectNum adds i to the "collect_num" field.
-func (tuo *TravelUpdateOne) AddCollectNum(i int) *TravelUpdateOne {
+func (tuo *TravelsUpdateOne) AddCollectNum(i int) *TravelsUpdateOne {
 	tuo.mutation.AddCollectNum(i)
 	return tuo
 }
 
-// AddTravelExtendIDs adds the "travel_extend" edge to the TravelExtend entity by IDs.
-func (tuo *TravelUpdateOne) AddTravelExtendIDs(ids ...int) *TravelUpdateOne {
+// AddTravelExtendIDs adds the "travel_extends" edge to the TravelExtends entity by IDs.
+func (tuo *TravelsUpdateOne) AddTravelExtendIDs(ids ...int) *TravelsUpdateOne {
 	tuo.mutation.AddTravelExtendIDs(ids...)
 	return tuo
 }
 
-// AddTravelExtend adds the "travel_extend" edges to the TravelExtend entity.
-func (tuo *TravelUpdateOne) AddTravelExtend(t ...*TravelExtend) *TravelUpdateOne {
+// AddTravelExtends adds the "travel_extends" edges to the TravelExtends entity.
+func (tuo *TravelsUpdateOne) AddTravelExtends(t ...*TravelExtends) *TravelsUpdateOne {
 	ids := make([]int, len(t))
 	for i := range t {
 		ids[i] = t[i].ID
@@ -803,44 +803,44 @@ func (tuo *TravelUpdateOne) AddTravelExtend(t ...*TravelExtend) *TravelUpdateOne
 	return tuo.AddTravelExtendIDs(ids...)
 }
 
-// SetAccountTravelID sets the "account_travel" edge to the Account entity by ID.
-func (tuo *TravelUpdateOne) SetAccountTravelID(id int) *TravelUpdateOne {
-	tuo.mutation.SetAccountTravelID(id)
+// SetAccountTravelsID sets the "account_travels" edge to the Account entity by ID.
+func (tuo *TravelsUpdateOne) SetAccountTravelsID(id int) *TravelsUpdateOne {
+	tuo.mutation.SetAccountTravelsID(id)
 	return tuo
 }
 
-// SetNillableAccountTravelID sets the "account_travel" edge to the Account entity by ID if the given value is not nil.
-func (tuo *TravelUpdateOne) SetNillableAccountTravelID(id *int) *TravelUpdateOne {
+// SetNillableAccountTravelsID sets the "account_travels" edge to the Account entity by ID if the given value is not nil.
+func (tuo *TravelsUpdateOne) SetNillableAccountTravelsID(id *int) *TravelsUpdateOne {
 	if id != nil {
-		tuo = tuo.SetAccountTravelID(*id)
+		tuo = tuo.SetAccountTravelsID(*id)
 	}
 	return tuo
 }
 
-// SetAccountTravel sets the "account_travel" edge to the Account entity.
-func (tuo *TravelUpdateOne) SetAccountTravel(a *Account) *TravelUpdateOne {
-	return tuo.SetAccountTravelID(a.ID)
+// SetAccountTravels sets the "account_travels" edge to the Account entity.
+func (tuo *TravelsUpdateOne) SetAccountTravels(a *Account) *TravelsUpdateOne {
+	return tuo.SetAccountTravelsID(a.ID)
 }
 
-// Mutation returns the TravelMutation object of the builder.
-func (tuo *TravelUpdateOne) Mutation() *TravelMutation {
+// Mutation returns the TravelsMutation object of the builder.
+func (tuo *TravelsUpdateOne) Mutation() *TravelsMutation {
 	return tuo.mutation
 }
 
-// ClearTravelExtend clears all "travel_extend" edges to the TravelExtend entity.
-func (tuo *TravelUpdateOne) ClearTravelExtend() *TravelUpdateOne {
-	tuo.mutation.ClearTravelExtend()
+// ClearTravelExtends clears all "travel_extends" edges to the TravelExtends entity.
+func (tuo *TravelsUpdateOne) ClearTravelExtends() *TravelsUpdateOne {
+	tuo.mutation.ClearTravelExtends()
 	return tuo
 }
 
-// RemoveTravelExtendIDs removes the "travel_extend" edge to TravelExtend entities by IDs.
-func (tuo *TravelUpdateOne) RemoveTravelExtendIDs(ids ...int) *TravelUpdateOne {
+// RemoveTravelExtendIDs removes the "travel_extends" edge to TravelExtends entities by IDs.
+func (tuo *TravelsUpdateOne) RemoveTravelExtendIDs(ids ...int) *TravelsUpdateOne {
 	tuo.mutation.RemoveTravelExtendIDs(ids...)
 	return tuo
 }
 
-// RemoveTravelExtend removes "travel_extend" edges to TravelExtend entities.
-func (tuo *TravelUpdateOne) RemoveTravelExtend(t ...*TravelExtend) *TravelUpdateOne {
+// RemoveTravelExtends removes "travel_extends" edges to TravelExtends entities.
+func (tuo *TravelsUpdateOne) RemoveTravelExtends(t ...*TravelExtends) *TravelsUpdateOne {
 	ids := make([]int, len(t))
 	for i := range t {
 		ids[i] = t[i].ID
@@ -848,27 +848,27 @@ func (tuo *TravelUpdateOne) RemoveTravelExtend(t ...*TravelExtend) *TravelUpdate
 	return tuo.RemoveTravelExtendIDs(ids...)
 }
 
-// ClearAccountTravel clears the "account_travel" edge to the Account entity.
-func (tuo *TravelUpdateOne) ClearAccountTravel() *TravelUpdateOne {
-	tuo.mutation.ClearAccountTravel()
+// ClearAccountTravels clears the "account_travels" edge to the Account entity.
+func (tuo *TravelsUpdateOne) ClearAccountTravels() *TravelsUpdateOne {
+	tuo.mutation.ClearAccountTravels()
 	return tuo
 }
 
-// Where appends a list predicates to the TravelUpdate builder.
-func (tuo *TravelUpdateOne) Where(ps ...predicate.Travel) *TravelUpdateOne {
+// Where appends a list predicates to the TravelsUpdate builder.
+func (tuo *TravelsUpdateOne) Where(ps ...predicate.Travels) *TravelsUpdateOne {
 	tuo.mutation.Where(ps...)
 	return tuo
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
 // The default is selecting all fields defined in the entity schema.
-func (tuo *TravelUpdateOne) Select(field string, fields ...string) *TravelUpdateOne {
+func (tuo *TravelsUpdateOne) Select(field string, fields ...string) *TravelsUpdateOne {
 	tuo.fields = append([]string{field}, fields...)
 	return tuo
 }
 
-// Save executes the query and returns the updated Travel entity.
-func (tuo *TravelUpdateOne) Save(ctx context.Context) (*Travel, error) {
+// Save executes the query and returns the updated Travels entity.
+func (tuo *TravelsUpdateOne) Save(ctx context.Context) (*Travels, error) {
 	if err := tuo.defaults(); err != nil {
 		return nil, err
 	}
@@ -876,7 +876,7 @@ func (tuo *TravelUpdateOne) Save(ctx context.Context) (*Travel, error) {
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (tuo *TravelUpdateOne) SaveX(ctx context.Context) *Travel {
+func (tuo *TravelsUpdateOne) SaveX(ctx context.Context) *Travels {
 	node, err := tuo.Save(ctx)
 	if err != nil {
 		panic(err)
@@ -885,68 +885,68 @@ func (tuo *TravelUpdateOne) SaveX(ctx context.Context) *Travel {
 }
 
 // Exec executes the query on the entity.
-func (tuo *TravelUpdateOne) Exec(ctx context.Context) error {
+func (tuo *TravelsUpdateOne) Exec(ctx context.Context) error {
 	_, err := tuo.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (tuo *TravelUpdateOne) ExecX(ctx context.Context) {
+func (tuo *TravelsUpdateOne) ExecX(ctx context.Context) {
 	if err := tuo.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // defaults sets the default values of the builder before save.
-func (tuo *TravelUpdateOne) defaults() error {
+func (tuo *TravelsUpdateOne) defaults() error {
 	if _, ok := tuo.mutation.UpdatedAt(); !ok {
-		if travel.UpdateDefaultUpdatedAt == nil {
-			return fmt.Errorf("ent: uninitialized travel.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
+		if travels.UpdateDefaultUpdatedAt == nil {
+			return fmt.Errorf("ent: uninitialized travels.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
 		}
-		v := travel.UpdateDefaultUpdatedAt()
+		v := travels.UpdateDefaultUpdatedAt()
 		tuo.mutation.SetUpdatedAt(v)
 	}
 	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (tuo *TravelUpdateOne) check() error {
+func (tuo *TravelsUpdateOne) check() error {
 	if v, ok := tuo.mutation.Description(); ok {
-		if err := travel.DescriptionValidator(v); err != nil {
-			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Travel.description": %w`, err)}
+		if err := travels.DescriptionValidator(v); err != nil {
+			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Travels.description": %w`, err)}
 		}
 	}
 	if v, ok := tuo.mutation.Video(); ok {
-		if err := travel.VideoValidator(v); err != nil {
-			return &ValidationError{Name: "video", err: fmt.Errorf(`ent: validator failed for field "Travel.video": %w`, err)}
+		if err := travels.VideoValidator(v); err != nil {
+			return &ValidationError{Name: "video", err: fmt.Errorf(`ent: validator failed for field "Travels.video": %w`, err)}
 		}
 	}
 	if v, ok := tuo.mutation.AccountID(); ok {
-		if err := travel.AccountIDValidator(v); err != nil {
-			return &ValidationError{Name: "account_id", err: fmt.Errorf(`ent: validator failed for field "Travel.account_id": %w`, err)}
+		if err := travels.AccountIDValidator(v); err != nil {
+			return &ValidationError{Name: "account_id", err: fmt.Errorf(`ent: validator failed for field "Travels.account_id": %w`, err)}
 		}
 	}
 	return nil
 }
 
-func (tuo *TravelUpdateOne) sqlSave(ctx context.Context) (_node *Travel, err error) {
+func (tuo *TravelsUpdateOne) sqlSave(ctx context.Context) (_node *Travels, err error) {
 	if err := tuo.check(); err != nil {
 		return _node, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(travel.Table, travel.Columns, sqlgraph.NewFieldSpec(travel.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewUpdateSpec(travels.Table, travels.Columns, sqlgraph.NewFieldSpec(travels.FieldID, field.TypeInt))
 	id, ok := tuo.mutation.ID()
 	if !ok {
-		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "Travel.id" for update`)}
+		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "Travels.id" for update`)}
 	}
 	_spec.Node.ID.Value = id
 	if fields := tuo.fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
-		_spec.Node.Columns = append(_spec.Node.Columns, travel.FieldID)
+		_spec.Node.Columns = append(_spec.Node.Columns, travels.FieldID)
 		for _, f := range fields {
-			if !travel.ValidColumn(f) {
+			if !travels.ValidColumn(f) {
 				return nil, &ValidationError{Name: f, err: fmt.Errorf("ent: invalid field %q for query", f)}
 			}
-			if f != travel.FieldID {
+			if f != travels.FieldID {
 				_spec.Node.Columns = append(_spec.Node.Columns, f)
 			}
 		}
@@ -959,95 +959,95 @@ func (tuo *TravelUpdateOne) sqlSave(ctx context.Context) (_node *Travel, err err
 		}
 	}
 	if value, ok := tuo.mutation.UpdatedAt(); ok {
-		_spec.SetField(travel.FieldUpdatedAt, field.TypeInt64, value)
+		_spec.SetField(travels.FieldUpdatedAt, field.TypeInt64, value)
 	}
 	if value, ok := tuo.mutation.AddedUpdatedAt(); ok {
-		_spec.AddField(travel.FieldUpdatedAt, field.TypeInt64, value)
+		_spec.AddField(travels.FieldUpdatedAt, field.TypeInt64, value)
 	}
 	if value, ok := tuo.mutation.UpdatedBy(); ok {
-		_spec.SetField(travel.FieldUpdatedBy, field.TypeInt64, value)
+		_spec.SetField(travels.FieldUpdatedBy, field.TypeInt64, value)
 	}
 	if value, ok := tuo.mutation.AddedUpdatedBy(); ok {
-		_spec.AddField(travel.FieldUpdatedBy, field.TypeInt64, value)
+		_spec.AddField(travels.FieldUpdatedBy, field.TypeInt64, value)
 	}
 	if value, ok := tuo.mutation.DeletedAt(); ok {
-		_spec.SetField(travel.FieldDeletedAt, field.TypeInt64, value)
+		_spec.SetField(travels.FieldDeletedAt, field.TypeInt64, value)
 	}
 	if value, ok := tuo.mutation.AddedDeletedAt(); ok {
-		_spec.AddField(travel.FieldDeletedAt, field.TypeInt64, value)
+		_spec.AddField(travels.FieldDeletedAt, field.TypeInt64, value)
 	}
 	if value, ok := tuo.mutation.DeletedBy(); ok {
-		_spec.SetField(travel.FieldDeletedBy, field.TypeInt64, value)
+		_spec.SetField(travels.FieldDeletedBy, field.TypeInt64, value)
 	}
 	if value, ok := tuo.mutation.AddedDeletedBy(); ok {
-		_spec.AddField(travel.FieldDeletedBy, field.TypeInt64, value)
+		_spec.AddField(travels.FieldDeletedBy, field.TypeInt64, value)
 	}
 	if value, ok := tuo.mutation.Title(); ok {
-		_spec.SetField(travel.FieldTitle, field.TypeString, value)
+		_spec.SetField(travels.FieldTitle, field.TypeString, value)
 	}
 	if value, ok := tuo.mutation.Description(); ok {
-		_spec.SetField(travel.FieldDescription, field.TypeString, value)
+		_spec.SetField(travels.FieldDescription, field.TypeString, value)
 	}
 	if value, ok := tuo.mutation.Video(); ok {
-		_spec.SetField(travel.FieldVideo, field.TypeString, value)
+		_spec.SetField(travels.FieldVideo, field.TypeString, value)
 	}
 	if value, ok := tuo.mutation.IsHidden(); ok {
-		_spec.SetField(travel.FieldIsHidden, field.TypeBool, value)
+		_spec.SetField(travels.FieldIsHidden, field.TypeBool, value)
 	}
 	if value, ok := tuo.mutation.AccountID(); ok {
-		_spec.SetField(travel.FieldAccountID, field.TypeInt, value)
+		_spec.SetField(travels.FieldAccountID, field.TypeInt, value)
 	}
 	if value, ok := tuo.mutation.AddedAccountID(); ok {
-		_spec.AddField(travel.FieldAccountID, field.TypeInt, value)
+		_spec.AddField(travels.FieldAccountID, field.TypeInt, value)
 	}
 	if value, ok := tuo.mutation.Photos(); ok {
-		_spec.SetField(travel.FieldPhotos, field.TypeJSON, value)
+		_spec.SetField(travels.FieldPhotos, field.TypeJSON, value)
 	}
 	if value, ok := tuo.mutation.AppendedPhotos(); ok {
 		_spec.AddModifier(func(u *sql.UpdateBuilder) {
-			sqljson.Append(u, travel.FieldPhotos, value)
+			sqljson.Append(u, travels.FieldPhotos, value)
 		})
 	}
 	if value, ok := tuo.mutation.BrowseNum(); ok {
-		_spec.SetField(travel.FieldBrowseNum, field.TypeInt, value)
+		_spec.SetField(travels.FieldBrowseNum, field.TypeInt, value)
 	}
 	if value, ok := tuo.mutation.AddedBrowseNum(); ok {
-		_spec.AddField(travel.FieldBrowseNum, field.TypeInt, value)
+		_spec.AddField(travels.FieldBrowseNum, field.TypeInt, value)
 	}
 	if value, ok := tuo.mutation.ThumbNum(); ok {
-		_spec.SetField(travel.FieldThumbNum, field.TypeInt, value)
+		_spec.SetField(travels.FieldThumbNum, field.TypeInt, value)
 	}
 	if value, ok := tuo.mutation.AddedThumbNum(); ok {
-		_spec.AddField(travel.FieldThumbNum, field.TypeInt, value)
+		_spec.AddField(travels.FieldThumbNum, field.TypeInt, value)
 	}
 	if value, ok := tuo.mutation.CollectNum(); ok {
-		_spec.SetField(travel.FieldCollectNum, field.TypeInt, value)
+		_spec.SetField(travels.FieldCollectNum, field.TypeInt, value)
 	}
 	if value, ok := tuo.mutation.AddedCollectNum(); ok {
-		_spec.AddField(travel.FieldCollectNum, field.TypeInt, value)
+		_spec.AddField(travels.FieldCollectNum, field.TypeInt, value)
 	}
-	if tuo.mutation.TravelExtendCleared() {
+	if tuo.mutation.TravelExtendsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   travel.TravelExtendTable,
-			Columns: []string{travel.TravelExtendColumn},
+			Table:   travels.TravelExtendsTable,
+			Columns: []string{travels.TravelExtendsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(travelextend.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(travelextends.FieldID, field.TypeInt),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := tuo.mutation.RemovedTravelExtendIDs(); len(nodes) > 0 && !tuo.mutation.TravelExtendCleared() {
+	if nodes := tuo.mutation.RemovedTravelExtendsIDs(); len(nodes) > 0 && !tuo.mutation.TravelExtendsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   travel.TravelExtendTable,
-			Columns: []string{travel.TravelExtendColumn},
+			Table:   travels.TravelExtendsTable,
+			Columns: []string{travels.TravelExtendsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(travelextend.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(travelextends.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -1055,44 +1055,15 @@ func (tuo *TravelUpdateOne) sqlSave(ctx context.Context) (_node *Travel, err err
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := tuo.mutation.TravelExtendIDs(); len(nodes) > 0 {
+	if nodes := tuo.mutation.TravelExtendsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   travel.TravelExtendTable,
-			Columns: []string{travel.TravelExtendColumn},
+			Table:   travels.TravelExtendsTable,
+			Columns: []string{travels.TravelExtendsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(travelextend.FieldID, field.TypeInt),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
-	}
-	if tuo.mutation.AccountTravelCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   travel.AccountTravelTable,
-			Columns: []string{travel.AccountTravelColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(account.FieldID, field.TypeInt),
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := tuo.mutation.AccountTravelIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   travel.AccountTravelTable,
-			Columns: []string{travel.AccountTravelColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(account.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(travelextends.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -1100,12 +1071,41 @@ func (tuo *TravelUpdateOne) sqlSave(ctx context.Context) (_node *Travel, err err
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	_node = &Travel{config: tuo.config}
+	if tuo.mutation.AccountTravelsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   travels.AccountTravelsTable,
+			Columns: []string{travels.AccountTravelsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(account.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := tuo.mutation.AccountTravelsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   travels.AccountTravelsTable,
+			Columns: []string{travels.AccountTravelsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(account.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	_node = &Travels{config: tuo.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues
 	if err = sqlgraph.UpdateNode(ctx, tuo.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
-			err = &NotFoundError{travel.Label}
+			err = &NotFoundError{travels.Label}
 		} else if sqlgraph.IsConstraintError(err) {
 			err = &ConstraintError{msg: err.Error(), wrap: err}
 		}

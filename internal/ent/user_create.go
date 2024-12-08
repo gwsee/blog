@@ -187,6 +187,34 @@ func (uc *UserCreate) SetDescription(s string) *UserCreate {
 	return uc
 }
 
+// SetExperience sets the "experience" field.
+func (uc *UserCreate) SetExperience(i int) *UserCreate {
+	uc.mutation.SetExperience(i)
+	return uc
+}
+
+// SetNillableExperience sets the "experience" field if the given value is not nil.
+func (uc *UserCreate) SetNillableExperience(i *int) *UserCreate {
+	if i != nil {
+		uc.SetExperience(*i)
+	}
+	return uc
+}
+
+// SetProject sets the "project" field.
+func (uc *UserCreate) SetProject(i int) *UserCreate {
+	uc.mutation.SetProject(i)
+	return uc
+}
+
+// SetNillableProject sets the "project" field if the given value is not nil.
+func (uc *UserCreate) SetNillableProject(i *int) *UserCreate {
+	if i != nil {
+		uc.SetProject(*i)
+	}
+	return uc
+}
+
 // SetID sets the "id" field.
 func (uc *UserCreate) SetID(i int) *UserCreate {
 	uc.mutation.SetID(i)
@@ -274,6 +302,14 @@ func (uc *UserCreate) defaults() error {
 		v := user.DefaultAddress
 		uc.mutation.SetAddress(v)
 	}
+	if _, ok := uc.mutation.Experience(); !ok {
+		v := user.DefaultExperience
+		uc.mutation.SetExperience(v)
+	}
+	if _, ok := uc.mutation.Project(); !ok {
+		v := user.DefaultProject
+		uc.mutation.SetProject(v)
+	}
 	return nil
 }
 
@@ -322,6 +358,12 @@ func (uc *UserCreate) check() error {
 		if err := user.DescriptionValidator(v); err != nil {
 			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "User.description": %w`, err)}
 		}
+	}
+	if _, ok := uc.mutation.Experience(); !ok {
+		return &ValidationError{Name: "experience", err: errors.New(`ent: missing required field "User.experience"`)}
+	}
+	if _, ok := uc.mutation.Project(); !ok {
+		return &ValidationError{Name: "project", err: errors.New(`ent: missing required field "User.project"`)}
 	}
 	if v, ok := uc.mutation.ID(); ok {
 		if err := user.IDValidator(v); err != nil {
@@ -412,6 +454,14 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 	if value, ok := uc.mutation.Description(); ok {
 		_spec.SetField(user.FieldDescription, field.TypeString, value)
 		_node.Description = value
+	}
+	if value, ok := uc.mutation.Experience(); ok {
+		_spec.SetField(user.FieldExperience, field.TypeInt, value)
+		_node.Experience = value
+	}
+	if value, ok := uc.mutation.Project(); ok {
+		_spec.SetField(user.FieldProject, field.TypeInt, value)
+		_node.Project = value
 	}
 	return _node, _spec
 }
@@ -618,6 +668,42 @@ func (u *UserUpsert) SetDescription(v string) *UserUpsert {
 // UpdateDescription sets the "description" field to the value that was provided on create.
 func (u *UserUpsert) UpdateDescription() *UserUpsert {
 	u.SetExcluded(user.FieldDescription)
+	return u
+}
+
+// SetExperience sets the "experience" field.
+func (u *UserUpsert) SetExperience(v int) *UserUpsert {
+	u.Set(user.FieldExperience, v)
+	return u
+}
+
+// UpdateExperience sets the "experience" field to the value that was provided on create.
+func (u *UserUpsert) UpdateExperience() *UserUpsert {
+	u.SetExcluded(user.FieldExperience)
+	return u
+}
+
+// AddExperience adds v to the "experience" field.
+func (u *UserUpsert) AddExperience(v int) *UserUpsert {
+	u.Add(user.FieldExperience, v)
+	return u
+}
+
+// SetProject sets the "project" field.
+func (u *UserUpsert) SetProject(v int) *UserUpsert {
+	u.Set(user.FieldProject, v)
+	return u
+}
+
+// UpdateProject sets the "project" field to the value that was provided on create.
+func (u *UserUpsert) UpdateProject() *UserUpsert {
+	u.SetExcluded(user.FieldProject)
+	return u
+}
+
+// AddProject adds v to the "project" field.
+func (u *UserUpsert) AddProject(v int) *UserUpsert {
+	u.Add(user.FieldProject, v)
 	return u
 }
 
@@ -854,6 +940,48 @@ func (u *UserUpsertOne) SetDescription(v string) *UserUpsertOne {
 func (u *UserUpsertOne) UpdateDescription() *UserUpsertOne {
 	return u.Update(func(s *UserUpsert) {
 		s.UpdateDescription()
+	})
+}
+
+// SetExperience sets the "experience" field.
+func (u *UserUpsertOne) SetExperience(v int) *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.SetExperience(v)
+	})
+}
+
+// AddExperience adds v to the "experience" field.
+func (u *UserUpsertOne) AddExperience(v int) *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.AddExperience(v)
+	})
+}
+
+// UpdateExperience sets the "experience" field to the value that was provided on create.
+func (u *UserUpsertOne) UpdateExperience() *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdateExperience()
+	})
+}
+
+// SetProject sets the "project" field.
+func (u *UserUpsertOne) SetProject(v int) *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.SetProject(v)
+	})
+}
+
+// AddProject adds v to the "project" field.
+func (u *UserUpsertOne) AddProject(v int) *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.AddProject(v)
+	})
+}
+
+// UpdateProject sets the "project" field to the value that was provided on create.
+func (u *UserUpsertOne) UpdateProject() *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdateProject()
 	})
 }
 
@@ -1256,6 +1384,48 @@ func (u *UserUpsertBulk) SetDescription(v string) *UserUpsertBulk {
 func (u *UserUpsertBulk) UpdateDescription() *UserUpsertBulk {
 	return u.Update(func(s *UserUpsert) {
 		s.UpdateDescription()
+	})
+}
+
+// SetExperience sets the "experience" field.
+func (u *UserUpsertBulk) SetExperience(v int) *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.SetExperience(v)
+	})
+}
+
+// AddExperience adds v to the "experience" field.
+func (u *UserUpsertBulk) AddExperience(v int) *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.AddExperience(v)
+	})
+}
+
+// UpdateExperience sets the "experience" field to the value that was provided on create.
+func (u *UserUpsertBulk) UpdateExperience() *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdateExperience()
+	})
+}
+
+// SetProject sets the "project" field.
+func (u *UserUpsertBulk) SetProject(v int) *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.SetProject(v)
+	})
+}
+
+// AddProject adds v to the "project" field.
+func (u *UserUpsertBulk) AddProject(v int) *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.AddProject(v)
+	})
+}
+
+// UpdateProject sets the "project" field to the value that was provided on create.
+func (u *UserUpsertBulk) UpdateProject() *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdateProject()
 	})
 }
 

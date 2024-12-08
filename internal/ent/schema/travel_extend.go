@@ -10,11 +10,11 @@ import (
 	"entgo.io/ent/schema/index"
 )
 
-type TravelExtend struct {
+type TravelExtends struct {
 	ent.Schema
 }
 
-func (TravelExtend) Fields() []ent.Field {
+func (TravelExtends) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int("account_id").Positive().Comment("账户ID"),
 		field.Int("travel_id").Comment("旅行的ID"),
@@ -22,25 +22,26 @@ func (TravelExtend) Fields() []ent.Field {
 		field.Bool("is_collect").Comment("收藏量"),
 	}
 }
-func (TravelExtend) Indexes() []ent.Index {
+func (TravelExtends) Indexes() []ent.Index {
 	return []ent.Index{
 		index.Fields("account_id", "travel_id").Unique(),
 	}
 }
-func (TravelExtend) Edges() []ent.Edge {
+
+func (TravelExtends) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.From("travel", Travel.Type).Ref("travel_extend").Unique(),
+		edge.From("extends", Travels.Type).Ref("travel_extends").Unique(),
 	}
 }
-func (TravelExtend) Mixin() []ent.Mixin {
+func (TravelExtends) Mixin() []ent.Mixin {
 	return []ent.Mixin{
 		mixin.Time{},
 		mixin.SoftDelete{},
 	}
 }
-func (TravelExtend) Annotations() []schema.Annotation {
+func (TravelExtends) Annotations() []schema.Annotation {
 	return []schema.Annotation{
-		entsql.Annotation{Table: "travel_extend"},
+		entsql.Annotation{Table: "travel_extends"},
 		entsql.WithComments(true),
 		schema.Comment("旅行关联关系"),
 	}

@@ -4,7 +4,7 @@ package ent
 
 import (
 	"blog/internal/ent/account"
-	"blog/internal/ent/travel"
+	"blog/internal/ent/travels"
 	"context"
 	"errors"
 	"fmt"
@@ -200,19 +200,19 @@ func (ac *AccountCreate) SetID(i int) *AccountCreate {
 	return ac
 }
 
-// AddTravelAccountIDs adds the "travel_account" edge to the Travel entity by IDs.
-func (ac *AccountCreate) AddTravelAccountIDs(ids ...int) *AccountCreate {
-	ac.mutation.AddTravelAccountIDs(ids...)
+// AddTravelIDs adds the "travels" edge to the Travels entity by IDs.
+func (ac *AccountCreate) AddTravelIDs(ids ...int) *AccountCreate {
+	ac.mutation.AddTravelIDs(ids...)
 	return ac
 }
 
-// AddTravelAccount adds the "travel_account" edges to the Travel entity.
-func (ac *AccountCreate) AddTravelAccount(t ...*Travel) *AccountCreate {
+// AddTravels adds the "travels" edges to the Travels entity.
+func (ac *AccountCreate) AddTravels(t ...*Travels) *AccountCreate {
 	ids := make([]int, len(t))
 	for i := range t {
 		ids[i] = t[i].ID
 	}
-	return ac.AddTravelAccountIDs(ids...)
+	return ac.AddTravelIDs(ids...)
 }
 
 // Mutation returns the AccountMutation object of the builder.
@@ -452,15 +452,15 @@ func (ac *AccountCreate) createSpec() (*Account, *sqlgraph.CreateSpec) {
 		_spec.SetField(account.FieldStatus, field.TypeInt8, value)
 		_node.Status = value
 	}
-	if nodes := ac.mutation.TravelAccountIDs(); len(nodes) > 0 {
+	if nodes := ac.mutation.TravelsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   account.TravelAccountTable,
-			Columns: []string{account.TravelAccountColumn},
+			Table:   account.TravelsTable,
+			Columns: []string{account.TravelsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(travel.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(travels.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {

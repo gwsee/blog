@@ -38,6 +38,10 @@ const (
 	FieldSkills = "skills"
 	// FieldDescription holds the string denoting the description field in the database.
 	FieldDescription = "description"
+	// FieldExperience holds the string denoting the experience field in the database.
+	FieldExperience = "experience"
+	// FieldProject holds the string denoting the project field in the database.
+	FieldProject = "project"
 	// Table holds the table name of the user in the database.
 	Table = "user"
 )
@@ -58,6 +62,8 @@ var Columns = []string{
 	FieldAddress,
 	FieldSkills,
 	FieldDescription,
+	FieldExperience,
+	FieldProject,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -76,8 +82,7 @@ func ValidColumn(column string) bool {
 //
 //	import _ "blog/internal/ent/runtime"
 var (
-	Hooks        [3]ent.Hook
-	Interceptors [1]ent.Interceptor
+	Hooks [3]ent.Hook
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
 	DefaultCreatedAt int64
 	// DefaultCreatedBy holds the default value on creation for the "created_by" field.
@@ -104,6 +109,10 @@ var (
 	DefaultAddress string
 	// DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
 	DescriptionValidator func(string) error
+	// DefaultExperience holds the default value on creation for the "experience" field.
+	DefaultExperience int
+	// DefaultProject holds the default value on creation for the "project" field.
+	DefaultProject int
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
 	IDValidator func(int) error
 )
@@ -174,4 +183,14 @@ func ByAddress(opts ...sql.OrderTermOption) OrderOption {
 // ByDescription orders the results by the description field.
 func ByDescription(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldDescription, opts...).ToFunc()
+}
+
+// ByExperience orders the results by the experience field.
+func ByExperience(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldExperience, opts...).ToFunc()
+}
+
+// ByProject orders the results by the project field.
+func ByProject(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldProject, opts...).ToFunc()
 }

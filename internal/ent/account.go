@@ -53,20 +53,20 @@ type Account struct {
 
 // AccountEdges holds the relations/edges for other nodes in the graph.
 type AccountEdges struct {
-	// TravelAccount holds the value of the travel_account edge.
-	TravelAccount []*Travel `json:"travel_account,omitempty"`
+	// Travels holds the value of the travels edge.
+	Travels []*Travels `json:"travels,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [1]bool
 }
 
-// TravelAccountOrErr returns the TravelAccount value or an error if the edge
+// TravelsOrErr returns the Travels value or an error if the edge
 // was not loaded in eager-loading.
-func (e AccountEdges) TravelAccountOrErr() ([]*Travel, error) {
+func (e AccountEdges) TravelsOrErr() ([]*Travels, error) {
 	if e.loadedTypes[0] {
-		return e.TravelAccount, nil
+		return e.Travels, nil
 	}
-	return nil, &NotLoadedError{edge: "travel_account"}
+	return nil, &NotLoadedError{edge: "travels"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -196,9 +196,9 @@ func (a *Account) Value(name string) (ent.Value, error) {
 	return a.selectValues.Get(name)
 }
 
-// QueryTravelAccount queries the "travel_account" edge of the Account entity.
-func (a *Account) QueryTravelAccount() *TravelQuery {
-	return NewAccountClient(a.config).QueryTravelAccount(a)
+// QueryTravels queries the "travels" edge of the Account entity.
+func (a *Account) QueryTravels() *TravelsQuery {
+	return NewAccountClient(a.config).QueryTravels(a)
 }
 
 // Update returns a builder for updating this Account.

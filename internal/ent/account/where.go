@@ -834,21 +834,21 @@ func StatusLTE(v int8) predicate.Account {
 	return predicate.Account(sql.FieldLTE(FieldStatus, v))
 }
 
-// HasTravelAccount applies the HasEdge predicate on the "travel_account" edge.
-func HasTravelAccount() predicate.Account {
+// HasTravels applies the HasEdge predicate on the "travels" edge.
+func HasTravels() predicate.Account {
 	return predicate.Account(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, TravelAccountTable, TravelAccountColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, TravelsTable, TravelsColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
 
-// HasTravelAccountWith applies the HasEdge predicate on the "travel_account" edge with a given conditions (other predicates).
-func HasTravelAccountWith(preds ...predicate.Travel) predicate.Account {
+// HasTravelsWith applies the HasEdge predicate on the "travels" edge with a given conditions (other predicates).
+func HasTravelsWith(preds ...predicate.Travels) predicate.Account {
 	return predicate.Account(func(s *sql.Selector) {
-		step := newTravelAccountStep()
+		step := newTravelsStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)

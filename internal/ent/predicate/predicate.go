@@ -24,11 +24,11 @@ type Files func(*sql.Selector)
 // FilesExtend is the predicate function for filesextend builders.
 type FilesExtend func(*sql.Selector)
 
-// Travel is the predicate function for travel builders.
-type Travel func(*sql.Selector)
+// TravelExtends is the predicate function for travelextends builders.
+type TravelExtends func(*sql.Selector)
 
-// TravelExtend is the predicate function for travelextend builders.
-type TravelExtend func(*sql.Selector)
+// Travels is the predicate function for travels builders.
+type Travels func(*sql.Selector)
 
 // User is the predicate function for user builders.
 type User func(*sql.Selector)

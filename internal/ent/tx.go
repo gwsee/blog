@@ -26,10 +26,10 @@ type Tx struct {
 	Files *FilesClient
 	// FilesExtend is the client for interacting with the FilesExtend builders.
 	FilesExtend *FilesExtendClient
-	// Travel is the client for interacting with the Travel builders.
-	Travel *TravelClient
-	// TravelExtend is the client for interacting with the TravelExtend builders.
-	TravelExtend *TravelExtendClient
+	// TravelExtends is the client for interacting with the TravelExtends builders.
+	TravelExtends *TravelExtendsClient
+	// Travels is the client for interacting with the Travels builders.
+	Travels *TravelsClient
 	// User is the client for interacting with the User builders.
 	User *UserClient
 	// UserExperience is the client for interacting with the UserExperience builders.
@@ -173,8 +173,8 @@ func (tx *Tx) init() {
 	tx.BlogsContent = NewBlogsContentClient(tx.config)
 	tx.Files = NewFilesClient(tx.config)
 	tx.FilesExtend = NewFilesExtendClient(tx.config)
-	tx.Travel = NewTravelClient(tx.config)
-	tx.TravelExtend = NewTravelExtendClient(tx.config)
+	tx.TravelExtends = NewTravelExtendsClient(tx.config)
+	tx.Travels = NewTravelsClient(tx.config)
 	tx.User = NewUserClient(tx.config)
 	tx.UserExperience = NewUserExperienceClient(tx.config)
 	tx.UserProject = NewUserProjectClient(tx.config)

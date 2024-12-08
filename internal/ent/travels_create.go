@@ -4,8 +4,8 @@ package ent
 
 import (
 	"blog/internal/ent/account"
-	"blog/internal/ent/travel"
-	"blog/internal/ent/travelextend"
+	"blog/internal/ent/travelextends"
+	"blog/internal/ent/travels"
 	"context"
 	"errors"
 	"fmt"
@@ -15,22 +15,22 @@ import (
 	"entgo.io/ent/schema/field"
 )
 
-// TravelCreate is the builder for creating a Travel entity.
-type TravelCreate struct {
+// TravelsCreate is the builder for creating a Travels entity.
+type TravelsCreate struct {
 	config
-	mutation *TravelMutation
+	mutation *TravelsMutation
 	hooks    []Hook
 	conflict []sql.ConflictOption
 }
 
 // SetCreatedAt sets the "created_at" field.
-func (tc *TravelCreate) SetCreatedAt(i int64) *TravelCreate {
+func (tc *TravelsCreate) SetCreatedAt(i int64) *TravelsCreate {
 	tc.mutation.SetCreatedAt(i)
 	return tc
 }
 
 // SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
-func (tc *TravelCreate) SetNillableCreatedAt(i *int64) *TravelCreate {
+func (tc *TravelsCreate) SetNillableCreatedAt(i *int64) *TravelsCreate {
 	if i != nil {
 		tc.SetCreatedAt(*i)
 	}
@@ -38,13 +38,13 @@ func (tc *TravelCreate) SetNillableCreatedAt(i *int64) *TravelCreate {
 }
 
 // SetCreatedBy sets the "created_by" field.
-func (tc *TravelCreate) SetCreatedBy(i int64) *TravelCreate {
+func (tc *TravelsCreate) SetCreatedBy(i int64) *TravelsCreate {
 	tc.mutation.SetCreatedBy(i)
 	return tc
 }
 
 // SetNillableCreatedBy sets the "created_by" field if the given value is not nil.
-func (tc *TravelCreate) SetNillableCreatedBy(i *int64) *TravelCreate {
+func (tc *TravelsCreate) SetNillableCreatedBy(i *int64) *TravelsCreate {
 	if i != nil {
 		tc.SetCreatedBy(*i)
 	}
@@ -52,13 +52,13 @@ func (tc *TravelCreate) SetNillableCreatedBy(i *int64) *TravelCreate {
 }
 
 // SetUpdatedAt sets the "updated_at" field.
-func (tc *TravelCreate) SetUpdatedAt(i int64) *TravelCreate {
+func (tc *TravelsCreate) SetUpdatedAt(i int64) *TravelsCreate {
 	tc.mutation.SetUpdatedAt(i)
 	return tc
 }
 
 // SetNillableUpdatedAt sets the "updated_at" field if the given value is not nil.
-func (tc *TravelCreate) SetNillableUpdatedAt(i *int64) *TravelCreate {
+func (tc *TravelsCreate) SetNillableUpdatedAt(i *int64) *TravelsCreate {
 	if i != nil {
 		tc.SetUpdatedAt(*i)
 	}
@@ -66,13 +66,13 @@ func (tc *TravelCreate) SetNillableUpdatedAt(i *int64) *TravelCreate {
 }
 
 // SetUpdatedBy sets the "updated_by" field.
-func (tc *TravelCreate) SetUpdatedBy(i int64) *TravelCreate {
+func (tc *TravelsCreate) SetUpdatedBy(i int64) *TravelsCreate {
 	tc.mutation.SetUpdatedBy(i)
 	return tc
 }
 
 // SetNillableUpdatedBy sets the "updated_by" field if the given value is not nil.
-func (tc *TravelCreate) SetNillableUpdatedBy(i *int64) *TravelCreate {
+func (tc *TravelsCreate) SetNillableUpdatedBy(i *int64) *TravelsCreate {
 	if i != nil {
 		tc.SetUpdatedBy(*i)
 	}
@@ -80,13 +80,13 @@ func (tc *TravelCreate) SetNillableUpdatedBy(i *int64) *TravelCreate {
 }
 
 // SetDeletedAt sets the "deleted_at" field.
-func (tc *TravelCreate) SetDeletedAt(i int64) *TravelCreate {
+func (tc *TravelsCreate) SetDeletedAt(i int64) *TravelsCreate {
 	tc.mutation.SetDeletedAt(i)
 	return tc
 }
 
 // SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
-func (tc *TravelCreate) SetNillableDeletedAt(i *int64) *TravelCreate {
+func (tc *TravelsCreate) SetNillableDeletedAt(i *int64) *TravelsCreate {
 	if i != nil {
 		tc.SetDeletedAt(*i)
 	}
@@ -94,13 +94,13 @@ func (tc *TravelCreate) SetNillableDeletedAt(i *int64) *TravelCreate {
 }
 
 // SetDeletedBy sets the "deleted_by" field.
-func (tc *TravelCreate) SetDeletedBy(i int64) *TravelCreate {
+func (tc *TravelsCreate) SetDeletedBy(i int64) *TravelsCreate {
 	tc.mutation.SetDeletedBy(i)
 	return tc
 }
 
 // SetNillableDeletedBy sets the "deleted_by" field if the given value is not nil.
-func (tc *TravelCreate) SetNillableDeletedBy(i *int64) *TravelCreate {
+func (tc *TravelsCreate) SetNillableDeletedBy(i *int64) *TravelsCreate {
 	if i != nil {
 		tc.SetDeletedBy(*i)
 	}
@@ -108,13 +108,13 @@ func (tc *TravelCreate) SetNillableDeletedBy(i *int64) *TravelCreate {
 }
 
 // SetTitle sets the "title" field.
-func (tc *TravelCreate) SetTitle(s string) *TravelCreate {
+func (tc *TravelsCreate) SetTitle(s string) *TravelsCreate {
 	tc.mutation.SetTitle(s)
 	return tc
 }
 
 // SetNillableTitle sets the "title" field if the given value is not nil.
-func (tc *TravelCreate) SetNillableTitle(s *string) *TravelCreate {
+func (tc *TravelsCreate) SetNillableTitle(s *string) *TravelsCreate {
 	if s != nil {
 		tc.SetTitle(*s)
 	}
@@ -122,25 +122,25 @@ func (tc *TravelCreate) SetNillableTitle(s *string) *TravelCreate {
 }
 
 // SetDescription sets the "description" field.
-func (tc *TravelCreate) SetDescription(s string) *TravelCreate {
+func (tc *TravelsCreate) SetDescription(s string) *TravelsCreate {
 	tc.mutation.SetDescription(s)
 	return tc
 }
 
 // SetVideo sets the "video" field.
-func (tc *TravelCreate) SetVideo(s string) *TravelCreate {
+func (tc *TravelsCreate) SetVideo(s string) *TravelsCreate {
 	tc.mutation.SetVideo(s)
 	return tc
 }
 
 // SetIsHidden sets the "is_hidden" field.
-func (tc *TravelCreate) SetIsHidden(b bool) *TravelCreate {
+func (tc *TravelsCreate) SetIsHidden(b bool) *TravelsCreate {
 	tc.mutation.SetIsHidden(b)
 	return tc
 }
 
 // SetNillableIsHidden sets the "is_hidden" field if the given value is not nil.
-func (tc *TravelCreate) SetNillableIsHidden(b *bool) *TravelCreate {
+func (tc *TravelsCreate) SetNillableIsHidden(b *bool) *TravelsCreate {
 	if b != nil {
 		tc.SetIsHidden(*b)
 	}
@@ -148,49 +148,49 @@ func (tc *TravelCreate) SetNillableIsHidden(b *bool) *TravelCreate {
 }
 
 // SetAccountID sets the "account_id" field.
-func (tc *TravelCreate) SetAccountID(i int) *TravelCreate {
+func (tc *TravelsCreate) SetAccountID(i int) *TravelsCreate {
 	tc.mutation.SetAccountID(i)
 	return tc
 }
 
 // SetPhotos sets the "photos" field.
-func (tc *TravelCreate) SetPhotos(s []string) *TravelCreate {
+func (tc *TravelsCreate) SetPhotos(s []string) *TravelsCreate {
 	tc.mutation.SetPhotos(s)
 	return tc
 }
 
 // SetBrowseNum sets the "browse_num" field.
-func (tc *TravelCreate) SetBrowseNum(i int) *TravelCreate {
+func (tc *TravelsCreate) SetBrowseNum(i int) *TravelsCreate {
 	tc.mutation.SetBrowseNum(i)
 	return tc
 }
 
 // SetThumbNum sets the "thumb_num" field.
-func (tc *TravelCreate) SetThumbNum(i int) *TravelCreate {
+func (tc *TravelsCreate) SetThumbNum(i int) *TravelsCreate {
 	tc.mutation.SetThumbNum(i)
 	return tc
 }
 
 // SetCollectNum sets the "collect_num" field.
-func (tc *TravelCreate) SetCollectNum(i int) *TravelCreate {
+func (tc *TravelsCreate) SetCollectNum(i int) *TravelsCreate {
 	tc.mutation.SetCollectNum(i)
 	return tc
 }
 
 // SetID sets the "id" field.
-func (tc *TravelCreate) SetID(i int) *TravelCreate {
+func (tc *TravelsCreate) SetID(i int) *TravelsCreate {
 	tc.mutation.SetID(i)
 	return tc
 }
 
-// AddTravelExtendIDs adds the "travel_extend" edge to the TravelExtend entity by IDs.
-func (tc *TravelCreate) AddTravelExtendIDs(ids ...int) *TravelCreate {
+// AddTravelExtendIDs adds the "travel_extends" edge to the TravelExtends entity by IDs.
+func (tc *TravelsCreate) AddTravelExtendIDs(ids ...int) *TravelsCreate {
 	tc.mutation.AddTravelExtendIDs(ids...)
 	return tc
 }
 
-// AddTravelExtend adds the "travel_extend" edges to the TravelExtend entity.
-func (tc *TravelCreate) AddTravelExtend(t ...*TravelExtend) *TravelCreate {
+// AddTravelExtends adds the "travel_extends" edges to the TravelExtends entity.
+func (tc *TravelsCreate) AddTravelExtends(t ...*TravelExtends) *TravelsCreate {
 	ids := make([]int, len(t))
 	for i := range t {
 		ids[i] = t[i].ID
@@ -198,32 +198,32 @@ func (tc *TravelCreate) AddTravelExtend(t ...*TravelExtend) *TravelCreate {
 	return tc.AddTravelExtendIDs(ids...)
 }
 
-// SetAccountTravelID sets the "account_travel" edge to the Account entity by ID.
-func (tc *TravelCreate) SetAccountTravelID(id int) *TravelCreate {
-	tc.mutation.SetAccountTravelID(id)
+// SetAccountTravelsID sets the "account_travels" edge to the Account entity by ID.
+func (tc *TravelsCreate) SetAccountTravelsID(id int) *TravelsCreate {
+	tc.mutation.SetAccountTravelsID(id)
 	return tc
 }
 
-// SetNillableAccountTravelID sets the "account_travel" edge to the Account entity by ID if the given value is not nil.
-func (tc *TravelCreate) SetNillableAccountTravelID(id *int) *TravelCreate {
+// SetNillableAccountTravelsID sets the "account_travels" edge to the Account entity by ID if the given value is not nil.
+func (tc *TravelsCreate) SetNillableAccountTravelsID(id *int) *TravelsCreate {
 	if id != nil {
-		tc = tc.SetAccountTravelID(*id)
+		tc = tc.SetAccountTravelsID(*id)
 	}
 	return tc
 }
 
-// SetAccountTravel sets the "account_travel" edge to the Account entity.
-func (tc *TravelCreate) SetAccountTravel(a *Account) *TravelCreate {
-	return tc.SetAccountTravelID(a.ID)
+// SetAccountTravels sets the "account_travels" edge to the Account entity.
+func (tc *TravelsCreate) SetAccountTravels(a *Account) *TravelsCreate {
+	return tc.SetAccountTravelsID(a.ID)
 }
 
-// Mutation returns the TravelMutation object of the builder.
-func (tc *TravelCreate) Mutation() *TravelMutation {
+// Mutation returns the TravelsMutation object of the builder.
+func (tc *TravelsCreate) Mutation() *TravelsMutation {
 	return tc.mutation
 }
 
-// Save creates the Travel in the database.
-func (tc *TravelCreate) Save(ctx context.Context) (*Travel, error) {
+// Save creates the Travels in the database.
+func (tc *TravelsCreate) Save(ctx context.Context) (*Travels, error) {
 	if err := tc.defaults(); err != nil {
 		return nil, err
 	}
@@ -231,7 +231,7 @@ func (tc *TravelCreate) Save(ctx context.Context) (*Travel, error) {
 }
 
 // SaveX calls Save and panics if Save returns an error.
-func (tc *TravelCreate) SaveX(ctx context.Context) *Travel {
+func (tc *TravelsCreate) SaveX(ctx context.Context) *Travels {
 	v, err := tc.Save(ctx)
 	if err != nil {
 		panic(err)
@@ -240,121 +240,121 @@ func (tc *TravelCreate) SaveX(ctx context.Context) *Travel {
 }
 
 // Exec executes the query.
-func (tc *TravelCreate) Exec(ctx context.Context) error {
+func (tc *TravelsCreate) Exec(ctx context.Context) error {
 	_, err := tc.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (tc *TravelCreate) ExecX(ctx context.Context) {
+func (tc *TravelsCreate) ExecX(ctx context.Context) {
 	if err := tc.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // defaults sets the default values of the builder before save.
-func (tc *TravelCreate) defaults() error {
+func (tc *TravelsCreate) defaults() error {
 	if _, ok := tc.mutation.CreatedAt(); !ok {
-		v := travel.DefaultCreatedAt
+		v := travels.DefaultCreatedAt
 		tc.mutation.SetCreatedAt(v)
 	}
 	if _, ok := tc.mutation.CreatedBy(); !ok {
-		v := travel.DefaultCreatedBy
+		v := travels.DefaultCreatedBy
 		tc.mutation.SetCreatedBy(v)
 	}
 	if _, ok := tc.mutation.UpdatedAt(); !ok {
-		v := travel.DefaultUpdatedAt
+		v := travels.DefaultUpdatedAt
 		tc.mutation.SetUpdatedAt(v)
 	}
 	if _, ok := tc.mutation.UpdatedBy(); !ok {
-		v := travel.DefaultUpdatedBy
+		v := travels.DefaultUpdatedBy
 		tc.mutation.SetUpdatedBy(v)
 	}
 	if _, ok := tc.mutation.DeletedAt(); !ok {
-		v := travel.DefaultDeletedAt
+		v := travels.DefaultDeletedAt
 		tc.mutation.SetDeletedAt(v)
 	}
 	if _, ok := tc.mutation.DeletedBy(); !ok {
-		v := travel.DefaultDeletedBy
+		v := travels.DefaultDeletedBy
 		tc.mutation.SetDeletedBy(v)
 	}
 	if _, ok := tc.mutation.Title(); !ok {
-		v := travel.DefaultTitle
+		v := travels.DefaultTitle
 		tc.mutation.SetTitle(v)
 	}
 	if _, ok := tc.mutation.IsHidden(); !ok {
-		v := travel.DefaultIsHidden
+		v := travels.DefaultIsHidden
 		tc.mutation.SetIsHidden(v)
 	}
 	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (tc *TravelCreate) check() error {
+func (tc *TravelsCreate) check() error {
 	if _, ok := tc.mutation.CreatedAt(); !ok {
-		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "Travel.created_at"`)}
+		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "Travels.created_at"`)}
 	}
 	if _, ok := tc.mutation.CreatedBy(); !ok {
-		return &ValidationError{Name: "created_by", err: errors.New(`ent: missing required field "Travel.created_by"`)}
+		return &ValidationError{Name: "created_by", err: errors.New(`ent: missing required field "Travels.created_by"`)}
 	}
 	if _, ok := tc.mutation.UpdatedAt(); !ok {
-		return &ValidationError{Name: "updated_at", err: errors.New(`ent: missing required field "Travel.updated_at"`)}
+		return &ValidationError{Name: "updated_at", err: errors.New(`ent: missing required field "Travels.updated_at"`)}
 	}
 	if _, ok := tc.mutation.UpdatedBy(); !ok {
-		return &ValidationError{Name: "updated_by", err: errors.New(`ent: missing required field "Travel.updated_by"`)}
+		return &ValidationError{Name: "updated_by", err: errors.New(`ent: missing required field "Travels.updated_by"`)}
 	}
 	if _, ok := tc.mutation.DeletedAt(); !ok {
-		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "Travel.deleted_at"`)}
+		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "Travels.deleted_at"`)}
 	}
 	if _, ok := tc.mutation.DeletedBy(); !ok {
-		return &ValidationError{Name: "deleted_by", err: errors.New(`ent: missing required field "Travel.deleted_by"`)}
+		return &ValidationError{Name: "deleted_by", err: errors.New(`ent: missing required field "Travels.deleted_by"`)}
 	}
 	if _, ok := tc.mutation.Title(); !ok {
-		return &ValidationError{Name: "title", err: errors.New(`ent: missing required field "Travel.title"`)}
+		return &ValidationError{Name: "title", err: errors.New(`ent: missing required field "Travels.title"`)}
 	}
 	if _, ok := tc.mutation.Description(); !ok {
-		return &ValidationError{Name: "description", err: errors.New(`ent: missing required field "Travel.description"`)}
+		return &ValidationError{Name: "description", err: errors.New(`ent: missing required field "Travels.description"`)}
 	}
 	if v, ok := tc.mutation.Description(); ok {
-		if err := travel.DescriptionValidator(v); err != nil {
-			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Travel.description": %w`, err)}
+		if err := travels.DescriptionValidator(v); err != nil {
+			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Travels.description": %w`, err)}
 		}
 	}
 	if _, ok := tc.mutation.Video(); !ok {
-		return &ValidationError{Name: "video", err: errors.New(`ent: missing required field "Travel.video"`)}
+		return &ValidationError{Name: "video", err: errors.New(`ent: missing required field "Travels.video"`)}
 	}
 	if v, ok := tc.mutation.Video(); ok {
-		if err := travel.VideoValidator(v); err != nil {
-			return &ValidationError{Name: "video", err: fmt.Errorf(`ent: validator failed for field "Travel.video": %w`, err)}
+		if err := travels.VideoValidator(v); err != nil {
+			return &ValidationError{Name: "video", err: fmt.Errorf(`ent: validator failed for field "Travels.video": %w`, err)}
 		}
 	}
 	if _, ok := tc.mutation.IsHidden(); !ok {
-		return &ValidationError{Name: "is_hidden", err: errors.New(`ent: missing required field "Travel.is_hidden"`)}
+		return &ValidationError{Name: "is_hidden", err: errors.New(`ent: missing required field "Travels.is_hidden"`)}
 	}
 	if _, ok := tc.mutation.AccountID(); !ok {
-		return &ValidationError{Name: "account_id", err: errors.New(`ent: missing required field "Travel.account_id"`)}
+		return &ValidationError{Name: "account_id", err: errors.New(`ent: missing required field "Travels.account_id"`)}
 	}
 	if v, ok := tc.mutation.AccountID(); ok {
-		if err := travel.AccountIDValidator(v); err != nil {
-			return &ValidationError{Name: "account_id", err: fmt.Errorf(`ent: validator failed for field "Travel.account_id": %w`, err)}
+		if err := travels.AccountIDValidator(v); err != nil {
+			return &ValidationError{Name: "account_id", err: fmt.Errorf(`ent: validator failed for field "Travels.account_id": %w`, err)}
 		}
 	}
 	if _, ok := tc.mutation.Photos(); !ok {
-		return &ValidationError{Name: "photos", err: errors.New(`ent: missing required field "Travel.photos"`)}
+		return &ValidationError{Name: "photos", err: errors.New(`ent: missing required field "Travels.photos"`)}
 	}
 	if _, ok := tc.mutation.BrowseNum(); !ok {
-		return &ValidationError{Name: "browse_num", err: errors.New(`ent: missing required field "Travel.browse_num"`)}
+		return &ValidationError{Name: "browse_num", err: errors.New(`ent: missing required field "Travels.browse_num"`)}
 	}
 	if _, ok := tc.mutation.ThumbNum(); !ok {
-		return &ValidationError{Name: "thumb_num", err: errors.New(`ent: missing required field "Travel.thumb_num"`)}
+		return &ValidationError{Name: "thumb_num", err: errors.New(`ent: missing required field "Travels.thumb_num"`)}
 	}
 	if _, ok := tc.mutation.CollectNum(); !ok {
-		return &ValidationError{Name: "collect_num", err: errors.New(`ent: missing required field "Travel.collect_num"`)}
+		return &ValidationError{Name: "collect_num", err: errors.New(`ent: missing required field "Travels.collect_num"`)}
 	}
 	return nil
 }
 
-func (tc *TravelCreate) sqlSave(ctx context.Context) (*Travel, error) {
+func (tc *TravelsCreate) sqlSave(ctx context.Context) (*Travels, error) {
 	if err := tc.check(); err != nil {
 		return nil, err
 	}
@@ -374,10 +374,10 @@ func (tc *TravelCreate) sqlSave(ctx context.Context) (*Travel, error) {
 	return _node, nil
 }
 
-func (tc *TravelCreate) createSpec() (*Travel, *sqlgraph.CreateSpec) {
+func (tc *TravelsCreate) createSpec() (*Travels, *sqlgraph.CreateSpec) {
 	var (
-		_node = &Travel{config: tc.config}
-		_spec = sqlgraph.NewCreateSpec(travel.Table, sqlgraph.NewFieldSpec(travel.FieldID, field.TypeInt))
+		_node = &Travels{config: tc.config}
+		_spec = sqlgraph.NewCreateSpec(travels.Table, sqlgraph.NewFieldSpec(travels.FieldID, field.TypeInt))
 	)
 	_spec.OnConflict = tc.conflict
 	if id, ok := tc.mutation.ID(); ok {
@@ -385,74 +385,74 @@ func (tc *TravelCreate) createSpec() (*Travel, *sqlgraph.CreateSpec) {
 		_spec.ID.Value = id
 	}
 	if value, ok := tc.mutation.CreatedAt(); ok {
-		_spec.SetField(travel.FieldCreatedAt, field.TypeInt64, value)
+		_spec.SetField(travels.FieldCreatedAt, field.TypeInt64, value)
 		_node.CreatedAt = value
 	}
 	if value, ok := tc.mutation.CreatedBy(); ok {
-		_spec.SetField(travel.FieldCreatedBy, field.TypeInt64, value)
+		_spec.SetField(travels.FieldCreatedBy, field.TypeInt64, value)
 		_node.CreatedBy = value
 	}
 	if value, ok := tc.mutation.UpdatedAt(); ok {
-		_spec.SetField(travel.FieldUpdatedAt, field.TypeInt64, value)
+		_spec.SetField(travels.FieldUpdatedAt, field.TypeInt64, value)
 		_node.UpdatedAt = value
 	}
 	if value, ok := tc.mutation.UpdatedBy(); ok {
-		_spec.SetField(travel.FieldUpdatedBy, field.TypeInt64, value)
+		_spec.SetField(travels.FieldUpdatedBy, field.TypeInt64, value)
 		_node.UpdatedBy = value
 	}
 	if value, ok := tc.mutation.DeletedAt(); ok {
-		_spec.SetField(travel.FieldDeletedAt, field.TypeInt64, value)
+		_spec.SetField(travels.FieldDeletedAt, field.TypeInt64, value)
 		_node.DeletedAt = value
 	}
 	if value, ok := tc.mutation.DeletedBy(); ok {
-		_spec.SetField(travel.FieldDeletedBy, field.TypeInt64, value)
+		_spec.SetField(travels.FieldDeletedBy, field.TypeInt64, value)
 		_node.DeletedBy = value
 	}
 	if value, ok := tc.mutation.Title(); ok {
-		_spec.SetField(travel.FieldTitle, field.TypeString, value)
+		_spec.SetField(travels.FieldTitle, field.TypeString, value)
 		_node.Title = value
 	}
 	if value, ok := tc.mutation.Description(); ok {
-		_spec.SetField(travel.FieldDescription, field.TypeString, value)
+		_spec.SetField(travels.FieldDescription, field.TypeString, value)
 		_node.Description = value
 	}
 	if value, ok := tc.mutation.Video(); ok {
-		_spec.SetField(travel.FieldVideo, field.TypeString, value)
+		_spec.SetField(travels.FieldVideo, field.TypeString, value)
 		_node.Video = value
 	}
 	if value, ok := tc.mutation.IsHidden(); ok {
-		_spec.SetField(travel.FieldIsHidden, field.TypeBool, value)
+		_spec.SetField(travels.FieldIsHidden, field.TypeBool, value)
 		_node.IsHidden = value
 	}
 	if value, ok := tc.mutation.AccountID(); ok {
-		_spec.SetField(travel.FieldAccountID, field.TypeInt, value)
+		_spec.SetField(travels.FieldAccountID, field.TypeInt, value)
 		_node.AccountID = value
 	}
 	if value, ok := tc.mutation.Photos(); ok {
-		_spec.SetField(travel.FieldPhotos, field.TypeJSON, value)
+		_spec.SetField(travels.FieldPhotos, field.TypeJSON, value)
 		_node.Photos = value
 	}
 	if value, ok := tc.mutation.BrowseNum(); ok {
-		_spec.SetField(travel.FieldBrowseNum, field.TypeInt, value)
+		_spec.SetField(travels.FieldBrowseNum, field.TypeInt, value)
 		_node.BrowseNum = value
 	}
 	if value, ok := tc.mutation.ThumbNum(); ok {
-		_spec.SetField(travel.FieldThumbNum, field.TypeInt, value)
+		_spec.SetField(travels.FieldThumbNum, field.TypeInt, value)
 		_node.ThumbNum = value
 	}
 	if value, ok := tc.mutation.CollectNum(); ok {
-		_spec.SetField(travel.FieldCollectNum, field.TypeInt, value)
+		_spec.SetField(travels.FieldCollectNum, field.TypeInt, value)
 		_node.CollectNum = value
 	}
-	if nodes := tc.mutation.TravelExtendIDs(); len(nodes) > 0 {
+	if nodes := tc.mutation.TravelExtendsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   travel.TravelExtendTable,
-			Columns: []string{travel.TravelExtendColumn},
+			Table:   travels.TravelExtendsTable,
+			Columns: []string{travels.TravelExtendsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(travelextend.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(travelextends.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -460,12 +460,12 @@ func (tc *TravelCreate) createSpec() (*Travel, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := tc.mutation.AccountTravelIDs(); len(nodes) > 0 {
+	if nodes := tc.mutation.AccountTravelsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   travel.AccountTravelTable,
-			Columns: []string{travel.AccountTravelColumn},
+			Table:   travels.AccountTravelsTable,
+			Columns: []string{travels.AccountTravelsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(account.FieldID, field.TypeInt),
@@ -474,7 +474,7 @@ func (tc *TravelCreate) createSpec() (*Travel, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		_node.account_travel_account = &nodes[0]
+		_node.account_travels = &nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec
@@ -483,7 +483,7 @@ func (tc *TravelCreate) createSpec() (*Travel, *sqlgraph.CreateSpec) {
 // OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
 // of the `INSERT` statement. For example:
 //
-//	client.Travel.Create().
+//	client.Travels.Create().
 //		SetCreatedAt(v).
 //		OnConflict(
 //			// Update the row with the new values
@@ -492,13 +492,13 @@ func (tc *TravelCreate) createSpec() (*Travel, *sqlgraph.CreateSpec) {
 //		).
 //		// Override some of the fields with custom
 //		// update values.
-//		Update(func(u *ent.TravelUpsert) {
+//		Update(func(u *ent.TravelsUpsert) {
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
-func (tc *TravelCreate) OnConflict(opts ...sql.ConflictOption) *TravelUpsertOne {
+func (tc *TravelsCreate) OnConflict(opts ...sql.ConflictOption) *TravelsUpsertOne {
 	tc.conflict = opts
-	return &TravelUpsertOne{
+	return &TravelsUpsertOne{
 		create: tc,
 	}
 }
@@ -506,255 +506,255 @@ func (tc *TravelCreate) OnConflict(opts ...sql.ConflictOption) *TravelUpsertOne 
 // OnConflictColumns calls `OnConflict` and configures the columns
 // as conflict target. Using this option is equivalent to using:
 //
-//	client.Travel.Create().
+//	client.Travels.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-func (tc *TravelCreate) OnConflictColumns(columns ...string) *TravelUpsertOne {
+func (tc *TravelsCreate) OnConflictColumns(columns ...string) *TravelsUpsertOne {
 	tc.conflict = append(tc.conflict, sql.ConflictColumns(columns...))
-	return &TravelUpsertOne{
+	return &TravelsUpsertOne{
 		create: tc,
 	}
 }
 
 type (
-	// TravelUpsertOne is the builder for "upsert"-ing
-	//  one Travel node.
-	TravelUpsertOne struct {
-		create *TravelCreate
+	// TravelsUpsertOne is the builder for "upsert"-ing
+	//  one Travels node.
+	TravelsUpsertOne struct {
+		create *TravelsCreate
 	}
 
-	// TravelUpsert is the "OnConflict" setter.
-	TravelUpsert struct {
+	// TravelsUpsert is the "OnConflict" setter.
+	TravelsUpsert struct {
 		*sql.UpdateSet
 	}
 )
 
 // SetUpdatedAt sets the "updated_at" field.
-func (u *TravelUpsert) SetUpdatedAt(v int64) *TravelUpsert {
-	u.Set(travel.FieldUpdatedAt, v)
+func (u *TravelsUpsert) SetUpdatedAt(v int64) *TravelsUpsert {
+	u.Set(travels.FieldUpdatedAt, v)
 	return u
 }
 
 // UpdateUpdatedAt sets the "updated_at" field to the value that was provided on create.
-func (u *TravelUpsert) UpdateUpdatedAt() *TravelUpsert {
-	u.SetExcluded(travel.FieldUpdatedAt)
+func (u *TravelsUpsert) UpdateUpdatedAt() *TravelsUpsert {
+	u.SetExcluded(travels.FieldUpdatedAt)
 	return u
 }
 
 // AddUpdatedAt adds v to the "updated_at" field.
-func (u *TravelUpsert) AddUpdatedAt(v int64) *TravelUpsert {
-	u.Add(travel.FieldUpdatedAt, v)
+func (u *TravelsUpsert) AddUpdatedAt(v int64) *TravelsUpsert {
+	u.Add(travels.FieldUpdatedAt, v)
 	return u
 }
 
 // SetUpdatedBy sets the "updated_by" field.
-func (u *TravelUpsert) SetUpdatedBy(v int64) *TravelUpsert {
-	u.Set(travel.FieldUpdatedBy, v)
+func (u *TravelsUpsert) SetUpdatedBy(v int64) *TravelsUpsert {
+	u.Set(travels.FieldUpdatedBy, v)
 	return u
 }
 
 // UpdateUpdatedBy sets the "updated_by" field to the value that was provided on create.
-func (u *TravelUpsert) UpdateUpdatedBy() *TravelUpsert {
-	u.SetExcluded(travel.FieldUpdatedBy)
+func (u *TravelsUpsert) UpdateUpdatedBy() *TravelsUpsert {
+	u.SetExcluded(travels.FieldUpdatedBy)
 	return u
 }
 
 // AddUpdatedBy adds v to the "updated_by" field.
-func (u *TravelUpsert) AddUpdatedBy(v int64) *TravelUpsert {
-	u.Add(travel.FieldUpdatedBy, v)
+func (u *TravelsUpsert) AddUpdatedBy(v int64) *TravelsUpsert {
+	u.Add(travels.FieldUpdatedBy, v)
 	return u
 }
 
 // SetDeletedAt sets the "deleted_at" field.
-func (u *TravelUpsert) SetDeletedAt(v int64) *TravelUpsert {
-	u.Set(travel.FieldDeletedAt, v)
+func (u *TravelsUpsert) SetDeletedAt(v int64) *TravelsUpsert {
+	u.Set(travels.FieldDeletedAt, v)
 	return u
 }
 
 // UpdateDeletedAt sets the "deleted_at" field to the value that was provided on create.
-func (u *TravelUpsert) UpdateDeletedAt() *TravelUpsert {
-	u.SetExcluded(travel.FieldDeletedAt)
+func (u *TravelsUpsert) UpdateDeletedAt() *TravelsUpsert {
+	u.SetExcluded(travels.FieldDeletedAt)
 	return u
 }
 
 // AddDeletedAt adds v to the "deleted_at" field.
-func (u *TravelUpsert) AddDeletedAt(v int64) *TravelUpsert {
-	u.Add(travel.FieldDeletedAt, v)
+func (u *TravelsUpsert) AddDeletedAt(v int64) *TravelsUpsert {
+	u.Add(travels.FieldDeletedAt, v)
 	return u
 }
 
 // SetDeletedBy sets the "deleted_by" field.
-func (u *TravelUpsert) SetDeletedBy(v int64) *TravelUpsert {
-	u.Set(travel.FieldDeletedBy, v)
+func (u *TravelsUpsert) SetDeletedBy(v int64) *TravelsUpsert {
+	u.Set(travels.FieldDeletedBy, v)
 	return u
 }
 
 // UpdateDeletedBy sets the "deleted_by" field to the value that was provided on create.
-func (u *TravelUpsert) UpdateDeletedBy() *TravelUpsert {
-	u.SetExcluded(travel.FieldDeletedBy)
+func (u *TravelsUpsert) UpdateDeletedBy() *TravelsUpsert {
+	u.SetExcluded(travels.FieldDeletedBy)
 	return u
 }
 
 // AddDeletedBy adds v to the "deleted_by" field.
-func (u *TravelUpsert) AddDeletedBy(v int64) *TravelUpsert {
-	u.Add(travel.FieldDeletedBy, v)
+func (u *TravelsUpsert) AddDeletedBy(v int64) *TravelsUpsert {
+	u.Add(travels.FieldDeletedBy, v)
 	return u
 }
 
 // SetTitle sets the "title" field.
-func (u *TravelUpsert) SetTitle(v string) *TravelUpsert {
-	u.Set(travel.FieldTitle, v)
+func (u *TravelsUpsert) SetTitle(v string) *TravelsUpsert {
+	u.Set(travels.FieldTitle, v)
 	return u
 }
 
 // UpdateTitle sets the "title" field to the value that was provided on create.
-func (u *TravelUpsert) UpdateTitle() *TravelUpsert {
-	u.SetExcluded(travel.FieldTitle)
+func (u *TravelsUpsert) UpdateTitle() *TravelsUpsert {
+	u.SetExcluded(travels.FieldTitle)
 	return u
 }
 
 // SetDescription sets the "description" field.
-func (u *TravelUpsert) SetDescription(v string) *TravelUpsert {
-	u.Set(travel.FieldDescription, v)
+func (u *TravelsUpsert) SetDescription(v string) *TravelsUpsert {
+	u.Set(travels.FieldDescription, v)
 	return u
 }
 
 // UpdateDescription sets the "description" field to the value that was provided on create.
-func (u *TravelUpsert) UpdateDescription() *TravelUpsert {
-	u.SetExcluded(travel.FieldDescription)
+func (u *TravelsUpsert) UpdateDescription() *TravelsUpsert {
+	u.SetExcluded(travels.FieldDescription)
 	return u
 }
 
 // SetVideo sets the "video" field.
-func (u *TravelUpsert) SetVideo(v string) *TravelUpsert {
-	u.Set(travel.FieldVideo, v)
+func (u *TravelsUpsert) SetVideo(v string) *TravelsUpsert {
+	u.Set(travels.FieldVideo, v)
 	return u
 }
 
 // UpdateVideo sets the "video" field to the value that was provided on create.
-func (u *TravelUpsert) UpdateVideo() *TravelUpsert {
-	u.SetExcluded(travel.FieldVideo)
+func (u *TravelsUpsert) UpdateVideo() *TravelsUpsert {
+	u.SetExcluded(travels.FieldVideo)
 	return u
 }
 
 // SetIsHidden sets the "is_hidden" field.
-func (u *TravelUpsert) SetIsHidden(v bool) *TravelUpsert {
-	u.Set(travel.FieldIsHidden, v)
+func (u *TravelsUpsert) SetIsHidden(v bool) *TravelsUpsert {
+	u.Set(travels.FieldIsHidden, v)
 	return u
 }
 
 // UpdateIsHidden sets the "is_hidden" field to the value that was provided on create.
-func (u *TravelUpsert) UpdateIsHidden() *TravelUpsert {
-	u.SetExcluded(travel.FieldIsHidden)
+func (u *TravelsUpsert) UpdateIsHidden() *TravelsUpsert {
+	u.SetExcluded(travels.FieldIsHidden)
 	return u
 }
 
 // SetAccountID sets the "account_id" field.
-func (u *TravelUpsert) SetAccountID(v int) *TravelUpsert {
-	u.Set(travel.FieldAccountID, v)
+func (u *TravelsUpsert) SetAccountID(v int) *TravelsUpsert {
+	u.Set(travels.FieldAccountID, v)
 	return u
 }
 
 // UpdateAccountID sets the "account_id" field to the value that was provided on create.
-func (u *TravelUpsert) UpdateAccountID() *TravelUpsert {
-	u.SetExcluded(travel.FieldAccountID)
+func (u *TravelsUpsert) UpdateAccountID() *TravelsUpsert {
+	u.SetExcluded(travels.FieldAccountID)
 	return u
 }
 
 // AddAccountID adds v to the "account_id" field.
-func (u *TravelUpsert) AddAccountID(v int) *TravelUpsert {
-	u.Add(travel.FieldAccountID, v)
+func (u *TravelsUpsert) AddAccountID(v int) *TravelsUpsert {
+	u.Add(travels.FieldAccountID, v)
 	return u
 }
 
 // SetPhotos sets the "photos" field.
-func (u *TravelUpsert) SetPhotos(v []string) *TravelUpsert {
-	u.Set(travel.FieldPhotos, v)
+func (u *TravelsUpsert) SetPhotos(v []string) *TravelsUpsert {
+	u.Set(travels.FieldPhotos, v)
 	return u
 }
 
 // UpdatePhotos sets the "photos" field to the value that was provided on create.
-func (u *TravelUpsert) UpdatePhotos() *TravelUpsert {
-	u.SetExcluded(travel.FieldPhotos)
+func (u *TravelsUpsert) UpdatePhotos() *TravelsUpsert {
+	u.SetExcluded(travels.FieldPhotos)
 	return u
 }
 
 // SetBrowseNum sets the "browse_num" field.
-func (u *TravelUpsert) SetBrowseNum(v int) *TravelUpsert {
-	u.Set(travel.FieldBrowseNum, v)
+func (u *TravelsUpsert) SetBrowseNum(v int) *TravelsUpsert {
+	u.Set(travels.FieldBrowseNum, v)
 	return u
 }
 
 // UpdateBrowseNum sets the "browse_num" field to the value that was provided on create.
-func (u *TravelUpsert) UpdateBrowseNum() *TravelUpsert {
-	u.SetExcluded(travel.FieldBrowseNum)
+func (u *TravelsUpsert) UpdateBrowseNum() *TravelsUpsert {
+	u.SetExcluded(travels.FieldBrowseNum)
 	return u
 }
 
 // AddBrowseNum adds v to the "browse_num" field.
-func (u *TravelUpsert) AddBrowseNum(v int) *TravelUpsert {
-	u.Add(travel.FieldBrowseNum, v)
+func (u *TravelsUpsert) AddBrowseNum(v int) *TravelsUpsert {
+	u.Add(travels.FieldBrowseNum, v)
 	return u
 }
 
 // SetThumbNum sets the "thumb_num" field.
-func (u *TravelUpsert) SetThumbNum(v int) *TravelUpsert {
-	u.Set(travel.FieldThumbNum, v)
+func (u *TravelsUpsert) SetThumbNum(v int) *TravelsUpsert {
+	u.Set(travels.FieldThumbNum, v)
 	return u
 }
 
 // UpdateThumbNum sets the "thumb_num" field to the value that was provided on create.
-func (u *TravelUpsert) UpdateThumbNum() *TravelUpsert {
-	u.SetExcluded(travel.FieldThumbNum)
+func (u *TravelsUpsert) UpdateThumbNum() *TravelsUpsert {
+	u.SetExcluded(travels.FieldThumbNum)
 	return u
 }
 
 // AddThumbNum adds v to the "thumb_num" field.
-func (u *TravelUpsert) AddThumbNum(v int) *TravelUpsert {
-	u.Add(travel.FieldThumbNum, v)
+func (u *TravelsUpsert) AddThumbNum(v int) *TravelsUpsert {
+	u.Add(travels.FieldThumbNum, v)
 	return u
 }
 
 // SetCollectNum sets the "collect_num" field.
-func (u *TravelUpsert) SetCollectNum(v int) *TravelUpsert {
-	u.Set(travel.FieldCollectNum, v)
+func (u *TravelsUpsert) SetCollectNum(v int) *TravelsUpsert {
+	u.Set(travels.FieldCollectNum, v)
 	return u
 }
 
 // UpdateCollectNum sets the "collect_num" field to the value that was provided on create.
-func (u *TravelUpsert) UpdateCollectNum() *TravelUpsert {
-	u.SetExcluded(travel.FieldCollectNum)
+func (u *TravelsUpsert) UpdateCollectNum() *TravelsUpsert {
+	u.SetExcluded(travels.FieldCollectNum)
 	return u
 }
 
 // AddCollectNum adds v to the "collect_num" field.
-func (u *TravelUpsert) AddCollectNum(v int) *TravelUpsert {
-	u.Add(travel.FieldCollectNum, v)
+func (u *TravelsUpsert) AddCollectNum(v int) *TravelsUpsert {
+	u.Add(travels.FieldCollectNum, v)
 	return u
 }
 
 // UpdateNewValues updates the mutable fields using the new values that were set on create except the ID field.
 // Using this option is equivalent to using:
 //
-//	client.Travel.Create().
+//	client.Travels.Create().
 //		OnConflict(
 //			sql.ResolveWithNewValues(),
 //			sql.ResolveWith(func(u *sql.UpdateSet) {
-//				u.SetIgnore(travel.FieldID)
+//				u.SetIgnore(travels.FieldID)
 //			}),
 //		).
 //		Exec(ctx)
-func (u *TravelUpsertOne) UpdateNewValues() *TravelUpsertOne {
+func (u *TravelsUpsertOne) UpdateNewValues() *TravelsUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
 		if _, exists := u.create.mutation.ID(); exists {
-			s.SetIgnore(travel.FieldID)
+			s.SetIgnore(travels.FieldID)
 		}
 		if _, exists := u.create.mutation.CreatedAt(); exists {
-			s.SetIgnore(travel.FieldCreatedAt)
+			s.SetIgnore(travels.FieldCreatedAt)
 		}
 		if _, exists := u.create.mutation.CreatedBy(); exists {
-			s.SetIgnore(travel.FieldCreatedBy)
+			s.SetIgnore(travels.FieldCreatedBy)
 		}
 	}))
 	return u
@@ -763,285 +763,285 @@ func (u *TravelUpsertOne) UpdateNewValues() *TravelUpsertOne {
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//	client.Travel.Create().
+//	client.Travels.Create().
 //	    OnConflict(sql.ResolveWithIgnore()).
 //	    Exec(ctx)
-func (u *TravelUpsertOne) Ignore() *TravelUpsertOne {
+func (u *TravelsUpsertOne) Ignore() *TravelsUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
 }
 
 // DoNothing configures the conflict_action to `DO NOTHING`.
 // Supported only by SQLite and PostgreSQL.
-func (u *TravelUpsertOne) DoNothing() *TravelUpsertOne {
+func (u *TravelsUpsertOne) DoNothing() *TravelsUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.DoNothing())
 	return u
 }
 
-// Update allows overriding fields `UPDATE` values. See the TravelCreate.OnConflict
+// Update allows overriding fields `UPDATE` values. See the TravelsCreate.OnConflict
 // documentation for more info.
-func (u *TravelUpsertOne) Update(set func(*TravelUpsert)) *TravelUpsertOne {
+func (u *TravelsUpsertOne) Update(set func(*TravelsUpsert)) *TravelsUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
-		set(&TravelUpsert{UpdateSet: update})
+		set(&TravelsUpsert{UpdateSet: update})
 	}))
 	return u
 }
 
 // SetUpdatedAt sets the "updated_at" field.
-func (u *TravelUpsertOne) SetUpdatedAt(v int64) *TravelUpsertOne {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertOne) SetUpdatedAt(v int64) *TravelsUpsertOne {
+	return u.Update(func(s *TravelsUpsert) {
 		s.SetUpdatedAt(v)
 	})
 }
 
 // AddUpdatedAt adds v to the "updated_at" field.
-func (u *TravelUpsertOne) AddUpdatedAt(v int64) *TravelUpsertOne {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertOne) AddUpdatedAt(v int64) *TravelsUpsertOne {
+	return u.Update(func(s *TravelsUpsert) {
 		s.AddUpdatedAt(v)
 	})
 }
 
 // UpdateUpdatedAt sets the "updated_at" field to the value that was provided on create.
-func (u *TravelUpsertOne) UpdateUpdatedAt() *TravelUpsertOne {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertOne) UpdateUpdatedAt() *TravelsUpsertOne {
+	return u.Update(func(s *TravelsUpsert) {
 		s.UpdateUpdatedAt()
 	})
 }
 
 // SetUpdatedBy sets the "updated_by" field.
-func (u *TravelUpsertOne) SetUpdatedBy(v int64) *TravelUpsertOne {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertOne) SetUpdatedBy(v int64) *TravelsUpsertOne {
+	return u.Update(func(s *TravelsUpsert) {
 		s.SetUpdatedBy(v)
 	})
 }
 
 // AddUpdatedBy adds v to the "updated_by" field.
-func (u *TravelUpsertOne) AddUpdatedBy(v int64) *TravelUpsertOne {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertOne) AddUpdatedBy(v int64) *TravelsUpsertOne {
+	return u.Update(func(s *TravelsUpsert) {
 		s.AddUpdatedBy(v)
 	})
 }
 
 // UpdateUpdatedBy sets the "updated_by" field to the value that was provided on create.
-func (u *TravelUpsertOne) UpdateUpdatedBy() *TravelUpsertOne {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertOne) UpdateUpdatedBy() *TravelsUpsertOne {
+	return u.Update(func(s *TravelsUpsert) {
 		s.UpdateUpdatedBy()
 	})
 }
 
 // SetDeletedAt sets the "deleted_at" field.
-func (u *TravelUpsertOne) SetDeletedAt(v int64) *TravelUpsertOne {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertOne) SetDeletedAt(v int64) *TravelsUpsertOne {
+	return u.Update(func(s *TravelsUpsert) {
 		s.SetDeletedAt(v)
 	})
 }
 
 // AddDeletedAt adds v to the "deleted_at" field.
-func (u *TravelUpsertOne) AddDeletedAt(v int64) *TravelUpsertOne {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertOne) AddDeletedAt(v int64) *TravelsUpsertOne {
+	return u.Update(func(s *TravelsUpsert) {
 		s.AddDeletedAt(v)
 	})
 }
 
 // UpdateDeletedAt sets the "deleted_at" field to the value that was provided on create.
-func (u *TravelUpsertOne) UpdateDeletedAt() *TravelUpsertOne {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertOne) UpdateDeletedAt() *TravelsUpsertOne {
+	return u.Update(func(s *TravelsUpsert) {
 		s.UpdateDeletedAt()
 	})
 }
 
 // SetDeletedBy sets the "deleted_by" field.
-func (u *TravelUpsertOne) SetDeletedBy(v int64) *TravelUpsertOne {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertOne) SetDeletedBy(v int64) *TravelsUpsertOne {
+	return u.Update(func(s *TravelsUpsert) {
 		s.SetDeletedBy(v)
 	})
 }
 
 // AddDeletedBy adds v to the "deleted_by" field.
-func (u *TravelUpsertOne) AddDeletedBy(v int64) *TravelUpsertOne {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertOne) AddDeletedBy(v int64) *TravelsUpsertOne {
+	return u.Update(func(s *TravelsUpsert) {
 		s.AddDeletedBy(v)
 	})
 }
 
 // UpdateDeletedBy sets the "deleted_by" field to the value that was provided on create.
-func (u *TravelUpsertOne) UpdateDeletedBy() *TravelUpsertOne {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertOne) UpdateDeletedBy() *TravelsUpsertOne {
+	return u.Update(func(s *TravelsUpsert) {
 		s.UpdateDeletedBy()
 	})
 }
 
 // SetTitle sets the "title" field.
-func (u *TravelUpsertOne) SetTitle(v string) *TravelUpsertOne {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertOne) SetTitle(v string) *TravelsUpsertOne {
+	return u.Update(func(s *TravelsUpsert) {
 		s.SetTitle(v)
 	})
 }
 
 // UpdateTitle sets the "title" field to the value that was provided on create.
-func (u *TravelUpsertOne) UpdateTitle() *TravelUpsertOne {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertOne) UpdateTitle() *TravelsUpsertOne {
+	return u.Update(func(s *TravelsUpsert) {
 		s.UpdateTitle()
 	})
 }
 
 // SetDescription sets the "description" field.
-func (u *TravelUpsertOne) SetDescription(v string) *TravelUpsertOne {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertOne) SetDescription(v string) *TravelsUpsertOne {
+	return u.Update(func(s *TravelsUpsert) {
 		s.SetDescription(v)
 	})
 }
 
 // UpdateDescription sets the "description" field to the value that was provided on create.
-func (u *TravelUpsertOne) UpdateDescription() *TravelUpsertOne {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertOne) UpdateDescription() *TravelsUpsertOne {
+	return u.Update(func(s *TravelsUpsert) {
 		s.UpdateDescription()
 	})
 }
 
 // SetVideo sets the "video" field.
-func (u *TravelUpsertOne) SetVideo(v string) *TravelUpsertOne {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertOne) SetVideo(v string) *TravelsUpsertOne {
+	return u.Update(func(s *TravelsUpsert) {
 		s.SetVideo(v)
 	})
 }
 
 // UpdateVideo sets the "video" field to the value that was provided on create.
-func (u *TravelUpsertOne) UpdateVideo() *TravelUpsertOne {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertOne) UpdateVideo() *TravelsUpsertOne {
+	return u.Update(func(s *TravelsUpsert) {
 		s.UpdateVideo()
 	})
 }
 
 // SetIsHidden sets the "is_hidden" field.
-func (u *TravelUpsertOne) SetIsHidden(v bool) *TravelUpsertOne {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertOne) SetIsHidden(v bool) *TravelsUpsertOne {
+	return u.Update(func(s *TravelsUpsert) {
 		s.SetIsHidden(v)
 	})
 }
 
 // UpdateIsHidden sets the "is_hidden" field to the value that was provided on create.
-func (u *TravelUpsertOne) UpdateIsHidden() *TravelUpsertOne {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertOne) UpdateIsHidden() *TravelsUpsertOne {
+	return u.Update(func(s *TravelsUpsert) {
 		s.UpdateIsHidden()
 	})
 }
 
 // SetAccountID sets the "account_id" field.
-func (u *TravelUpsertOne) SetAccountID(v int) *TravelUpsertOne {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertOne) SetAccountID(v int) *TravelsUpsertOne {
+	return u.Update(func(s *TravelsUpsert) {
 		s.SetAccountID(v)
 	})
 }
 
 // AddAccountID adds v to the "account_id" field.
-func (u *TravelUpsertOne) AddAccountID(v int) *TravelUpsertOne {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertOne) AddAccountID(v int) *TravelsUpsertOne {
+	return u.Update(func(s *TravelsUpsert) {
 		s.AddAccountID(v)
 	})
 }
 
 // UpdateAccountID sets the "account_id" field to the value that was provided on create.
-func (u *TravelUpsertOne) UpdateAccountID() *TravelUpsertOne {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertOne) UpdateAccountID() *TravelsUpsertOne {
+	return u.Update(func(s *TravelsUpsert) {
 		s.UpdateAccountID()
 	})
 }
 
 // SetPhotos sets the "photos" field.
-func (u *TravelUpsertOne) SetPhotos(v []string) *TravelUpsertOne {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertOne) SetPhotos(v []string) *TravelsUpsertOne {
+	return u.Update(func(s *TravelsUpsert) {
 		s.SetPhotos(v)
 	})
 }
 
 // UpdatePhotos sets the "photos" field to the value that was provided on create.
-func (u *TravelUpsertOne) UpdatePhotos() *TravelUpsertOne {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertOne) UpdatePhotos() *TravelsUpsertOne {
+	return u.Update(func(s *TravelsUpsert) {
 		s.UpdatePhotos()
 	})
 }
 
 // SetBrowseNum sets the "browse_num" field.
-func (u *TravelUpsertOne) SetBrowseNum(v int) *TravelUpsertOne {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertOne) SetBrowseNum(v int) *TravelsUpsertOne {
+	return u.Update(func(s *TravelsUpsert) {
 		s.SetBrowseNum(v)
 	})
 }
 
 // AddBrowseNum adds v to the "browse_num" field.
-func (u *TravelUpsertOne) AddBrowseNum(v int) *TravelUpsertOne {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertOne) AddBrowseNum(v int) *TravelsUpsertOne {
+	return u.Update(func(s *TravelsUpsert) {
 		s.AddBrowseNum(v)
 	})
 }
 
 // UpdateBrowseNum sets the "browse_num" field to the value that was provided on create.
-func (u *TravelUpsertOne) UpdateBrowseNum() *TravelUpsertOne {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertOne) UpdateBrowseNum() *TravelsUpsertOne {
+	return u.Update(func(s *TravelsUpsert) {
 		s.UpdateBrowseNum()
 	})
 }
 
 // SetThumbNum sets the "thumb_num" field.
-func (u *TravelUpsertOne) SetThumbNum(v int) *TravelUpsertOne {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertOne) SetThumbNum(v int) *TravelsUpsertOne {
+	return u.Update(func(s *TravelsUpsert) {
 		s.SetThumbNum(v)
 	})
 }
 
 // AddThumbNum adds v to the "thumb_num" field.
-func (u *TravelUpsertOne) AddThumbNum(v int) *TravelUpsertOne {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertOne) AddThumbNum(v int) *TravelsUpsertOne {
+	return u.Update(func(s *TravelsUpsert) {
 		s.AddThumbNum(v)
 	})
 }
 
 // UpdateThumbNum sets the "thumb_num" field to the value that was provided on create.
-func (u *TravelUpsertOne) UpdateThumbNum() *TravelUpsertOne {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertOne) UpdateThumbNum() *TravelsUpsertOne {
+	return u.Update(func(s *TravelsUpsert) {
 		s.UpdateThumbNum()
 	})
 }
 
 // SetCollectNum sets the "collect_num" field.
-func (u *TravelUpsertOne) SetCollectNum(v int) *TravelUpsertOne {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertOne) SetCollectNum(v int) *TravelsUpsertOne {
+	return u.Update(func(s *TravelsUpsert) {
 		s.SetCollectNum(v)
 	})
 }
 
 // AddCollectNum adds v to the "collect_num" field.
-func (u *TravelUpsertOne) AddCollectNum(v int) *TravelUpsertOne {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertOne) AddCollectNum(v int) *TravelsUpsertOne {
+	return u.Update(func(s *TravelsUpsert) {
 		s.AddCollectNum(v)
 	})
 }
 
 // UpdateCollectNum sets the "collect_num" field to the value that was provided on create.
-func (u *TravelUpsertOne) UpdateCollectNum() *TravelUpsertOne {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertOne) UpdateCollectNum() *TravelsUpsertOne {
+	return u.Update(func(s *TravelsUpsert) {
 		s.UpdateCollectNum()
 	})
 }
 
 // Exec executes the query.
-func (u *TravelUpsertOne) Exec(ctx context.Context) error {
+func (u *TravelsUpsertOne) Exec(ctx context.Context) error {
 	if len(u.create.conflict) == 0 {
-		return errors.New("ent: missing options for TravelCreate.OnConflict")
+		return errors.New("ent: missing options for TravelsCreate.OnConflict")
 	}
 	return u.create.Exec(ctx)
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (u *TravelUpsertOne) ExecX(ctx context.Context) {
+func (u *TravelsUpsertOne) ExecX(ctx context.Context) {
 	if err := u.create.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // Exec executes the UPSERT query and returns the inserted/updated ID.
-func (u *TravelUpsertOne) ID(ctx context.Context) (id int, err error) {
+func (u *TravelsUpsertOne) ID(ctx context.Context) (id int, err error) {
 	node, err := u.create.Save(ctx)
 	if err != nil {
 		return id, err
@@ -1050,7 +1050,7 @@ func (u *TravelUpsertOne) ID(ctx context.Context) (id int, err error) {
 }
 
 // IDX is like ID, but panics if an error occurs.
-func (u *TravelUpsertOne) IDX(ctx context.Context) int {
+func (u *TravelsUpsertOne) IDX(ctx context.Context) int {
 	id, err := u.ID(ctx)
 	if err != nil {
 		panic(err)
@@ -1058,28 +1058,28 @@ func (u *TravelUpsertOne) IDX(ctx context.Context) int {
 	return id
 }
 
-// TravelCreateBulk is the builder for creating many Travel entities in bulk.
-type TravelCreateBulk struct {
+// TravelsCreateBulk is the builder for creating many Travels entities in bulk.
+type TravelsCreateBulk struct {
 	config
 	err      error
-	builders []*TravelCreate
+	builders []*TravelsCreate
 	conflict []sql.ConflictOption
 }
 
-// Save creates the Travel entities in the database.
-func (tcb *TravelCreateBulk) Save(ctx context.Context) ([]*Travel, error) {
+// Save creates the Travels entities in the database.
+func (tcb *TravelsCreateBulk) Save(ctx context.Context) ([]*Travels, error) {
 	if tcb.err != nil {
 		return nil, tcb.err
 	}
 	specs := make([]*sqlgraph.CreateSpec, len(tcb.builders))
-	nodes := make([]*Travel, len(tcb.builders))
+	nodes := make([]*Travels, len(tcb.builders))
 	mutators := make([]Mutator, len(tcb.builders))
 	for i := range tcb.builders {
 		func(i int, root context.Context) {
 			builder := tcb.builders[i]
 			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-				mutation, ok := m.(*TravelMutation)
+				mutation, ok := m.(*TravelsMutation)
 				if !ok {
 					return nil, fmt.Errorf("unexpected mutation type %T", m)
 				}
@@ -1127,7 +1127,7 @@ func (tcb *TravelCreateBulk) Save(ctx context.Context) ([]*Travel, error) {
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (tcb *TravelCreateBulk) SaveX(ctx context.Context) []*Travel {
+func (tcb *TravelsCreateBulk) SaveX(ctx context.Context) []*Travels {
 	v, err := tcb.Save(ctx)
 	if err != nil {
 		panic(err)
@@ -1136,13 +1136,13 @@ func (tcb *TravelCreateBulk) SaveX(ctx context.Context) []*Travel {
 }
 
 // Exec executes the query.
-func (tcb *TravelCreateBulk) Exec(ctx context.Context) error {
+func (tcb *TravelsCreateBulk) Exec(ctx context.Context) error {
 	_, err := tcb.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (tcb *TravelCreateBulk) ExecX(ctx context.Context) {
+func (tcb *TravelsCreateBulk) ExecX(ctx context.Context) {
 	if err := tcb.Exec(ctx); err != nil {
 		panic(err)
 	}
@@ -1151,7 +1151,7 @@ func (tcb *TravelCreateBulk) ExecX(ctx context.Context) {
 // OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
 // of the `INSERT` statement. For example:
 //
-//	client.Travel.CreateBulk(builders...).
+//	client.Travels.CreateBulk(builders...).
 //		OnConflict(
 //			// Update the row with the new values
 //			// the was proposed for insertion.
@@ -1159,13 +1159,13 @@ func (tcb *TravelCreateBulk) ExecX(ctx context.Context) {
 //		).
 //		// Override some of the fields with custom
 //		// update values.
-//		Update(func(u *ent.TravelUpsert) {
+//		Update(func(u *ent.TravelsUpsert) {
 //			SetCreatedAt(v+v).
 //		}).
 //		Exec(ctx)
-func (tcb *TravelCreateBulk) OnConflict(opts ...sql.ConflictOption) *TravelUpsertBulk {
+func (tcb *TravelsCreateBulk) OnConflict(opts ...sql.ConflictOption) *TravelsUpsertBulk {
 	tcb.conflict = opts
-	return &TravelUpsertBulk{
+	return &TravelsUpsertBulk{
 		create: tcb,
 	}
 }
@@ -1173,45 +1173,45 @@ func (tcb *TravelCreateBulk) OnConflict(opts ...sql.ConflictOption) *TravelUpser
 // OnConflictColumns calls `OnConflict` and configures the columns
 // as conflict target. Using this option is equivalent to using:
 //
-//	client.Travel.Create().
+//	client.Travels.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-func (tcb *TravelCreateBulk) OnConflictColumns(columns ...string) *TravelUpsertBulk {
+func (tcb *TravelsCreateBulk) OnConflictColumns(columns ...string) *TravelsUpsertBulk {
 	tcb.conflict = append(tcb.conflict, sql.ConflictColumns(columns...))
-	return &TravelUpsertBulk{
+	return &TravelsUpsertBulk{
 		create: tcb,
 	}
 }
 
-// TravelUpsertBulk is the builder for "upsert"-ing
-// a bulk of Travel nodes.
-type TravelUpsertBulk struct {
-	create *TravelCreateBulk
+// TravelsUpsertBulk is the builder for "upsert"-ing
+// a bulk of Travels nodes.
+type TravelsUpsertBulk struct {
+	create *TravelsCreateBulk
 }
 
 // UpdateNewValues updates the mutable fields using the new values that
 // were set on create. Using this option is equivalent to using:
 //
-//	client.Travel.Create().
+//	client.Travels.Create().
 //		OnConflict(
 //			sql.ResolveWithNewValues(),
 //			sql.ResolveWith(func(u *sql.UpdateSet) {
-//				u.SetIgnore(travel.FieldID)
+//				u.SetIgnore(travels.FieldID)
 //			}),
 //		).
 //		Exec(ctx)
-func (u *TravelUpsertBulk) UpdateNewValues() *TravelUpsertBulk {
+func (u *TravelsUpsertBulk) UpdateNewValues() *TravelsUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
 		for _, b := range u.create.builders {
 			if _, exists := b.mutation.ID(); exists {
-				s.SetIgnore(travel.FieldID)
+				s.SetIgnore(travels.FieldID)
 			}
 			if _, exists := b.mutation.CreatedAt(); exists {
-				s.SetIgnore(travel.FieldCreatedAt)
+				s.SetIgnore(travels.FieldCreatedAt)
 			}
 			if _, exists := b.mutation.CreatedBy(); exists {
-				s.SetIgnore(travel.FieldCreatedBy)
+				s.SetIgnore(travels.FieldCreatedBy)
 			}
 		}
 	}))
@@ -1221,286 +1221,286 @@ func (u *TravelUpsertBulk) UpdateNewValues() *TravelUpsertBulk {
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//	client.Travel.Create().
+//	client.Travels.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
-func (u *TravelUpsertBulk) Ignore() *TravelUpsertBulk {
+func (u *TravelsUpsertBulk) Ignore() *TravelsUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
 }
 
 // DoNothing configures the conflict_action to `DO NOTHING`.
 // Supported only by SQLite and PostgreSQL.
-func (u *TravelUpsertBulk) DoNothing() *TravelUpsertBulk {
+func (u *TravelsUpsertBulk) DoNothing() *TravelsUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.DoNothing())
 	return u
 }
 
-// Update allows overriding fields `UPDATE` values. See the TravelCreateBulk.OnConflict
+// Update allows overriding fields `UPDATE` values. See the TravelsCreateBulk.OnConflict
 // documentation for more info.
-func (u *TravelUpsertBulk) Update(set func(*TravelUpsert)) *TravelUpsertBulk {
+func (u *TravelsUpsertBulk) Update(set func(*TravelsUpsert)) *TravelsUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
-		set(&TravelUpsert{UpdateSet: update})
+		set(&TravelsUpsert{UpdateSet: update})
 	}))
 	return u
 }
 
 // SetUpdatedAt sets the "updated_at" field.
-func (u *TravelUpsertBulk) SetUpdatedAt(v int64) *TravelUpsertBulk {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertBulk) SetUpdatedAt(v int64) *TravelsUpsertBulk {
+	return u.Update(func(s *TravelsUpsert) {
 		s.SetUpdatedAt(v)
 	})
 }
 
 // AddUpdatedAt adds v to the "updated_at" field.
-func (u *TravelUpsertBulk) AddUpdatedAt(v int64) *TravelUpsertBulk {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertBulk) AddUpdatedAt(v int64) *TravelsUpsertBulk {
+	return u.Update(func(s *TravelsUpsert) {
 		s.AddUpdatedAt(v)
 	})
 }
 
 // UpdateUpdatedAt sets the "updated_at" field to the value that was provided on create.
-func (u *TravelUpsertBulk) UpdateUpdatedAt() *TravelUpsertBulk {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertBulk) UpdateUpdatedAt() *TravelsUpsertBulk {
+	return u.Update(func(s *TravelsUpsert) {
 		s.UpdateUpdatedAt()
 	})
 }
 
 // SetUpdatedBy sets the "updated_by" field.
-func (u *TravelUpsertBulk) SetUpdatedBy(v int64) *TravelUpsertBulk {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertBulk) SetUpdatedBy(v int64) *TravelsUpsertBulk {
+	return u.Update(func(s *TravelsUpsert) {
 		s.SetUpdatedBy(v)
 	})
 }
 
 // AddUpdatedBy adds v to the "updated_by" field.
-func (u *TravelUpsertBulk) AddUpdatedBy(v int64) *TravelUpsertBulk {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertBulk) AddUpdatedBy(v int64) *TravelsUpsertBulk {
+	return u.Update(func(s *TravelsUpsert) {
 		s.AddUpdatedBy(v)
 	})
 }
 
 // UpdateUpdatedBy sets the "updated_by" field to the value that was provided on create.
-func (u *TravelUpsertBulk) UpdateUpdatedBy() *TravelUpsertBulk {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertBulk) UpdateUpdatedBy() *TravelsUpsertBulk {
+	return u.Update(func(s *TravelsUpsert) {
 		s.UpdateUpdatedBy()
 	})
 }
 
 // SetDeletedAt sets the "deleted_at" field.
-func (u *TravelUpsertBulk) SetDeletedAt(v int64) *TravelUpsertBulk {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertBulk) SetDeletedAt(v int64) *TravelsUpsertBulk {
+	return u.Update(func(s *TravelsUpsert) {
 		s.SetDeletedAt(v)
 	})
 }
 
 // AddDeletedAt adds v to the "deleted_at" field.
-func (u *TravelUpsertBulk) AddDeletedAt(v int64) *TravelUpsertBulk {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertBulk) AddDeletedAt(v int64) *TravelsUpsertBulk {
+	return u.Update(func(s *TravelsUpsert) {
 		s.AddDeletedAt(v)
 	})
 }
 
 // UpdateDeletedAt sets the "deleted_at" field to the value that was provided on create.
-func (u *TravelUpsertBulk) UpdateDeletedAt() *TravelUpsertBulk {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertBulk) UpdateDeletedAt() *TravelsUpsertBulk {
+	return u.Update(func(s *TravelsUpsert) {
 		s.UpdateDeletedAt()
 	})
 }
 
 // SetDeletedBy sets the "deleted_by" field.
-func (u *TravelUpsertBulk) SetDeletedBy(v int64) *TravelUpsertBulk {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertBulk) SetDeletedBy(v int64) *TravelsUpsertBulk {
+	return u.Update(func(s *TravelsUpsert) {
 		s.SetDeletedBy(v)
 	})
 }
 
 // AddDeletedBy adds v to the "deleted_by" field.
-func (u *TravelUpsertBulk) AddDeletedBy(v int64) *TravelUpsertBulk {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertBulk) AddDeletedBy(v int64) *TravelsUpsertBulk {
+	return u.Update(func(s *TravelsUpsert) {
 		s.AddDeletedBy(v)
 	})
 }
 
 // UpdateDeletedBy sets the "deleted_by" field to the value that was provided on create.
-func (u *TravelUpsertBulk) UpdateDeletedBy() *TravelUpsertBulk {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertBulk) UpdateDeletedBy() *TravelsUpsertBulk {
+	return u.Update(func(s *TravelsUpsert) {
 		s.UpdateDeletedBy()
 	})
 }
 
 // SetTitle sets the "title" field.
-func (u *TravelUpsertBulk) SetTitle(v string) *TravelUpsertBulk {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertBulk) SetTitle(v string) *TravelsUpsertBulk {
+	return u.Update(func(s *TravelsUpsert) {
 		s.SetTitle(v)
 	})
 }
 
 // UpdateTitle sets the "title" field to the value that was provided on create.
-func (u *TravelUpsertBulk) UpdateTitle() *TravelUpsertBulk {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertBulk) UpdateTitle() *TravelsUpsertBulk {
+	return u.Update(func(s *TravelsUpsert) {
 		s.UpdateTitle()
 	})
 }
 
 // SetDescription sets the "description" field.
-func (u *TravelUpsertBulk) SetDescription(v string) *TravelUpsertBulk {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertBulk) SetDescription(v string) *TravelsUpsertBulk {
+	return u.Update(func(s *TravelsUpsert) {
 		s.SetDescription(v)
 	})
 }
 
 // UpdateDescription sets the "description" field to the value that was provided on create.
-func (u *TravelUpsertBulk) UpdateDescription() *TravelUpsertBulk {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertBulk) UpdateDescription() *TravelsUpsertBulk {
+	return u.Update(func(s *TravelsUpsert) {
 		s.UpdateDescription()
 	})
 }
 
 // SetVideo sets the "video" field.
-func (u *TravelUpsertBulk) SetVideo(v string) *TravelUpsertBulk {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertBulk) SetVideo(v string) *TravelsUpsertBulk {
+	return u.Update(func(s *TravelsUpsert) {
 		s.SetVideo(v)
 	})
 }
 
 // UpdateVideo sets the "video" field to the value that was provided on create.
-func (u *TravelUpsertBulk) UpdateVideo() *TravelUpsertBulk {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertBulk) UpdateVideo() *TravelsUpsertBulk {
+	return u.Update(func(s *TravelsUpsert) {
 		s.UpdateVideo()
 	})
 }
 
 // SetIsHidden sets the "is_hidden" field.
-func (u *TravelUpsertBulk) SetIsHidden(v bool) *TravelUpsertBulk {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertBulk) SetIsHidden(v bool) *TravelsUpsertBulk {
+	return u.Update(func(s *TravelsUpsert) {
 		s.SetIsHidden(v)
 	})
 }
 
 // UpdateIsHidden sets the "is_hidden" field to the value that was provided on create.
-func (u *TravelUpsertBulk) UpdateIsHidden() *TravelUpsertBulk {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertBulk) UpdateIsHidden() *TravelsUpsertBulk {
+	return u.Update(func(s *TravelsUpsert) {
 		s.UpdateIsHidden()
 	})
 }
 
 // SetAccountID sets the "account_id" field.
-func (u *TravelUpsertBulk) SetAccountID(v int) *TravelUpsertBulk {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertBulk) SetAccountID(v int) *TravelsUpsertBulk {
+	return u.Update(func(s *TravelsUpsert) {
 		s.SetAccountID(v)
 	})
 }
 
 // AddAccountID adds v to the "account_id" field.
-func (u *TravelUpsertBulk) AddAccountID(v int) *TravelUpsertBulk {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertBulk) AddAccountID(v int) *TravelsUpsertBulk {
+	return u.Update(func(s *TravelsUpsert) {
 		s.AddAccountID(v)
 	})
 }
 
 // UpdateAccountID sets the "account_id" field to the value that was provided on create.
-func (u *TravelUpsertBulk) UpdateAccountID() *TravelUpsertBulk {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertBulk) UpdateAccountID() *TravelsUpsertBulk {
+	return u.Update(func(s *TravelsUpsert) {
 		s.UpdateAccountID()
 	})
 }
 
 // SetPhotos sets the "photos" field.
-func (u *TravelUpsertBulk) SetPhotos(v []string) *TravelUpsertBulk {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertBulk) SetPhotos(v []string) *TravelsUpsertBulk {
+	return u.Update(func(s *TravelsUpsert) {
 		s.SetPhotos(v)
 	})
 }
 
 // UpdatePhotos sets the "photos" field to the value that was provided on create.
-func (u *TravelUpsertBulk) UpdatePhotos() *TravelUpsertBulk {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertBulk) UpdatePhotos() *TravelsUpsertBulk {
+	return u.Update(func(s *TravelsUpsert) {
 		s.UpdatePhotos()
 	})
 }
 
 // SetBrowseNum sets the "browse_num" field.
-func (u *TravelUpsertBulk) SetBrowseNum(v int) *TravelUpsertBulk {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertBulk) SetBrowseNum(v int) *TravelsUpsertBulk {
+	return u.Update(func(s *TravelsUpsert) {
 		s.SetBrowseNum(v)
 	})
 }
 
 // AddBrowseNum adds v to the "browse_num" field.
-func (u *TravelUpsertBulk) AddBrowseNum(v int) *TravelUpsertBulk {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertBulk) AddBrowseNum(v int) *TravelsUpsertBulk {
+	return u.Update(func(s *TravelsUpsert) {
 		s.AddBrowseNum(v)
 	})
 }
 
 // UpdateBrowseNum sets the "browse_num" field to the value that was provided on create.
-func (u *TravelUpsertBulk) UpdateBrowseNum() *TravelUpsertBulk {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertBulk) UpdateBrowseNum() *TravelsUpsertBulk {
+	return u.Update(func(s *TravelsUpsert) {
 		s.UpdateBrowseNum()
 	})
 }
 
 // SetThumbNum sets the "thumb_num" field.
-func (u *TravelUpsertBulk) SetThumbNum(v int) *TravelUpsertBulk {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertBulk) SetThumbNum(v int) *TravelsUpsertBulk {
+	return u.Update(func(s *TravelsUpsert) {
 		s.SetThumbNum(v)
 	})
 }
 
 // AddThumbNum adds v to the "thumb_num" field.
-func (u *TravelUpsertBulk) AddThumbNum(v int) *TravelUpsertBulk {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertBulk) AddThumbNum(v int) *TravelsUpsertBulk {
+	return u.Update(func(s *TravelsUpsert) {
 		s.AddThumbNum(v)
 	})
 }
 
 // UpdateThumbNum sets the "thumb_num" field to the value that was provided on create.
-func (u *TravelUpsertBulk) UpdateThumbNum() *TravelUpsertBulk {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertBulk) UpdateThumbNum() *TravelsUpsertBulk {
+	return u.Update(func(s *TravelsUpsert) {
 		s.UpdateThumbNum()
 	})
 }
 
 // SetCollectNum sets the "collect_num" field.
-func (u *TravelUpsertBulk) SetCollectNum(v int) *TravelUpsertBulk {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertBulk) SetCollectNum(v int) *TravelsUpsertBulk {
+	return u.Update(func(s *TravelsUpsert) {
 		s.SetCollectNum(v)
 	})
 }
 
 // AddCollectNum adds v to the "collect_num" field.
-func (u *TravelUpsertBulk) AddCollectNum(v int) *TravelUpsertBulk {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertBulk) AddCollectNum(v int) *TravelsUpsertBulk {
+	return u.Update(func(s *TravelsUpsert) {
 		s.AddCollectNum(v)
 	})
 }
 
 // UpdateCollectNum sets the "collect_num" field to the value that was provided on create.
-func (u *TravelUpsertBulk) UpdateCollectNum() *TravelUpsertBulk {
-	return u.Update(func(s *TravelUpsert) {
+func (u *TravelsUpsertBulk) UpdateCollectNum() *TravelsUpsertBulk {
+	return u.Update(func(s *TravelsUpsert) {
 		s.UpdateCollectNum()
 	})
 }
 
 // Exec executes the query.
-func (u *TravelUpsertBulk) Exec(ctx context.Context) error {
+func (u *TravelsUpsertBulk) Exec(ctx context.Context) error {
 	if u.create.err != nil {
 		return u.create.err
 	}
 	for i, b := range u.create.builders {
 		if len(b.conflict) != 0 {
-			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the TravelCreateBulk instead", i)
+			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the TravelsCreateBulk instead", i)
 		}
 	}
 	if len(u.create.conflict) == 0 {
-		return errors.New("ent: missing options for TravelCreateBulk.OnConflict")
+		return errors.New("ent: missing options for TravelsCreateBulk.OnConflict")
 	}
 	return u.create.Exec(ctx)
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (u *TravelUpsertBulk) ExecX(ctx context.Context) {
+func (u *TravelsUpsertBulk) ExecX(ctx context.Context) {
 	if err := u.create.Exec(ctx); err != nil {
 		panic(err)
 	}

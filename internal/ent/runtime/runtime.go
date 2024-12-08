@@ -10,8 +10,8 @@ import (
 	"blog/internal/ent/files"
 	"blog/internal/ent/filesextend"
 	"blog/internal/ent/schema"
-	"blog/internal/ent/travel"
-	"blog/internal/ent/travelextend"
+	"blog/internal/ent/travelextends"
+	"blog/internal/ent/travels"
 	"blog/internal/ent/user"
 	"blog/internal/ent/userexperience"
 	"blog/internal/ent/userproject"
@@ -27,8 +27,6 @@ func init() {
 	account.Hooks[0] = accountMixinHooks0[0]
 	account.Hooks[1] = accountMixinHooks0[1]
 	account.Hooks[2] = accountMixinHooks1[0]
-	accountMixinInters1 := accountMixin[1].Interceptors()
-	account.Interceptors[0] = accountMixinInters1[0]
 	accountMixinFields0 := accountMixin[0].Fields()
 	_ = accountMixinFields0
 	accountMixinFields1 := accountMixin[1].Fields()
@@ -103,8 +101,6 @@ func init() {
 	blogs.Hooks[0] = blogsMixinHooks0[0]
 	blogs.Hooks[1] = blogsMixinHooks0[1]
 	blogs.Hooks[2] = blogsMixinHooks1[0]
-	blogsMixinInters1 := blogsMixin[1].Interceptors()
-	blogs.Interceptors[0] = blogsMixinInters1[0]
 	blogsMixinFields0 := blogsMixin[0].Fields()
 	_ = blogsMixinFields0
 	blogsMixinFields1 := blogsMixin[1].Fields()
@@ -151,8 +147,6 @@ func init() {
 	blogscomment.Hooks[0] = blogscommentMixinHooks0[0]
 	blogscomment.Hooks[1] = blogscommentMixinHooks0[1]
 	blogscomment.Hooks[2] = blogscommentMixinHooks1[0]
-	blogscommentMixinInters1 := blogscommentMixin[1].Interceptors()
-	blogscomment.Interceptors[0] = blogscommentMixinInters1[0]
 	blogscommentMixinFields0 := blogscommentMixin[0].Fields()
 	_ = blogscommentMixinFields0
 	blogscommentMixinFields1 := blogscommentMixin[1].Fields()
@@ -229,8 +223,6 @@ func init() {
 	files.Hooks[0] = filesMixinHooks0[0]
 	files.Hooks[1] = filesMixinHooks0[1]
 	files.Hooks[2] = filesMixinHooks1[0]
-	filesMixinInters1 := filesMixin[1].Interceptors()
-	files.Interceptors[0] = filesMixinInters1[0]
 	filesMixinFields0 := filesMixin[0].Fields()
 	_ = filesMixinFields0
 	filesMixinFields1 := filesMixin[1].Fields()
@@ -285,8 +277,6 @@ func init() {
 	filesextend.Hooks[0] = filesextendMixinHooks0[0]
 	filesextend.Hooks[1] = filesextendMixinHooks0[1]
 	filesextend.Hooks[2] = filesextendMixinHooks1[0]
-	filesextendMixinInters1 := filesextendMixin[1].Interceptors()
-	filesextend.Interceptors[0] = filesextendMixinInters1[0]
 	filesextendMixinFields0 := filesextendMixin[0].Fields()
 	_ = filesextendMixinFields0
 	filesextendMixinFields1 := filesextendMixin[1].Fields()
@@ -331,118 +321,112 @@ func init() {
 	filesextendDescID := filesextendFields[0].Descriptor()
 	// filesextend.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	filesextend.IDValidator = filesextendDescID.Validators[0].(func(int) error)
-	travelMixin := schema.Travel{}.Mixin()
-	travelMixinHooks0 := travelMixin[0].Hooks()
-	travelMixinHooks1 := travelMixin[1].Hooks()
-	travel.Hooks[0] = travelMixinHooks0[0]
-	travel.Hooks[1] = travelMixinHooks0[1]
-	travel.Hooks[2] = travelMixinHooks1[0]
-	travelMixinInters1 := travelMixin[1].Interceptors()
-	travel.Interceptors[0] = travelMixinInters1[0]
-	travelMixinFields0 := travelMixin[0].Fields()
-	_ = travelMixinFields0
-	travelMixinFields1 := travelMixin[1].Fields()
-	_ = travelMixinFields1
-	travelFields := schema.Travel{}.Fields()
-	_ = travelFields
-	// travelDescCreatedAt is the schema descriptor for created_at field.
-	travelDescCreatedAt := travelMixinFields0[0].Descriptor()
-	// travel.DefaultCreatedAt holds the default value on creation for the created_at field.
-	travel.DefaultCreatedAt = travelDescCreatedAt.Default.(int64)
-	// travelDescCreatedBy is the schema descriptor for created_by field.
-	travelDescCreatedBy := travelMixinFields0[1].Descriptor()
-	// travel.DefaultCreatedBy holds the default value on creation for the created_by field.
-	travel.DefaultCreatedBy = travelDescCreatedBy.Default.(int64)
-	// travelDescUpdatedAt is the schema descriptor for updated_at field.
-	travelDescUpdatedAt := travelMixinFields0[2].Descriptor()
-	// travel.DefaultUpdatedAt holds the default value on creation for the updated_at field.
-	travel.DefaultUpdatedAt = travelDescUpdatedAt.Default.(int64)
-	// travel.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
-	travel.UpdateDefaultUpdatedAt = travelDescUpdatedAt.UpdateDefault.(func() int64)
-	// travelDescUpdatedBy is the schema descriptor for updated_by field.
-	travelDescUpdatedBy := travelMixinFields0[3].Descriptor()
-	// travel.DefaultUpdatedBy holds the default value on creation for the updated_by field.
-	travel.DefaultUpdatedBy = travelDescUpdatedBy.Default.(int64)
-	// travelDescDeletedAt is the schema descriptor for deleted_at field.
-	travelDescDeletedAt := travelMixinFields1[0].Descriptor()
-	// travel.DefaultDeletedAt holds the default value on creation for the deleted_at field.
-	travel.DefaultDeletedAt = travelDescDeletedAt.Default.(int64)
-	// travelDescDeletedBy is the schema descriptor for deleted_by field.
-	travelDescDeletedBy := travelMixinFields1[1].Descriptor()
-	// travel.DefaultDeletedBy holds the default value on creation for the deleted_by field.
-	travel.DefaultDeletedBy = travelDescDeletedBy.Default.(int64)
-	// travelDescTitle is the schema descriptor for title field.
-	travelDescTitle := travelFields[1].Descriptor()
-	// travel.DefaultTitle holds the default value on creation for the title field.
-	travel.DefaultTitle = travelDescTitle.Default.(string)
-	// travelDescDescription is the schema descriptor for description field.
-	travelDescDescription := travelFields[2].Descriptor()
-	// travel.DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
-	travel.DescriptionValidator = travelDescDescription.Validators[0].(func(string) error)
-	// travelDescVideo is the schema descriptor for video field.
-	travelDescVideo := travelFields[3].Descriptor()
-	// travel.VideoValidator is a validator for the "video" field. It is called by the builders before save.
-	travel.VideoValidator = travelDescVideo.Validators[0].(func(string) error)
-	// travelDescIsHidden is the schema descriptor for is_hidden field.
-	travelDescIsHidden := travelFields[4].Descriptor()
-	// travel.DefaultIsHidden holds the default value on creation for the is_hidden field.
-	travel.DefaultIsHidden = travelDescIsHidden.Default.(bool)
-	// travelDescAccountID is the schema descriptor for account_id field.
-	travelDescAccountID := travelFields[5].Descriptor()
-	// travel.AccountIDValidator is a validator for the "account_id" field. It is called by the builders before save.
-	travel.AccountIDValidator = travelDescAccountID.Validators[0].(func(int) error)
-	travelextendMixin := schema.TravelExtend{}.Mixin()
-	travelextendMixinHooks0 := travelextendMixin[0].Hooks()
-	travelextendMixinHooks1 := travelextendMixin[1].Hooks()
-	travelextend.Hooks[0] = travelextendMixinHooks0[0]
-	travelextend.Hooks[1] = travelextendMixinHooks0[1]
-	travelextend.Hooks[2] = travelextendMixinHooks1[0]
-	travelextendMixinInters1 := travelextendMixin[1].Interceptors()
-	travelextend.Interceptors[0] = travelextendMixinInters1[0]
-	travelextendMixinFields0 := travelextendMixin[0].Fields()
-	_ = travelextendMixinFields0
-	travelextendMixinFields1 := travelextendMixin[1].Fields()
-	_ = travelextendMixinFields1
-	travelextendFields := schema.TravelExtend{}.Fields()
-	_ = travelextendFields
-	// travelextendDescCreatedAt is the schema descriptor for created_at field.
-	travelextendDescCreatedAt := travelextendMixinFields0[0].Descriptor()
-	// travelextend.DefaultCreatedAt holds the default value on creation for the created_at field.
-	travelextend.DefaultCreatedAt = travelextendDescCreatedAt.Default.(int64)
-	// travelextendDescCreatedBy is the schema descriptor for created_by field.
-	travelextendDescCreatedBy := travelextendMixinFields0[1].Descriptor()
-	// travelextend.DefaultCreatedBy holds the default value on creation for the created_by field.
-	travelextend.DefaultCreatedBy = travelextendDescCreatedBy.Default.(int64)
-	// travelextendDescUpdatedAt is the schema descriptor for updated_at field.
-	travelextendDescUpdatedAt := travelextendMixinFields0[2].Descriptor()
-	// travelextend.DefaultUpdatedAt holds the default value on creation for the updated_at field.
-	travelextend.DefaultUpdatedAt = travelextendDescUpdatedAt.Default.(int64)
-	// travelextend.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
-	travelextend.UpdateDefaultUpdatedAt = travelextendDescUpdatedAt.UpdateDefault.(func() int64)
-	// travelextendDescUpdatedBy is the schema descriptor for updated_by field.
-	travelextendDescUpdatedBy := travelextendMixinFields0[3].Descriptor()
-	// travelextend.DefaultUpdatedBy holds the default value on creation for the updated_by field.
-	travelextend.DefaultUpdatedBy = travelextendDescUpdatedBy.Default.(int64)
-	// travelextendDescDeletedAt is the schema descriptor for deleted_at field.
-	travelextendDescDeletedAt := travelextendMixinFields1[0].Descriptor()
-	// travelextend.DefaultDeletedAt holds the default value on creation for the deleted_at field.
-	travelextend.DefaultDeletedAt = travelextendDescDeletedAt.Default.(int64)
-	// travelextendDescDeletedBy is the schema descriptor for deleted_by field.
-	travelextendDescDeletedBy := travelextendMixinFields1[1].Descriptor()
-	// travelextend.DefaultDeletedBy holds the default value on creation for the deleted_by field.
-	travelextend.DefaultDeletedBy = travelextendDescDeletedBy.Default.(int64)
-	// travelextendDescAccountID is the schema descriptor for account_id field.
-	travelextendDescAccountID := travelextendFields[0].Descriptor()
-	// travelextend.AccountIDValidator is a validator for the "account_id" field. It is called by the builders before save.
-	travelextend.AccountIDValidator = travelextendDescAccountID.Validators[0].(func(int) error)
+	travelextendsMixin := schema.TravelExtends{}.Mixin()
+	travelextendsMixinHooks0 := travelextendsMixin[0].Hooks()
+	travelextendsMixinHooks1 := travelextendsMixin[1].Hooks()
+	travelextends.Hooks[0] = travelextendsMixinHooks0[0]
+	travelextends.Hooks[1] = travelextendsMixinHooks0[1]
+	travelextends.Hooks[2] = travelextendsMixinHooks1[0]
+	travelextendsMixinFields0 := travelextendsMixin[0].Fields()
+	_ = travelextendsMixinFields0
+	travelextendsMixinFields1 := travelextendsMixin[1].Fields()
+	_ = travelextendsMixinFields1
+	travelextendsFields := schema.TravelExtends{}.Fields()
+	_ = travelextendsFields
+	// travelextendsDescCreatedAt is the schema descriptor for created_at field.
+	travelextendsDescCreatedAt := travelextendsMixinFields0[0].Descriptor()
+	// travelextends.DefaultCreatedAt holds the default value on creation for the created_at field.
+	travelextends.DefaultCreatedAt = travelextendsDescCreatedAt.Default.(int64)
+	// travelextendsDescCreatedBy is the schema descriptor for created_by field.
+	travelextendsDescCreatedBy := travelextendsMixinFields0[1].Descriptor()
+	// travelextends.DefaultCreatedBy holds the default value on creation for the created_by field.
+	travelextends.DefaultCreatedBy = travelextendsDescCreatedBy.Default.(int64)
+	// travelextendsDescUpdatedAt is the schema descriptor for updated_at field.
+	travelextendsDescUpdatedAt := travelextendsMixinFields0[2].Descriptor()
+	// travelextends.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	travelextends.DefaultUpdatedAt = travelextendsDescUpdatedAt.Default.(int64)
+	// travelextends.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	travelextends.UpdateDefaultUpdatedAt = travelextendsDescUpdatedAt.UpdateDefault.(func() int64)
+	// travelextendsDescUpdatedBy is the schema descriptor for updated_by field.
+	travelextendsDescUpdatedBy := travelextendsMixinFields0[3].Descriptor()
+	// travelextends.DefaultUpdatedBy holds the default value on creation for the updated_by field.
+	travelextends.DefaultUpdatedBy = travelextendsDescUpdatedBy.Default.(int64)
+	// travelextendsDescDeletedAt is the schema descriptor for deleted_at field.
+	travelextendsDescDeletedAt := travelextendsMixinFields1[0].Descriptor()
+	// travelextends.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	travelextends.DefaultDeletedAt = travelextendsDescDeletedAt.Default.(int64)
+	// travelextendsDescDeletedBy is the schema descriptor for deleted_by field.
+	travelextendsDescDeletedBy := travelextendsMixinFields1[1].Descriptor()
+	// travelextends.DefaultDeletedBy holds the default value on creation for the deleted_by field.
+	travelextends.DefaultDeletedBy = travelextendsDescDeletedBy.Default.(int64)
+	// travelextendsDescAccountID is the schema descriptor for account_id field.
+	travelextendsDescAccountID := travelextendsFields[0].Descriptor()
+	// travelextends.AccountIDValidator is a validator for the "account_id" field. It is called by the builders before save.
+	travelextends.AccountIDValidator = travelextendsDescAccountID.Validators[0].(func(int) error)
+	travelsMixin := schema.Travels{}.Mixin()
+	travelsMixinHooks0 := travelsMixin[0].Hooks()
+	travelsMixinHooks1 := travelsMixin[1].Hooks()
+	travels.Hooks[0] = travelsMixinHooks0[0]
+	travels.Hooks[1] = travelsMixinHooks0[1]
+	travels.Hooks[2] = travelsMixinHooks1[0]
+	travelsMixinFields0 := travelsMixin[0].Fields()
+	_ = travelsMixinFields0
+	travelsMixinFields1 := travelsMixin[1].Fields()
+	_ = travelsMixinFields1
+	travelsFields := schema.Travels{}.Fields()
+	_ = travelsFields
+	// travelsDescCreatedAt is the schema descriptor for created_at field.
+	travelsDescCreatedAt := travelsMixinFields0[0].Descriptor()
+	// travels.DefaultCreatedAt holds the default value on creation for the created_at field.
+	travels.DefaultCreatedAt = travelsDescCreatedAt.Default.(int64)
+	// travelsDescCreatedBy is the schema descriptor for created_by field.
+	travelsDescCreatedBy := travelsMixinFields0[1].Descriptor()
+	// travels.DefaultCreatedBy holds the default value on creation for the created_by field.
+	travels.DefaultCreatedBy = travelsDescCreatedBy.Default.(int64)
+	// travelsDescUpdatedAt is the schema descriptor for updated_at field.
+	travelsDescUpdatedAt := travelsMixinFields0[2].Descriptor()
+	// travels.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	travels.DefaultUpdatedAt = travelsDescUpdatedAt.Default.(int64)
+	// travels.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	travels.UpdateDefaultUpdatedAt = travelsDescUpdatedAt.UpdateDefault.(func() int64)
+	// travelsDescUpdatedBy is the schema descriptor for updated_by field.
+	travelsDescUpdatedBy := travelsMixinFields0[3].Descriptor()
+	// travels.DefaultUpdatedBy holds the default value on creation for the updated_by field.
+	travels.DefaultUpdatedBy = travelsDescUpdatedBy.Default.(int64)
+	// travelsDescDeletedAt is the schema descriptor for deleted_at field.
+	travelsDescDeletedAt := travelsMixinFields1[0].Descriptor()
+	// travels.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	travels.DefaultDeletedAt = travelsDescDeletedAt.Default.(int64)
+	// travelsDescDeletedBy is the schema descriptor for deleted_by field.
+	travelsDescDeletedBy := travelsMixinFields1[1].Descriptor()
+	// travels.DefaultDeletedBy holds the default value on creation for the deleted_by field.
+	travels.DefaultDeletedBy = travelsDescDeletedBy.Default.(int64)
+	// travelsDescTitle is the schema descriptor for title field.
+	travelsDescTitle := travelsFields[1].Descriptor()
+	// travels.DefaultTitle holds the default value on creation for the title field.
+	travels.DefaultTitle = travelsDescTitle.Default.(string)
+	// travelsDescDescription is the schema descriptor for description field.
+	travelsDescDescription := travelsFields[2].Descriptor()
+	// travels.DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
+	travels.DescriptionValidator = travelsDescDescription.Validators[0].(func(string) error)
+	// travelsDescVideo is the schema descriptor for video field.
+	travelsDescVideo := travelsFields[3].Descriptor()
+	// travels.VideoValidator is a validator for the "video" field. It is called by the builders before save.
+	travels.VideoValidator = travelsDescVideo.Validators[0].(func(string) error)
+	// travelsDescIsHidden is the schema descriptor for is_hidden field.
+	travelsDescIsHidden := travelsFields[4].Descriptor()
+	// travels.DefaultIsHidden holds the default value on creation for the is_hidden field.
+	travels.DefaultIsHidden = travelsDescIsHidden.Default.(bool)
+	// travelsDescAccountID is the schema descriptor for account_id field.
+	travelsDescAccountID := travelsFields[5].Descriptor()
+	// travels.AccountIDValidator is a validator for the "account_id" field. It is called by the builders before save.
+	travels.AccountIDValidator = travelsDescAccountID.Validators[0].(func(int) error)
 	userMixin := schema.User{}.Mixin()
 	userMixinHooks0 := userMixin[0].Hooks()
 	userMixinHooks1 := userMixin[1].Hooks()
 	user.Hooks[0] = userMixinHooks0[0]
 	user.Hooks[1] = userMixinHooks0[1]
 	user.Hooks[2] = userMixinHooks1[0]
-	userMixinInters1 := userMixin[1].Interceptors()
-	user.Interceptors[0] = userMixinInters1[0]
 	userMixinFields0 := userMixin[0].Fields()
 	_ = userMixinFields0
 	userMixinFields1 := userMixin[1].Fields()
@@ -499,6 +483,14 @@ func init() {
 	userDescDescription := userFields[7].Descriptor()
 	// user.DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
 	user.DescriptionValidator = userDescDescription.Validators[0].(func(string) error)
+	// userDescExperience is the schema descriptor for experience field.
+	userDescExperience := userFields[8].Descriptor()
+	// user.DefaultExperience holds the default value on creation for the experience field.
+	user.DefaultExperience = userDescExperience.Default.(int)
+	// userDescProject is the schema descriptor for project field.
+	userDescProject := userFields[9].Descriptor()
+	// user.DefaultProject holds the default value on creation for the project field.
+	user.DefaultProject = userDescProject.Default.(int)
 	// userDescID is the schema descriptor for id field.
 	userDescID := userFields[0].Descriptor()
 	// user.IDValidator is a validator for the "id" field. It is called by the builders before save.
@@ -509,8 +501,6 @@ func init() {
 	userexperience.Hooks[0] = userexperienceMixinHooks0[0]
 	userexperience.Hooks[1] = userexperienceMixinHooks0[1]
 	userexperience.Hooks[2] = userexperienceMixinHooks1[0]
-	userexperienceMixinInters1 := userexperienceMixin[1].Interceptors()
-	userexperience.Interceptors[0] = userexperienceMixinInters1[0]
 	userexperienceMixinFields0 := userexperienceMixin[0].Fields()
 	_ = userexperienceMixinFields0
 	userexperienceMixinFields1 := userexperienceMixin[1].Fields()
@@ -553,8 +543,6 @@ func init() {
 	userproject.Hooks[0] = userprojectMixinHooks0[0]
 	userproject.Hooks[1] = userprojectMixinHooks0[1]
 	userproject.Hooks[2] = userprojectMixinHooks1[0]
-	userprojectMixinInters1 := userprojectMixin[1].Interceptors()
-	userproject.Interceptors[0] = userprojectMixinInters1[0]
 	userprojectMixinFields0 := userprojectMixin[0].Fields()
 	_ = userprojectMixinFields0
 	userprojectMixinFields1 := userprojectMixin[1].Fields()

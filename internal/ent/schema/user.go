@@ -42,6 +42,8 @@ func (User) Fields() []ent.Field {
 			SchemaType(map[string]string{
 				dialect.MySQL: "text",
 			}),
+		field.Int("experience").Default(0).Comment("经历数"),
+		field.Int("project").Default(0).Comment("项目数"),
 	}
 }
 func (User) Mixin() []ent.Mixin {

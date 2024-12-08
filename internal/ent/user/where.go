@@ -113,6 +113,16 @@ func Description(v string) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldDescription, v))
 }
 
+// Experience applies equality check predicate on the "experience" field. It's identical to ExperienceEQ.
+func Experience(v int) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldExperience, v))
+}
+
+// Project applies equality check predicate on the "project" field. It's identical to ProjectEQ.
+func Project(v int) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldProject, v))
+}
+
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
 func CreatedAtEQ(v int64) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldCreatedAt, v))
@@ -741,6 +751,86 @@ func DescriptionEqualFold(v string) predicate.User {
 // DescriptionContainsFold applies the ContainsFold predicate on the "description" field.
 func DescriptionContainsFold(v string) predicate.User {
 	return predicate.User(sql.FieldContainsFold(FieldDescription, v))
+}
+
+// ExperienceEQ applies the EQ predicate on the "experience" field.
+func ExperienceEQ(v int) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldExperience, v))
+}
+
+// ExperienceNEQ applies the NEQ predicate on the "experience" field.
+func ExperienceNEQ(v int) predicate.User {
+	return predicate.User(sql.FieldNEQ(FieldExperience, v))
+}
+
+// ExperienceIn applies the In predicate on the "experience" field.
+func ExperienceIn(vs ...int) predicate.User {
+	return predicate.User(sql.FieldIn(FieldExperience, vs...))
+}
+
+// ExperienceNotIn applies the NotIn predicate on the "experience" field.
+func ExperienceNotIn(vs ...int) predicate.User {
+	return predicate.User(sql.FieldNotIn(FieldExperience, vs...))
+}
+
+// ExperienceGT applies the GT predicate on the "experience" field.
+func ExperienceGT(v int) predicate.User {
+	return predicate.User(sql.FieldGT(FieldExperience, v))
+}
+
+// ExperienceGTE applies the GTE predicate on the "experience" field.
+func ExperienceGTE(v int) predicate.User {
+	return predicate.User(sql.FieldGTE(FieldExperience, v))
+}
+
+// ExperienceLT applies the LT predicate on the "experience" field.
+func ExperienceLT(v int) predicate.User {
+	return predicate.User(sql.FieldLT(FieldExperience, v))
+}
+
+// ExperienceLTE applies the LTE predicate on the "experience" field.
+func ExperienceLTE(v int) predicate.User {
+	return predicate.User(sql.FieldLTE(FieldExperience, v))
+}
+
+// ProjectEQ applies the EQ predicate on the "project" field.
+func ProjectEQ(v int) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldProject, v))
+}
+
+// ProjectNEQ applies the NEQ predicate on the "project" field.
+func ProjectNEQ(v int) predicate.User {
+	return predicate.User(sql.FieldNEQ(FieldProject, v))
+}
+
+// ProjectIn applies the In predicate on the "project" field.
+func ProjectIn(vs ...int) predicate.User {
+	return predicate.User(sql.FieldIn(FieldProject, vs...))
+}
+
+// ProjectNotIn applies the NotIn predicate on the "project" field.
+func ProjectNotIn(vs ...int) predicate.User {
+	return predicate.User(sql.FieldNotIn(FieldProject, vs...))
+}
+
+// ProjectGT applies the GT predicate on the "project" field.
+func ProjectGT(v int) predicate.User {
+	return predicate.User(sql.FieldGT(FieldProject, v))
+}
+
+// ProjectGTE applies the GTE predicate on the "project" field.
+func ProjectGTE(v int) predicate.User {
+	return predicate.User(sql.FieldGTE(FieldProject, v))
+}
+
+// ProjectLT applies the LT predicate on the "project" field.
+func ProjectLT(v int) predicate.User {
+	return predicate.User(sql.FieldLT(FieldProject, v))
+}
+
+// ProjectLTE applies the LTE predicate on the "project" field.
+func ProjectLTE(v int) predicate.User {
+	return predicate.User(sql.FieldLTE(FieldProject, v))
 }
 
 // And groups predicates with the AND operator between them.

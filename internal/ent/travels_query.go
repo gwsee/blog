@@ -5,8 +5,8 @@ package ent
 import (
 	"blog/internal/ent/account"
 	"blog/internal/ent/predicate"
-	"blog/internal/ent/travel"
-	"blog/internal/ent/travelextend"
+	"blog/internal/ent/travelextends"
+	"blog/internal/ent/travels"
 	"context"
 	"database/sql/driver"
 	"fmt"
@@ -18,55 +18,55 @@ import (
 	"entgo.io/ent/schema/field"
 )
 
-// TravelQuery is the builder for querying Travel entities.
-type TravelQuery struct {
+// TravelsQuery is the builder for querying Travels entities.
+type TravelsQuery struct {
 	config
-	ctx               *QueryContext
-	order             []travel.OrderOption
-	inters            []Interceptor
-	predicates        []predicate.Travel
-	withTravelExtend  *TravelExtendQuery
-	withAccountTravel *AccountQuery
-	withFKs           bool
+	ctx                *QueryContext
+	order              []travels.OrderOption
+	inters             []Interceptor
+	predicates         []predicate.Travels
+	withTravelExtends  *TravelExtendsQuery
+	withAccountTravels *AccountQuery
+	withFKs            bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
 }
 
-// Where adds a new predicate for the TravelQuery builder.
-func (tq *TravelQuery) Where(ps ...predicate.Travel) *TravelQuery {
+// Where adds a new predicate for the TravelsQuery builder.
+func (tq *TravelsQuery) Where(ps ...predicate.Travels) *TravelsQuery {
 	tq.predicates = append(tq.predicates, ps...)
 	return tq
 }
 
 // Limit the number of records to be returned by this query.
-func (tq *TravelQuery) Limit(limit int) *TravelQuery {
+func (tq *TravelsQuery) Limit(limit int) *TravelsQuery {
 	tq.ctx.Limit = &limit
 	return tq
 }
 
 // Offset to start from.
-func (tq *TravelQuery) Offset(offset int) *TravelQuery {
+func (tq *TravelsQuery) Offset(offset int) *TravelsQuery {
 	tq.ctx.Offset = &offset
 	return tq
 }
 
 // Unique configures the query builder to filter duplicate records on query.
 // By default, unique is set to true, and can be disabled using this method.
-func (tq *TravelQuery) Unique(unique bool) *TravelQuery {
+func (tq *TravelsQuery) Unique(unique bool) *TravelsQuery {
 	tq.ctx.Unique = &unique
 	return tq
 }
 
 // Order specifies how the records should be ordered.
-func (tq *TravelQuery) Order(o ...travel.OrderOption) *TravelQuery {
+func (tq *TravelsQuery) Order(o ...travels.OrderOption) *TravelsQuery {
 	tq.order = append(tq.order, o...)
 	return tq
 }
 
-// QueryTravelExtend chains the current query on the "travel_extend" edge.
-func (tq *TravelQuery) QueryTravelExtend() *TravelExtendQuery {
-	query := (&TravelExtendClient{config: tq.config}).Query()
+// QueryTravelExtends chains the current query on the "travel_extends" edge.
+func (tq *TravelsQuery) QueryTravelExtends() *TravelExtendsQuery {
+	query := (&TravelExtendsClient{config: tq.config}).Query()
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := tq.prepareQuery(ctx); err != nil {
 			return nil, err
@@ -76,9 +76,9 @@ func (tq *TravelQuery) QueryTravelExtend() *TravelExtendQuery {
 			return nil, err
 		}
 		step := sqlgraph.NewStep(
-			sqlgraph.From(travel.Table, travel.FieldID, selector),
-			sqlgraph.To(travelextend.Table, travelextend.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, travel.TravelExtendTable, travel.TravelExtendColumn),
+			sqlgraph.From(travels.Table, travels.FieldID, selector),
+			sqlgraph.To(travelextends.Table, travelextends.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, travels.TravelExtendsTable, travels.TravelExtendsColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(tq.driver.Dialect(), step)
 		return fromU, nil
@@ -86,8 +86,8 @@ func (tq *TravelQuery) QueryTravelExtend() *TravelExtendQuery {
 	return query
 }
 
-// QueryAccountTravel chains the current query on the "account_travel" edge.
-func (tq *TravelQuery) QueryAccountTravel() *AccountQuery {
+// QueryAccountTravels chains the current query on the "account_travels" edge.
+func (tq *TravelsQuery) QueryAccountTravels() *AccountQuery {
 	query := (&AccountClient{config: tq.config}).Query()
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := tq.prepareQuery(ctx); err != nil {
@@ -98,9 +98,9 @@ func (tq *TravelQuery) QueryAccountTravel() *AccountQuery {
 			return nil, err
 		}
 		step := sqlgraph.NewStep(
-			sqlgraph.From(travel.Table, travel.FieldID, selector),
+			sqlgraph.From(travels.Table, travels.FieldID, selector),
 			sqlgraph.To(account.Table, account.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, travel.AccountTravelTable, travel.AccountTravelColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, travels.AccountTravelsTable, travels.AccountTravelsColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(tq.driver.Dialect(), step)
 		return fromU, nil
@@ -108,21 +108,21 @@ func (tq *TravelQuery) QueryAccountTravel() *AccountQuery {
 	return query
 }
 
-// First returns the first Travel entity from the query.
-// Returns a *NotFoundError when no Travel was found.
-func (tq *TravelQuery) First(ctx context.Context) (*Travel, error) {
+// First returns the first Travels entity from the query.
+// Returns a *NotFoundError when no Travels was found.
+func (tq *TravelsQuery) First(ctx context.Context) (*Travels, error) {
 	nodes, err := tq.Limit(1).All(setContextOp(ctx, tq.ctx, ent.OpQueryFirst))
 	if err != nil {
 		return nil, err
 	}
 	if len(nodes) == 0 {
-		return nil, &NotFoundError{travel.Label}
+		return nil, &NotFoundError{travels.Label}
 	}
 	return nodes[0], nil
 }
 
 // FirstX is like First, but panics if an error occurs.
-func (tq *TravelQuery) FirstX(ctx context.Context) *Travel {
+func (tq *TravelsQuery) FirstX(ctx context.Context) *Travels {
 	node, err := tq.First(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -130,22 +130,22 @@ func (tq *TravelQuery) FirstX(ctx context.Context) *Travel {
 	return node
 }
 
-// FirstID returns the first Travel ID from the query.
-// Returns a *NotFoundError when no Travel ID was found.
-func (tq *TravelQuery) FirstID(ctx context.Context) (id int, err error) {
+// FirstID returns the first Travels ID from the query.
+// Returns a *NotFoundError when no Travels ID was found.
+func (tq *TravelsQuery) FirstID(ctx context.Context) (id int, err error) {
 	var ids []int
 	if ids, err = tq.Limit(1).IDs(setContextOp(ctx, tq.ctx, ent.OpQueryFirstID)); err != nil {
 		return
 	}
 	if len(ids) == 0 {
-		err = &NotFoundError{travel.Label}
+		err = &NotFoundError{travels.Label}
 		return
 	}
 	return ids[0], nil
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (tq *TravelQuery) FirstIDX(ctx context.Context) int {
+func (tq *TravelsQuery) FirstIDX(ctx context.Context) int {
 	id, err := tq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -153,10 +153,10 @@ func (tq *TravelQuery) FirstIDX(ctx context.Context) int {
 	return id
 }
 
-// Only returns a single Travel entity found by the query, ensuring it only returns one.
-// Returns a *NotSingularError when more than one Travel entity is found.
-// Returns a *NotFoundError when no Travel entities are found.
-func (tq *TravelQuery) Only(ctx context.Context) (*Travel, error) {
+// Only returns a single Travels entity found by the query, ensuring it only returns one.
+// Returns a *NotSingularError when more than one Travels entity is found.
+// Returns a *NotFoundError when no Travels entities are found.
+func (tq *TravelsQuery) Only(ctx context.Context) (*Travels, error) {
 	nodes, err := tq.Limit(2).All(setContextOp(ctx, tq.ctx, ent.OpQueryOnly))
 	if err != nil {
 		return nil, err
@@ -165,14 +165,14 @@ func (tq *TravelQuery) Only(ctx context.Context) (*Travel, error) {
 	case 1:
 		return nodes[0], nil
 	case 0:
-		return nil, &NotFoundError{travel.Label}
+		return nil, &NotFoundError{travels.Label}
 	default:
-		return nil, &NotSingularError{travel.Label}
+		return nil, &NotSingularError{travels.Label}
 	}
 }
 
 // OnlyX is like Only, but panics if an error occurs.
-func (tq *TravelQuery) OnlyX(ctx context.Context) *Travel {
+func (tq *TravelsQuery) OnlyX(ctx context.Context) *Travels {
 	node, err := tq.Only(ctx)
 	if err != nil {
 		panic(err)
@@ -180,10 +180,10 @@ func (tq *TravelQuery) OnlyX(ctx context.Context) *Travel {
 	return node
 }
 
-// OnlyID is like Only, but returns the only Travel ID in the query.
-// Returns a *NotSingularError when more than one Travel ID is found.
+// OnlyID is like Only, but returns the only Travels ID in the query.
+// Returns a *NotSingularError when more than one Travels ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (tq *TravelQuery) OnlyID(ctx context.Context) (id int, err error) {
+func (tq *TravelsQuery) OnlyID(ctx context.Context) (id int, err error) {
 	var ids []int
 	if ids, err = tq.Limit(2).IDs(setContextOp(ctx, tq.ctx, ent.OpQueryOnlyID)); err != nil {
 		return
@@ -192,15 +192,15 @@ func (tq *TravelQuery) OnlyID(ctx context.Context) (id int, err error) {
 	case 1:
 		id = ids[0]
 	case 0:
-		err = &NotFoundError{travel.Label}
+		err = &NotFoundError{travels.Label}
 	default:
-		err = &NotSingularError{travel.Label}
+		err = &NotSingularError{travels.Label}
 	}
 	return
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (tq *TravelQuery) OnlyIDX(ctx context.Context) int {
+func (tq *TravelsQuery) OnlyIDX(ctx context.Context) int {
 	id, err := tq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -208,18 +208,18 @@ func (tq *TravelQuery) OnlyIDX(ctx context.Context) int {
 	return id
 }
 
-// All executes the query and returns a list of Travels.
-func (tq *TravelQuery) All(ctx context.Context) ([]*Travel, error) {
+// All executes the query and returns a list of TravelsSlice.
+func (tq *TravelsQuery) All(ctx context.Context) ([]*Travels, error) {
 	ctx = setContextOp(ctx, tq.ctx, ent.OpQueryAll)
 	if err := tq.prepareQuery(ctx); err != nil {
 		return nil, err
 	}
-	qr := querierAll[[]*Travel, *TravelQuery]()
-	return withInterceptors[[]*Travel](ctx, tq, qr, tq.inters)
+	qr := querierAll[[]*Travels, *TravelsQuery]()
+	return withInterceptors[[]*Travels](ctx, tq, qr, tq.inters)
 }
 
 // AllX is like All, but panics if an error occurs.
-func (tq *TravelQuery) AllX(ctx context.Context) []*Travel {
+func (tq *TravelsQuery) AllX(ctx context.Context) []*Travels {
 	nodes, err := tq.All(ctx)
 	if err != nil {
 		panic(err)
@@ -227,20 +227,20 @@ func (tq *TravelQuery) AllX(ctx context.Context) []*Travel {
 	return nodes
 }
 
-// IDs executes the query and returns a list of Travel IDs.
-func (tq *TravelQuery) IDs(ctx context.Context) (ids []int, err error) {
+// IDs executes the query and returns a list of Travels IDs.
+func (tq *TravelsQuery) IDs(ctx context.Context) (ids []int, err error) {
 	if tq.ctx.Unique == nil && tq.path != nil {
 		tq.Unique(true)
 	}
 	ctx = setContextOp(ctx, tq.ctx, ent.OpQueryIDs)
-	if err = tq.Select(travel.FieldID).Scan(ctx, &ids); err != nil {
+	if err = tq.Select(travels.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
 	return ids, nil
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (tq *TravelQuery) IDsX(ctx context.Context) []int {
+func (tq *TravelsQuery) IDsX(ctx context.Context) []int {
 	ids, err := tq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -249,16 +249,16 @@ func (tq *TravelQuery) IDsX(ctx context.Context) []int {
 }
 
 // Count returns the count of the given query.
-func (tq *TravelQuery) Count(ctx context.Context) (int, error) {
+func (tq *TravelsQuery) Count(ctx context.Context) (int, error) {
 	ctx = setContextOp(ctx, tq.ctx, ent.OpQueryCount)
 	if err := tq.prepareQuery(ctx); err != nil {
 		return 0, err
 	}
-	return withInterceptors[int](ctx, tq, querierCount[*TravelQuery](), tq.inters)
+	return withInterceptors[int](ctx, tq, querierCount[*TravelsQuery](), tq.inters)
 }
 
 // CountX is like Count, but panics if an error occurs.
-func (tq *TravelQuery) CountX(ctx context.Context) int {
+func (tq *TravelsQuery) CountX(ctx context.Context) int {
 	count, err := tq.Count(ctx)
 	if err != nil {
 		panic(err)
@@ -267,7 +267,7 @@ func (tq *TravelQuery) CountX(ctx context.Context) int {
 }
 
 // Exist returns true if the query has elements in the graph.
-func (tq *TravelQuery) Exist(ctx context.Context) (bool, error) {
+func (tq *TravelsQuery) Exist(ctx context.Context) (bool, error) {
 	ctx = setContextOp(ctx, tq.ctx, ent.OpQueryExist)
 	switch _, err := tq.FirstID(ctx); {
 	case IsNotFound(err):
@@ -280,7 +280,7 @@ func (tq *TravelQuery) Exist(ctx context.Context) (bool, error) {
 }
 
 // ExistX is like Exist, but panics if an error occurs.
-func (tq *TravelQuery) ExistX(ctx context.Context) bool {
+func (tq *TravelsQuery) ExistX(ctx context.Context) bool {
 	exist, err := tq.Exist(ctx)
 	if err != nil {
 		panic(err)
@@ -288,45 +288,45 @@ func (tq *TravelQuery) ExistX(ctx context.Context) bool {
 	return exist
 }
 
-// Clone returns a duplicate of the TravelQuery builder, including all associated steps. It can be
+// Clone returns a duplicate of the TravelsQuery builder, including all associated steps. It can be
 // used to prepare common query builders and use them differently after the clone is made.
-func (tq *TravelQuery) Clone() *TravelQuery {
+func (tq *TravelsQuery) Clone() *TravelsQuery {
 	if tq == nil {
 		return nil
 	}
-	return &TravelQuery{
-		config:            tq.config,
-		ctx:               tq.ctx.Clone(),
-		order:             append([]travel.OrderOption{}, tq.order...),
-		inters:            append([]Interceptor{}, tq.inters...),
-		predicates:        append([]predicate.Travel{}, tq.predicates...),
-		withTravelExtend:  tq.withTravelExtend.Clone(),
-		withAccountTravel: tq.withAccountTravel.Clone(),
+	return &TravelsQuery{
+		config:             tq.config,
+		ctx:                tq.ctx.Clone(),
+		order:              append([]travels.OrderOption{}, tq.order...),
+		inters:             append([]Interceptor{}, tq.inters...),
+		predicates:         append([]predicate.Travels{}, tq.predicates...),
+		withTravelExtends:  tq.withTravelExtends.Clone(),
+		withAccountTravels: tq.withAccountTravels.Clone(),
 		// clone intermediate query.
 		sql:  tq.sql.Clone(),
 		path: tq.path,
 	}
 }
 
-// WithTravelExtend tells the query-builder to eager-load the nodes that are connected to
-// the "travel_extend" edge. The optional arguments are used to configure the query builder of the edge.
-func (tq *TravelQuery) WithTravelExtend(opts ...func(*TravelExtendQuery)) *TravelQuery {
-	query := (&TravelExtendClient{config: tq.config}).Query()
+// WithTravelExtends tells the query-builder to eager-load the nodes that are connected to
+// the "travel_extends" edge. The optional arguments are used to configure the query builder of the edge.
+func (tq *TravelsQuery) WithTravelExtends(opts ...func(*TravelExtendsQuery)) *TravelsQuery {
+	query := (&TravelExtendsClient{config: tq.config}).Query()
 	for _, opt := range opts {
 		opt(query)
 	}
-	tq.withTravelExtend = query
+	tq.withTravelExtends = query
 	return tq
 }
 
-// WithAccountTravel tells the query-builder to eager-load the nodes that are connected to
-// the "account_travel" edge. The optional arguments are used to configure the query builder of the edge.
-func (tq *TravelQuery) WithAccountTravel(opts ...func(*AccountQuery)) *TravelQuery {
+// WithAccountTravels tells the query-builder to eager-load the nodes that are connected to
+// the "account_travels" edge. The optional arguments are used to configure the query builder of the edge.
+func (tq *TravelsQuery) WithAccountTravels(opts ...func(*AccountQuery)) *TravelsQuery {
 	query := (&AccountClient{config: tq.config}).Query()
 	for _, opt := range opts {
 		opt(query)
 	}
-	tq.withAccountTravel = query
+	tq.withAccountTravels = query
 	return tq
 }
 
@@ -340,15 +340,15 @@ func (tq *TravelQuery) WithAccountTravel(opts ...func(*AccountQuery)) *TravelQue
 //		Count int `json:"count,omitempty"`
 //	}
 //
-//	client.Travel.Query().
-//		GroupBy(travel.FieldCreatedAt).
+//	client.Travels.Query().
+//		GroupBy(travels.FieldCreatedAt).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
-func (tq *TravelQuery) GroupBy(field string, fields ...string) *TravelGroupBy {
+func (tq *TravelsQuery) GroupBy(field string, fields ...string) *TravelsGroupBy {
 	tq.ctx.Fields = append([]string{field}, fields...)
-	grbuild := &TravelGroupBy{build: tq}
+	grbuild := &TravelsGroupBy{build: tq}
 	grbuild.flds = &tq.ctx.Fields
-	grbuild.label = travel.Label
+	grbuild.label = travels.Label
 	grbuild.scan = grbuild.Scan
 	return grbuild
 }
@@ -362,23 +362,23 @@ func (tq *TravelQuery) GroupBy(field string, fields ...string) *TravelGroupBy {
 //		CreatedAt int64 `json:"created_at,omitempty"`
 //	}
 //
-//	client.Travel.Query().
-//		Select(travel.FieldCreatedAt).
+//	client.Travels.Query().
+//		Select(travels.FieldCreatedAt).
 //		Scan(ctx, &v)
-func (tq *TravelQuery) Select(fields ...string) *TravelSelect {
+func (tq *TravelsQuery) Select(fields ...string) *TravelsSelect {
 	tq.ctx.Fields = append(tq.ctx.Fields, fields...)
-	sbuild := &TravelSelect{TravelQuery: tq}
-	sbuild.label = travel.Label
+	sbuild := &TravelsSelect{TravelsQuery: tq}
+	sbuild.label = travels.Label
 	sbuild.flds, sbuild.scan = &tq.ctx.Fields, sbuild.Scan
 	return sbuild
 }
 
-// Aggregate returns a TravelSelect configured with the given aggregations.
-func (tq *TravelQuery) Aggregate(fns ...AggregateFunc) *TravelSelect {
+// Aggregate returns a TravelsSelect configured with the given aggregations.
+func (tq *TravelsQuery) Aggregate(fns ...AggregateFunc) *TravelsSelect {
 	return tq.Select().Aggregate(fns...)
 }
 
-func (tq *TravelQuery) prepareQuery(ctx context.Context) error {
+func (tq *TravelsQuery) prepareQuery(ctx context.Context) error {
 	for _, inter := range tq.inters {
 		if inter == nil {
 			return fmt.Errorf("ent: uninitialized interceptor (forgotten import ent/runtime?)")
@@ -390,7 +390,7 @@ func (tq *TravelQuery) prepareQuery(ctx context.Context) error {
 		}
 	}
 	for _, f := range tq.ctx.Fields {
-		if !travel.ValidColumn(f) {
+		if !travels.ValidColumn(f) {
 			return &ValidationError{Name: f, err: fmt.Errorf("ent: invalid field %q for query", f)}
 		}
 	}
@@ -404,27 +404,27 @@ func (tq *TravelQuery) prepareQuery(ctx context.Context) error {
 	return nil
 }
 
-func (tq *TravelQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Travel, error) {
+func (tq *TravelsQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Travels, error) {
 	var (
-		nodes       = []*Travel{}
+		nodes       = []*Travels{}
 		withFKs     = tq.withFKs
 		_spec       = tq.querySpec()
 		loadedTypes = [2]bool{
-			tq.withTravelExtend != nil,
-			tq.withAccountTravel != nil,
+			tq.withTravelExtends != nil,
+			tq.withAccountTravels != nil,
 		}
 	)
-	if tq.withAccountTravel != nil {
+	if tq.withAccountTravels != nil {
 		withFKs = true
 	}
 	if withFKs {
-		_spec.Node.Columns = append(_spec.Node.Columns, travel.ForeignKeys...)
+		_spec.Node.Columns = append(_spec.Node.Columns, travels.ForeignKeys...)
 	}
 	_spec.ScanValues = func(columns []string) ([]any, error) {
-		return (*Travel).scanValues(nil, columns)
+		return (*Travels).scanValues(nil, columns)
 	}
 	_spec.Assign = func(columns []string, values []any) error {
-		node := &Travel{config: tq.config}
+		node := &Travels{config: tq.config}
 		nodes = append(nodes, node)
 		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
@@ -438,25 +438,25 @@ func (tq *TravelQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Trave
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
-	if query := tq.withTravelExtend; query != nil {
-		if err := tq.loadTravelExtend(ctx, query, nodes,
-			func(n *Travel) { n.Edges.TravelExtend = []*TravelExtend{} },
-			func(n *Travel, e *TravelExtend) { n.Edges.TravelExtend = append(n.Edges.TravelExtend, e) }); err != nil {
+	if query := tq.withTravelExtends; query != nil {
+		if err := tq.loadTravelExtends(ctx, query, nodes,
+			func(n *Travels) { n.Edges.TravelExtends = []*TravelExtends{} },
+			func(n *Travels, e *TravelExtends) { n.Edges.TravelExtends = append(n.Edges.TravelExtends, e) }); err != nil {
 			return nil, err
 		}
 	}
-	if query := tq.withAccountTravel; query != nil {
-		if err := tq.loadAccountTravel(ctx, query, nodes, nil,
-			func(n *Travel, e *Account) { n.Edges.AccountTravel = e }); err != nil {
+	if query := tq.withAccountTravels; query != nil {
+		if err := tq.loadAccountTravels(ctx, query, nodes, nil,
+			func(n *Travels, e *Account) { n.Edges.AccountTravels = e }); err != nil {
 			return nil, err
 		}
 	}
 	return nodes, nil
 }
 
-func (tq *TravelQuery) loadTravelExtend(ctx context.Context, query *TravelExtendQuery, nodes []*Travel, init func(*Travel), assign func(*Travel, *TravelExtend)) error {
+func (tq *TravelsQuery) loadTravelExtends(ctx context.Context, query *TravelExtendsQuery, nodes []*Travels, init func(*Travels), assign func(*Travels, *TravelExtends)) error {
 	fks := make([]driver.Value, 0, len(nodes))
-	nodeids := make(map[int]*Travel)
+	nodeids := make(map[int]*Travels)
 	for i := range nodes {
 		fks = append(fks, nodes[i].ID)
 		nodeids[nodes[i].ID] = nodes[i]
@@ -465,34 +465,34 @@ func (tq *TravelQuery) loadTravelExtend(ctx context.Context, query *TravelExtend
 		}
 	}
 	query.withFKs = true
-	query.Where(predicate.TravelExtend(func(s *sql.Selector) {
-		s.Where(sql.InValues(s.C(travel.TravelExtendColumn), fks...))
+	query.Where(predicate.TravelExtends(func(s *sql.Selector) {
+		s.Where(sql.InValues(s.C(travels.TravelExtendsColumn), fks...))
 	}))
 	neighbors, err := query.All(ctx)
 	if err != nil {
 		return err
 	}
 	for _, n := range neighbors {
-		fk := n.travel_travel_extend
+		fk := n.travels_travel_extends
 		if fk == nil {
-			return fmt.Errorf(`foreign-key "travel_travel_extend" is nil for node %v`, n.ID)
+			return fmt.Errorf(`foreign-key "travels_travel_extends" is nil for node %v`, n.ID)
 		}
 		node, ok := nodeids[*fk]
 		if !ok {
-			return fmt.Errorf(`unexpected referenced foreign-key "travel_travel_extend" returned %v for node %v`, *fk, n.ID)
+			return fmt.Errorf(`unexpected referenced foreign-key "travels_travel_extends" returned %v for node %v`, *fk, n.ID)
 		}
 		assign(node, n)
 	}
 	return nil
 }
-func (tq *TravelQuery) loadAccountTravel(ctx context.Context, query *AccountQuery, nodes []*Travel, init func(*Travel), assign func(*Travel, *Account)) error {
+func (tq *TravelsQuery) loadAccountTravels(ctx context.Context, query *AccountQuery, nodes []*Travels, init func(*Travels), assign func(*Travels, *Account)) error {
 	ids := make([]int, 0, len(nodes))
-	nodeids := make(map[int][]*Travel)
+	nodeids := make(map[int][]*Travels)
 	for i := range nodes {
-		if nodes[i].account_travel_account == nil {
+		if nodes[i].account_travels == nil {
 			continue
 		}
-		fk := *nodes[i].account_travel_account
+		fk := *nodes[i].account_travels
 		if _, ok := nodeids[fk]; !ok {
 			ids = append(ids, fk)
 		}
@@ -509,7 +509,7 @@ func (tq *TravelQuery) loadAccountTravel(ctx context.Context, query *AccountQuer
 	for _, n := range neighbors {
 		nodes, ok := nodeids[n.ID]
 		if !ok {
-			return fmt.Errorf(`unexpected foreign-key "account_travel_account" returned %v`, n.ID)
+			return fmt.Errorf(`unexpected foreign-key "account_travels" returned %v`, n.ID)
 		}
 		for i := range nodes {
 			assign(nodes[i], n)
@@ -518,7 +518,7 @@ func (tq *TravelQuery) loadAccountTravel(ctx context.Context, query *AccountQuer
 	return nil
 }
 
-func (tq *TravelQuery) sqlCount(ctx context.Context) (int, error) {
+func (tq *TravelsQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := tq.querySpec()
 	_spec.Node.Columns = tq.ctx.Fields
 	if len(tq.ctx.Fields) > 0 {
@@ -527,8 +527,8 @@ func (tq *TravelQuery) sqlCount(ctx context.Context) (int, error) {
 	return sqlgraph.CountNodes(ctx, tq.driver, _spec)
 }
 
-func (tq *TravelQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(travel.Table, travel.Columns, sqlgraph.NewFieldSpec(travel.FieldID, field.TypeInt))
+func (tq *TravelsQuery) querySpec() *sqlgraph.QuerySpec {
+	_spec := sqlgraph.NewQuerySpec(travels.Table, travels.Columns, sqlgraph.NewFieldSpec(travels.FieldID, field.TypeInt))
 	_spec.From = tq.sql
 	if unique := tq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique
@@ -537,9 +537,9 @@ func (tq *TravelQuery) querySpec() *sqlgraph.QuerySpec {
 	}
 	if fields := tq.ctx.Fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
-		_spec.Node.Columns = append(_spec.Node.Columns, travel.FieldID)
+		_spec.Node.Columns = append(_spec.Node.Columns, travels.FieldID)
 		for i := range fields {
-			if fields[i] != travel.FieldID {
+			if fields[i] != travels.FieldID {
 				_spec.Node.Columns = append(_spec.Node.Columns, fields[i])
 			}
 		}
@@ -567,12 +567,12 @@ func (tq *TravelQuery) querySpec() *sqlgraph.QuerySpec {
 	return _spec
 }
 
-func (tq *TravelQuery) sqlQuery(ctx context.Context) *sql.Selector {
+func (tq *TravelsQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	builder := sql.Dialect(tq.driver.Dialect())
-	t1 := builder.Table(travel.Table)
+	t1 := builder.Table(travels.Table)
 	columns := tq.ctx.Fields
 	if len(columns) == 0 {
-		columns = travel.Columns
+		columns = travels.Columns
 	}
 	selector := builder.Select(t1.Columns(columns...)...).From(t1)
 	if tq.sql != nil {
@@ -599,28 +599,28 @@ func (tq *TravelQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	return selector
 }
 
-// TravelGroupBy is the group-by builder for Travel entities.
-type TravelGroupBy struct {
+// TravelsGroupBy is the group-by builder for Travels entities.
+type TravelsGroupBy struct {
 	selector
-	build *TravelQuery
+	build *TravelsQuery
 }
 
 // Aggregate adds the given aggregation functions to the group-by query.
-func (tgb *TravelGroupBy) Aggregate(fns ...AggregateFunc) *TravelGroupBy {
+func (tgb *TravelsGroupBy) Aggregate(fns ...AggregateFunc) *TravelsGroupBy {
 	tgb.fns = append(tgb.fns, fns...)
 	return tgb
 }
 
 // Scan applies the selector query and scans the result into the given value.
-func (tgb *TravelGroupBy) Scan(ctx context.Context, v any) error {
+func (tgb *TravelsGroupBy) Scan(ctx context.Context, v any) error {
 	ctx = setContextOp(ctx, tgb.build.ctx, ent.OpQueryGroupBy)
 	if err := tgb.build.prepareQuery(ctx); err != nil {
 		return err
 	}
-	return scanWithInterceptors[*TravelQuery, *TravelGroupBy](ctx, tgb.build, tgb, tgb.build.inters, v)
+	return scanWithInterceptors[*TravelsQuery, *TravelsGroupBy](ctx, tgb.build, tgb, tgb.build.inters, v)
 }
 
-func (tgb *TravelGroupBy) sqlScan(ctx context.Context, root *TravelQuery, v any) error {
+func (tgb *TravelsGroupBy) sqlScan(ctx context.Context, root *TravelsQuery, v any) error {
 	selector := root.sqlQuery(ctx).Select()
 	aggregation := make([]string, 0, len(tgb.fns))
 	for _, fn := range tgb.fns {
@@ -647,28 +647,28 @@ func (tgb *TravelGroupBy) sqlScan(ctx context.Context, root *TravelQuery, v any)
 	return sql.ScanSlice(rows, v)
 }
 
-// TravelSelect is the builder for selecting fields of Travel entities.
-type TravelSelect struct {
-	*TravelQuery
+// TravelsSelect is the builder for selecting fields of Travels entities.
+type TravelsSelect struct {
+	*TravelsQuery
 	selector
 }
 
 // Aggregate adds the given aggregation functions to the selector query.
-func (ts *TravelSelect) Aggregate(fns ...AggregateFunc) *TravelSelect {
+func (ts *TravelsSelect) Aggregate(fns ...AggregateFunc) *TravelsSelect {
 	ts.fns = append(ts.fns, fns...)
 	return ts
 }
 
 // Scan applies the selector query and scans the result into the given value.
-func (ts *TravelSelect) Scan(ctx context.Context, v any) error {
+func (ts *TravelsSelect) Scan(ctx context.Context, v any) error {
 	ctx = setContextOp(ctx, ts.ctx, ent.OpQuerySelect)
 	if err := ts.prepareQuery(ctx); err != nil {
 		return err
 	}
-	return scanWithInterceptors[*TravelQuery, *TravelSelect](ctx, ts.TravelQuery, ts, ts.inters, v)
+	return scanWithInterceptors[*TravelsQuery, *TravelsSelect](ctx, ts.TravelsQuery, ts, ts.inters, v)
 }
 
-func (ts *TravelSelect) sqlScan(ctx context.Context, root *TravelQuery, v any) error {
+func (ts *TravelsSelect) sqlScan(ctx context.Context, root *TravelsQuery, v any) error {
 	selector := root.sqlQuery(ctx)
 	aggregation := make([]string, 0, len(ts.fns))
 	for _, fn := range ts.fns {

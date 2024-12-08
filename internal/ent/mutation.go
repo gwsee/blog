@@ -10,8 +10,8 @@ import (
 	"blog/internal/ent/files"
 	"blog/internal/ent/filesextend"
 	"blog/internal/ent/predicate"
-	"blog/internal/ent/travel"
-	"blog/internal/ent/travelextend"
+	"blog/internal/ent/travelextends"
+	"blog/internal/ent/travels"
 	"blog/internal/ent/user"
 	"blog/internal/ent/userexperience"
 	"blog/internal/ent/userproject"
@@ -39,8 +39,8 @@ const (
 	TypeBlogsContent   = "BlogsContent"
 	TypeFiles          = "Files"
 	TypeFilesExtend    = "FilesExtend"
-	TypeTravel         = "Travel"
-	TypeTravelExtend   = "TravelExtend"
+	TypeTravelExtends  = "TravelExtends"
+	TypeTravels        = "Travels"
 	TypeUser           = "User"
 	TypeUserExperience = "UserExperience"
 	TypeUserProject    = "UserProject"
@@ -49,38 +49,38 @@ const (
 // AccountMutation represents an operation that mutates the Account nodes in the graph.
 type AccountMutation struct {
 	config
-	op                    Op
-	typ                   string
-	id                    *int
-	created_at            *int64
-	addcreated_at         *int64
-	created_by            *int64
-	addcreated_by         *int64
-	updated_at            *int64
-	addupdated_at         *int64
-	updated_by            *int64
-	addupdated_by         *int64
-	deleted_at            *int64
-	adddeleted_at         *int64
-	deleted_by            *int64
-	adddeleted_by         *int64
-	nickname              *string
-	account               *string
-	password              *string
-	email                 *string
-	description           *string
-	avatar                *string
-	blog_num              *int
-	addblog_num           *int
-	status                *int8
-	addstatus             *int8
-	clearedFields         map[string]struct{}
-	travel_account        map[int]struct{}
-	removedtravel_account map[int]struct{}
-	clearedtravel_account bool
-	done                  bool
-	oldValue              func(context.Context) (*Account, error)
-	predicates            []predicate.Account
+	op             Op
+	typ            string
+	id             *int
+	created_at     *int64
+	addcreated_at  *int64
+	created_by     *int64
+	addcreated_by  *int64
+	updated_at     *int64
+	addupdated_at  *int64
+	updated_by     *int64
+	addupdated_by  *int64
+	deleted_at     *int64
+	adddeleted_at  *int64
+	deleted_by     *int64
+	adddeleted_by  *int64
+	nickname       *string
+	account        *string
+	password       *string
+	email          *string
+	description    *string
+	avatar         *string
+	blog_num       *int
+	addblog_num    *int
+	status         *int8
+	addstatus      *int8
+	clearedFields  map[string]struct{}
+	travels        map[int]struct{}
+	removedtravels map[int]struct{}
+	clearedtravels bool
+	done           bool
+	oldValue       func(context.Context) (*Account, error)
+	predicates     []predicate.Account
 }
 
 var _ ent.Mutation = (*AccountMutation)(nil)
@@ -851,58 +851,58 @@ func (m *AccountMutation) ResetStatus() {
 	m.addstatus = nil
 }
 
-// AddTravelAccountIDs adds the "travel_account" edge to the Travel entity by ids.
-func (m *AccountMutation) AddTravelAccountIDs(ids ...int) {
-	if m.travel_account == nil {
-		m.travel_account = make(map[int]struct{})
+// AddTravelIDs adds the "travels" edge to the Travels entity by ids.
+func (m *AccountMutation) AddTravelIDs(ids ...int) {
+	if m.travels == nil {
+		m.travels = make(map[int]struct{})
 	}
 	for i := range ids {
-		m.travel_account[ids[i]] = struct{}{}
+		m.travels[ids[i]] = struct{}{}
 	}
 }
 
-// ClearTravelAccount clears the "travel_account" edge to the Travel entity.
-func (m *AccountMutation) ClearTravelAccount() {
-	m.clearedtravel_account = true
+// ClearTravels clears the "travels" edge to the Travels entity.
+func (m *AccountMutation) ClearTravels() {
+	m.clearedtravels = true
 }
 
-// TravelAccountCleared reports if the "travel_account" edge to the Travel entity was cleared.
-func (m *AccountMutation) TravelAccountCleared() bool {
-	return m.clearedtravel_account
+// TravelsCleared reports if the "travels" edge to the Travels entity was cleared.
+func (m *AccountMutation) TravelsCleared() bool {
+	return m.clearedtravels
 }
 
-// RemoveTravelAccountIDs removes the "travel_account" edge to the Travel entity by IDs.
-func (m *AccountMutation) RemoveTravelAccountIDs(ids ...int) {
-	if m.removedtravel_account == nil {
-		m.removedtravel_account = make(map[int]struct{})
+// RemoveTravelIDs removes the "travels" edge to the Travels entity by IDs.
+func (m *AccountMutation) RemoveTravelIDs(ids ...int) {
+	if m.removedtravels == nil {
+		m.removedtravels = make(map[int]struct{})
 	}
 	for i := range ids {
-		delete(m.travel_account, ids[i])
-		m.removedtravel_account[ids[i]] = struct{}{}
+		delete(m.travels, ids[i])
+		m.removedtravels[ids[i]] = struct{}{}
 	}
 }
 
-// RemovedTravelAccount returns the removed IDs of the "travel_account" edge to the Travel entity.
-func (m *AccountMutation) RemovedTravelAccountIDs() (ids []int) {
-	for id := range m.removedtravel_account {
+// RemovedTravels returns the removed IDs of the "travels" edge to the Travels entity.
+func (m *AccountMutation) RemovedTravelsIDs() (ids []int) {
+	for id := range m.removedtravels {
 		ids = append(ids, id)
 	}
 	return
 }
 
-// TravelAccountIDs returns the "travel_account" edge IDs in the mutation.
-func (m *AccountMutation) TravelAccountIDs() (ids []int) {
-	for id := range m.travel_account {
+// TravelsIDs returns the "travels" edge IDs in the mutation.
+func (m *AccountMutation) TravelsIDs() (ids []int) {
+	for id := range m.travels {
 		ids = append(ids, id)
 	}
 	return
 }
 
-// ResetTravelAccount resets all changes to the "travel_account" edge.
-func (m *AccountMutation) ResetTravelAccount() {
-	m.travel_account = nil
-	m.clearedtravel_account = false
-	m.removedtravel_account = nil
+// ResetTravels resets all changes to the "travels" edge.
+func (m *AccountMutation) ResetTravels() {
+	m.travels = nil
+	m.clearedtravels = false
+	m.removedtravels = nil
 }
 
 // Where appends a list predicates to the AccountMutation builder.
@@ -1359,8 +1359,8 @@ func (m *AccountMutation) ResetField(name string) error {
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *AccountMutation) AddedEdges() []string {
 	edges := make([]string, 0, 1)
-	if m.travel_account != nil {
-		edges = append(edges, account.EdgeTravelAccount)
+	if m.travels != nil {
+		edges = append(edges, account.EdgeTravels)
 	}
 	return edges
 }
@@ -1369,9 +1369,9 @@ func (m *AccountMutation) AddedEdges() []string {
 // name in this mutation.
 func (m *AccountMutation) AddedIDs(name string) []ent.Value {
 	switch name {
-	case account.EdgeTravelAccount:
-		ids := make([]ent.Value, 0, len(m.travel_account))
-		for id := range m.travel_account {
+	case account.EdgeTravels:
+		ids := make([]ent.Value, 0, len(m.travels))
+		for id := range m.travels {
 			ids = append(ids, id)
 		}
 		return ids
@@ -1382,8 +1382,8 @@ func (m *AccountMutation) AddedIDs(name string) []ent.Value {
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *AccountMutation) RemovedEdges() []string {
 	edges := make([]string, 0, 1)
-	if m.removedtravel_account != nil {
-		edges = append(edges, account.EdgeTravelAccount)
+	if m.removedtravels != nil {
+		edges = append(edges, account.EdgeTravels)
 	}
 	return edges
 }
@@ -1392,9 +1392,9 @@ func (m *AccountMutation) RemovedEdges() []string {
 // the given name in this mutation.
 func (m *AccountMutation) RemovedIDs(name string) []ent.Value {
 	switch name {
-	case account.EdgeTravelAccount:
-		ids := make([]ent.Value, 0, len(m.removedtravel_account))
-		for id := range m.removedtravel_account {
+	case account.EdgeTravels:
+		ids := make([]ent.Value, 0, len(m.removedtravels))
+		for id := range m.removedtravels {
 			ids = append(ids, id)
 		}
 		return ids
@@ -1405,8 +1405,8 @@ func (m *AccountMutation) RemovedIDs(name string) []ent.Value {
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *AccountMutation) ClearedEdges() []string {
 	edges := make([]string, 0, 1)
-	if m.clearedtravel_account {
-		edges = append(edges, account.EdgeTravelAccount)
+	if m.clearedtravels {
+		edges = append(edges, account.EdgeTravels)
 	}
 	return edges
 }
@@ -1415,8 +1415,8 @@ func (m *AccountMutation) ClearedEdges() []string {
 // was cleared in this mutation.
 func (m *AccountMutation) EdgeCleared(name string) bool {
 	switch name {
-	case account.EdgeTravelAccount:
-		return m.clearedtravel_account
+	case account.EdgeTravels:
+		return m.clearedtravels
 	}
 	return false
 }
@@ -1433,8 +1433,8 @@ func (m *AccountMutation) ClearEdge(name string) error {
 // It returns an error if the edge is not defined in the schema.
 func (m *AccountMutation) ResetEdge(name string) error {
 	switch name {
-	case account.EdgeTravelAccount:
-		m.ResetTravelAccount()
+	case account.EdgeTravels:
+		m.ResetTravels()
 		return nil
 	}
 	return fmt.Errorf("unknown Account edge %s", name)
@@ -6708,60 +6708,49 @@ func (m *FilesExtendMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown FilesExtend edge %s", name)
 }
 
-// TravelMutation represents an operation that mutates the Travel nodes in the graph.
-type TravelMutation struct {
+// TravelExtendsMutation represents an operation that mutates the TravelExtends nodes in the graph.
+type TravelExtendsMutation struct {
 	config
-	op                    Op
-	typ                   string
-	id                    *int
-	created_at            *int64
-	addcreated_at         *int64
-	created_by            *int64
-	addcreated_by         *int64
-	updated_at            *int64
-	addupdated_at         *int64
-	updated_by            *int64
-	addupdated_by         *int64
-	deleted_at            *int64
-	adddeleted_at         *int64
-	deleted_by            *int64
-	adddeleted_by         *int64
-	title                 *string
-	description           *string
-	video                 *string
-	is_hidden             *bool
-	account_id            *int
-	addaccount_id         *int
-	photos                *[]string
-	appendphotos          []string
-	browse_num            *int
-	addbrowse_num         *int
-	thumb_num             *int
-	addthumb_num          *int
-	collect_num           *int
-	addcollect_num        *int
-	clearedFields         map[string]struct{}
-	travel_extend         map[int]struct{}
-	removedtravel_extend  map[int]struct{}
-	clearedtravel_extend  bool
-	account_travel        *int
-	clearedaccount_travel bool
-	done                  bool
-	oldValue              func(context.Context) (*Travel, error)
-	predicates            []predicate.Travel
+	op             Op
+	typ            string
+	id             *int
+	created_at     *int64
+	addcreated_at  *int64
+	created_by     *int64
+	addcreated_by  *int64
+	updated_at     *int64
+	addupdated_at  *int64
+	updated_by     *int64
+	addupdated_by  *int64
+	deleted_at     *int64
+	adddeleted_at  *int64
+	deleted_by     *int64
+	adddeleted_by  *int64
+	account_id     *int
+	addaccount_id  *int
+	travel_id      *int
+	addtravel_id   *int
+	is_thumb       *bool
+	is_collect     *bool
+	clearedFields  map[string]struct{}
+	extends        *int
+	clearedextends bool
+	done           bool
+	oldValue       func(context.Context) (*TravelExtends, error)
+	predicates     []predicate.TravelExtends
 }
 
-var _ ent.Mutation = (*TravelMutation)(nil)
+var _ ent.Mutation = (*TravelExtendsMutation)(nil)
 
-// travelOption allows management of the mutation configuration using functional options.
-type travelOption func(*TravelMutation)
+// travelextendsOption allows management of the mutation configuration using functional options.
+type travelextendsOption func(*TravelExtendsMutation)
 
-// newTravelMutation creates new mutation for the Travel entity.
-func newTravelMutation(c config, op Op, opts ...travelOption) *TravelMutation {
-	m := &TravelMutation{
+// newTravelExtendsMutation creates new mutation for the TravelExtends entity.
+func newTravelExtendsMutation(c config, op Op, opts ...travelextendsOption) *TravelExtendsMutation {
+	m := &TravelExtendsMutation{
 		config:        c,
 		op:            op,
-		typ:           TypeTravel,
+		typ:           TypeTravelExtends,
 		clearedFields: make(map[string]struct{}),
 	}
 	for _, opt := range opts {
@@ -6770,20 +6759,20 @@ func newTravelMutation(c config, op Op, opts ...travelOption) *TravelMutation {
 	return m
 }
 
-// withTravelID sets the ID field of the mutation.
-func withTravelID(id int) travelOption {
-	return func(m *TravelMutation) {
+// withTravelExtendsID sets the ID field of the mutation.
+func withTravelExtendsID(id int) travelextendsOption {
+	return func(m *TravelExtendsMutation) {
 		var (
 			err   error
 			once  sync.Once
-			value *Travel
+			value *TravelExtends
 		)
-		m.oldValue = func(ctx context.Context) (*Travel, error) {
+		m.oldValue = func(ctx context.Context) (*TravelExtends, error) {
 			once.Do(func() {
 				if m.done {
 					err = errors.New("querying old values post mutation is not allowed")
 				} else {
-					value, err = m.Client().Travel.Get(ctx, id)
+					value, err = m.Client().TravelExtends.Get(ctx, id)
 				}
 			})
 			return value, err
@@ -6792,10 +6781,10 @@ func withTravelID(id int) travelOption {
 	}
 }
 
-// withTravel sets the old Travel of the mutation.
-func withTravel(node *Travel) travelOption {
-	return func(m *TravelMutation) {
-		m.oldValue = func(context.Context) (*Travel, error) {
+// withTravelExtends sets the old TravelExtends of the mutation.
+func withTravelExtends(node *TravelExtends) travelextendsOption {
+	return func(m *TravelExtendsMutation) {
+		m.oldValue = func(context.Context) (*TravelExtends, error) {
 			return node, nil
 		}
 		m.id = &node.ID
@@ -6804,7 +6793,7 @@ func withTravel(node *Travel) travelOption {
 
 // Client returns a new `ent.Client` from the mutation. If the mutation was
 // executed in a transaction (ent.Tx), a transactional client is returned.
-func (m TravelMutation) Client() *Client {
+func (m TravelExtendsMutation) Client() *Client {
 	client := &Client{config: m.config}
 	client.init()
 	return client
@@ -6812,7 +6801,7 @@ func (m TravelMutation) Client() *Client {
 
 // Tx returns an `ent.Tx` for mutations that were executed in transactions;
 // it returns an error otherwise.
-func (m TravelMutation) Tx() (*Tx, error) {
+func (m TravelExtendsMutation) Tx() (*Tx, error) {
 	if _, ok := m.driver.(*txDriver); !ok {
 		return nil, errors.New("ent: mutation is not running in a transaction")
 	}
@@ -6821,15 +6810,9 @@ func (m TravelMutation) Tx() (*Tx, error) {
 	return tx, nil
 }
 
-// SetID sets the value of the id field. Note that this
-// operation is only accepted on creation of Travel entities.
-func (m *TravelMutation) SetID(id int) {
-	m.id = &id
-}
-
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *TravelMutation) ID() (id int, exists bool) {
+func (m *TravelExtendsMutation) ID() (id int, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -6840,7 +6823,7 @@ func (m *TravelMutation) ID() (id int, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *TravelMutation) IDs(ctx context.Context) ([]int, error) {
+func (m *TravelExtendsMutation) IDs(ctx context.Context) ([]int, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
@@ -6849,20 +6832,20 @@ func (m *TravelMutation) IDs(ctx context.Context) ([]int, error) {
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
-		return m.Client().Travel.Query().Where(m.predicates...).IDs(ctx)
+		return m.Client().TravelExtends.Query().Where(m.predicates...).IDs(ctx)
 	default:
 		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
 	}
 }
 
 // SetCreatedAt sets the "created_at" field.
-func (m *TravelMutation) SetCreatedAt(i int64) {
+func (m *TravelExtendsMutation) SetCreatedAt(i int64) {
 	m.created_at = &i
 	m.addcreated_at = nil
 }
 
 // CreatedAt returns the value of the "created_at" field in the mutation.
-func (m *TravelMutation) CreatedAt() (r int64, exists bool) {
+func (m *TravelExtendsMutation) CreatedAt() (r int64, exists bool) {
 	v := m.created_at
 	if v == nil {
 		return
@@ -6870,10 +6853,10 @@ func (m *TravelMutation) CreatedAt() (r int64, exists bool) {
 	return *v, true
 }
 
-// OldCreatedAt returns the old "created_at" field's value of the Travel entity.
-// If the Travel object wasn't provided to the builder, the object is fetched from the database.
+// OldCreatedAt returns the old "created_at" field's value of the TravelExtends entity.
+// If the TravelExtends object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TravelMutation) OldCreatedAt(ctx context.Context) (v int64, err error) {
+func (m *TravelExtendsMutation) OldCreatedAt(ctx context.Context) (v int64, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
 	}
@@ -6888,7 +6871,7 @@ func (m *TravelMutation) OldCreatedAt(ctx context.Context) (v int64, err error) 
 }
 
 // AddCreatedAt adds i to the "created_at" field.
-func (m *TravelMutation) AddCreatedAt(i int64) {
+func (m *TravelExtendsMutation) AddCreatedAt(i int64) {
 	if m.addcreated_at != nil {
 		*m.addcreated_at += i
 	} else {
@@ -6897,7 +6880,7 @@ func (m *TravelMutation) AddCreatedAt(i int64) {
 }
 
 // AddedCreatedAt returns the value that was added to the "created_at" field in this mutation.
-func (m *TravelMutation) AddedCreatedAt() (r int64, exists bool) {
+func (m *TravelExtendsMutation) AddedCreatedAt() (r int64, exists bool) {
 	v := m.addcreated_at
 	if v == nil {
 		return
@@ -6906,19 +6889,19 @@ func (m *TravelMutation) AddedCreatedAt() (r int64, exists bool) {
 }
 
 // ResetCreatedAt resets all changes to the "created_at" field.
-func (m *TravelMutation) ResetCreatedAt() {
+func (m *TravelExtendsMutation) ResetCreatedAt() {
 	m.created_at = nil
 	m.addcreated_at = nil
 }
 
 // SetCreatedBy sets the "created_by" field.
-func (m *TravelMutation) SetCreatedBy(i int64) {
+func (m *TravelExtendsMutation) SetCreatedBy(i int64) {
 	m.created_by = &i
 	m.addcreated_by = nil
 }
 
 // CreatedBy returns the value of the "created_by" field in the mutation.
-func (m *TravelMutation) CreatedBy() (r int64, exists bool) {
+func (m *TravelExtendsMutation) CreatedBy() (r int64, exists bool) {
 	v := m.created_by
 	if v == nil {
 		return
@@ -6926,10 +6909,10 @@ func (m *TravelMutation) CreatedBy() (r int64, exists bool) {
 	return *v, true
 }
 
-// OldCreatedBy returns the old "created_by" field's value of the Travel entity.
-// If the Travel object wasn't provided to the builder, the object is fetched from the database.
+// OldCreatedBy returns the old "created_by" field's value of the TravelExtends entity.
+// If the TravelExtends object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TravelMutation) OldCreatedBy(ctx context.Context) (v int64, err error) {
+func (m *TravelExtendsMutation) OldCreatedBy(ctx context.Context) (v int64, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldCreatedBy is only allowed on UpdateOne operations")
 	}
@@ -6944,7 +6927,7 @@ func (m *TravelMutation) OldCreatedBy(ctx context.Context) (v int64, err error) 
 }
 
 // AddCreatedBy adds i to the "created_by" field.
-func (m *TravelMutation) AddCreatedBy(i int64) {
+func (m *TravelExtendsMutation) AddCreatedBy(i int64) {
 	if m.addcreated_by != nil {
 		*m.addcreated_by += i
 	} else {
@@ -6953,7 +6936,7 @@ func (m *TravelMutation) AddCreatedBy(i int64) {
 }
 
 // AddedCreatedBy returns the value that was added to the "created_by" field in this mutation.
-func (m *TravelMutation) AddedCreatedBy() (r int64, exists bool) {
+func (m *TravelExtendsMutation) AddedCreatedBy() (r int64, exists bool) {
 	v := m.addcreated_by
 	if v == nil {
 		return
@@ -6962,19 +6945,19 @@ func (m *TravelMutation) AddedCreatedBy() (r int64, exists bool) {
 }
 
 // ResetCreatedBy resets all changes to the "created_by" field.
-func (m *TravelMutation) ResetCreatedBy() {
+func (m *TravelExtendsMutation) ResetCreatedBy() {
 	m.created_by = nil
 	m.addcreated_by = nil
 }
 
 // SetUpdatedAt sets the "updated_at" field.
-func (m *TravelMutation) SetUpdatedAt(i int64) {
+func (m *TravelExtendsMutation) SetUpdatedAt(i int64) {
 	m.updated_at = &i
 	m.addupdated_at = nil
 }
 
 // UpdatedAt returns the value of the "updated_at" field in the mutation.
-func (m *TravelMutation) UpdatedAt() (r int64, exists bool) {
+func (m *TravelExtendsMutation) UpdatedAt() (r int64, exists bool) {
 	v := m.updated_at
 	if v == nil {
 		return
@@ -6982,10 +6965,10 @@ func (m *TravelMutation) UpdatedAt() (r int64, exists bool) {
 	return *v, true
 }
 
-// OldUpdatedAt returns the old "updated_at" field's value of the Travel entity.
-// If the Travel object wasn't provided to the builder, the object is fetched from the database.
+// OldUpdatedAt returns the old "updated_at" field's value of the TravelExtends entity.
+// If the TravelExtends object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TravelMutation) OldUpdatedAt(ctx context.Context) (v int64, err error) {
+func (m *TravelExtendsMutation) OldUpdatedAt(ctx context.Context) (v int64, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
 	}
@@ -7000,7 +6983,7 @@ func (m *TravelMutation) OldUpdatedAt(ctx context.Context) (v int64, err error) 
 }
 
 // AddUpdatedAt adds i to the "updated_at" field.
-func (m *TravelMutation) AddUpdatedAt(i int64) {
+func (m *TravelExtendsMutation) AddUpdatedAt(i int64) {
 	if m.addupdated_at != nil {
 		*m.addupdated_at += i
 	} else {
@@ -7009,7 +6992,7 @@ func (m *TravelMutation) AddUpdatedAt(i int64) {
 }
 
 // AddedUpdatedAt returns the value that was added to the "updated_at" field in this mutation.
-func (m *TravelMutation) AddedUpdatedAt() (r int64, exists bool) {
+func (m *TravelExtendsMutation) AddedUpdatedAt() (r int64, exists bool) {
 	v := m.addupdated_at
 	if v == nil {
 		return
@@ -7018,19 +7001,19 @@ func (m *TravelMutation) AddedUpdatedAt() (r int64, exists bool) {
 }
 
 // ResetUpdatedAt resets all changes to the "updated_at" field.
-func (m *TravelMutation) ResetUpdatedAt() {
+func (m *TravelExtendsMutation) ResetUpdatedAt() {
 	m.updated_at = nil
 	m.addupdated_at = nil
 }
 
 // SetUpdatedBy sets the "updated_by" field.
-func (m *TravelMutation) SetUpdatedBy(i int64) {
+func (m *TravelExtendsMutation) SetUpdatedBy(i int64) {
 	m.updated_by = &i
 	m.addupdated_by = nil
 }
 
 // UpdatedBy returns the value of the "updated_by" field in the mutation.
-func (m *TravelMutation) UpdatedBy() (r int64, exists bool) {
+func (m *TravelExtendsMutation) UpdatedBy() (r int64, exists bool) {
 	v := m.updated_by
 	if v == nil {
 		return
@@ -7038,10 +7021,10 @@ func (m *TravelMutation) UpdatedBy() (r int64, exists bool) {
 	return *v, true
 }
 
-// OldUpdatedBy returns the old "updated_by" field's value of the Travel entity.
-// If the Travel object wasn't provided to the builder, the object is fetched from the database.
+// OldUpdatedBy returns the old "updated_by" field's value of the TravelExtends entity.
+// If the TravelExtends object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TravelMutation) OldUpdatedBy(ctx context.Context) (v int64, err error) {
+func (m *TravelExtendsMutation) OldUpdatedBy(ctx context.Context) (v int64, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldUpdatedBy is only allowed on UpdateOne operations")
 	}
@@ -7056,7 +7039,7 @@ func (m *TravelMutation) OldUpdatedBy(ctx context.Context) (v int64, err error) 
 }
 
 // AddUpdatedBy adds i to the "updated_by" field.
-func (m *TravelMutation) AddUpdatedBy(i int64) {
+func (m *TravelExtendsMutation) AddUpdatedBy(i int64) {
 	if m.addupdated_by != nil {
 		*m.addupdated_by += i
 	} else {
@@ -7065,7 +7048,7 @@ func (m *TravelMutation) AddUpdatedBy(i int64) {
 }
 
 // AddedUpdatedBy returns the value that was added to the "updated_by" field in this mutation.
-func (m *TravelMutation) AddedUpdatedBy() (r int64, exists bool) {
+func (m *TravelExtendsMutation) AddedUpdatedBy() (r int64, exists bool) {
 	v := m.addupdated_by
 	if v == nil {
 		return
@@ -7074,19 +7057,19 @@ func (m *TravelMutation) AddedUpdatedBy() (r int64, exists bool) {
 }
 
 // ResetUpdatedBy resets all changes to the "updated_by" field.
-func (m *TravelMutation) ResetUpdatedBy() {
+func (m *TravelExtendsMutation) ResetUpdatedBy() {
 	m.updated_by = nil
 	m.addupdated_by = nil
 }
 
 // SetDeletedAt sets the "deleted_at" field.
-func (m *TravelMutation) SetDeletedAt(i int64) {
+func (m *TravelExtendsMutation) SetDeletedAt(i int64) {
 	m.deleted_at = &i
 	m.adddeleted_at = nil
 }
 
 // DeletedAt returns the value of the "deleted_at" field in the mutation.
-func (m *TravelMutation) DeletedAt() (r int64, exists bool) {
+func (m *TravelExtendsMutation) DeletedAt() (r int64, exists bool) {
 	v := m.deleted_at
 	if v == nil {
 		return
@@ -7094,10 +7077,10 @@ func (m *TravelMutation) DeletedAt() (r int64, exists bool) {
 	return *v, true
 }
 
-// OldDeletedAt returns the old "deleted_at" field's value of the Travel entity.
-// If the Travel object wasn't provided to the builder, the object is fetched from the database.
+// OldDeletedAt returns the old "deleted_at" field's value of the TravelExtends entity.
+// If the TravelExtends object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TravelMutation) OldDeletedAt(ctx context.Context) (v int64, err error) {
+func (m *TravelExtendsMutation) OldDeletedAt(ctx context.Context) (v int64, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldDeletedAt is only allowed on UpdateOne operations")
 	}
@@ -7112,7 +7095,7 @@ func (m *TravelMutation) OldDeletedAt(ctx context.Context) (v int64, err error) 
 }
 
 // AddDeletedAt adds i to the "deleted_at" field.
-func (m *TravelMutation) AddDeletedAt(i int64) {
+func (m *TravelExtendsMutation) AddDeletedAt(i int64) {
 	if m.adddeleted_at != nil {
 		*m.adddeleted_at += i
 	} else {
@@ -7121,7 +7104,7 @@ func (m *TravelMutation) AddDeletedAt(i int64) {
 }
 
 // AddedDeletedAt returns the value that was added to the "deleted_at" field in this mutation.
-func (m *TravelMutation) AddedDeletedAt() (r int64, exists bool) {
+func (m *TravelExtendsMutation) AddedDeletedAt() (r int64, exists bool) {
 	v := m.adddeleted_at
 	if v == nil {
 		return
@@ -7130,19 +7113,19 @@ func (m *TravelMutation) AddedDeletedAt() (r int64, exists bool) {
 }
 
 // ResetDeletedAt resets all changes to the "deleted_at" field.
-func (m *TravelMutation) ResetDeletedAt() {
+func (m *TravelExtendsMutation) ResetDeletedAt() {
 	m.deleted_at = nil
 	m.adddeleted_at = nil
 }
 
 // SetDeletedBy sets the "deleted_by" field.
-func (m *TravelMutation) SetDeletedBy(i int64) {
+func (m *TravelExtendsMutation) SetDeletedBy(i int64) {
 	m.deleted_by = &i
 	m.adddeleted_by = nil
 }
 
 // DeletedBy returns the value of the "deleted_by" field in the mutation.
-func (m *TravelMutation) DeletedBy() (r int64, exists bool) {
+func (m *TravelExtendsMutation) DeletedBy() (r int64, exists bool) {
 	v := m.deleted_by
 	if v == nil {
 		return
@@ -7150,10 +7133,10 @@ func (m *TravelMutation) DeletedBy() (r int64, exists bool) {
 	return *v, true
 }
 
-// OldDeletedBy returns the old "deleted_by" field's value of the Travel entity.
-// If the Travel object wasn't provided to the builder, the object is fetched from the database.
+// OldDeletedBy returns the old "deleted_by" field's value of the TravelExtends entity.
+// If the TravelExtends object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TravelMutation) OldDeletedBy(ctx context.Context) (v int64, err error) {
+func (m *TravelExtendsMutation) OldDeletedBy(ctx context.Context) (v int64, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldDeletedBy is only allowed on UpdateOne operations")
 	}
@@ -7168,7 +7151,7 @@ func (m *TravelMutation) OldDeletedBy(ctx context.Context) (v int64, err error) 
 }
 
 // AddDeletedBy adds i to the "deleted_by" field.
-func (m *TravelMutation) AddDeletedBy(i int64) {
+func (m *TravelExtendsMutation) AddDeletedBy(i int64) {
 	if m.adddeleted_by != nil {
 		*m.adddeleted_by += i
 	} else {
@@ -7177,7 +7160,7 @@ func (m *TravelMutation) AddDeletedBy(i int64) {
 }
 
 // AddedDeletedBy returns the value that was added to the "deleted_by" field in this mutation.
-func (m *TravelMutation) AddedDeletedBy() (r int64, exists bool) {
+func (m *TravelExtendsMutation) AddedDeletedBy() (r int64, exists bool) {
 	v := m.adddeleted_by
 	if v == nil {
 		return
@@ -7186,163 +7169,19 @@ func (m *TravelMutation) AddedDeletedBy() (r int64, exists bool) {
 }
 
 // ResetDeletedBy resets all changes to the "deleted_by" field.
-func (m *TravelMutation) ResetDeletedBy() {
+func (m *TravelExtendsMutation) ResetDeletedBy() {
 	m.deleted_by = nil
 	m.adddeleted_by = nil
 }
 
-// SetTitle sets the "title" field.
-func (m *TravelMutation) SetTitle(s string) {
-	m.title = &s
-}
-
-// Title returns the value of the "title" field in the mutation.
-func (m *TravelMutation) Title() (r string, exists bool) {
-	v := m.title
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldTitle returns the old "title" field's value of the Travel entity.
-// If the Travel object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TravelMutation) OldTitle(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldTitle is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldTitle requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldTitle: %w", err)
-	}
-	return oldValue.Title, nil
-}
-
-// ResetTitle resets all changes to the "title" field.
-func (m *TravelMutation) ResetTitle() {
-	m.title = nil
-}
-
-// SetDescription sets the "description" field.
-func (m *TravelMutation) SetDescription(s string) {
-	m.description = &s
-}
-
-// Description returns the value of the "description" field in the mutation.
-func (m *TravelMutation) Description() (r string, exists bool) {
-	v := m.description
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldDescription returns the old "description" field's value of the Travel entity.
-// If the Travel object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TravelMutation) OldDescription(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldDescription is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldDescription requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldDescription: %w", err)
-	}
-	return oldValue.Description, nil
-}
-
-// ResetDescription resets all changes to the "description" field.
-func (m *TravelMutation) ResetDescription() {
-	m.description = nil
-}
-
-// SetVideo sets the "video" field.
-func (m *TravelMutation) SetVideo(s string) {
-	m.video = &s
-}
-
-// Video returns the value of the "video" field in the mutation.
-func (m *TravelMutation) Video() (r string, exists bool) {
-	v := m.video
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldVideo returns the old "video" field's value of the Travel entity.
-// If the Travel object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TravelMutation) OldVideo(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldVideo is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldVideo requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldVideo: %w", err)
-	}
-	return oldValue.Video, nil
-}
-
-// ResetVideo resets all changes to the "video" field.
-func (m *TravelMutation) ResetVideo() {
-	m.video = nil
-}
-
-// SetIsHidden sets the "is_hidden" field.
-func (m *TravelMutation) SetIsHidden(b bool) {
-	m.is_hidden = &b
-}
-
-// IsHidden returns the value of the "is_hidden" field in the mutation.
-func (m *TravelMutation) IsHidden() (r bool, exists bool) {
-	v := m.is_hidden
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldIsHidden returns the old "is_hidden" field's value of the Travel entity.
-// If the Travel object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TravelMutation) OldIsHidden(ctx context.Context) (v bool, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldIsHidden is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldIsHidden requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldIsHidden: %w", err)
-	}
-	return oldValue.IsHidden, nil
-}
-
-// ResetIsHidden resets all changes to the "is_hidden" field.
-func (m *TravelMutation) ResetIsHidden() {
-	m.is_hidden = nil
-}
-
 // SetAccountID sets the "account_id" field.
-func (m *TravelMutation) SetAccountID(i int) {
+func (m *TravelExtendsMutation) SetAccountID(i int) {
 	m.account_id = &i
 	m.addaccount_id = nil
 }
 
 // AccountID returns the value of the "account_id" field in the mutation.
-func (m *TravelMutation) AccountID() (r int, exists bool) {
+func (m *TravelExtendsMutation) AccountID() (r int, exists bool) {
 	v := m.account_id
 	if v == nil {
 		return
@@ -7350,10 +7189,10 @@ func (m *TravelMutation) AccountID() (r int, exists bool) {
 	return *v, true
 }
 
-// OldAccountID returns the old "account_id" field's value of the Travel entity.
-// If the Travel object wasn't provided to the builder, the object is fetched from the database.
+// OldAccountID returns the old "account_id" field's value of the TravelExtends entity.
+// If the TravelExtends object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TravelMutation) OldAccountID(ctx context.Context) (v int, err error) {
+func (m *TravelExtendsMutation) OldAccountID(ctx context.Context) (v int, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldAccountID is only allowed on UpdateOne operations")
 	}
@@ -7368,7 +7207,7 @@ func (m *TravelMutation) OldAccountID(ctx context.Context) (v int, err error) {
 }
 
 // AddAccountID adds i to the "account_id" field.
-func (m *TravelMutation) AddAccountID(i int) {
+func (m *TravelExtendsMutation) AddAccountID(i int) {
 	if m.addaccount_id != nil {
 		*m.addaccount_id += i
 	} else {
@@ -7377,7 +7216,7 @@ func (m *TravelMutation) AddAccountID(i int) {
 }
 
 // AddedAccountID returns the value that was added to the "account_id" field in this mutation.
-func (m *TravelMutation) AddedAccountID() (r int, exists bool) {
+func (m *TravelExtendsMutation) AddedAccountID() (r int, exists bool) {
 	v := m.addaccount_id
 	if v == nil {
 		return
@@ -7386,1447 +7225,19 @@ func (m *TravelMutation) AddedAccountID() (r int, exists bool) {
 }
 
 // ResetAccountID resets all changes to the "account_id" field.
-func (m *TravelMutation) ResetAccountID() {
-	m.account_id = nil
-	m.addaccount_id = nil
-}
-
-// SetPhotos sets the "photos" field.
-func (m *TravelMutation) SetPhotos(s []string) {
-	m.photos = &s
-	m.appendphotos = nil
-}
-
-// Photos returns the value of the "photos" field in the mutation.
-func (m *TravelMutation) Photos() (r []string, exists bool) {
-	v := m.photos
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldPhotos returns the old "photos" field's value of the Travel entity.
-// If the Travel object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TravelMutation) OldPhotos(ctx context.Context) (v []string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldPhotos is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldPhotos requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldPhotos: %w", err)
-	}
-	return oldValue.Photos, nil
-}
-
-// AppendPhotos adds s to the "photos" field.
-func (m *TravelMutation) AppendPhotos(s []string) {
-	m.appendphotos = append(m.appendphotos, s...)
-}
-
-// AppendedPhotos returns the list of values that were appended to the "photos" field in this mutation.
-func (m *TravelMutation) AppendedPhotos() ([]string, bool) {
-	if len(m.appendphotos) == 0 {
-		return nil, false
-	}
-	return m.appendphotos, true
-}
-
-// ResetPhotos resets all changes to the "photos" field.
-func (m *TravelMutation) ResetPhotos() {
-	m.photos = nil
-	m.appendphotos = nil
-}
-
-// SetBrowseNum sets the "browse_num" field.
-func (m *TravelMutation) SetBrowseNum(i int) {
-	m.browse_num = &i
-	m.addbrowse_num = nil
-}
-
-// BrowseNum returns the value of the "browse_num" field in the mutation.
-func (m *TravelMutation) BrowseNum() (r int, exists bool) {
-	v := m.browse_num
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldBrowseNum returns the old "browse_num" field's value of the Travel entity.
-// If the Travel object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TravelMutation) OldBrowseNum(ctx context.Context) (v int, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldBrowseNum is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldBrowseNum requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldBrowseNum: %w", err)
-	}
-	return oldValue.BrowseNum, nil
-}
-
-// AddBrowseNum adds i to the "browse_num" field.
-func (m *TravelMutation) AddBrowseNum(i int) {
-	if m.addbrowse_num != nil {
-		*m.addbrowse_num += i
-	} else {
-		m.addbrowse_num = &i
-	}
-}
-
-// AddedBrowseNum returns the value that was added to the "browse_num" field in this mutation.
-func (m *TravelMutation) AddedBrowseNum() (r int, exists bool) {
-	v := m.addbrowse_num
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetBrowseNum resets all changes to the "browse_num" field.
-func (m *TravelMutation) ResetBrowseNum() {
-	m.browse_num = nil
-	m.addbrowse_num = nil
-}
-
-// SetThumbNum sets the "thumb_num" field.
-func (m *TravelMutation) SetThumbNum(i int) {
-	m.thumb_num = &i
-	m.addthumb_num = nil
-}
-
-// ThumbNum returns the value of the "thumb_num" field in the mutation.
-func (m *TravelMutation) ThumbNum() (r int, exists bool) {
-	v := m.thumb_num
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldThumbNum returns the old "thumb_num" field's value of the Travel entity.
-// If the Travel object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TravelMutation) OldThumbNum(ctx context.Context) (v int, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldThumbNum is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldThumbNum requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldThumbNum: %w", err)
-	}
-	return oldValue.ThumbNum, nil
-}
-
-// AddThumbNum adds i to the "thumb_num" field.
-func (m *TravelMutation) AddThumbNum(i int) {
-	if m.addthumb_num != nil {
-		*m.addthumb_num += i
-	} else {
-		m.addthumb_num = &i
-	}
-}
-
-// AddedThumbNum returns the value that was added to the "thumb_num" field in this mutation.
-func (m *TravelMutation) AddedThumbNum() (r int, exists bool) {
-	v := m.addthumb_num
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetThumbNum resets all changes to the "thumb_num" field.
-func (m *TravelMutation) ResetThumbNum() {
-	m.thumb_num = nil
-	m.addthumb_num = nil
-}
-
-// SetCollectNum sets the "collect_num" field.
-func (m *TravelMutation) SetCollectNum(i int) {
-	m.collect_num = &i
-	m.addcollect_num = nil
-}
-
-// CollectNum returns the value of the "collect_num" field in the mutation.
-func (m *TravelMutation) CollectNum() (r int, exists bool) {
-	v := m.collect_num
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldCollectNum returns the old "collect_num" field's value of the Travel entity.
-// If the Travel object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TravelMutation) OldCollectNum(ctx context.Context) (v int, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldCollectNum is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldCollectNum requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldCollectNum: %w", err)
-	}
-	return oldValue.CollectNum, nil
-}
-
-// AddCollectNum adds i to the "collect_num" field.
-func (m *TravelMutation) AddCollectNum(i int) {
-	if m.addcollect_num != nil {
-		*m.addcollect_num += i
-	} else {
-		m.addcollect_num = &i
-	}
-}
-
-// AddedCollectNum returns the value that was added to the "collect_num" field in this mutation.
-func (m *TravelMutation) AddedCollectNum() (r int, exists bool) {
-	v := m.addcollect_num
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetCollectNum resets all changes to the "collect_num" field.
-func (m *TravelMutation) ResetCollectNum() {
-	m.collect_num = nil
-	m.addcollect_num = nil
-}
-
-// AddTravelExtendIDs adds the "travel_extend" edge to the TravelExtend entity by ids.
-func (m *TravelMutation) AddTravelExtendIDs(ids ...int) {
-	if m.travel_extend == nil {
-		m.travel_extend = make(map[int]struct{})
-	}
-	for i := range ids {
-		m.travel_extend[ids[i]] = struct{}{}
-	}
-}
-
-// ClearTravelExtend clears the "travel_extend" edge to the TravelExtend entity.
-func (m *TravelMutation) ClearTravelExtend() {
-	m.clearedtravel_extend = true
-}
-
-// TravelExtendCleared reports if the "travel_extend" edge to the TravelExtend entity was cleared.
-func (m *TravelMutation) TravelExtendCleared() bool {
-	return m.clearedtravel_extend
-}
-
-// RemoveTravelExtendIDs removes the "travel_extend" edge to the TravelExtend entity by IDs.
-func (m *TravelMutation) RemoveTravelExtendIDs(ids ...int) {
-	if m.removedtravel_extend == nil {
-		m.removedtravel_extend = make(map[int]struct{})
-	}
-	for i := range ids {
-		delete(m.travel_extend, ids[i])
-		m.removedtravel_extend[ids[i]] = struct{}{}
-	}
-}
-
-// RemovedTravelExtend returns the removed IDs of the "travel_extend" edge to the TravelExtend entity.
-func (m *TravelMutation) RemovedTravelExtendIDs() (ids []int) {
-	for id := range m.removedtravel_extend {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// TravelExtendIDs returns the "travel_extend" edge IDs in the mutation.
-func (m *TravelMutation) TravelExtendIDs() (ids []int) {
-	for id := range m.travel_extend {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// ResetTravelExtend resets all changes to the "travel_extend" edge.
-func (m *TravelMutation) ResetTravelExtend() {
-	m.travel_extend = nil
-	m.clearedtravel_extend = false
-	m.removedtravel_extend = nil
-}
-
-// SetAccountTravelID sets the "account_travel" edge to the Account entity by id.
-func (m *TravelMutation) SetAccountTravelID(id int) {
-	m.account_travel = &id
-}
-
-// ClearAccountTravel clears the "account_travel" edge to the Account entity.
-func (m *TravelMutation) ClearAccountTravel() {
-	m.clearedaccount_travel = true
-}
-
-// AccountTravelCleared reports if the "account_travel" edge to the Account entity was cleared.
-func (m *TravelMutation) AccountTravelCleared() bool {
-	return m.clearedaccount_travel
-}
-
-// AccountTravelID returns the "account_travel" edge ID in the mutation.
-func (m *TravelMutation) AccountTravelID() (id int, exists bool) {
-	if m.account_travel != nil {
-		return *m.account_travel, true
-	}
-	return
-}
-
-// AccountTravelIDs returns the "account_travel" edge IDs in the mutation.
-// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
-// AccountTravelID instead. It exists only for internal usage by the builders.
-func (m *TravelMutation) AccountTravelIDs() (ids []int) {
-	if id := m.account_travel; id != nil {
-		ids = append(ids, *id)
-	}
-	return
-}
-
-// ResetAccountTravel resets all changes to the "account_travel" edge.
-func (m *TravelMutation) ResetAccountTravel() {
-	m.account_travel = nil
-	m.clearedaccount_travel = false
-}
-
-// Where appends a list predicates to the TravelMutation builder.
-func (m *TravelMutation) Where(ps ...predicate.Travel) {
-	m.predicates = append(m.predicates, ps...)
-}
-
-// WhereP appends storage-level predicates to the TravelMutation builder. Using this method,
-// users can use type-assertion to append predicates that do not depend on any generated package.
-func (m *TravelMutation) WhereP(ps ...func(*sql.Selector)) {
-	p := make([]predicate.Travel, len(ps))
-	for i := range ps {
-		p[i] = ps[i]
-	}
-	m.Where(p...)
-}
-
-// Op returns the operation name.
-func (m *TravelMutation) Op() Op {
-	return m.op
-}
-
-// SetOp allows setting the mutation operation.
-func (m *TravelMutation) SetOp(op Op) {
-	m.op = op
-}
-
-// Type returns the node type of this mutation (Travel).
-func (m *TravelMutation) Type() string {
-	return m.typ
-}
-
-// Fields returns all fields that were changed during this mutation. Note that in
-// order to get all numeric fields that were incremented/decremented, call
-// AddedFields().
-func (m *TravelMutation) Fields() []string {
-	fields := make([]string, 0, 15)
-	if m.created_at != nil {
-		fields = append(fields, travel.FieldCreatedAt)
-	}
-	if m.created_by != nil {
-		fields = append(fields, travel.FieldCreatedBy)
-	}
-	if m.updated_at != nil {
-		fields = append(fields, travel.FieldUpdatedAt)
-	}
-	if m.updated_by != nil {
-		fields = append(fields, travel.FieldUpdatedBy)
-	}
-	if m.deleted_at != nil {
-		fields = append(fields, travel.FieldDeletedAt)
-	}
-	if m.deleted_by != nil {
-		fields = append(fields, travel.FieldDeletedBy)
-	}
-	if m.title != nil {
-		fields = append(fields, travel.FieldTitle)
-	}
-	if m.description != nil {
-		fields = append(fields, travel.FieldDescription)
-	}
-	if m.video != nil {
-		fields = append(fields, travel.FieldVideo)
-	}
-	if m.is_hidden != nil {
-		fields = append(fields, travel.FieldIsHidden)
-	}
-	if m.account_id != nil {
-		fields = append(fields, travel.FieldAccountID)
-	}
-	if m.photos != nil {
-		fields = append(fields, travel.FieldPhotos)
-	}
-	if m.browse_num != nil {
-		fields = append(fields, travel.FieldBrowseNum)
-	}
-	if m.thumb_num != nil {
-		fields = append(fields, travel.FieldThumbNum)
-	}
-	if m.collect_num != nil {
-		fields = append(fields, travel.FieldCollectNum)
-	}
-	return fields
-}
-
-// Field returns the value of a field with the given name. The second boolean
-// return value indicates that this field was not set, or was not defined in the
-// schema.
-func (m *TravelMutation) Field(name string) (ent.Value, bool) {
-	switch name {
-	case travel.FieldCreatedAt:
-		return m.CreatedAt()
-	case travel.FieldCreatedBy:
-		return m.CreatedBy()
-	case travel.FieldUpdatedAt:
-		return m.UpdatedAt()
-	case travel.FieldUpdatedBy:
-		return m.UpdatedBy()
-	case travel.FieldDeletedAt:
-		return m.DeletedAt()
-	case travel.FieldDeletedBy:
-		return m.DeletedBy()
-	case travel.FieldTitle:
-		return m.Title()
-	case travel.FieldDescription:
-		return m.Description()
-	case travel.FieldVideo:
-		return m.Video()
-	case travel.FieldIsHidden:
-		return m.IsHidden()
-	case travel.FieldAccountID:
-		return m.AccountID()
-	case travel.FieldPhotos:
-		return m.Photos()
-	case travel.FieldBrowseNum:
-		return m.BrowseNum()
-	case travel.FieldThumbNum:
-		return m.ThumbNum()
-	case travel.FieldCollectNum:
-		return m.CollectNum()
-	}
-	return nil, false
-}
-
-// OldField returns the old value of the field from the database. An error is
-// returned if the mutation operation is not UpdateOne, or the query to the
-// database failed.
-func (m *TravelMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
-	switch name {
-	case travel.FieldCreatedAt:
-		return m.OldCreatedAt(ctx)
-	case travel.FieldCreatedBy:
-		return m.OldCreatedBy(ctx)
-	case travel.FieldUpdatedAt:
-		return m.OldUpdatedAt(ctx)
-	case travel.FieldUpdatedBy:
-		return m.OldUpdatedBy(ctx)
-	case travel.FieldDeletedAt:
-		return m.OldDeletedAt(ctx)
-	case travel.FieldDeletedBy:
-		return m.OldDeletedBy(ctx)
-	case travel.FieldTitle:
-		return m.OldTitle(ctx)
-	case travel.FieldDescription:
-		return m.OldDescription(ctx)
-	case travel.FieldVideo:
-		return m.OldVideo(ctx)
-	case travel.FieldIsHidden:
-		return m.OldIsHidden(ctx)
-	case travel.FieldAccountID:
-		return m.OldAccountID(ctx)
-	case travel.FieldPhotos:
-		return m.OldPhotos(ctx)
-	case travel.FieldBrowseNum:
-		return m.OldBrowseNum(ctx)
-	case travel.FieldThumbNum:
-		return m.OldThumbNum(ctx)
-	case travel.FieldCollectNum:
-		return m.OldCollectNum(ctx)
-	}
-	return nil, fmt.Errorf("unknown Travel field %s", name)
-}
-
-// SetField sets the value of a field with the given name. It returns an error if
-// the field is not defined in the schema, or if the type mismatched the field
-// type.
-func (m *TravelMutation) SetField(name string, value ent.Value) error {
-	switch name {
-	case travel.FieldCreatedAt:
-		v, ok := value.(int64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetCreatedAt(v)
-		return nil
-	case travel.FieldCreatedBy:
-		v, ok := value.(int64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetCreatedBy(v)
-		return nil
-	case travel.FieldUpdatedAt:
-		v, ok := value.(int64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetUpdatedAt(v)
-		return nil
-	case travel.FieldUpdatedBy:
-		v, ok := value.(int64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetUpdatedBy(v)
-		return nil
-	case travel.FieldDeletedAt:
-		v, ok := value.(int64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetDeletedAt(v)
-		return nil
-	case travel.FieldDeletedBy:
-		v, ok := value.(int64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetDeletedBy(v)
-		return nil
-	case travel.FieldTitle:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetTitle(v)
-		return nil
-	case travel.FieldDescription:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetDescription(v)
-		return nil
-	case travel.FieldVideo:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetVideo(v)
-		return nil
-	case travel.FieldIsHidden:
-		v, ok := value.(bool)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetIsHidden(v)
-		return nil
-	case travel.FieldAccountID:
-		v, ok := value.(int)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetAccountID(v)
-		return nil
-	case travel.FieldPhotos:
-		v, ok := value.([]string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetPhotos(v)
-		return nil
-	case travel.FieldBrowseNum:
-		v, ok := value.(int)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetBrowseNum(v)
-		return nil
-	case travel.FieldThumbNum:
-		v, ok := value.(int)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetThumbNum(v)
-		return nil
-	case travel.FieldCollectNum:
-		v, ok := value.(int)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetCollectNum(v)
-		return nil
-	}
-	return fmt.Errorf("unknown Travel field %s", name)
-}
-
-// AddedFields returns all numeric fields that were incremented/decremented during
-// this mutation.
-func (m *TravelMutation) AddedFields() []string {
-	var fields []string
-	if m.addcreated_at != nil {
-		fields = append(fields, travel.FieldCreatedAt)
-	}
-	if m.addcreated_by != nil {
-		fields = append(fields, travel.FieldCreatedBy)
-	}
-	if m.addupdated_at != nil {
-		fields = append(fields, travel.FieldUpdatedAt)
-	}
-	if m.addupdated_by != nil {
-		fields = append(fields, travel.FieldUpdatedBy)
-	}
-	if m.adddeleted_at != nil {
-		fields = append(fields, travel.FieldDeletedAt)
-	}
-	if m.adddeleted_by != nil {
-		fields = append(fields, travel.FieldDeletedBy)
-	}
-	if m.addaccount_id != nil {
-		fields = append(fields, travel.FieldAccountID)
-	}
-	if m.addbrowse_num != nil {
-		fields = append(fields, travel.FieldBrowseNum)
-	}
-	if m.addthumb_num != nil {
-		fields = append(fields, travel.FieldThumbNum)
-	}
-	if m.addcollect_num != nil {
-		fields = append(fields, travel.FieldCollectNum)
-	}
-	return fields
-}
-
-// AddedField returns the numeric value that was incremented/decremented on a field
-// with the given name. The second boolean return value indicates that this field
-// was not set, or was not defined in the schema.
-func (m *TravelMutation) AddedField(name string) (ent.Value, bool) {
-	switch name {
-	case travel.FieldCreatedAt:
-		return m.AddedCreatedAt()
-	case travel.FieldCreatedBy:
-		return m.AddedCreatedBy()
-	case travel.FieldUpdatedAt:
-		return m.AddedUpdatedAt()
-	case travel.FieldUpdatedBy:
-		return m.AddedUpdatedBy()
-	case travel.FieldDeletedAt:
-		return m.AddedDeletedAt()
-	case travel.FieldDeletedBy:
-		return m.AddedDeletedBy()
-	case travel.FieldAccountID:
-		return m.AddedAccountID()
-	case travel.FieldBrowseNum:
-		return m.AddedBrowseNum()
-	case travel.FieldThumbNum:
-		return m.AddedThumbNum()
-	case travel.FieldCollectNum:
-		return m.AddedCollectNum()
-	}
-	return nil, false
-}
-
-// AddField adds the value to the field with the given name. It returns an error if
-// the field is not defined in the schema, or if the type mismatched the field
-// type.
-func (m *TravelMutation) AddField(name string, value ent.Value) error {
-	switch name {
-	case travel.FieldCreatedAt:
-		v, ok := value.(int64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddCreatedAt(v)
-		return nil
-	case travel.FieldCreatedBy:
-		v, ok := value.(int64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddCreatedBy(v)
-		return nil
-	case travel.FieldUpdatedAt:
-		v, ok := value.(int64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddUpdatedAt(v)
-		return nil
-	case travel.FieldUpdatedBy:
-		v, ok := value.(int64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddUpdatedBy(v)
-		return nil
-	case travel.FieldDeletedAt:
-		v, ok := value.(int64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddDeletedAt(v)
-		return nil
-	case travel.FieldDeletedBy:
-		v, ok := value.(int64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddDeletedBy(v)
-		return nil
-	case travel.FieldAccountID:
-		v, ok := value.(int)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddAccountID(v)
-		return nil
-	case travel.FieldBrowseNum:
-		v, ok := value.(int)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddBrowseNum(v)
-		return nil
-	case travel.FieldThumbNum:
-		v, ok := value.(int)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddThumbNum(v)
-		return nil
-	case travel.FieldCollectNum:
-		v, ok := value.(int)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddCollectNum(v)
-		return nil
-	}
-	return fmt.Errorf("unknown Travel numeric field %s", name)
-}
-
-// ClearedFields returns all nullable fields that were cleared during this
-// mutation.
-func (m *TravelMutation) ClearedFields() []string {
-	return nil
-}
-
-// FieldCleared returns a boolean indicating if a field with the given name was
-// cleared in this mutation.
-func (m *TravelMutation) FieldCleared(name string) bool {
-	_, ok := m.clearedFields[name]
-	return ok
-}
-
-// ClearField clears the value of the field with the given name. It returns an
-// error if the field is not defined in the schema.
-func (m *TravelMutation) ClearField(name string) error {
-	return fmt.Errorf("unknown Travel nullable field %s", name)
-}
-
-// ResetField resets all changes in the mutation for the field with the given name.
-// It returns an error if the field is not defined in the schema.
-func (m *TravelMutation) ResetField(name string) error {
-	switch name {
-	case travel.FieldCreatedAt:
-		m.ResetCreatedAt()
-		return nil
-	case travel.FieldCreatedBy:
-		m.ResetCreatedBy()
-		return nil
-	case travel.FieldUpdatedAt:
-		m.ResetUpdatedAt()
-		return nil
-	case travel.FieldUpdatedBy:
-		m.ResetUpdatedBy()
-		return nil
-	case travel.FieldDeletedAt:
-		m.ResetDeletedAt()
-		return nil
-	case travel.FieldDeletedBy:
-		m.ResetDeletedBy()
-		return nil
-	case travel.FieldTitle:
-		m.ResetTitle()
-		return nil
-	case travel.FieldDescription:
-		m.ResetDescription()
-		return nil
-	case travel.FieldVideo:
-		m.ResetVideo()
-		return nil
-	case travel.FieldIsHidden:
-		m.ResetIsHidden()
-		return nil
-	case travel.FieldAccountID:
-		m.ResetAccountID()
-		return nil
-	case travel.FieldPhotos:
-		m.ResetPhotos()
-		return nil
-	case travel.FieldBrowseNum:
-		m.ResetBrowseNum()
-		return nil
-	case travel.FieldThumbNum:
-		m.ResetThumbNum()
-		return nil
-	case travel.FieldCollectNum:
-		m.ResetCollectNum()
-		return nil
-	}
-	return fmt.Errorf("unknown Travel field %s", name)
-}
-
-// AddedEdges returns all edge names that were set/added in this mutation.
-func (m *TravelMutation) AddedEdges() []string {
-	edges := make([]string, 0, 2)
-	if m.travel_extend != nil {
-		edges = append(edges, travel.EdgeTravelExtend)
-	}
-	if m.account_travel != nil {
-		edges = append(edges, travel.EdgeAccountTravel)
-	}
-	return edges
-}
-
-// AddedIDs returns all IDs (to other nodes) that were added for the given edge
-// name in this mutation.
-func (m *TravelMutation) AddedIDs(name string) []ent.Value {
-	switch name {
-	case travel.EdgeTravelExtend:
-		ids := make([]ent.Value, 0, len(m.travel_extend))
-		for id := range m.travel_extend {
-			ids = append(ids, id)
-		}
-		return ids
-	case travel.EdgeAccountTravel:
-		if id := m.account_travel; id != nil {
-			return []ent.Value{*id}
-		}
-	}
-	return nil
-}
-
-// RemovedEdges returns all edge names that were removed in this mutation.
-func (m *TravelMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 2)
-	if m.removedtravel_extend != nil {
-		edges = append(edges, travel.EdgeTravelExtend)
-	}
-	return edges
-}
-
-// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
-// the given name in this mutation.
-func (m *TravelMutation) RemovedIDs(name string) []ent.Value {
-	switch name {
-	case travel.EdgeTravelExtend:
-		ids := make([]ent.Value, 0, len(m.removedtravel_extend))
-		for id := range m.removedtravel_extend {
-			ids = append(ids, id)
-		}
-		return ids
-	}
-	return nil
-}
-
-// ClearedEdges returns all edge names that were cleared in this mutation.
-func (m *TravelMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 2)
-	if m.clearedtravel_extend {
-		edges = append(edges, travel.EdgeTravelExtend)
-	}
-	if m.clearedaccount_travel {
-		edges = append(edges, travel.EdgeAccountTravel)
-	}
-	return edges
-}
-
-// EdgeCleared returns a boolean which indicates if the edge with the given name
-// was cleared in this mutation.
-func (m *TravelMutation) EdgeCleared(name string) bool {
-	switch name {
-	case travel.EdgeTravelExtend:
-		return m.clearedtravel_extend
-	case travel.EdgeAccountTravel:
-		return m.clearedaccount_travel
-	}
-	return false
-}
-
-// ClearEdge clears the value of the edge with the given name. It returns an error
-// if that edge is not defined in the schema.
-func (m *TravelMutation) ClearEdge(name string) error {
-	switch name {
-	case travel.EdgeAccountTravel:
-		m.ClearAccountTravel()
-		return nil
-	}
-	return fmt.Errorf("unknown Travel unique edge %s", name)
-}
-
-// ResetEdge resets all changes to the edge with the given name in this mutation.
-// It returns an error if the edge is not defined in the schema.
-func (m *TravelMutation) ResetEdge(name string) error {
-	switch name {
-	case travel.EdgeTravelExtend:
-		m.ResetTravelExtend()
-		return nil
-	case travel.EdgeAccountTravel:
-		m.ResetAccountTravel()
-		return nil
-	}
-	return fmt.Errorf("unknown Travel edge %s", name)
-}
-
-// TravelExtendMutation represents an operation that mutates the TravelExtend nodes in the graph.
-type TravelExtendMutation struct {
-	config
-	op            Op
-	typ           string
-	id            *int
-	created_at    *int64
-	addcreated_at *int64
-	created_by    *int64
-	addcreated_by *int64
-	updated_at    *int64
-	addupdated_at *int64
-	updated_by    *int64
-	addupdated_by *int64
-	deleted_at    *int64
-	adddeleted_at *int64
-	deleted_by    *int64
-	adddeleted_by *int64
-	account_id    *int
-	addaccount_id *int
-	travel_id     *int
-	addtravel_id  *int
-	is_thumb      *bool
-	is_collect    *bool
-	clearedFields map[string]struct{}
-	travel        *int
-	clearedtravel bool
-	done          bool
-	oldValue      func(context.Context) (*TravelExtend, error)
-	predicates    []predicate.TravelExtend
-}
-
-var _ ent.Mutation = (*TravelExtendMutation)(nil)
-
-// travelextendOption allows management of the mutation configuration using functional options.
-type travelextendOption func(*TravelExtendMutation)
-
-// newTravelExtendMutation creates new mutation for the TravelExtend entity.
-func newTravelExtendMutation(c config, op Op, opts ...travelextendOption) *TravelExtendMutation {
-	m := &TravelExtendMutation{
-		config:        c,
-		op:            op,
-		typ:           TypeTravelExtend,
-		clearedFields: make(map[string]struct{}),
-	}
-	for _, opt := range opts {
-		opt(m)
-	}
-	return m
-}
-
-// withTravelExtendID sets the ID field of the mutation.
-func withTravelExtendID(id int) travelextendOption {
-	return func(m *TravelExtendMutation) {
-		var (
-			err   error
-			once  sync.Once
-			value *TravelExtend
-		)
-		m.oldValue = func(ctx context.Context) (*TravelExtend, error) {
-			once.Do(func() {
-				if m.done {
-					err = errors.New("querying old values post mutation is not allowed")
-				} else {
-					value, err = m.Client().TravelExtend.Get(ctx, id)
-				}
-			})
-			return value, err
-		}
-		m.id = &id
-	}
-}
-
-// withTravelExtend sets the old TravelExtend of the mutation.
-func withTravelExtend(node *TravelExtend) travelextendOption {
-	return func(m *TravelExtendMutation) {
-		m.oldValue = func(context.Context) (*TravelExtend, error) {
-			return node, nil
-		}
-		m.id = &node.ID
-	}
-}
-
-// Client returns a new `ent.Client` from the mutation. If the mutation was
-// executed in a transaction (ent.Tx), a transactional client is returned.
-func (m TravelExtendMutation) Client() *Client {
-	client := &Client{config: m.config}
-	client.init()
-	return client
-}
-
-// Tx returns an `ent.Tx` for mutations that were executed in transactions;
-// it returns an error otherwise.
-func (m TravelExtendMutation) Tx() (*Tx, error) {
-	if _, ok := m.driver.(*txDriver); !ok {
-		return nil, errors.New("ent: mutation is not running in a transaction")
-	}
-	tx := &Tx{config: m.config}
-	tx.init()
-	return tx, nil
-}
-
-// ID returns the ID value in the mutation. Note that the ID is only available
-// if it was provided to the builder or after it was returned from the database.
-func (m *TravelExtendMutation) ID() (id int, exists bool) {
-	if m.id == nil {
-		return
-	}
-	return *m.id, true
-}
-
-// IDs queries the database and returns the entity ids that match the mutation's predicate.
-// That means, if the mutation is applied within a transaction with an isolation level such
-// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
-// or updated by the mutation.
-func (m *TravelExtendMutation) IDs(ctx context.Context) ([]int, error) {
-	switch {
-	case m.op.Is(OpUpdateOne | OpDeleteOne):
-		id, exists := m.ID()
-		if exists {
-			return []int{id}, nil
-		}
-		fallthrough
-	case m.op.Is(OpUpdate | OpDelete):
-		return m.Client().TravelExtend.Query().Where(m.predicates...).IDs(ctx)
-	default:
-		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
-	}
-}
-
-// SetCreatedAt sets the "created_at" field.
-func (m *TravelExtendMutation) SetCreatedAt(i int64) {
-	m.created_at = &i
-	m.addcreated_at = nil
-}
-
-// CreatedAt returns the value of the "created_at" field in the mutation.
-func (m *TravelExtendMutation) CreatedAt() (r int64, exists bool) {
-	v := m.created_at
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldCreatedAt returns the old "created_at" field's value of the TravelExtend entity.
-// If the TravelExtend object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TravelExtendMutation) OldCreatedAt(ctx context.Context) (v int64, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
-	}
-	return oldValue.CreatedAt, nil
-}
-
-// AddCreatedAt adds i to the "created_at" field.
-func (m *TravelExtendMutation) AddCreatedAt(i int64) {
-	if m.addcreated_at != nil {
-		*m.addcreated_at += i
-	} else {
-		m.addcreated_at = &i
-	}
-}
-
-// AddedCreatedAt returns the value that was added to the "created_at" field in this mutation.
-func (m *TravelExtendMutation) AddedCreatedAt() (r int64, exists bool) {
-	v := m.addcreated_at
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetCreatedAt resets all changes to the "created_at" field.
-func (m *TravelExtendMutation) ResetCreatedAt() {
-	m.created_at = nil
-	m.addcreated_at = nil
-}
-
-// SetCreatedBy sets the "created_by" field.
-func (m *TravelExtendMutation) SetCreatedBy(i int64) {
-	m.created_by = &i
-	m.addcreated_by = nil
-}
-
-// CreatedBy returns the value of the "created_by" field in the mutation.
-func (m *TravelExtendMutation) CreatedBy() (r int64, exists bool) {
-	v := m.created_by
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldCreatedBy returns the old "created_by" field's value of the TravelExtend entity.
-// If the TravelExtend object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TravelExtendMutation) OldCreatedBy(ctx context.Context) (v int64, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldCreatedBy is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldCreatedBy requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldCreatedBy: %w", err)
-	}
-	return oldValue.CreatedBy, nil
-}
-
-// AddCreatedBy adds i to the "created_by" field.
-func (m *TravelExtendMutation) AddCreatedBy(i int64) {
-	if m.addcreated_by != nil {
-		*m.addcreated_by += i
-	} else {
-		m.addcreated_by = &i
-	}
-}
-
-// AddedCreatedBy returns the value that was added to the "created_by" field in this mutation.
-func (m *TravelExtendMutation) AddedCreatedBy() (r int64, exists bool) {
-	v := m.addcreated_by
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetCreatedBy resets all changes to the "created_by" field.
-func (m *TravelExtendMutation) ResetCreatedBy() {
-	m.created_by = nil
-	m.addcreated_by = nil
-}
-
-// SetUpdatedAt sets the "updated_at" field.
-func (m *TravelExtendMutation) SetUpdatedAt(i int64) {
-	m.updated_at = &i
-	m.addupdated_at = nil
-}
-
-// UpdatedAt returns the value of the "updated_at" field in the mutation.
-func (m *TravelExtendMutation) UpdatedAt() (r int64, exists bool) {
-	v := m.updated_at
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldUpdatedAt returns the old "updated_at" field's value of the TravelExtend entity.
-// If the TravelExtend object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TravelExtendMutation) OldUpdatedAt(ctx context.Context) (v int64, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldUpdatedAt requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldUpdatedAt: %w", err)
-	}
-	return oldValue.UpdatedAt, nil
-}
-
-// AddUpdatedAt adds i to the "updated_at" field.
-func (m *TravelExtendMutation) AddUpdatedAt(i int64) {
-	if m.addupdated_at != nil {
-		*m.addupdated_at += i
-	} else {
-		m.addupdated_at = &i
-	}
-}
-
-// AddedUpdatedAt returns the value that was added to the "updated_at" field in this mutation.
-func (m *TravelExtendMutation) AddedUpdatedAt() (r int64, exists bool) {
-	v := m.addupdated_at
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetUpdatedAt resets all changes to the "updated_at" field.
-func (m *TravelExtendMutation) ResetUpdatedAt() {
-	m.updated_at = nil
-	m.addupdated_at = nil
-}
-
-// SetUpdatedBy sets the "updated_by" field.
-func (m *TravelExtendMutation) SetUpdatedBy(i int64) {
-	m.updated_by = &i
-	m.addupdated_by = nil
-}
-
-// UpdatedBy returns the value of the "updated_by" field in the mutation.
-func (m *TravelExtendMutation) UpdatedBy() (r int64, exists bool) {
-	v := m.updated_by
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldUpdatedBy returns the old "updated_by" field's value of the TravelExtend entity.
-// If the TravelExtend object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TravelExtendMutation) OldUpdatedBy(ctx context.Context) (v int64, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldUpdatedBy is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldUpdatedBy requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldUpdatedBy: %w", err)
-	}
-	return oldValue.UpdatedBy, nil
-}
-
-// AddUpdatedBy adds i to the "updated_by" field.
-func (m *TravelExtendMutation) AddUpdatedBy(i int64) {
-	if m.addupdated_by != nil {
-		*m.addupdated_by += i
-	} else {
-		m.addupdated_by = &i
-	}
-}
-
-// AddedUpdatedBy returns the value that was added to the "updated_by" field in this mutation.
-func (m *TravelExtendMutation) AddedUpdatedBy() (r int64, exists bool) {
-	v := m.addupdated_by
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetUpdatedBy resets all changes to the "updated_by" field.
-func (m *TravelExtendMutation) ResetUpdatedBy() {
-	m.updated_by = nil
-	m.addupdated_by = nil
-}
-
-// SetDeletedAt sets the "deleted_at" field.
-func (m *TravelExtendMutation) SetDeletedAt(i int64) {
-	m.deleted_at = &i
-	m.adddeleted_at = nil
-}
-
-// DeletedAt returns the value of the "deleted_at" field in the mutation.
-func (m *TravelExtendMutation) DeletedAt() (r int64, exists bool) {
-	v := m.deleted_at
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldDeletedAt returns the old "deleted_at" field's value of the TravelExtend entity.
-// If the TravelExtend object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TravelExtendMutation) OldDeletedAt(ctx context.Context) (v int64, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldDeletedAt is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldDeletedAt requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldDeletedAt: %w", err)
-	}
-	return oldValue.DeletedAt, nil
-}
-
-// AddDeletedAt adds i to the "deleted_at" field.
-func (m *TravelExtendMutation) AddDeletedAt(i int64) {
-	if m.adddeleted_at != nil {
-		*m.adddeleted_at += i
-	} else {
-		m.adddeleted_at = &i
-	}
-}
-
-// AddedDeletedAt returns the value that was added to the "deleted_at" field in this mutation.
-func (m *TravelExtendMutation) AddedDeletedAt() (r int64, exists bool) {
-	v := m.adddeleted_at
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetDeletedAt resets all changes to the "deleted_at" field.
-func (m *TravelExtendMutation) ResetDeletedAt() {
-	m.deleted_at = nil
-	m.adddeleted_at = nil
-}
-
-// SetDeletedBy sets the "deleted_by" field.
-func (m *TravelExtendMutation) SetDeletedBy(i int64) {
-	m.deleted_by = &i
-	m.adddeleted_by = nil
-}
-
-// DeletedBy returns the value of the "deleted_by" field in the mutation.
-func (m *TravelExtendMutation) DeletedBy() (r int64, exists bool) {
-	v := m.deleted_by
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldDeletedBy returns the old "deleted_by" field's value of the TravelExtend entity.
-// If the TravelExtend object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TravelExtendMutation) OldDeletedBy(ctx context.Context) (v int64, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldDeletedBy is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldDeletedBy requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldDeletedBy: %w", err)
-	}
-	return oldValue.DeletedBy, nil
-}
-
-// AddDeletedBy adds i to the "deleted_by" field.
-func (m *TravelExtendMutation) AddDeletedBy(i int64) {
-	if m.adddeleted_by != nil {
-		*m.adddeleted_by += i
-	} else {
-		m.adddeleted_by = &i
-	}
-}
-
-// AddedDeletedBy returns the value that was added to the "deleted_by" field in this mutation.
-func (m *TravelExtendMutation) AddedDeletedBy() (r int64, exists bool) {
-	v := m.adddeleted_by
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetDeletedBy resets all changes to the "deleted_by" field.
-func (m *TravelExtendMutation) ResetDeletedBy() {
-	m.deleted_by = nil
-	m.adddeleted_by = nil
-}
-
-// SetAccountID sets the "account_id" field.
-func (m *TravelExtendMutation) SetAccountID(i int) {
-	m.account_id = &i
-	m.addaccount_id = nil
-}
-
-// AccountID returns the value of the "account_id" field in the mutation.
-func (m *TravelExtendMutation) AccountID() (r int, exists bool) {
-	v := m.account_id
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldAccountID returns the old "account_id" field's value of the TravelExtend entity.
-// If the TravelExtend object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TravelExtendMutation) OldAccountID(ctx context.Context) (v int, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldAccountID is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldAccountID requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldAccountID: %w", err)
-	}
-	return oldValue.AccountID, nil
-}
-
-// AddAccountID adds i to the "account_id" field.
-func (m *TravelExtendMutation) AddAccountID(i int) {
-	if m.addaccount_id != nil {
-		*m.addaccount_id += i
-	} else {
-		m.addaccount_id = &i
-	}
-}
-
-// AddedAccountID returns the value that was added to the "account_id" field in this mutation.
-func (m *TravelExtendMutation) AddedAccountID() (r int, exists bool) {
-	v := m.addaccount_id
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetAccountID resets all changes to the "account_id" field.
-func (m *TravelExtendMutation) ResetAccountID() {
+func (m *TravelExtendsMutation) ResetAccountID() {
 	m.account_id = nil
 	m.addaccount_id = nil
 }
 
 // SetTravelID sets the "travel_id" field.
-func (m *TravelExtendMutation) SetTravelID(i int) {
+func (m *TravelExtendsMutation) SetTravelID(i int) {
 	m.travel_id = &i
 	m.addtravel_id = nil
 }
 
 // TravelID returns the value of the "travel_id" field in the mutation.
-func (m *TravelExtendMutation) TravelID() (r int, exists bool) {
+func (m *TravelExtendsMutation) TravelID() (r int, exists bool) {
 	v := m.travel_id
 	if v == nil {
 		return
@@ -8834,10 +7245,10 @@ func (m *TravelExtendMutation) TravelID() (r int, exists bool) {
 	return *v, true
 }
 
-// OldTravelID returns the old "travel_id" field's value of the TravelExtend entity.
-// If the TravelExtend object wasn't provided to the builder, the object is fetched from the database.
+// OldTravelID returns the old "travel_id" field's value of the TravelExtends entity.
+// If the TravelExtends object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TravelExtendMutation) OldTravelID(ctx context.Context) (v int, err error) {
+func (m *TravelExtendsMutation) OldTravelID(ctx context.Context) (v int, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldTravelID is only allowed on UpdateOne operations")
 	}
@@ -8852,7 +7263,7 @@ func (m *TravelExtendMutation) OldTravelID(ctx context.Context) (v int, err erro
 }
 
 // AddTravelID adds i to the "travel_id" field.
-func (m *TravelExtendMutation) AddTravelID(i int) {
+func (m *TravelExtendsMutation) AddTravelID(i int) {
 	if m.addtravel_id != nil {
 		*m.addtravel_id += i
 	} else {
@@ -8861,7 +7272,7 @@ func (m *TravelExtendMutation) AddTravelID(i int) {
 }
 
 // AddedTravelID returns the value that was added to the "travel_id" field in this mutation.
-func (m *TravelExtendMutation) AddedTravelID() (r int, exists bool) {
+func (m *TravelExtendsMutation) AddedTravelID() (r int, exists bool) {
 	v := m.addtravel_id
 	if v == nil {
 		return
@@ -8870,18 +7281,18 @@ func (m *TravelExtendMutation) AddedTravelID() (r int, exists bool) {
 }
 
 // ResetTravelID resets all changes to the "travel_id" field.
-func (m *TravelExtendMutation) ResetTravelID() {
+func (m *TravelExtendsMutation) ResetTravelID() {
 	m.travel_id = nil
 	m.addtravel_id = nil
 }
 
 // SetIsThumb sets the "is_thumb" field.
-func (m *TravelExtendMutation) SetIsThumb(b bool) {
+func (m *TravelExtendsMutation) SetIsThumb(b bool) {
 	m.is_thumb = &b
 }
 
 // IsThumb returns the value of the "is_thumb" field in the mutation.
-func (m *TravelExtendMutation) IsThumb() (r bool, exists bool) {
+func (m *TravelExtendsMutation) IsThumb() (r bool, exists bool) {
 	v := m.is_thumb
 	if v == nil {
 		return
@@ -8889,10 +7300,10 @@ func (m *TravelExtendMutation) IsThumb() (r bool, exists bool) {
 	return *v, true
 }
 
-// OldIsThumb returns the old "is_thumb" field's value of the TravelExtend entity.
-// If the TravelExtend object wasn't provided to the builder, the object is fetched from the database.
+// OldIsThumb returns the old "is_thumb" field's value of the TravelExtends entity.
+// If the TravelExtends object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TravelExtendMutation) OldIsThumb(ctx context.Context) (v bool, err error) {
+func (m *TravelExtendsMutation) OldIsThumb(ctx context.Context) (v bool, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldIsThumb is only allowed on UpdateOne operations")
 	}
@@ -8907,17 +7318,17 @@ func (m *TravelExtendMutation) OldIsThumb(ctx context.Context) (v bool, err erro
 }
 
 // ResetIsThumb resets all changes to the "is_thumb" field.
-func (m *TravelExtendMutation) ResetIsThumb() {
+func (m *TravelExtendsMutation) ResetIsThumb() {
 	m.is_thumb = nil
 }
 
 // SetIsCollect sets the "is_collect" field.
-func (m *TravelExtendMutation) SetIsCollect(b bool) {
+func (m *TravelExtendsMutation) SetIsCollect(b bool) {
 	m.is_collect = &b
 }
 
 // IsCollect returns the value of the "is_collect" field in the mutation.
-func (m *TravelExtendMutation) IsCollect() (r bool, exists bool) {
+func (m *TravelExtendsMutation) IsCollect() (r bool, exists bool) {
 	v := m.is_collect
 	if v == nil {
 		return
@@ -8925,10 +7336,10 @@ func (m *TravelExtendMutation) IsCollect() (r bool, exists bool) {
 	return *v, true
 }
 
-// OldIsCollect returns the old "is_collect" field's value of the TravelExtend entity.
-// If the TravelExtend object wasn't provided to the builder, the object is fetched from the database.
+// OldIsCollect returns the old "is_collect" field's value of the TravelExtends entity.
+// If the TravelExtends object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TravelExtendMutation) OldIsCollect(ctx context.Context) (v bool, err error) {
+func (m *TravelExtendsMutation) OldIsCollect(ctx context.Context) (v bool, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldIsCollect is only allowed on UpdateOne operations")
 	}
@@ -8943,58 +7354,58 @@ func (m *TravelExtendMutation) OldIsCollect(ctx context.Context) (v bool, err er
 }
 
 // ResetIsCollect resets all changes to the "is_collect" field.
-func (m *TravelExtendMutation) ResetIsCollect() {
+func (m *TravelExtendsMutation) ResetIsCollect() {
 	m.is_collect = nil
 }
 
-// SetTravelID sets the "travel" edge to the Travel entity by id.
-func (m *TravelExtendMutation) SetTravelID(id int) {
-	m.travel = &id
+// SetExtendsID sets the "extends" edge to the Travels entity by id.
+func (m *TravelExtendsMutation) SetExtendsID(id int) {
+	m.extends = &id
 }
 
-// ClearTravel clears the "travel" edge to the Travel entity.
-func (m *TravelExtendMutation) ClearTravel() {
-	m.clearedtravel = true
+// ClearExtends clears the "extends" edge to the Travels entity.
+func (m *TravelExtendsMutation) ClearExtends() {
+	m.clearedextends = true
 }
 
-// TravelCleared reports if the "travel" edge to the Travel entity was cleared.
-func (m *TravelExtendMutation) TravelCleared() bool {
-	return m.clearedtravel
+// ExtendsCleared reports if the "extends" edge to the Travels entity was cleared.
+func (m *TravelExtendsMutation) ExtendsCleared() bool {
+	return m.clearedextends
 }
 
-// TravelID returns the "travel" edge ID in the mutation.
-func (m *TravelExtendMutation) TravelID() (id int, exists bool) {
-	if m.travel != nil {
-		return *m.travel, true
+// ExtendsID returns the "extends" edge ID in the mutation.
+func (m *TravelExtendsMutation) ExtendsID() (id int, exists bool) {
+	if m.extends != nil {
+		return *m.extends, true
 	}
 	return
 }
 
-// TravelIDs returns the "travel" edge IDs in the mutation.
+// ExtendsIDs returns the "extends" edge IDs in the mutation.
 // Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
-// TravelID instead. It exists only for internal usage by the builders.
-func (m *TravelExtendMutation) TravelIDs() (ids []int) {
-	if id := m.travel; id != nil {
+// ExtendsID instead. It exists only for internal usage by the builders.
+func (m *TravelExtendsMutation) ExtendsIDs() (ids []int) {
+	if id := m.extends; id != nil {
 		ids = append(ids, *id)
 	}
 	return
 }
 
-// ResetTravel resets all changes to the "travel" edge.
-func (m *TravelExtendMutation) ResetTravel() {
-	m.travel = nil
-	m.clearedtravel = false
+// ResetExtends resets all changes to the "extends" edge.
+func (m *TravelExtendsMutation) ResetExtends() {
+	m.extends = nil
+	m.clearedextends = false
 }
 
-// Where appends a list predicates to the TravelExtendMutation builder.
-func (m *TravelExtendMutation) Where(ps ...predicate.TravelExtend) {
+// Where appends a list predicates to the TravelExtendsMutation builder.
+func (m *TravelExtendsMutation) Where(ps ...predicate.TravelExtends) {
 	m.predicates = append(m.predicates, ps...)
 }
 
-// WhereP appends storage-level predicates to the TravelExtendMutation builder. Using this method,
+// WhereP appends storage-level predicates to the TravelExtendsMutation builder. Using this method,
 // users can use type-assertion to append predicates that do not depend on any generated package.
-func (m *TravelExtendMutation) WhereP(ps ...func(*sql.Selector)) {
-	p := make([]predicate.TravelExtend, len(ps))
+func (m *TravelExtendsMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.TravelExtends, len(ps))
 	for i := range ps {
 		p[i] = ps[i]
 	}
@@ -9002,54 +7413,54 @@ func (m *TravelExtendMutation) WhereP(ps ...func(*sql.Selector)) {
 }
 
 // Op returns the operation name.
-func (m *TravelExtendMutation) Op() Op {
+func (m *TravelExtendsMutation) Op() Op {
 	return m.op
 }
 
 // SetOp allows setting the mutation operation.
-func (m *TravelExtendMutation) SetOp(op Op) {
+func (m *TravelExtendsMutation) SetOp(op Op) {
 	m.op = op
 }
 
-// Type returns the node type of this mutation (TravelExtend).
-func (m *TravelExtendMutation) Type() string {
+// Type returns the node type of this mutation (TravelExtends).
+func (m *TravelExtendsMutation) Type() string {
 	return m.typ
 }
 
 // Fields returns all fields that were changed during this mutation. Note that in
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
-func (m *TravelExtendMutation) Fields() []string {
+func (m *TravelExtendsMutation) Fields() []string {
 	fields := make([]string, 0, 10)
 	if m.created_at != nil {
-		fields = append(fields, travelextend.FieldCreatedAt)
+		fields = append(fields, travelextends.FieldCreatedAt)
 	}
 	if m.created_by != nil {
-		fields = append(fields, travelextend.FieldCreatedBy)
+		fields = append(fields, travelextends.FieldCreatedBy)
 	}
 	if m.updated_at != nil {
-		fields = append(fields, travelextend.FieldUpdatedAt)
+		fields = append(fields, travelextends.FieldUpdatedAt)
 	}
 	if m.updated_by != nil {
-		fields = append(fields, travelextend.FieldUpdatedBy)
+		fields = append(fields, travelextends.FieldUpdatedBy)
 	}
 	if m.deleted_at != nil {
-		fields = append(fields, travelextend.FieldDeletedAt)
+		fields = append(fields, travelextends.FieldDeletedAt)
 	}
 	if m.deleted_by != nil {
-		fields = append(fields, travelextend.FieldDeletedBy)
+		fields = append(fields, travelextends.FieldDeletedBy)
 	}
 	if m.account_id != nil {
-		fields = append(fields, travelextend.FieldAccountID)
+		fields = append(fields, travelextends.FieldAccountID)
 	}
 	if m.travel_id != nil {
-		fields = append(fields, travelextend.FieldTravelID)
+		fields = append(fields, travelextends.FieldTravelID)
 	}
 	if m.is_thumb != nil {
-		fields = append(fields, travelextend.FieldIsThumb)
+		fields = append(fields, travelextends.FieldIsThumb)
 	}
 	if m.is_collect != nil {
-		fields = append(fields, travelextend.FieldIsCollect)
+		fields = append(fields, travelextends.FieldIsCollect)
 	}
 	return fields
 }
@@ -9057,27 +7468,27 @@ func (m *TravelExtendMutation) Fields() []string {
 // Field returns the value of a field with the given name. The second boolean
 // return value indicates that this field was not set, or was not defined in the
 // schema.
-func (m *TravelExtendMutation) Field(name string) (ent.Value, bool) {
+func (m *TravelExtendsMutation) Field(name string) (ent.Value, bool) {
 	switch name {
-	case travelextend.FieldCreatedAt:
+	case travelextends.FieldCreatedAt:
 		return m.CreatedAt()
-	case travelextend.FieldCreatedBy:
+	case travelextends.FieldCreatedBy:
 		return m.CreatedBy()
-	case travelextend.FieldUpdatedAt:
+	case travelextends.FieldUpdatedAt:
 		return m.UpdatedAt()
-	case travelextend.FieldUpdatedBy:
+	case travelextends.FieldUpdatedBy:
 		return m.UpdatedBy()
-	case travelextend.FieldDeletedAt:
+	case travelextends.FieldDeletedAt:
 		return m.DeletedAt()
-	case travelextend.FieldDeletedBy:
+	case travelextends.FieldDeletedBy:
 		return m.DeletedBy()
-	case travelextend.FieldAccountID:
+	case travelextends.FieldAccountID:
 		return m.AccountID()
-	case travelextend.FieldTravelID:
+	case travelextends.FieldTravelID:
 		return m.TravelID()
-	case travelextend.FieldIsThumb:
+	case travelextends.FieldIsThumb:
 		return m.IsThumb()
-	case travelextend.FieldIsCollect:
+	case travelextends.FieldIsCollect:
 		return m.IsCollect()
 	}
 	return nil, false
@@ -9086,101 +7497,101 @@ func (m *TravelExtendMutation) Field(name string) (ent.Value, bool) {
 // OldField returns the old value of the field from the database. An error is
 // returned if the mutation operation is not UpdateOne, or the query to the
 // database failed.
-func (m *TravelExtendMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+func (m *TravelExtendsMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
-	case travelextend.FieldCreatedAt:
+	case travelextends.FieldCreatedAt:
 		return m.OldCreatedAt(ctx)
-	case travelextend.FieldCreatedBy:
+	case travelextends.FieldCreatedBy:
 		return m.OldCreatedBy(ctx)
-	case travelextend.FieldUpdatedAt:
+	case travelextends.FieldUpdatedAt:
 		return m.OldUpdatedAt(ctx)
-	case travelextend.FieldUpdatedBy:
+	case travelextends.FieldUpdatedBy:
 		return m.OldUpdatedBy(ctx)
-	case travelextend.FieldDeletedAt:
+	case travelextends.FieldDeletedAt:
 		return m.OldDeletedAt(ctx)
-	case travelextend.FieldDeletedBy:
+	case travelextends.FieldDeletedBy:
 		return m.OldDeletedBy(ctx)
-	case travelextend.FieldAccountID:
+	case travelextends.FieldAccountID:
 		return m.OldAccountID(ctx)
-	case travelextend.FieldTravelID:
+	case travelextends.FieldTravelID:
 		return m.OldTravelID(ctx)
-	case travelextend.FieldIsThumb:
+	case travelextends.FieldIsThumb:
 		return m.OldIsThumb(ctx)
-	case travelextend.FieldIsCollect:
+	case travelextends.FieldIsCollect:
 		return m.OldIsCollect(ctx)
 	}
-	return nil, fmt.Errorf("unknown TravelExtend field %s", name)
+	return nil, fmt.Errorf("unknown TravelExtends field %s", name)
 }
 
 // SetField sets the value of a field with the given name. It returns an error if
 // the field is not defined in the schema, or if the type mismatched the field
 // type.
-func (m *TravelExtendMutation) SetField(name string, value ent.Value) error {
+func (m *TravelExtendsMutation) SetField(name string, value ent.Value) error {
 	switch name {
-	case travelextend.FieldCreatedAt:
+	case travelextends.FieldCreatedAt:
 		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetCreatedAt(v)
 		return nil
-	case travelextend.FieldCreatedBy:
+	case travelextends.FieldCreatedBy:
 		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetCreatedBy(v)
 		return nil
-	case travelextend.FieldUpdatedAt:
+	case travelextends.FieldUpdatedAt:
 		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetUpdatedAt(v)
 		return nil
-	case travelextend.FieldUpdatedBy:
+	case travelextends.FieldUpdatedBy:
 		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetUpdatedBy(v)
 		return nil
-	case travelextend.FieldDeletedAt:
+	case travelextends.FieldDeletedAt:
 		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetDeletedAt(v)
 		return nil
-	case travelextend.FieldDeletedBy:
+	case travelextends.FieldDeletedBy:
 		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetDeletedBy(v)
 		return nil
-	case travelextend.FieldAccountID:
+	case travelextends.FieldAccountID:
 		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetAccountID(v)
 		return nil
-	case travelextend.FieldTravelID:
+	case travelextends.FieldTravelID:
 		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetTravelID(v)
 		return nil
-	case travelextend.FieldIsThumb:
+	case travelextends.FieldIsThumb:
 		v, ok := value.(bool)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetIsThumb(v)
 		return nil
-	case travelextend.FieldIsCollect:
+	case travelextends.FieldIsCollect:
 		v, ok := value.(bool)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
@@ -9188,36 +7599,36 @@ func (m *TravelExtendMutation) SetField(name string, value ent.Value) error {
 		m.SetIsCollect(v)
 		return nil
 	}
-	return fmt.Errorf("unknown TravelExtend field %s", name)
+	return fmt.Errorf("unknown TravelExtends field %s", name)
 }
 
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
-func (m *TravelExtendMutation) AddedFields() []string {
+func (m *TravelExtendsMutation) AddedFields() []string {
 	var fields []string
 	if m.addcreated_at != nil {
-		fields = append(fields, travelextend.FieldCreatedAt)
+		fields = append(fields, travelextends.FieldCreatedAt)
 	}
 	if m.addcreated_by != nil {
-		fields = append(fields, travelextend.FieldCreatedBy)
+		fields = append(fields, travelextends.FieldCreatedBy)
 	}
 	if m.addupdated_at != nil {
-		fields = append(fields, travelextend.FieldUpdatedAt)
+		fields = append(fields, travelextends.FieldUpdatedAt)
 	}
 	if m.addupdated_by != nil {
-		fields = append(fields, travelextend.FieldUpdatedBy)
+		fields = append(fields, travelextends.FieldUpdatedBy)
 	}
 	if m.adddeleted_at != nil {
-		fields = append(fields, travelextend.FieldDeletedAt)
+		fields = append(fields, travelextends.FieldDeletedAt)
 	}
 	if m.adddeleted_by != nil {
-		fields = append(fields, travelextend.FieldDeletedBy)
+		fields = append(fields, travelextends.FieldDeletedBy)
 	}
 	if m.addaccount_id != nil {
-		fields = append(fields, travelextend.FieldAccountID)
+		fields = append(fields, travelextends.FieldAccountID)
 	}
 	if m.addtravel_id != nil {
-		fields = append(fields, travelextend.FieldTravelID)
+		fields = append(fields, travelextends.FieldTravelID)
 	}
 	return fields
 }
@@ -9225,23 +7636,23 @@ func (m *TravelExtendMutation) AddedFields() []string {
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
-func (m *TravelExtendMutation) AddedField(name string) (ent.Value, bool) {
+func (m *TravelExtendsMutation) AddedField(name string) (ent.Value, bool) {
 	switch name {
-	case travelextend.FieldCreatedAt:
+	case travelextends.FieldCreatedAt:
 		return m.AddedCreatedAt()
-	case travelextend.FieldCreatedBy:
+	case travelextends.FieldCreatedBy:
 		return m.AddedCreatedBy()
-	case travelextend.FieldUpdatedAt:
+	case travelextends.FieldUpdatedAt:
 		return m.AddedUpdatedAt()
-	case travelextend.FieldUpdatedBy:
+	case travelextends.FieldUpdatedBy:
 		return m.AddedUpdatedBy()
-	case travelextend.FieldDeletedAt:
+	case travelextends.FieldDeletedAt:
 		return m.AddedDeletedAt()
-	case travelextend.FieldDeletedBy:
+	case travelextends.FieldDeletedBy:
 		return m.AddedDeletedBy()
-	case travelextend.FieldAccountID:
+	case travelextends.FieldAccountID:
 		return m.AddedAccountID()
-	case travelextend.FieldTravelID:
+	case travelextends.FieldTravelID:
 		return m.AddedTravelID()
 	}
 	return nil, false
@@ -9250,58 +7661,58 @@ func (m *TravelExtendMutation) AddedField(name string) (ent.Value, bool) {
 // AddField adds the value to the field with the given name. It returns an error if
 // the field is not defined in the schema, or if the type mismatched the field
 // type.
-func (m *TravelExtendMutation) AddField(name string, value ent.Value) error {
+func (m *TravelExtendsMutation) AddField(name string, value ent.Value) error {
 	switch name {
-	case travelextend.FieldCreatedAt:
+	case travelextends.FieldCreatedAt:
 		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddCreatedAt(v)
 		return nil
-	case travelextend.FieldCreatedBy:
+	case travelextends.FieldCreatedBy:
 		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddCreatedBy(v)
 		return nil
-	case travelextend.FieldUpdatedAt:
+	case travelextends.FieldUpdatedAt:
 		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddUpdatedAt(v)
 		return nil
-	case travelextend.FieldUpdatedBy:
+	case travelextends.FieldUpdatedBy:
 		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddUpdatedBy(v)
 		return nil
-	case travelextend.FieldDeletedAt:
+	case travelextends.FieldDeletedAt:
 		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddDeletedAt(v)
 		return nil
-	case travelextend.FieldDeletedBy:
+	case travelextends.FieldDeletedBy:
 		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddDeletedBy(v)
 		return nil
-	case travelextend.FieldAccountID:
+	case travelextends.FieldAccountID:
 		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddAccountID(v)
 		return nil
-	case travelextend.FieldTravelID:
+	case travelextends.FieldTravelID:
 		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
@@ -9309,81 +7720,81 @@ func (m *TravelExtendMutation) AddField(name string, value ent.Value) error {
 		m.AddTravelID(v)
 		return nil
 	}
-	return fmt.Errorf("unknown TravelExtend numeric field %s", name)
+	return fmt.Errorf("unknown TravelExtends numeric field %s", name)
 }
 
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
-func (m *TravelExtendMutation) ClearedFields() []string {
+func (m *TravelExtendsMutation) ClearedFields() []string {
 	return nil
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
 // cleared in this mutation.
-func (m *TravelExtendMutation) FieldCleared(name string) bool {
+func (m *TravelExtendsMutation) FieldCleared(name string) bool {
 	_, ok := m.clearedFields[name]
 	return ok
 }
 
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
-func (m *TravelExtendMutation) ClearField(name string) error {
-	return fmt.Errorf("unknown TravelExtend nullable field %s", name)
+func (m *TravelExtendsMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown TravelExtends nullable field %s", name)
 }
 
 // ResetField resets all changes in the mutation for the field with the given name.
 // It returns an error if the field is not defined in the schema.
-func (m *TravelExtendMutation) ResetField(name string) error {
+func (m *TravelExtendsMutation) ResetField(name string) error {
 	switch name {
-	case travelextend.FieldCreatedAt:
+	case travelextends.FieldCreatedAt:
 		m.ResetCreatedAt()
 		return nil
-	case travelextend.FieldCreatedBy:
+	case travelextends.FieldCreatedBy:
 		m.ResetCreatedBy()
 		return nil
-	case travelextend.FieldUpdatedAt:
+	case travelextends.FieldUpdatedAt:
 		m.ResetUpdatedAt()
 		return nil
-	case travelextend.FieldUpdatedBy:
+	case travelextends.FieldUpdatedBy:
 		m.ResetUpdatedBy()
 		return nil
-	case travelextend.FieldDeletedAt:
+	case travelextends.FieldDeletedAt:
 		m.ResetDeletedAt()
 		return nil
-	case travelextend.FieldDeletedBy:
+	case travelextends.FieldDeletedBy:
 		m.ResetDeletedBy()
 		return nil
-	case travelextend.FieldAccountID:
+	case travelextends.FieldAccountID:
 		m.ResetAccountID()
 		return nil
-	case travelextend.FieldTravelID:
+	case travelextends.FieldTravelID:
 		m.ResetTravelID()
 		return nil
-	case travelextend.FieldIsThumb:
+	case travelextends.FieldIsThumb:
 		m.ResetIsThumb()
 		return nil
-	case travelextend.FieldIsCollect:
+	case travelextends.FieldIsCollect:
 		m.ResetIsCollect()
 		return nil
 	}
-	return fmt.Errorf("unknown TravelExtend field %s", name)
+	return fmt.Errorf("unknown TravelExtends field %s", name)
 }
 
 // AddedEdges returns all edge names that were set/added in this mutation.
-func (m *TravelExtendMutation) AddedEdges() []string {
+func (m *TravelExtendsMutation) AddedEdges() []string {
 	edges := make([]string, 0, 1)
-	if m.travel != nil {
-		edges = append(edges, travelextend.EdgeTravel)
+	if m.extends != nil {
+		edges = append(edges, travelextends.EdgeExtends)
 	}
 	return edges
 }
 
 // AddedIDs returns all IDs (to other nodes) that were added for the given edge
 // name in this mutation.
-func (m *TravelExtendMutation) AddedIDs(name string) []ent.Value {
+func (m *TravelExtendsMutation) AddedIDs(name string) []ent.Value {
 	switch name {
-	case travelextend.EdgeTravel:
-		if id := m.travel; id != nil {
+	case travelextends.EdgeExtends:
+		if id := m.extends; id != nil {
 			return []ent.Value{*id}
 		}
 	}
@@ -9391,56 +7802,1645 @@ func (m *TravelExtendMutation) AddedIDs(name string) []ent.Value {
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
-func (m *TravelExtendMutation) RemovedEdges() []string {
+func (m *TravelExtendsMutation) RemovedEdges() []string {
 	edges := make([]string, 0, 1)
 	return edges
 }
 
 // RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
 // the given name in this mutation.
-func (m *TravelExtendMutation) RemovedIDs(name string) []ent.Value {
+func (m *TravelExtendsMutation) RemovedIDs(name string) []ent.Value {
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
-func (m *TravelExtendMutation) ClearedEdges() []string {
+func (m *TravelExtendsMutation) ClearedEdges() []string {
 	edges := make([]string, 0, 1)
-	if m.clearedtravel {
-		edges = append(edges, travelextend.EdgeTravel)
+	if m.clearedextends {
+		edges = append(edges, travelextends.EdgeExtends)
 	}
 	return edges
 }
 
 // EdgeCleared returns a boolean which indicates if the edge with the given name
 // was cleared in this mutation.
-func (m *TravelExtendMutation) EdgeCleared(name string) bool {
+func (m *TravelExtendsMutation) EdgeCleared(name string) bool {
 	switch name {
-	case travelextend.EdgeTravel:
-		return m.clearedtravel
+	case travelextends.EdgeExtends:
+		return m.clearedextends
 	}
 	return false
 }
 
 // ClearEdge clears the value of the edge with the given name. It returns an error
 // if that edge is not defined in the schema.
-func (m *TravelExtendMutation) ClearEdge(name string) error {
+func (m *TravelExtendsMutation) ClearEdge(name string) error {
 	switch name {
-	case travelextend.EdgeTravel:
-		m.ClearTravel()
+	case travelextends.EdgeExtends:
+		m.ClearExtends()
 		return nil
 	}
-	return fmt.Errorf("unknown TravelExtend unique edge %s", name)
+	return fmt.Errorf("unknown TravelExtends unique edge %s", name)
 }
 
 // ResetEdge resets all changes to the edge with the given name in this mutation.
 // It returns an error if the edge is not defined in the schema.
-func (m *TravelExtendMutation) ResetEdge(name string) error {
+func (m *TravelExtendsMutation) ResetEdge(name string) error {
 	switch name {
-	case travelextend.EdgeTravel:
-		m.ResetTravel()
+	case travelextends.EdgeExtends:
+		m.ResetExtends()
 		return nil
 	}
-	return fmt.Errorf("unknown TravelExtend edge %s", name)
+	return fmt.Errorf("unknown TravelExtends edge %s", name)
+}
+
+// TravelsMutation represents an operation that mutates the Travels nodes in the graph.
+type TravelsMutation struct {
+	config
+	op                     Op
+	typ                    string
+	id                     *int
+	created_at             *int64
+	addcreated_at          *int64
+	created_by             *int64
+	addcreated_by          *int64
+	updated_at             *int64
+	addupdated_at          *int64
+	updated_by             *int64
+	addupdated_by          *int64
+	deleted_at             *int64
+	adddeleted_at          *int64
+	deleted_by             *int64
+	adddeleted_by          *int64
+	title                  *string
+	description            *string
+	video                  *string
+	is_hidden              *bool
+	account_id             *int
+	addaccount_id          *int
+	photos                 *[]string
+	appendphotos           []string
+	browse_num             *int
+	addbrowse_num          *int
+	thumb_num              *int
+	addthumb_num           *int
+	collect_num            *int
+	addcollect_num         *int
+	clearedFields          map[string]struct{}
+	travel_extends         map[int]struct{}
+	removedtravel_extends  map[int]struct{}
+	clearedtravel_extends  bool
+	account_travels        *int
+	clearedaccount_travels bool
+	done                   bool
+	oldValue               func(context.Context) (*Travels, error)
+	predicates             []predicate.Travels
+}
+
+var _ ent.Mutation = (*TravelsMutation)(nil)
+
+// travelsOption allows management of the mutation configuration using functional options.
+type travelsOption func(*TravelsMutation)
+
+// newTravelsMutation creates new mutation for the Travels entity.
+func newTravelsMutation(c config, op Op, opts ...travelsOption) *TravelsMutation {
+	m := &TravelsMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeTravels,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withTravelsID sets the ID field of the mutation.
+func withTravelsID(id int) travelsOption {
+	return func(m *TravelsMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *Travels
+		)
+		m.oldValue = func(ctx context.Context) (*Travels, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().Travels.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withTravels sets the old Travels of the mutation.
+func withTravels(node *Travels) travelsOption {
+	return func(m *TravelsMutation) {
+		m.oldValue = func(context.Context) (*Travels, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m TravelsMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m TravelsMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of Travels entities.
+func (m *TravelsMutation) SetID(id int) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *TravelsMutation) ID() (id int, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *TravelsMutation) IDs(ctx context.Context) ([]int, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []int{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().Travels.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (m *TravelsMutation) SetCreatedAt(i int64) {
+	m.created_at = &i
+	m.addcreated_at = nil
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *TravelsMutation) CreatedAt() (r int64, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the Travels entity.
+// If the Travels object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TravelsMutation) OldCreatedAt(ctx context.Context) (v int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// AddCreatedAt adds i to the "created_at" field.
+func (m *TravelsMutation) AddCreatedAt(i int64) {
+	if m.addcreated_at != nil {
+		*m.addcreated_at += i
+	} else {
+		m.addcreated_at = &i
+	}
+}
+
+// AddedCreatedAt returns the value that was added to the "created_at" field in this mutation.
+func (m *TravelsMutation) AddedCreatedAt() (r int64, exists bool) {
+	v := m.addcreated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *TravelsMutation) ResetCreatedAt() {
+	m.created_at = nil
+	m.addcreated_at = nil
+}
+
+// SetCreatedBy sets the "created_by" field.
+func (m *TravelsMutation) SetCreatedBy(i int64) {
+	m.created_by = &i
+	m.addcreated_by = nil
+}
+
+// CreatedBy returns the value of the "created_by" field in the mutation.
+func (m *TravelsMutation) CreatedBy() (r int64, exists bool) {
+	v := m.created_by
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedBy returns the old "created_by" field's value of the Travels entity.
+// If the Travels object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TravelsMutation) OldCreatedBy(ctx context.Context) (v int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedBy is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedBy requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedBy: %w", err)
+	}
+	return oldValue.CreatedBy, nil
+}
+
+// AddCreatedBy adds i to the "created_by" field.
+func (m *TravelsMutation) AddCreatedBy(i int64) {
+	if m.addcreated_by != nil {
+		*m.addcreated_by += i
+	} else {
+		m.addcreated_by = &i
+	}
+}
+
+// AddedCreatedBy returns the value that was added to the "created_by" field in this mutation.
+func (m *TravelsMutation) AddedCreatedBy() (r int64, exists bool) {
+	v := m.addcreated_by
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCreatedBy resets all changes to the "created_by" field.
+func (m *TravelsMutation) ResetCreatedBy() {
+	m.created_by = nil
+	m.addcreated_by = nil
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (m *TravelsMutation) SetUpdatedAt(i int64) {
+	m.updated_at = &i
+	m.addupdated_at = nil
+}
+
+// UpdatedAt returns the value of the "updated_at" field in the mutation.
+func (m *TravelsMutation) UpdatedAt() (r int64, exists bool) {
+	v := m.updated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdatedAt returns the old "updated_at" field's value of the Travels entity.
+// If the Travels object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TravelsMutation) OldUpdatedAt(ctx context.Context) (v int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdatedAt: %w", err)
+	}
+	return oldValue.UpdatedAt, nil
+}
+
+// AddUpdatedAt adds i to the "updated_at" field.
+func (m *TravelsMutation) AddUpdatedAt(i int64) {
+	if m.addupdated_at != nil {
+		*m.addupdated_at += i
+	} else {
+		m.addupdated_at = &i
+	}
+}
+
+// AddedUpdatedAt returns the value that was added to the "updated_at" field in this mutation.
+func (m *TravelsMutation) AddedUpdatedAt() (r int64, exists bool) {
+	v := m.addupdated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetUpdatedAt resets all changes to the "updated_at" field.
+func (m *TravelsMutation) ResetUpdatedAt() {
+	m.updated_at = nil
+	m.addupdated_at = nil
+}
+
+// SetUpdatedBy sets the "updated_by" field.
+func (m *TravelsMutation) SetUpdatedBy(i int64) {
+	m.updated_by = &i
+	m.addupdated_by = nil
+}
+
+// UpdatedBy returns the value of the "updated_by" field in the mutation.
+func (m *TravelsMutation) UpdatedBy() (r int64, exists bool) {
+	v := m.updated_by
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdatedBy returns the old "updated_by" field's value of the Travels entity.
+// If the Travels object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TravelsMutation) OldUpdatedBy(ctx context.Context) (v int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdatedBy is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdatedBy requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdatedBy: %w", err)
+	}
+	return oldValue.UpdatedBy, nil
+}
+
+// AddUpdatedBy adds i to the "updated_by" field.
+func (m *TravelsMutation) AddUpdatedBy(i int64) {
+	if m.addupdated_by != nil {
+		*m.addupdated_by += i
+	} else {
+		m.addupdated_by = &i
+	}
+}
+
+// AddedUpdatedBy returns the value that was added to the "updated_by" field in this mutation.
+func (m *TravelsMutation) AddedUpdatedBy() (r int64, exists bool) {
+	v := m.addupdated_by
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetUpdatedBy resets all changes to the "updated_by" field.
+func (m *TravelsMutation) ResetUpdatedBy() {
+	m.updated_by = nil
+	m.addupdated_by = nil
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (m *TravelsMutation) SetDeletedAt(i int64) {
+	m.deleted_at = &i
+	m.adddeleted_at = nil
+}
+
+// DeletedAt returns the value of the "deleted_at" field in the mutation.
+func (m *TravelsMutation) DeletedAt() (r int64, exists bool) {
+	v := m.deleted_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDeletedAt returns the old "deleted_at" field's value of the Travels entity.
+// If the Travels object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TravelsMutation) OldDeletedAt(ctx context.Context) (v int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDeletedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDeletedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDeletedAt: %w", err)
+	}
+	return oldValue.DeletedAt, nil
+}
+
+// AddDeletedAt adds i to the "deleted_at" field.
+func (m *TravelsMutation) AddDeletedAt(i int64) {
+	if m.adddeleted_at != nil {
+		*m.adddeleted_at += i
+	} else {
+		m.adddeleted_at = &i
+	}
+}
+
+// AddedDeletedAt returns the value that was added to the "deleted_at" field in this mutation.
+func (m *TravelsMutation) AddedDeletedAt() (r int64, exists bool) {
+	v := m.adddeleted_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDeletedAt resets all changes to the "deleted_at" field.
+func (m *TravelsMutation) ResetDeletedAt() {
+	m.deleted_at = nil
+	m.adddeleted_at = nil
+}
+
+// SetDeletedBy sets the "deleted_by" field.
+func (m *TravelsMutation) SetDeletedBy(i int64) {
+	m.deleted_by = &i
+	m.adddeleted_by = nil
+}
+
+// DeletedBy returns the value of the "deleted_by" field in the mutation.
+func (m *TravelsMutation) DeletedBy() (r int64, exists bool) {
+	v := m.deleted_by
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDeletedBy returns the old "deleted_by" field's value of the Travels entity.
+// If the Travels object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TravelsMutation) OldDeletedBy(ctx context.Context) (v int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDeletedBy is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDeletedBy requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDeletedBy: %w", err)
+	}
+	return oldValue.DeletedBy, nil
+}
+
+// AddDeletedBy adds i to the "deleted_by" field.
+func (m *TravelsMutation) AddDeletedBy(i int64) {
+	if m.adddeleted_by != nil {
+		*m.adddeleted_by += i
+	} else {
+		m.adddeleted_by = &i
+	}
+}
+
+// AddedDeletedBy returns the value that was added to the "deleted_by" field in this mutation.
+func (m *TravelsMutation) AddedDeletedBy() (r int64, exists bool) {
+	v := m.adddeleted_by
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDeletedBy resets all changes to the "deleted_by" field.
+func (m *TravelsMutation) ResetDeletedBy() {
+	m.deleted_by = nil
+	m.adddeleted_by = nil
+}
+
+// SetTitle sets the "title" field.
+func (m *TravelsMutation) SetTitle(s string) {
+	m.title = &s
+}
+
+// Title returns the value of the "title" field in the mutation.
+func (m *TravelsMutation) Title() (r string, exists bool) {
+	v := m.title
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTitle returns the old "title" field's value of the Travels entity.
+// If the Travels object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TravelsMutation) OldTitle(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldTitle is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldTitle requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTitle: %w", err)
+	}
+	return oldValue.Title, nil
+}
+
+// ResetTitle resets all changes to the "title" field.
+func (m *TravelsMutation) ResetTitle() {
+	m.title = nil
+}
+
+// SetDescription sets the "description" field.
+func (m *TravelsMutation) SetDescription(s string) {
+	m.description = &s
+}
+
+// Description returns the value of the "description" field in the mutation.
+func (m *TravelsMutation) Description() (r string, exists bool) {
+	v := m.description
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDescription returns the old "description" field's value of the Travels entity.
+// If the Travels object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TravelsMutation) OldDescription(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDescription is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDescription requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDescription: %w", err)
+	}
+	return oldValue.Description, nil
+}
+
+// ResetDescription resets all changes to the "description" field.
+func (m *TravelsMutation) ResetDescription() {
+	m.description = nil
+}
+
+// SetVideo sets the "video" field.
+func (m *TravelsMutation) SetVideo(s string) {
+	m.video = &s
+}
+
+// Video returns the value of the "video" field in the mutation.
+func (m *TravelsMutation) Video() (r string, exists bool) {
+	v := m.video
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldVideo returns the old "video" field's value of the Travels entity.
+// If the Travels object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TravelsMutation) OldVideo(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldVideo is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldVideo requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldVideo: %w", err)
+	}
+	return oldValue.Video, nil
+}
+
+// ResetVideo resets all changes to the "video" field.
+func (m *TravelsMutation) ResetVideo() {
+	m.video = nil
+}
+
+// SetIsHidden sets the "is_hidden" field.
+func (m *TravelsMutation) SetIsHidden(b bool) {
+	m.is_hidden = &b
+}
+
+// IsHidden returns the value of the "is_hidden" field in the mutation.
+func (m *TravelsMutation) IsHidden() (r bool, exists bool) {
+	v := m.is_hidden
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldIsHidden returns the old "is_hidden" field's value of the Travels entity.
+// If the Travels object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TravelsMutation) OldIsHidden(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldIsHidden is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldIsHidden requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldIsHidden: %w", err)
+	}
+	return oldValue.IsHidden, nil
+}
+
+// ResetIsHidden resets all changes to the "is_hidden" field.
+func (m *TravelsMutation) ResetIsHidden() {
+	m.is_hidden = nil
+}
+
+// SetAccountID sets the "account_id" field.
+func (m *TravelsMutation) SetAccountID(i int) {
+	m.account_id = &i
+	m.addaccount_id = nil
+}
+
+// AccountID returns the value of the "account_id" field in the mutation.
+func (m *TravelsMutation) AccountID() (r int, exists bool) {
+	v := m.account_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAccountID returns the old "account_id" field's value of the Travels entity.
+// If the Travels object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TravelsMutation) OldAccountID(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAccountID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAccountID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAccountID: %w", err)
+	}
+	return oldValue.AccountID, nil
+}
+
+// AddAccountID adds i to the "account_id" field.
+func (m *TravelsMutation) AddAccountID(i int) {
+	if m.addaccount_id != nil {
+		*m.addaccount_id += i
+	} else {
+		m.addaccount_id = &i
+	}
+}
+
+// AddedAccountID returns the value that was added to the "account_id" field in this mutation.
+func (m *TravelsMutation) AddedAccountID() (r int, exists bool) {
+	v := m.addaccount_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetAccountID resets all changes to the "account_id" field.
+func (m *TravelsMutation) ResetAccountID() {
+	m.account_id = nil
+	m.addaccount_id = nil
+}
+
+// SetPhotos sets the "photos" field.
+func (m *TravelsMutation) SetPhotos(s []string) {
+	m.photos = &s
+	m.appendphotos = nil
+}
+
+// Photos returns the value of the "photos" field in the mutation.
+func (m *TravelsMutation) Photos() (r []string, exists bool) {
+	v := m.photos
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPhotos returns the old "photos" field's value of the Travels entity.
+// If the Travels object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TravelsMutation) OldPhotos(ctx context.Context) (v []string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPhotos is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPhotos requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPhotos: %w", err)
+	}
+	return oldValue.Photos, nil
+}
+
+// AppendPhotos adds s to the "photos" field.
+func (m *TravelsMutation) AppendPhotos(s []string) {
+	m.appendphotos = append(m.appendphotos, s...)
+}
+
+// AppendedPhotos returns the list of values that were appended to the "photos" field in this mutation.
+func (m *TravelsMutation) AppendedPhotos() ([]string, bool) {
+	if len(m.appendphotos) == 0 {
+		return nil, false
+	}
+	return m.appendphotos, true
+}
+
+// ResetPhotos resets all changes to the "photos" field.
+func (m *TravelsMutation) ResetPhotos() {
+	m.photos = nil
+	m.appendphotos = nil
+}
+
+// SetBrowseNum sets the "browse_num" field.
+func (m *TravelsMutation) SetBrowseNum(i int) {
+	m.browse_num = &i
+	m.addbrowse_num = nil
+}
+
+// BrowseNum returns the value of the "browse_num" field in the mutation.
+func (m *TravelsMutation) BrowseNum() (r int, exists bool) {
+	v := m.browse_num
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldBrowseNum returns the old "browse_num" field's value of the Travels entity.
+// If the Travels object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TravelsMutation) OldBrowseNum(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldBrowseNum is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldBrowseNum requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldBrowseNum: %w", err)
+	}
+	return oldValue.BrowseNum, nil
+}
+
+// AddBrowseNum adds i to the "browse_num" field.
+func (m *TravelsMutation) AddBrowseNum(i int) {
+	if m.addbrowse_num != nil {
+		*m.addbrowse_num += i
+	} else {
+		m.addbrowse_num = &i
+	}
+}
+
+// AddedBrowseNum returns the value that was added to the "browse_num" field in this mutation.
+func (m *TravelsMutation) AddedBrowseNum() (r int, exists bool) {
+	v := m.addbrowse_num
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetBrowseNum resets all changes to the "browse_num" field.
+func (m *TravelsMutation) ResetBrowseNum() {
+	m.browse_num = nil
+	m.addbrowse_num = nil
+}
+
+// SetThumbNum sets the "thumb_num" field.
+func (m *TravelsMutation) SetThumbNum(i int) {
+	m.thumb_num = &i
+	m.addthumb_num = nil
+}
+
+// ThumbNum returns the value of the "thumb_num" field in the mutation.
+func (m *TravelsMutation) ThumbNum() (r int, exists bool) {
+	v := m.thumb_num
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldThumbNum returns the old "thumb_num" field's value of the Travels entity.
+// If the Travels object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TravelsMutation) OldThumbNum(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldThumbNum is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldThumbNum requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldThumbNum: %w", err)
+	}
+	return oldValue.ThumbNum, nil
+}
+
+// AddThumbNum adds i to the "thumb_num" field.
+func (m *TravelsMutation) AddThumbNum(i int) {
+	if m.addthumb_num != nil {
+		*m.addthumb_num += i
+	} else {
+		m.addthumb_num = &i
+	}
+}
+
+// AddedThumbNum returns the value that was added to the "thumb_num" field in this mutation.
+func (m *TravelsMutation) AddedThumbNum() (r int, exists bool) {
+	v := m.addthumb_num
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetThumbNum resets all changes to the "thumb_num" field.
+func (m *TravelsMutation) ResetThumbNum() {
+	m.thumb_num = nil
+	m.addthumb_num = nil
+}
+
+// SetCollectNum sets the "collect_num" field.
+func (m *TravelsMutation) SetCollectNum(i int) {
+	m.collect_num = &i
+	m.addcollect_num = nil
+}
+
+// CollectNum returns the value of the "collect_num" field in the mutation.
+func (m *TravelsMutation) CollectNum() (r int, exists bool) {
+	v := m.collect_num
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCollectNum returns the old "collect_num" field's value of the Travels entity.
+// If the Travels object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TravelsMutation) OldCollectNum(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCollectNum is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCollectNum requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCollectNum: %w", err)
+	}
+	return oldValue.CollectNum, nil
+}
+
+// AddCollectNum adds i to the "collect_num" field.
+func (m *TravelsMutation) AddCollectNum(i int) {
+	if m.addcollect_num != nil {
+		*m.addcollect_num += i
+	} else {
+		m.addcollect_num = &i
+	}
+}
+
+// AddedCollectNum returns the value that was added to the "collect_num" field in this mutation.
+func (m *TravelsMutation) AddedCollectNum() (r int, exists bool) {
+	v := m.addcollect_num
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCollectNum resets all changes to the "collect_num" field.
+func (m *TravelsMutation) ResetCollectNum() {
+	m.collect_num = nil
+	m.addcollect_num = nil
+}
+
+// AddTravelExtendIDs adds the "travel_extends" edge to the TravelExtends entity by ids.
+func (m *TravelsMutation) AddTravelExtendIDs(ids ...int) {
+	if m.travel_extends == nil {
+		m.travel_extends = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.travel_extends[ids[i]] = struct{}{}
+	}
+}
+
+// ClearTravelExtends clears the "travel_extends" edge to the TravelExtends entity.
+func (m *TravelsMutation) ClearTravelExtends() {
+	m.clearedtravel_extends = true
+}
+
+// TravelExtendsCleared reports if the "travel_extends" edge to the TravelExtends entity was cleared.
+func (m *TravelsMutation) TravelExtendsCleared() bool {
+	return m.clearedtravel_extends
+}
+
+// RemoveTravelExtendIDs removes the "travel_extends" edge to the TravelExtends entity by IDs.
+func (m *TravelsMutation) RemoveTravelExtendIDs(ids ...int) {
+	if m.removedtravel_extends == nil {
+		m.removedtravel_extends = make(map[int]struct{})
+	}
+	for i := range ids {
+		delete(m.travel_extends, ids[i])
+		m.removedtravel_extends[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedTravelExtends returns the removed IDs of the "travel_extends" edge to the TravelExtends entity.
+func (m *TravelsMutation) RemovedTravelExtendsIDs() (ids []int) {
+	for id := range m.removedtravel_extends {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// TravelExtendsIDs returns the "travel_extends" edge IDs in the mutation.
+func (m *TravelsMutation) TravelExtendsIDs() (ids []int) {
+	for id := range m.travel_extends {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetTravelExtends resets all changes to the "travel_extends" edge.
+func (m *TravelsMutation) ResetTravelExtends() {
+	m.travel_extends = nil
+	m.clearedtravel_extends = false
+	m.removedtravel_extends = nil
+}
+
+// SetAccountTravelsID sets the "account_travels" edge to the Account entity by id.
+func (m *TravelsMutation) SetAccountTravelsID(id int) {
+	m.account_travels = &id
+}
+
+// ClearAccountTravels clears the "account_travels" edge to the Account entity.
+func (m *TravelsMutation) ClearAccountTravels() {
+	m.clearedaccount_travels = true
+}
+
+// AccountTravelsCleared reports if the "account_travels" edge to the Account entity was cleared.
+func (m *TravelsMutation) AccountTravelsCleared() bool {
+	return m.clearedaccount_travels
+}
+
+// AccountTravelsID returns the "account_travels" edge ID in the mutation.
+func (m *TravelsMutation) AccountTravelsID() (id int, exists bool) {
+	if m.account_travels != nil {
+		return *m.account_travels, true
+	}
+	return
+}
+
+// AccountTravelsIDs returns the "account_travels" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// AccountTravelsID instead. It exists only for internal usage by the builders.
+func (m *TravelsMutation) AccountTravelsIDs() (ids []int) {
+	if id := m.account_travels; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetAccountTravels resets all changes to the "account_travels" edge.
+func (m *TravelsMutation) ResetAccountTravels() {
+	m.account_travels = nil
+	m.clearedaccount_travels = false
+}
+
+// Where appends a list predicates to the TravelsMutation builder.
+func (m *TravelsMutation) Where(ps ...predicate.Travels) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// WhereP appends storage-level predicates to the TravelsMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *TravelsMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.Travels, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
+// Op returns the operation name.
+func (m *TravelsMutation) Op() Op {
+	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *TravelsMutation) SetOp(op Op) {
+	m.op = op
+}
+
+// Type returns the node type of this mutation (Travels).
+func (m *TravelsMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *TravelsMutation) Fields() []string {
+	fields := make([]string, 0, 15)
+	if m.created_at != nil {
+		fields = append(fields, travels.FieldCreatedAt)
+	}
+	if m.created_by != nil {
+		fields = append(fields, travels.FieldCreatedBy)
+	}
+	if m.updated_at != nil {
+		fields = append(fields, travels.FieldUpdatedAt)
+	}
+	if m.updated_by != nil {
+		fields = append(fields, travels.FieldUpdatedBy)
+	}
+	if m.deleted_at != nil {
+		fields = append(fields, travels.FieldDeletedAt)
+	}
+	if m.deleted_by != nil {
+		fields = append(fields, travels.FieldDeletedBy)
+	}
+	if m.title != nil {
+		fields = append(fields, travels.FieldTitle)
+	}
+	if m.description != nil {
+		fields = append(fields, travels.FieldDescription)
+	}
+	if m.video != nil {
+		fields = append(fields, travels.FieldVideo)
+	}
+	if m.is_hidden != nil {
+		fields = append(fields, travels.FieldIsHidden)
+	}
+	if m.account_id != nil {
+		fields = append(fields, travels.FieldAccountID)
+	}
+	if m.photos != nil {
+		fields = append(fields, travels.FieldPhotos)
+	}
+	if m.browse_num != nil {
+		fields = append(fields, travels.FieldBrowseNum)
+	}
+	if m.thumb_num != nil {
+		fields = append(fields, travels.FieldThumbNum)
+	}
+	if m.collect_num != nil {
+		fields = append(fields, travels.FieldCollectNum)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *TravelsMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case travels.FieldCreatedAt:
+		return m.CreatedAt()
+	case travels.FieldCreatedBy:
+		return m.CreatedBy()
+	case travels.FieldUpdatedAt:
+		return m.UpdatedAt()
+	case travels.FieldUpdatedBy:
+		return m.UpdatedBy()
+	case travels.FieldDeletedAt:
+		return m.DeletedAt()
+	case travels.FieldDeletedBy:
+		return m.DeletedBy()
+	case travels.FieldTitle:
+		return m.Title()
+	case travels.FieldDescription:
+		return m.Description()
+	case travels.FieldVideo:
+		return m.Video()
+	case travels.FieldIsHidden:
+		return m.IsHidden()
+	case travels.FieldAccountID:
+		return m.AccountID()
+	case travels.FieldPhotos:
+		return m.Photos()
+	case travels.FieldBrowseNum:
+		return m.BrowseNum()
+	case travels.FieldThumbNum:
+		return m.ThumbNum()
+	case travels.FieldCollectNum:
+		return m.CollectNum()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *TravelsMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case travels.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
+	case travels.FieldCreatedBy:
+		return m.OldCreatedBy(ctx)
+	case travels.FieldUpdatedAt:
+		return m.OldUpdatedAt(ctx)
+	case travels.FieldUpdatedBy:
+		return m.OldUpdatedBy(ctx)
+	case travels.FieldDeletedAt:
+		return m.OldDeletedAt(ctx)
+	case travels.FieldDeletedBy:
+		return m.OldDeletedBy(ctx)
+	case travels.FieldTitle:
+		return m.OldTitle(ctx)
+	case travels.FieldDescription:
+		return m.OldDescription(ctx)
+	case travels.FieldVideo:
+		return m.OldVideo(ctx)
+	case travels.FieldIsHidden:
+		return m.OldIsHidden(ctx)
+	case travels.FieldAccountID:
+		return m.OldAccountID(ctx)
+	case travels.FieldPhotos:
+		return m.OldPhotos(ctx)
+	case travels.FieldBrowseNum:
+		return m.OldBrowseNum(ctx)
+	case travels.FieldThumbNum:
+		return m.OldThumbNum(ctx)
+	case travels.FieldCollectNum:
+		return m.OldCollectNum(ctx)
+	}
+	return nil, fmt.Errorf("unknown Travels field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *TravelsMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case travels.FieldCreatedAt:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
+		return nil
+	case travels.FieldCreatedBy:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedBy(v)
+		return nil
+	case travels.FieldUpdatedAt:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedAt(v)
+		return nil
+	case travels.FieldUpdatedBy:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedBy(v)
+		return nil
+	case travels.FieldDeletedAt:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDeletedAt(v)
+		return nil
+	case travels.FieldDeletedBy:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDeletedBy(v)
+		return nil
+	case travels.FieldTitle:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetTitle(v)
+		return nil
+	case travels.FieldDescription:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDescription(v)
+		return nil
+	case travels.FieldVideo:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetVideo(v)
+		return nil
+	case travels.FieldIsHidden:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetIsHidden(v)
+		return nil
+	case travels.FieldAccountID:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAccountID(v)
+		return nil
+	case travels.FieldPhotos:
+		v, ok := value.([]string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPhotos(v)
+		return nil
+	case travels.FieldBrowseNum:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetBrowseNum(v)
+		return nil
+	case travels.FieldThumbNum:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetThumbNum(v)
+		return nil
+	case travels.FieldCollectNum:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCollectNum(v)
+		return nil
+	}
+	return fmt.Errorf("unknown Travels field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *TravelsMutation) AddedFields() []string {
+	var fields []string
+	if m.addcreated_at != nil {
+		fields = append(fields, travels.FieldCreatedAt)
+	}
+	if m.addcreated_by != nil {
+		fields = append(fields, travels.FieldCreatedBy)
+	}
+	if m.addupdated_at != nil {
+		fields = append(fields, travels.FieldUpdatedAt)
+	}
+	if m.addupdated_by != nil {
+		fields = append(fields, travels.FieldUpdatedBy)
+	}
+	if m.adddeleted_at != nil {
+		fields = append(fields, travels.FieldDeletedAt)
+	}
+	if m.adddeleted_by != nil {
+		fields = append(fields, travels.FieldDeletedBy)
+	}
+	if m.addaccount_id != nil {
+		fields = append(fields, travels.FieldAccountID)
+	}
+	if m.addbrowse_num != nil {
+		fields = append(fields, travels.FieldBrowseNum)
+	}
+	if m.addthumb_num != nil {
+		fields = append(fields, travels.FieldThumbNum)
+	}
+	if m.addcollect_num != nil {
+		fields = append(fields, travels.FieldCollectNum)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *TravelsMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case travels.FieldCreatedAt:
+		return m.AddedCreatedAt()
+	case travels.FieldCreatedBy:
+		return m.AddedCreatedBy()
+	case travels.FieldUpdatedAt:
+		return m.AddedUpdatedAt()
+	case travels.FieldUpdatedBy:
+		return m.AddedUpdatedBy()
+	case travels.FieldDeletedAt:
+		return m.AddedDeletedAt()
+	case travels.FieldDeletedBy:
+		return m.AddedDeletedBy()
+	case travels.FieldAccountID:
+		return m.AddedAccountID()
+	case travels.FieldBrowseNum:
+		return m.AddedBrowseNum()
+	case travels.FieldThumbNum:
+		return m.AddedThumbNum()
+	case travels.FieldCollectNum:
+		return m.AddedCollectNum()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *TravelsMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case travels.FieldCreatedAt:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCreatedAt(v)
+		return nil
+	case travels.FieldCreatedBy:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCreatedBy(v)
+		return nil
+	case travels.FieldUpdatedAt:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddUpdatedAt(v)
+		return nil
+	case travels.FieldUpdatedBy:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddUpdatedBy(v)
+		return nil
+	case travels.FieldDeletedAt:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDeletedAt(v)
+		return nil
+	case travels.FieldDeletedBy:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDeletedBy(v)
+		return nil
+	case travels.FieldAccountID:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddAccountID(v)
+		return nil
+	case travels.FieldBrowseNum:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddBrowseNum(v)
+		return nil
+	case travels.FieldThumbNum:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddThumbNum(v)
+		return nil
+	case travels.FieldCollectNum:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCollectNum(v)
+		return nil
+	}
+	return fmt.Errorf("unknown Travels numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *TravelsMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *TravelsMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *TravelsMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown Travels nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *TravelsMutation) ResetField(name string) error {
+	switch name {
+	case travels.FieldCreatedAt:
+		m.ResetCreatedAt()
+		return nil
+	case travels.FieldCreatedBy:
+		m.ResetCreatedBy()
+		return nil
+	case travels.FieldUpdatedAt:
+		m.ResetUpdatedAt()
+		return nil
+	case travels.FieldUpdatedBy:
+		m.ResetUpdatedBy()
+		return nil
+	case travels.FieldDeletedAt:
+		m.ResetDeletedAt()
+		return nil
+	case travels.FieldDeletedBy:
+		m.ResetDeletedBy()
+		return nil
+	case travels.FieldTitle:
+		m.ResetTitle()
+		return nil
+	case travels.FieldDescription:
+		m.ResetDescription()
+		return nil
+	case travels.FieldVideo:
+		m.ResetVideo()
+		return nil
+	case travels.FieldIsHidden:
+		m.ResetIsHidden()
+		return nil
+	case travels.FieldAccountID:
+		m.ResetAccountID()
+		return nil
+	case travels.FieldPhotos:
+		m.ResetPhotos()
+		return nil
+	case travels.FieldBrowseNum:
+		m.ResetBrowseNum()
+		return nil
+	case travels.FieldThumbNum:
+		m.ResetThumbNum()
+		return nil
+	case travels.FieldCollectNum:
+		m.ResetCollectNum()
+		return nil
+	}
+	return fmt.Errorf("unknown Travels field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *TravelsMutation) AddedEdges() []string {
+	edges := make([]string, 0, 2)
+	if m.travel_extends != nil {
+		edges = append(edges, travels.EdgeTravelExtends)
+	}
+	if m.account_travels != nil {
+		edges = append(edges, travels.EdgeAccountTravels)
+	}
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *TravelsMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case travels.EdgeTravelExtends:
+		ids := make([]ent.Value, 0, len(m.travel_extends))
+		for id := range m.travel_extends {
+			ids = append(ids, id)
+		}
+		return ids
+	case travels.EdgeAccountTravels:
+		if id := m.account_travels; id != nil {
+			return []ent.Value{*id}
+		}
+	}
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *TravelsMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 2)
+	if m.removedtravel_extends != nil {
+		edges = append(edges, travels.EdgeTravelExtends)
+	}
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *TravelsMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	case travels.EdgeTravelExtends:
+		ids := make([]ent.Value, 0, len(m.removedtravel_extends))
+		for id := range m.removedtravel_extends {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *TravelsMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 2)
+	if m.clearedtravel_extends {
+		edges = append(edges, travels.EdgeTravelExtends)
+	}
+	if m.clearedaccount_travels {
+		edges = append(edges, travels.EdgeAccountTravels)
+	}
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *TravelsMutation) EdgeCleared(name string) bool {
+	switch name {
+	case travels.EdgeTravelExtends:
+		return m.clearedtravel_extends
+	case travels.EdgeAccountTravels:
+		return m.clearedaccount_travels
+	}
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *TravelsMutation) ClearEdge(name string) error {
+	switch name {
+	case travels.EdgeAccountTravels:
+		m.ClearAccountTravels()
+		return nil
+	}
+	return fmt.Errorf("unknown Travels unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *TravelsMutation) ResetEdge(name string) error {
+	switch name {
+	case travels.EdgeTravelExtends:
+		m.ResetTravelExtends()
+		return nil
+	case travels.EdgeAccountTravels:
+		m.ResetAccountTravels()
+		return nil
+	}
+	return fmt.Errorf("unknown Travels edge %s", name)
 }
 
 // UserMutation represents an operation that mutates the User nodes in the graph.
@@ -9469,6 +9469,10 @@ type UserMutation struct {
 	skills        *[]string
 	appendskills  []string
 	description   *string
+	experience    *int
+	addexperience *int
+	project       *int
+	addproject    *int
 	clearedFields map[string]struct{}
 	done          bool
 	oldValue      func(context.Context) (*User, error)
@@ -10182,6 +10186,118 @@ func (m *UserMutation) ResetDescription() {
 	m.description = nil
 }
 
+// SetExperience sets the "experience" field.
+func (m *UserMutation) SetExperience(i int) {
+	m.experience = &i
+	m.addexperience = nil
+}
+
+// Experience returns the value of the "experience" field in the mutation.
+func (m *UserMutation) Experience() (r int, exists bool) {
+	v := m.experience
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldExperience returns the old "experience" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldExperience(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldExperience is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldExperience requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldExperience: %w", err)
+	}
+	return oldValue.Experience, nil
+}
+
+// AddExperience adds i to the "experience" field.
+func (m *UserMutation) AddExperience(i int) {
+	if m.addexperience != nil {
+		*m.addexperience += i
+	} else {
+		m.addexperience = &i
+	}
+}
+
+// AddedExperience returns the value that was added to the "experience" field in this mutation.
+func (m *UserMutation) AddedExperience() (r int, exists bool) {
+	v := m.addexperience
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetExperience resets all changes to the "experience" field.
+func (m *UserMutation) ResetExperience() {
+	m.experience = nil
+	m.addexperience = nil
+}
+
+// SetProject sets the "project" field.
+func (m *UserMutation) SetProject(i int) {
+	m.project = &i
+	m.addproject = nil
+}
+
+// Project returns the value of the "project" field in the mutation.
+func (m *UserMutation) Project() (r int, exists bool) {
+	v := m.project
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldProject returns the old "project" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldProject(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldProject is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldProject requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldProject: %w", err)
+	}
+	return oldValue.Project, nil
+}
+
+// AddProject adds i to the "project" field.
+func (m *UserMutation) AddProject(i int) {
+	if m.addproject != nil {
+		*m.addproject += i
+	} else {
+		m.addproject = &i
+	}
+}
+
+// AddedProject returns the value that was added to the "project" field in this mutation.
+func (m *UserMutation) AddedProject() (r int, exists bool) {
+	v := m.addproject
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetProject resets all changes to the "project" field.
+func (m *UserMutation) ResetProject() {
+	m.project = nil
+	m.addproject = nil
+}
+
 // Where appends a list predicates to the UserMutation builder.
 func (m *UserMutation) Where(ps ...predicate.User) {
 	m.predicates = append(m.predicates, ps...)
@@ -10216,7 +10332,7 @@ func (m *UserMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *UserMutation) Fields() []string {
-	fields := make([]string, 0, 13)
+	fields := make([]string, 0, 15)
 	if m.created_at != nil {
 		fields = append(fields, user.FieldCreatedAt)
 	}
@@ -10256,6 +10372,12 @@ func (m *UserMutation) Fields() []string {
 	if m.description != nil {
 		fields = append(fields, user.FieldDescription)
 	}
+	if m.experience != nil {
+		fields = append(fields, user.FieldExperience)
+	}
+	if m.project != nil {
+		fields = append(fields, user.FieldProject)
+	}
 	return fields
 }
 
@@ -10290,6 +10412,10 @@ func (m *UserMutation) Field(name string) (ent.Value, bool) {
 		return m.Skills()
 	case user.FieldDescription:
 		return m.Description()
+	case user.FieldExperience:
+		return m.Experience()
+	case user.FieldProject:
+		return m.Project()
 	}
 	return nil, false
 }
@@ -10325,6 +10451,10 @@ func (m *UserMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldSkills(ctx)
 	case user.FieldDescription:
 		return m.OldDescription(ctx)
+	case user.FieldExperience:
+		return m.OldExperience(ctx)
+	case user.FieldProject:
+		return m.OldProject(ctx)
 	}
 	return nil, fmt.Errorf("unknown User field %s", name)
 }
@@ -10425,6 +10555,20 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetDescription(v)
 		return nil
+	case user.FieldExperience:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetExperience(v)
+		return nil
+	case user.FieldProject:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetProject(v)
+		return nil
 	}
 	return fmt.Errorf("unknown User field %s", name)
 }
@@ -10451,6 +10595,12 @@ func (m *UserMutation) AddedFields() []string {
 	if m.adddeleted_by != nil {
 		fields = append(fields, user.FieldDeletedBy)
 	}
+	if m.addexperience != nil {
+		fields = append(fields, user.FieldExperience)
+	}
+	if m.addproject != nil {
+		fields = append(fields, user.FieldProject)
+	}
 	return fields
 }
 
@@ -10471,6 +10621,10 @@ func (m *UserMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedDeletedAt()
 	case user.FieldDeletedBy:
 		return m.AddedDeletedBy()
+	case user.FieldExperience:
+		return m.AddedExperience()
+	case user.FieldProject:
+		return m.AddedProject()
 	}
 	return nil, false
 }
@@ -10521,6 +10675,20 @@ func (m *UserMutation) AddField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddDeletedBy(v)
+		return nil
+	case user.FieldExperience:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddExperience(v)
+		return nil
+	case user.FieldProject:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddProject(v)
 		return nil
 	}
 	return fmt.Errorf("unknown User numeric field %s", name)
@@ -10587,6 +10755,12 @@ func (m *UserMutation) ResetField(name string) error {
 		return nil
 	case user.FieldDescription:
 		m.ResetDescription()
+		return nil
+	case user.FieldExperience:
+		m.ResetExperience()
+		return nil
+	case user.FieldProject:
+		m.ResetProject()
 		return nil
 	}
 	return fmt.Errorf("unknown User field %s", name)
