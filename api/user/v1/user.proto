@@ -92,6 +92,7 @@ message GetExperienceReply {
 	repeated string skills = 10;//使用技能
 	int64 createdAt=11;//创建时间
 	int64 updatedAt=12;//编辑时间
+	int64 userId= 13;//用户ID
 }
 
 message ListExperienceRequest {
@@ -112,6 +113,7 @@ message ListExperience {
 	int64 end = 6;//结束时间
 	string description = 7;// 职位描述
 	int64 updatedAt=8;//编辑时间
+	int64 userId= 9;//用户ID
 }
 
 message SaveProjectRequest {
@@ -138,6 +140,7 @@ message GetProjectReply {
 	repeated string photos = 9;//项目图片
 	int64 createdAt=10;//创建时间
 	int64 updatedAt=11;//编辑时间
+	int64 userId= 12;//用户ID
 }
 
 message ListProjectRequest {
@@ -157,6 +160,7 @@ message ListProject {
 	string link = 7;//项目地址
 	string photo = 8;//项目图片
 	int64 updatedAt=9;//编辑时间
+	int64 userId= 10;//用户ID
 }
 message ListProjectReply {
 	repeated ListProject list = 1;
