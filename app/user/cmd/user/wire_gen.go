@@ -14,6 +14,7 @@ import (
 	"blog/app/user/internal/service"
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"
+	"go.opentelemetry.io/otel/sdk/trace"
 )
 
 import (
@@ -23,17 +24,18 @@ import (
 // Injectors from wire.go:
 
 // wireApp init kratos application.
-func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*kratos.App, func(), error) {
-	dataData, cleanup, err := data.NewData(confData, logger)
+func wireApp(conf *conf.Bootstrap, tracerProvider *trace.TracerProvider,logger log.Logger) (*kratos.App, func(), error) {
+	dataData, cleanup, err := data.NewData(conf.Data, logger)
 	if err != nil {
 		return nil, nil, err
 	}
-	greeterRepo := data.NewGreeterRepo(dataData, logger)
-	greeterUsecase := biz.NewGreeterUsecase(greeterRepo, logger)
-	greeterService := service.NewGreeterService(greeterUsecase)
-	grpcServer := server.NewGRPCServer(confServer, greeterService, logger)
-	httpServer := server.NewHTTPServer(confServer, greeterService, logger)
-	app := newApp(logger, grpcServer, httpServer)
+	userRepo := data.NewUserRepo(dataData, logger)
+	userUsecase := biz.NewUserUsecase(userRepo, logger)
+	userService := service.NewUserService(userUsecase)
+	grpcServer := server.NewGRPCServer(conf.Server, userService, logger)
+	httpServer := server.NewHTTPServer(conf.Server, userService, logger)
+	register := server.NewEtcdRegistrar(conf.Etcd)
+	app := newApp(logger, grpcServer, httpServer ,register)
 	return app, func() {
 		cleanup()
 	}, nil

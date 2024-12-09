@@ -68,10 +68,10 @@ func (s *BlogsCommentUseCase) UpdateBlogsComment(ctx context.Context, req *pb.Up
 	})
 }
 func (s *BlogsCommentUseCase) DeleteBlogsComment(ctx context.Context, req *global.ID) (*global.Empty, error) {
-	return &global.Empty{}, s.repo.DeleteBlogsComment(ctx, req.ID)
+	return &global.Empty{}, s.repo.DeleteBlogsComment(ctx, req.Id)
 }
 func (s *BlogsCommentUseCase) GetBlogsComment(ctx context.Context, req *global.ID) (*pb.GetBlogsCommentReply, error) {
-	comment, err := s.repo.GetBlogsComment(ctx, req.ID)
+	comment, err := s.repo.GetBlogsComment(ctx, req.Id)
 	if err != nil {
 		return nil, err
 	}

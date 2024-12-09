@@ -1,46 +1,112 @@
 package biz
 
 import (
+	"blog/api/global"
+	v1 "blog/api/tools/v1"
+	"blog/internal/common"
+	"blog/internal/constx"
 	"context"
+	"fmt"
+	"strings"
 
-	v1 "blog/app/tools/api/helloworld/v1"
-
-	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/log"
 )
 
-var (
-	// ErrUserNotFound is user not found.
-	ErrUserNotFound = errors.NotFound(v1.ErrorReason_USER_NOT_FOUND.String(), "user not found")
-)
-
-// Greeter is a Greeter model.
-type Greeter struct {
+// Tools is a Tools model.
+type Tools struct {
 	Hello string
 }
-
-// GreeterRepo is a Greater repo.
-type GreeterRepo interface {
-	Save(context.Context, *Greeter) (*Greeter, error)
-	Update(context.Context, *Greeter) (*Greeter, error)
-	FindByID(context.Context, int64) (*Greeter, error)
-	ListByHello(context.Context, string) ([]*Greeter, error)
-	ListAll(context.Context) ([]*Greeter, error)
+type File struct {
+	ID   string
+	Type string
+	Size int64
+	Name string
+	Path string
 }
 
-// GreeterUsecase is a Greeter usecase.
-type GreeterUsecase struct {
-	repo GreeterRepo
+// ToolsRepo is a Greater repo.
+type ToolsRepo interface {
+	SaveFile(context.Context, *File) error
+	ExistFile(context.Context, *File) (bool, error)
+	FindFile(context.Context, *File) (*File, error)
+}
+
+// ToolsUsecase is a Tools usecase.
+type ToolsUsecase struct {
+	repo ToolsRepo
 	log  *log.Helper
 }
 
-// NewGreeterUsecase new a Greeter usecase.
-func NewGreeterUsecase(repo GreeterRepo, logger log.Logger) *GreeterUsecase {
-	return &GreeterUsecase{repo: repo, log: log.NewHelper(logger)}
+const filePrefix = "_file_"
+
+// NewToolsUsecase new a Tools usecase.
+func NewToolsUsecase(repo ToolsRepo, logger log.Logger) *ToolsUsecase {
+	return &ToolsUsecase{repo: repo, log: log.NewHelper(logger)}
 }
 
-// CreateGreeter creates a Greeter, and returns the new Greeter.
-func (uc *GreeterUsecase) CreateGreeter(ctx context.Context, g *Greeter) (*Greeter, error) {
-	uc.log.WithContext(ctx).Infof("CreateGreeter: %v", g.Hello)
-	return uc.repo.Save(ctx, g)
+func (uc *ToolsUsecase) UploadFile(ctx context.Context, req *v1.UploadFileRequest) (*v1.UploadFileReply, error) {
+	//todo
+	u, err := constx.DefaultUser.User(ctx)
+	if err != nil {
+		return nil, err
+	}
+	var r strings.Builder
+	_, err = r.Write(req.Content)
+	if err != nil {
+		return nil, err
+	}
+	_, err = r.WriteString(filePrefix)
+	if err != nil {
+		return nil, err
+	}
+	_, err = r.WriteString(fmt.Sprintf("%v", u.Id))
+	if err != nil {
+		return nil, err
+	}
+	uuid := common.MD5(r.String())
+	exist, err := uc.repo.ExistFile(ctx, &File{ID: uuid})
+	if err != nil {
+		return nil, err
+	}
+	resp := &v1.UploadFileReply{Uuid: uuid}
+	if exist {
+		return resp, nil
+	}
+	//TODO 真实上传
+	return resp, err
+}
+func (uc *ToolsUsecase) UploadFileByStream(ctx context.Context, req *v1.StreamRequest) (*v1.UploadFileReply, error) {
+	//TODO 待调整
+	u, err := constx.DefaultUser.User(ctx)
+	if err != nil {
+		return nil, err
+	}
+	var r strings.Builder
+	_, err = r.Write(req.Chunk)
+	if err != nil {
+		return nil, err
+	}
+	_, err = r.WriteString(filePrefix)
+	if err != nil {
+		return nil, err
+	}
+	_, err = r.WriteString(fmt.Sprintf("%v", u.Id))
+	if err != nil {
+		return nil, err
+	}
+	uuid := common.MD5(r.String())
+	exist, err := uc.repo.ExistFile(ctx, &File{ID: uuid})
+	if err != nil {
+		return nil, err
+	}
+	resp := &v1.UploadFileReply{Uuid: uuid}
+	if exist {
+		return resp, nil
+	}
+	//TODO 真实上传
+	return resp, err
+}
+func (uc *ToolsUsecase) Files(ctx context.Context, req *global.IDStr) (*global.Byte, error) {
+	//TODO 实现数据获取与读取逻辑
+	return nil, nil
 }

@@ -5,9 +5,10 @@ package api.bff.v1;
 option go_package = "blog/api/bff/v1;v1";
 option java_multiple_files = true;
 option java_package = "api.bff.v1";
-import "api/account/v1/account.proto";
 import "third_party/google/api/annotations.proto";
 import "api/global/index.proto";
+import "api/account/v1/account.proto";
+
 
 service Account {
 	rpc CreateAccount (account.v1.CreateAccountRequest) returns (global.Empty){

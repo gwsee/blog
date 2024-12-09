@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+package api.bff.v1;
+
+option go_package = "blog/api/bff/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.bff.v1";
+import "third_party/google/api/annotations.proto";
+import "api/global/index.proto";
+
+import "api/user/v1/user.proto";
+
+service User {
+  //个人信息管理
+  rpc SaveUser (user.v1.SaveUserRequest) returns (global.Empty){
+    option (google.api.http) = {
+      post: "/v1/user/save"
+      body: "*"
+    };
+  };
+  rpc GetUser (global.Empty) returns (user.v1.GetUserReply){
+    option (google.api.http) = {
+      post: "/v1/user/get"
+      body: "*"
+    };
+  };
+  //项目管理
+  rpc SaveProject (user.v1.SaveProjectRequest) returns (global.Empty){
+    option (google.api.http) = {
+      post: "/v1/project/save"
+      body: "*"
+    };
+  };
+  rpc DeleteProject (global.ID) returns (global.Empty){
+    option (google.api.http) = {
+      post: "/v1/project/del"
+      body: "*"
+    };
+  };
+  rpc GetProject (global.ID) returns (user.v1.GetProjectReply){
+    option (google.api.http) = {
+      post: "/v1/project/get"
+      body: "*"
+    };
+  };
+  rpc ListProject (user.v1.ListProjectRequest) returns (user.v1.ListProjectReply){
+    option (google.api.http) = {
+      post: "/v1/project/list"
+      body: "*"
+    };
+  };
+
+  //工作经验管理
+  rpc SaveExperience (user.v1.SaveExperienceRequest) returns (global.Empty){
+    option (google.api.http) = {
+      post: "/v1/experience/save"
+      body: "*"
+    };
+  };
+  rpc DeleteExperience (global.ID) returns (global.Empty){
+    option (google.api.http) = {
+      post: "/v1/experience/del"
+      body: "*"
+    };
+  };
+  rpc GetExperience (global.ID) returns (user.v1.GetExperienceReply){
+    option (google.api.http) = {
+      post: "/v1/experience/get"
+      body: "*"
+    };
+  };
+  rpc ListExperience (user.v1.ListExperienceRequest) returns (user.v1.ListExperienceReply){
+    option (google.api.http) = {
+      post: "/v1/experience/list"
+      body: "*"
+    };
+  };
+}

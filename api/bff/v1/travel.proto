@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package api.bff.v1;
+
+option go_package = "blog/api/bff/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.bff.v1";
+import "third_party/google/api/annotations.proto";
+import "api/global/index.proto";
+
+import "api/travel/v1/travel.proto";
+
+
+service Travels {
+  rpc SaveTravel (travel.v1.SaveTravelRequest) returns (global.Empty){
+    option (google.api.http) = {
+      post: "/v1/travel/save"
+      body: "*"
+    };
+  };
+  rpc DeleteTravel (global.ID) returns (global.Empty){
+    option (google.api.http) = {
+      post: "/v1/travel/del"
+      body: "*"
+    };
+  };
+  rpc GetTravel (global.ID) returns (travel.v1.GetTravelReply){
+    option (google.api.http) = {
+      post: "/v1/travel/get"
+      body: "*"
+    };
+  };
+  rpc ListTravel (travel.v1.ListTravelRequest) returns (travel.v1.ListTravelReply){
+    option (google.api.http) = {
+      post: "/v1/travel/list"
+      body: "*"
+    };
+  };
+  rpc Thumb(global.Action) returns (global.Empty){
+    option (google.api.http) = {
+      post: "/v1/travel/thumb"
+      body: "*"
+    };
+  };
+  rpc Collect(global.Action) returns (global.Empty){
+    option (google.api.http) = {
+      post: "/v1/travel/collect"
+      body: "*"
+    };
+  };
+}

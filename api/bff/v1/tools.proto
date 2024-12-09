@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package api.bff.v1;
+
+option go_package = "blog/api/bff/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.bff.v1";
+import "third_party/google/api/annotations.proto";
+import "api/global/index.proto";
+
+import "api/tools/v1/tools.proto";
+
+service Tools {
+  rpc UploadFileByStream (tools.v1.StreamRequest) returns (tools.v1.UploadFileReply){
+    option (google.api.http) = {
+      post: "/v1/upload/stream"
+      body: "*"
+    };
+  };
+  //上传文件流的方式
+  rpc UploadFile (tools.v1.UploadFileRequest) returns (tools.v1.UploadFileReply){
+    option (google.api.http) = {
+      post: "/v1/upload/file"
+      body: "*"
+    };
+  };
+
+  rpc Files(global.IDStr)returns(global.Byte){
+    option (google.api.http) = {
+      get: "/v1/file/{id}"
+    };
+  }
+}

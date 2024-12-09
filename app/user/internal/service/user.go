@@ -1,29 +1,50 @@
 package service
 
 import (
-	"context"
-
-	v1 "blog/app/user/api/helloworld/v1"
+	"blog/api/global"
+	"blog/api/user/v1"
 	"blog/app/user/internal/biz"
+	"context"
 )
 
-// GreeterService is a greeter service.
-type GreeterService struct {
-	v1.UnimplementedGreeterServer
+// UserService is a greeter service.
+type UserService struct {
+	v1.UnimplementedUserServer
 
-	uc *biz.GreeterUsecase
+	uc *biz.UserUsecase
 }
 
-// NewGreeterService new a greeter service.
-func NewGreeterService(uc *biz.GreeterUsecase) *GreeterService {
-	return &GreeterService{uc: uc}
+// NewUserService new a greeter service.
+func NewUserService(uc *biz.UserUsecase) *UserService {
+	return &UserService{uc: uc}
 }
-
-// SayHello implements helloworld.GreeterServer.
-func (s *GreeterService) SayHello(ctx context.Context, in *v1.HelloRequest) (*v1.HelloReply, error) {
-	g, err := s.uc.CreateGreeter(ctx, &biz.Greeter{Hello: in.Name})
-	if err != nil {
-		return nil, err
-	}
-	return &v1.HelloReply{Message: "Hello " + g.Hello}, nil
+func (s *UserService) SaveUser(ctx context.Context, req *v1.SaveUserRequest) (*global.Empty, error) {
+	return s.uc.SaveUser(ctx, req)
+}
+func (s *UserService) GetUser(ctx context.Context, req *global.Empty) (*v1.GetUserReply, error) {
+	return s.uc.GetUser(ctx)
+}
+func (s *UserService) SaveProject(ctx context.Context, req *v1.SaveProjectRequest) (*global.Empty, error) {
+	return s.uc.SaveProject(ctx, req)
+}
+func (s *UserService) DeleteProject(ctx context.Context, req *global.ID) (*global.Empty, error) {
+	return s.uc.DeleteProject(ctx, req)
+}
+func (s *UserService) GetProject(ctx context.Context, req *global.ID) (*v1.GetProjectReply, error) {
+	return s.uc.GetProject(ctx, req)
+}
+func (s *UserService) ListProject(ctx context.Context, req *v1.ListProjectRequest) (*v1.ListProjectReply, error) {
+	return s.uc.ListProject(ctx, req)
+}
+func (s *UserService) SaveExperience(ctx context.Context, req *v1.SaveExperienceRequest) (*global.Empty, error) {
+	return s.uc.SaveExperience(ctx, req)
+}
+func (s *UserService) DeleteExperience(ctx context.Context, req *global.ID) (*global.Empty, error) {
+	return s.uc.DeleteExperience(ctx, req)
+}
+func (s *UserService) GetExperience(ctx context.Context, req *global.ID) (*v1.GetExperienceReply, error) {
+	return s.uc.GetExperience(ctx, req)
+}
+func (s *UserService) ListExperience(ctx context.Context, req *v1.ListExperienceRequest) (*v1.ListExperienceReply, error) {
+	return s.uc.ListExperience(ctx, req)
 }

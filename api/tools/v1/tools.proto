@@ -5,6 +5,8 @@ package api.tools.v1;
 option go_package = "blog/api/tools/v1;v1";
 option java_multiple_files = true;
 option java_package = "api.tools.v1";
+import "api/global/index.proto";
+
 import "third_party/google/api/annotations.proto";
 
 service Tools {
@@ -12,12 +14,18 @@ service Tools {
 		option (google.api.http) = {
 			body: "*"
 		};
-	};//上传文件流的方式
+	};
+	//上传文件流的方式
 	rpc UploadFile (UploadFileRequest) returns (UploadFileReply){
 		option (google.api.http) = {
 			body: "*"
 		};
-	};//上传文件流的方式
+	};
+	rpc Files(global.IDStr)returns(global.Byte){
+		option (google.api.http) = {
+			get: "/v1/file/{id}"
+		};
+	}
 }
 
 message UploadFileReply{

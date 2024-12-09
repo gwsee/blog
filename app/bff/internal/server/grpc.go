@@ -20,8 +20,8 @@ import (
 
 // NewGRPCServer new a gRPC server.
 func NewGRPCServer(c *conf.Bootstrap, logger log.Logger, tp *trace.TracerProvider,
-	account *service.AccountService, blogs *service.BlogsService,
-	blogsComment *service.BlogsCommentService) *grpc.Server {
+	account *service.AccountService, blogs *service.BlogsService, blogsComment *service.BlogsCommentService,
+	tool *service.ToolsService, travel *service.TravelService, user *service.UserService) *grpc.Server {
 	var opts = []grpc.ServerOption{
 		grpc.Middleware(
 			metadata.Server(),
@@ -58,5 +58,8 @@ func NewGRPCServer(c *conf.Bootstrap, logger log.Logger, tp *trace.TracerProvide
 	v1.RegisterAccountServer(srv, account)
 	v1.RegisterBlogsServer(srv, blogs)
 	v1.RegisterBlogsCommentServer(srv, blogsComment)
+	v1.RegisterToolsServer(srv, tool)
+	v1.RegisterTravelsServer(srv, travel)
+	v1.RegisterUserServer(srv, user)
 	return srv
 }

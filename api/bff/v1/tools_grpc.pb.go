@@ -2,12 +2,13 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             v5.28.2
-// source: api/tools/v1/tools.proto
+// source: api/bff/v1/tools.proto
 
 package v1
 
 import (
 	global "blog/api/global"
+	v1 "blog/api/tools/v1"
 	context "context"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
@@ -20,18 +21,18 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Tools_UploadFileByStream_FullMethodName = "/api.tools.v1.Tools/UploadFileByStream"
-	Tools_UploadFile_FullMethodName         = "/api.tools.v1.Tools/UploadFile"
-	Tools_Files_FullMethodName              = "/api.tools.v1.Tools/Files"
+	Tools_UploadFileByStream_FullMethodName = "/api.bff.v1.Tools/UploadFileByStream"
+	Tools_UploadFile_FullMethodName         = "/api.bff.v1.Tools/UploadFile"
+	Tools_Files_FullMethodName              = "/api.bff.v1.Tools/Files"
 )
 
 // ToolsClient is the client API for Tools service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ToolsClient interface {
-	UploadFileByStream(ctx context.Context, in *StreamRequest, opts ...grpc.CallOption) (*UploadFileReply, error)
+	UploadFileByStream(ctx context.Context, in *v1.StreamRequest, opts ...grpc.CallOption) (*v1.UploadFileReply, error)
 	// 上传文件流的方式
-	UploadFile(ctx context.Context, in *UploadFileRequest, opts ...grpc.CallOption) (*UploadFileReply, error)
+	UploadFile(ctx context.Context, in *v1.UploadFileRequest, opts ...grpc.CallOption) (*v1.UploadFileReply, error)
 	Files(ctx context.Context, in *global.IDStr, opts ...grpc.CallOption) (*global.Byte, error)
 }
 
@@ -43,9 +44,9 @@ func NewToolsClient(cc grpc.ClientConnInterface) ToolsClient {
 	return &toolsClient{cc}
 }
 
-func (c *toolsClient) UploadFileByStream(ctx context.Context, in *StreamRequest, opts ...grpc.CallOption) (*UploadFileReply, error) {
+func (c *toolsClient) UploadFileByStream(ctx context.Context, in *v1.StreamRequest, opts ...grpc.CallOption) (*v1.UploadFileReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UploadFileReply)
+	out := new(v1.UploadFileReply)
 	err := c.cc.Invoke(ctx, Tools_UploadFileByStream_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -53,9 +54,9 @@ func (c *toolsClient) UploadFileByStream(ctx context.Context, in *StreamRequest,
 	return out, nil
 }
 
-func (c *toolsClient) UploadFile(ctx context.Context, in *UploadFileRequest, opts ...grpc.CallOption) (*UploadFileReply, error) {
+func (c *toolsClient) UploadFile(ctx context.Context, in *v1.UploadFileRequest, opts ...grpc.CallOption) (*v1.UploadFileReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UploadFileReply)
+	out := new(v1.UploadFileReply)
 	err := c.cc.Invoke(ctx, Tools_UploadFile_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -77,9 +78,9 @@ func (c *toolsClient) Files(ctx context.Context, in *global.IDStr, opts ...grpc.
 // All implementations must embed UnimplementedToolsServer
 // for forward compatibility.
 type ToolsServer interface {
-	UploadFileByStream(context.Context, *StreamRequest) (*UploadFileReply, error)
+	UploadFileByStream(context.Context, *v1.StreamRequest) (*v1.UploadFileReply, error)
 	// 上传文件流的方式
-	UploadFile(context.Context, *UploadFileRequest) (*UploadFileReply, error)
+	UploadFile(context.Context, *v1.UploadFileRequest) (*v1.UploadFileReply, error)
 	Files(context.Context, *global.IDStr) (*global.Byte, error)
 	mustEmbedUnimplementedToolsServer()
 }
@@ -91,10 +92,10 @@ type ToolsServer interface {
 // pointer dereference when methods are called.
 type UnimplementedToolsServer struct{}
 
-func (UnimplementedToolsServer) UploadFileByStream(context.Context, *StreamRequest) (*UploadFileReply, error) {
+func (UnimplementedToolsServer) UploadFileByStream(context.Context, *v1.StreamRequest) (*v1.UploadFileReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UploadFileByStream not implemented")
 }
-func (UnimplementedToolsServer) UploadFile(context.Context, *UploadFileRequest) (*UploadFileReply, error) {
+func (UnimplementedToolsServer) UploadFile(context.Context, *v1.UploadFileRequest) (*v1.UploadFileReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UploadFile not implemented")
 }
 func (UnimplementedToolsServer) Files(context.Context, *global.IDStr) (*global.Byte, error) {
@@ -122,7 +123,7 @@ func RegisterToolsServer(s grpc.ServiceRegistrar, srv ToolsServer) {
 }
 
 func _Tools_UploadFileByStream_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(StreamRequest)
+	in := new(v1.StreamRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -134,13 +135,13 @@ func _Tools_UploadFileByStream_Handler(srv interface{}, ctx context.Context, dec
 		FullMethod: Tools_UploadFileByStream_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ToolsServer).UploadFileByStream(ctx, req.(*StreamRequest))
+		return srv.(ToolsServer).UploadFileByStream(ctx, req.(*v1.StreamRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Tools_UploadFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UploadFileRequest)
+	in := new(v1.UploadFileRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -152,7 +153,7 @@ func _Tools_UploadFile_Handler(srv interface{}, ctx context.Context, dec func(in
 		FullMethod: Tools_UploadFile_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ToolsServer).UploadFile(ctx, req.(*UploadFileRequest))
+		return srv.(ToolsServer).UploadFile(ctx, req.(*v1.UploadFileRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -179,7 +180,7 @@ func _Tools_Files_Handler(srv interface{}, ctx context.Context, dec func(interfa
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Tools_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "api.tools.v1.Tools",
+	ServiceName: "api.bff.v1.Tools",
 	HandlerType: (*ToolsServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -196,5 +197,5 @@ var Tools_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "api/tools/v1/tools.proto",
+	Metadata: "api/bff/v1/tools.proto",
 }

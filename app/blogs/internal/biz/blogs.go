@@ -89,14 +89,14 @@ func (s *BlogsUseCase) DeleteBlogs(ctx context.Context, req *global.ID) (*global
 		return nil, err
 	}
 	return &global.Empty{}, s.repo.DeleteBlogs(ctx, &Blogs{
-		Id:        req.ID,
+		Id:        req.Id,
 		AccountId: u.Id,
 	})
 }
 func (s *BlogsUseCase) GetBlogs(ctx context.Context, req *global.ID) (*pb.GetBlogsReply, error) {
 	u := constx.DefaultUser.Default(ctx)
 	info, err := s.repo.GetBlogs(ctx, &Blogs{
-		Id:        req.ID,
+		Id:        req.Id,
 		AccountId: u.Id,
 	})
 	if err != nil {

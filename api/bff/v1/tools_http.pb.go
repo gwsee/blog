@@ -2,12 +2,13 @@
 // versions:
 // - protoc-gen-go-http v2.8.0
 // - protoc             v5.28.2
-// source: api/tools/v1/tools.proto
+// source: api/bff/v1/tools.proto
 
 package v1
 
 import (
 	global "blog/api/global"
+	v1 "blog/api/tools/v1"
 	context "context"
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
@@ -20,27 +21,27 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const OperationToolsFiles = "/api.tools.v1.Tools/Files"
-const OperationToolsUploadFile = "/api.tools.v1.Tools/UploadFile"
-const OperationToolsUploadFileByStream = "/api.tools.v1.Tools/UploadFileByStream"
+const OperationToolsFiles = "/api.bff.v1.Tools/Files"
+const OperationToolsUploadFile = "/api.bff.v1.Tools/UploadFile"
+const OperationToolsUploadFileByStream = "/api.bff.v1.Tools/UploadFileByStream"
 
 type ToolsHTTPServer interface {
 	Files(context.Context, *global.IDStr) (*global.Byte, error)
 	// UploadFile上传文件流的方式
-	UploadFile(context.Context, *UploadFileRequest) (*UploadFileReply, error)
-	UploadFileByStream(context.Context, *StreamRequest) (*UploadFileReply, error)
+	UploadFile(context.Context, *v1.UploadFileRequest) (*v1.UploadFileReply, error)
+	UploadFileByStream(context.Context, *v1.StreamRequest) (*v1.UploadFileReply, error)
 }
 
 func RegisterToolsHTTPServer(s *http.Server, srv ToolsHTTPServer) {
 	r := s.Route("/")
-	r.POST("/api.tools.v1.Tools/UploadFileByStream", _Tools_UploadFileByStream0_HTTP_Handler(srv))
-	r.POST("/api.tools.v1.Tools/UploadFile", _Tools_UploadFile0_HTTP_Handler(srv))
+	r.POST("/v1/upload/stream", _Tools_UploadFileByStream0_HTTP_Handler(srv))
+	r.POST("/v1/upload/file", _Tools_UploadFile0_HTTP_Handler(srv))
 	r.GET("/v1/file/{id}", _Tools_Files0_HTTP_Handler(srv))
 }
 
 func _Tools_UploadFileByStream0_HTTP_Handler(srv ToolsHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in StreamRequest
+		var in v1.StreamRequest
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
@@ -49,20 +50,20 @@ func _Tools_UploadFileByStream0_HTTP_Handler(srv ToolsHTTPServer) func(ctx http.
 		}
 		http.SetOperation(ctx, OperationToolsUploadFileByStream)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.UploadFileByStream(ctx, req.(*StreamRequest))
+			return srv.UploadFileByStream(ctx, req.(*v1.StreamRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*UploadFileReply)
+		reply := out.(*v1.UploadFileReply)
 		return ctx.Result(200, reply)
 	}
 }
 
 func _Tools_UploadFile0_HTTP_Handler(srv ToolsHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in UploadFileRequest
+		var in v1.UploadFileRequest
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
@@ -71,13 +72,13 @@ func _Tools_UploadFile0_HTTP_Handler(srv ToolsHTTPServer) func(ctx http.Context)
 		}
 		http.SetOperation(ctx, OperationToolsUploadFile)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.UploadFile(ctx, req.(*UploadFileRequest))
+			return srv.UploadFile(ctx, req.(*v1.UploadFileRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*UploadFileReply)
+		reply := out.(*v1.UploadFileReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -106,8 +107,8 @@ func _Tools_Files0_HTTP_Handler(srv ToolsHTTPServer) func(ctx http.Context) erro
 
 type ToolsHTTPClient interface {
 	Files(ctx context.Context, req *global.IDStr, opts ...http.CallOption) (rsp *global.Byte, err error)
-	UploadFile(ctx context.Context, req *UploadFileRequest, opts ...http.CallOption) (rsp *UploadFileReply, err error)
-	UploadFileByStream(ctx context.Context, req *StreamRequest, opts ...http.CallOption) (rsp *UploadFileReply, err error)
+	UploadFile(ctx context.Context, req *v1.UploadFileRequest, opts ...http.CallOption) (rsp *v1.UploadFileReply, err error)
+	UploadFileByStream(ctx context.Context, req *v1.StreamRequest, opts ...http.CallOption) (rsp *v1.UploadFileReply, err error)
 }
 
 type ToolsHTTPClientImpl struct {
@@ -131,9 +132,9 @@ func (c *ToolsHTTPClientImpl) Files(ctx context.Context, in *global.IDStr, opts 
 	return &out, nil
 }
 
-func (c *ToolsHTTPClientImpl) UploadFile(ctx context.Context, in *UploadFileRequest, opts ...http.CallOption) (*UploadFileReply, error) {
-	var out UploadFileReply
-	pattern := "/api.tools.v1.Tools/UploadFile"
+func (c *ToolsHTTPClientImpl) UploadFile(ctx context.Context, in *v1.UploadFileRequest, opts ...http.CallOption) (*v1.UploadFileReply, error) {
+	var out v1.UploadFileReply
+	pattern := "/v1/upload/file"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationToolsUploadFile))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -144,9 +145,9 @@ func (c *ToolsHTTPClientImpl) UploadFile(ctx context.Context, in *UploadFileRequ
 	return &out, nil
 }
 
-func (c *ToolsHTTPClientImpl) UploadFileByStream(ctx context.Context, in *StreamRequest, opts ...http.CallOption) (*UploadFileReply, error) {
-	var out UploadFileReply
-	pattern := "/api.tools.v1.Tools/UploadFileByStream"
+func (c *ToolsHTTPClientImpl) UploadFileByStream(ctx context.Context, in *v1.StreamRequest, opts ...http.CallOption) (*v1.UploadFileReply, error) {
+	var out v1.UploadFileReply
+	pattern := "/v1/upload/stream"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationToolsUploadFileByStream))
 	opts = append(opts, http.PathTemplate(pattern))

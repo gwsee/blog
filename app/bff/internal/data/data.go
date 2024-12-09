@@ -3,6 +3,10 @@ package data
 import (
 	account "blog/api/account/v1"
 	blogs "blog/api/blogs/v1"
+	tools "blog/api/tools/v1"
+	travel "blog/api/travel/v1"
+	user "blog/api/user/v1"
+
 	"blog/app/bff/internal/conf"
 	"context"
 	"github.com/go-kratos/kratos/contrib/registry/etcd/v2"
@@ -18,13 +22,16 @@ import (
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(NewData, NewAccountRepo, NewBlogsRepo)
+var ProviderSet = wire.NewSet(NewData, NewAccountRepo, NewBlogsRepo, NewTravelRepo, NewUserRepo, NewToolsRepo)
 
 // Data .
 type Data struct {
 	ac  account.AccountClient
 	bc  blogs.BlogsClient
 	bcm blogs.BlogsCommentClient
+	uc  user.UserClient
+	tc  travel.TravelClient
+	t   tools.ToolsClient
 	dis registry.Discovery
 }
 
@@ -48,6 +55,15 @@ func NewData(c *conf.Etcd, logger log.Logger) (*Data, func(), error) {
 		return nil, cleanup, err
 	}
 	if err = data.NewBlogsClientClient(); err != nil {
+		return nil, cleanup, err
+	}
+	if err = data.NewUserClient(); err != nil {
+		return nil, cleanup, err
+	}
+	if err = data.NewTravelClient(); err != nil {
+		return nil, cleanup, err
+	}
+	if err = data.NewToolsClient(); err != nil {
 		return nil, cleanup, err
 	}
 	return data, cleanup, nil
@@ -109,5 +125,62 @@ func (l *Data) NewBlogsClientClient() error {
 		return err
 	}
 	l.bcm = blogs.NewBlogsCommentClient(conn)
+	return nil
+}
+func (l *Data) NewUserClient() error {
+	endpoint := "discovery:///app-user"
+	conn, err := grpc.DialInsecure(context.Background(), grpc.WithEndpoint(endpoint), grpc.WithDiscovery(l.dis), grpc.WithMiddleware(
+		recovery.Recovery(),
+		metadata.Client(),
+		jwt.Client(func(token *jwtv5.Token) (interface{}, error) {
+			return []byte("gwsee"), nil
+		}, jwt.WithSigningMethod(jwtv5.SigningMethodHS256),
+			jwt.WithClaims(func() jwtv5.Claims {
+				return &jwtv5.MapClaims{}
+			}),
+		),
+	))
+	if err != nil {
+		return err
+	}
+	l.uc = user.NewUserClient(conn)
+	return nil
+}
+func (l *Data) NewTravelClient() error {
+	endpoint := "discovery:///app-travel"
+	conn, err := grpc.DialInsecure(context.Background(), grpc.WithEndpoint(endpoint), grpc.WithDiscovery(l.dis), grpc.WithMiddleware(
+		recovery.Recovery(),
+		metadata.Client(),
+		jwt.Client(func(token *jwtv5.Token) (interface{}, error) {
+			return []byte("gwsee"), nil
+		}, jwt.WithSigningMethod(jwtv5.SigningMethodHS256),
+			jwt.WithClaims(func() jwtv5.Claims {
+				return &jwtv5.MapClaims{}
+			}),
+		),
+	))
+	if err != nil {
+		return err
+	}
+	l.tc = travel.NewTravelClient(conn)
+	return nil
+}
+func (l *Data) NewToolsClient() error {
+	endpoint := "discovery:///app-tools"
+	conn, err := grpc.DialInsecure(context.Background(), grpc.WithEndpoint(endpoint), grpc.WithDiscovery(l.dis), grpc.WithMiddleware(
+		recovery.Recovery(),
+		metadata.Client(),
+		jwt.Client(func(token *jwtv5.Token) (interface{}, error) {
+			return []byte("gwsee"), nil
+		}, jwt.WithSigningMethod(jwtv5.SigningMethodHS256),
+			jwt.WithClaims(func() jwtv5.Claims {
+				return &jwtv5.MapClaims{}
+			}),
+		),
+	))
+	if err != nil {
+		return err
+	}
+	l.t = tools.NewToolsClient(conn)
 	return nil
 }

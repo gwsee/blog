@@ -1,29 +1,31 @@
 package service
 
 import (
+	"blog/api/global"
 	"context"
 
-	v1 "blog/app/tools/api/helloworld/v1"
+	"blog/api/tools/v1"
 	"blog/app/tools/internal/biz"
 )
 
-// GreeterService is a greeter service.
-type GreeterService struct {
-	v1.UnimplementedGreeterServer
+// ToolsService is a greeter service.
+type ToolsService struct {
+	v1.UnimplementedToolsServer
 
-	uc *biz.GreeterUsecase
+	uc *biz.ToolsUsecase
 }
 
-// NewGreeterService new a greeter service.
-func NewGreeterService(uc *biz.GreeterUsecase) *GreeterService {
-	return &GreeterService{uc: uc}
+// NewToolsService new a greeter service.
+func NewToolsService(uc *biz.ToolsUsecase) *ToolsService {
+	return &ToolsService{uc: uc}
 }
 
-// SayHello implements helloworld.GreeterServer.
-func (s *GreeterService) SayHello(ctx context.Context, in *v1.HelloRequest) (*v1.HelloReply, error) {
-	g, err := s.uc.CreateGreeter(ctx, &biz.Greeter{Hello: in.Name})
-	if err != nil {
-		return nil, err
-	}
-	return &v1.HelloReply{Message: "Hello " + g.Hello}, nil
+func (s *ToolsService) UploadFile(ctx context.Context, in *v1.UploadFileRequest) (*v1.UploadFileReply, error) {
+	return s.uc.UploadFile(ctx, in)
+}
+func (s *ToolsService) UploadFileByStream(ctx context.Context, in *v1.StreamRequest) (*v1.UploadFileReply, error) {
+	return s.uc.UploadFileByStream(ctx, in)
+}
+func (s *ToolsService) Files(ctx context.Context, in *global.IDStr) (*global.Byte, error) {
+	return s.uc.Files(ctx, in)
 }

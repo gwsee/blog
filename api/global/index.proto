@@ -21,3 +21,6 @@ message Action {
   int64 id = 1;
   bool do =2;
 }
+message Byte {
+  bytes data = 1;
+}
