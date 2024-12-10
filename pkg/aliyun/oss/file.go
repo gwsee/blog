@@ -2,35 +2,11 @@ package oss
 
 import (
 	"bytes"
-	"context"
 	"fmt"
 	"github.com/aliyun/alibabacloud-oss-go-sdk-v2/oss"
-	"github.com/aliyun/alibabacloud-oss-go-sdk-v2/oss/credentials"
+	"strings"
+	"time"
 )
-
-type File struct {
-	cli    *oss.Client
-	bucket string
-	ctx    context.Context
-	site   string
-}
-
-func NewFileClient(ctx context.Context) *File {
-	f := &File{ctx: ctx}
-	return f
-}
-func (o *File) SetOSSClient(key, secret, region string) *File {
-	o.cli = NewOSSClient(key, secret, region)
-	return o
-}
-func (o *File) SetBucket(bucket string) *File {
-	o.bucket = bucket
-	return o
-}
-func (o *File) SetSite(site string) *File {
-	o.site = site
-	return o
-}
 
 func (o *File) UploadFile(filePath string, content []byte) (string, error) {
 	request := &oss.PutObjectRequest{
@@ -42,20 +18,17 @@ func (o *File) UploadFile(filePath string, content []byte) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return fmt.Sprintf("%s/%s", o.site, filePath), nil
+	url := fmt.Sprintf("%s%s", o.site, filePath)
+	return url, nil
 }
-func NewOSSClient(key, secret, region string) *oss.Client {
-	provider := credentials.CredentialsProviderFunc(func(ctx context.Context) (credentials.Credentials, error) {
-		// 返回长期凭证
-		return credentials.Credentials{AccessKeyID: key, AccessKeySecret: secret}, nil
-		// 返回临时凭证
-		//return credentials.Credentials{AccessKeyID: "id", AccessKeySecret: "secret",    SecurityToken: "token"}, nil
-	})
-	//// 定义要上传的内容
-	//credentials.NewAnonymousCredentialsProvider()
-	// 加载默认配置并设置凭证提供者和区域
-	cfg := oss.LoadDefaultConfig().
-		WithCredentialsProvider(provider).
-		WithRegion(region)
-	return oss.NewClient(cfg)
+func (o *File) Temp(path string, expireMinute int) (string, error) {
+	key := strings.ReplaceAll(path, o.site, "")
+	result, err := o.cli.Presign(o.ctx, &oss.GetObjectRequest{
+		Bucket: oss.Ptr(o.bucket),
+		Key:    oss.Ptr(key),
+	}, oss.PresignExpires(time.Duration(expireMinute)*time.Minute))
+	if err != nil {
+		return "", err
+	}
+	return result.URL, nil
 }

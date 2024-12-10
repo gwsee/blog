@@ -68,4 +68,5 @@ message Oss {
   string key = 3;
   string secret =4;
   string site = 5;
+  int64 expire = 6; //过期时间 单位分钟  --创建的文件不直接公开 通过阿里云oss获取临时文件的方式访问
 }

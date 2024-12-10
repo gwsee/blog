@@ -26,7 +26,7 @@ const OperationToolsUploadFile = "/api.bff.v1.Tools/UploadFile"
 const OperationToolsUploadFileByStream = "/api.bff.v1.Tools/UploadFileByStream"
 
 type ToolsHTTPServer interface {
-	Files(context.Context, *global.IDStr) (*global.Byte, error)
+	Files(context.Context, *global.IDStr) (*global.IDStr, error)
 	// UploadFile上传文件流的方式
 	UploadFile(context.Context, *v1.UploadFileRequest) (*v1.UploadFileReply, error)
 	UploadFileByStream(context.Context, *v1.StreamRequest) (*v1.UploadFileReply, error)
@@ -62,30 +62,10 @@ func _Tools_UploadFileByStream0_HTTP_Handler(srv ToolsHTTPServer) func(ctx http.
 }
 
 
-func _Tools_Files0_HTTP_Handler(srv ToolsHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in global.IDStr
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindVars(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationToolsFiles)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.Files(ctx, req.(*global.IDStr))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*global.Byte)
-		return ctx.Result(200, reply)
-	}
-}
+
 
 type ToolsHTTPClient interface {
-	Files(ctx context.Context, req *global.IDStr, opts ...http.CallOption) (rsp *global.Byte, err error)
+	Files(ctx context.Context, req *global.IDStr, opts ...http.CallOption) (rsp *global.IDStr, err error)
 	UploadFile(ctx context.Context, req *v1.UploadFileRequest, opts ...http.CallOption) (rsp *v1.UploadFileReply, err error)
 	UploadFileByStream(ctx context.Context, req *v1.StreamRequest, opts ...http.CallOption) (rsp *v1.UploadFileReply, err error)
 }
@@ -98,8 +78,8 @@ func NewToolsHTTPClient(client *http.Client) ToolsHTTPClient {
 	return &ToolsHTTPClientImpl{client}
 }
 
-func (c *ToolsHTTPClientImpl) Files(ctx context.Context, in *global.IDStr, opts ...http.CallOption) (*global.Byte, error) {
-	var out global.Byte
+func (c *ToolsHTTPClientImpl) Files(ctx context.Context, in *global.IDStr, opts ...http.CallOption) (*global.IDStr, error) {
+	var out global.IDStr
 	pattern := "/v1/file/{id}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationToolsFiles))

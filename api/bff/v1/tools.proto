@@ -25,7 +25,7 @@ service Tools {
     };
   };
 
-  rpc Files(global.IDStr)returns(global.Byte){
+  rpc Files(global.IDStr)returns(global.IDStr){
     option (google.api.http) = {
       get: "/v1/file/{id}"
     };

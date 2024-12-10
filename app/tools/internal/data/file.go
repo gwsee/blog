@@ -1,8 +1,11 @@
 package data
 
 import (
+	"blog/internal/constx"
 	"blog/internal/ent/files"
 	"context"
+	"fmt"
+	"time"
 
 	"blog/app/tools/internal/biz"
 
@@ -27,8 +30,12 @@ func (r *toolsRepo) SaveFile(ctx context.Context, g *biz.File) error {
 		SetID(g.ID).SetName(g.Name).SetType(g.Type).SetSize(g.Size).SetPath(g.Path).
 		OnConflict().DoNothing().Exec(ctx)
 }
-func (r *toolsRepo) ExistFile(ctx context.Context, g *biz.File) (bool, error) {
-	return r.data.db.Files.Query().Where(files.IDEQ(g.ID)).Exist(ctx)
+func (r *toolsRepo) ExistFile(ctx context.Context, g *biz.File) (string, error) {
+	f, err := r.data.db.Files.Query().Where(files.IDEQ(g.ID)).Only(ctx)
+	if err != nil {
+		return "", err
+	}
+	return f.Path, nil
 }
 func (r *toolsRepo) FindFile(ctx context.Context, g *biz.File) (*biz.File, error) {
 	file, err := r.data.db.Files.Get(ctx, g.ID)
@@ -42,4 +49,12 @@ func (r *toolsRepo) FindFile(ctx context.Context, g *biz.File) (*biz.File, error
 		Name: file.Name,
 		Path: file.Path,
 	}, nil
+}
+func (r *toolsRepo) CacheFile(ctx context.Context, origin, path string, expire int64) {
+	if r.data.redisCli == nil {
+		fmt.Println("没有缓存")
+		return
+	}
+	fmt.Println("缓存成功")
+	r.data.redisCli.Set(ctx, constx.FileCachePrefix+origin, path, time.Duration(expire)*time.Minute)
 }

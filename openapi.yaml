@@ -23,7 +23,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/Byte'
+                                $ref: '#/components/schemas/IDStr'
                 default:
                     description: Default error response
                     content:
@@ -81,12 +81,6 @@ paths:
                                 $ref: '#/components/schemas/Status'
 components:
     schemas:
-        Byte:
-            type: object
-            properties:
-                data:
-                    type: string
-                    format: bytes
         GoogleProtobufAny:
             type: object
             properties:
@@ -95,6 +89,11 @@ components:
                     description: The type of the serialized message.
             additionalProperties: true
             description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+        IDStr:
+            type: object
+            properties:
+                id:
+                    type: string
         Status:
             type: object
             properties:

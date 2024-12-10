@@ -31,8 +31,9 @@ type File struct {
 // ToolsRepo is a Greater repo.
 type ToolsRepo interface {
 	SaveFile(context.Context, *File) error
-	ExistFile(context.Context, *File) (bool, error)
+	ExistFile(context.Context, *File) (string, error)
 	FindFile(context.Context, *File) (*File, error)
+	CacheFile(context.Context, string, string, int64)
 }
 
 // ToolsUsecase is a Tools usecase.
@@ -55,21 +56,37 @@ func NewToolsUsecase(repo ToolsRepo, logger log.Logger, oss *global.Oss) *ToolsU
 const filePath = "%v/%v/%v/%v"
 const fileAuto = "auto"
 
-func (uc *ToolsUsecase) UploadFile(ctx context.Context, req *v1.UploadFileRequest) (*v1.UploadFileReply, error) {
+func (uc *ToolsUsecase) UploadFile(ctx context.Context, req *v1.UploadFileRequest) (resp *v1.UploadFileReply, err error) {
 	var r strings.Builder
-	_, err := r.Write(req.Content)
+	_, err = r.Write(req.Content)
 	if err != nil {
 		return nil, err
 	}
 	uuid := common.MD5(r.String())
-	exist, err := uc.repo.ExistFile(ctx, &File{ID: uuid})
+	var exist string
+
+	//返回的时候将临时链接返回
+	defer func() {
+		if err != nil {
+			return
+		}
+		c, _ := uc.fileLink(ctx, uuid, exist)
+		if c == nil {
+			return
+		}
+		resp.Message = c.Id
+	}()
+
+	//判断文件是否存在
+	exist, err = uc.repo.ExistFile(ctx, &File{ID: uuid})
 	if err != nil {
 		return nil, err
 	}
-	resp := &v1.UploadFileReply{Uuid: uuid}
-	if exist {
+	resp = &v1.UploadFileReply{Uuid: uuid}
+	if exist != "" {
 		return resp, nil
 	}
+	//自定义存储路径
 	kind, _ := filetype.Match(req.Content)
 	ty := strings.Split(kind.MIME.Value, "/")[0]
 	if kind == filetype.Unknown {
@@ -89,9 +106,11 @@ func (uc *ToolsUsecase) UploadFile(ctx context.Context, req *v1.UploadFileReques
 	}
 	path := fmt.Sprintf(filePath, ty, kind.Extension,
 		time.Now().Format("20060102"), req.Filename)
+
+	//上传文件并记录关系
 	fileCli := oss.NewFileClient(ctx).SetBucket(uc.oss.Bucket).SetSite(uc.oss.Site).
 		SetOSSClient(uc.oss.Key, uc.oss.Secret, uc.oss.Region)
-	res, err := fileCli.UploadFile(path, req.Content)
+	exist, err = fileCli.UploadFile(path, req.Content)
 	if err != nil {
 		return nil, err
 	}
@@ -100,7 +119,7 @@ func (uc *ToolsUsecase) UploadFile(ctx context.Context, req *v1.UploadFileReques
 		Type: ty,
 		Size: int64(len(req.Content)),
 		Name: req.Filename,
-		Path: res,
+		Path: exist,
 	})
 	return resp, err
 }
@@ -129,13 +148,29 @@ func (uc *ToolsUsecase) UploadFileByStream(ctx context.Context, req *v1.StreamRe
 		return nil, err
 	}
 	resp := &v1.UploadFileReply{Uuid: uuid}
-	if exist {
+	if exist != "" {
+		resp.Message = exist
 		return resp, nil
 	}
 	//TODO 真实上传
 	return resp, err
 }
-func (uc *ToolsUsecase) Files(ctx context.Context, req *global.IDStr) (*global.Byte, error) {
-	//TODO 实现数据获取与读取逻辑
-	return nil, nil
+func (uc *ToolsUsecase) Files(ctx context.Context, req *global.IDStr) (*global.IDStr, error) {
+	one, err := uc.repo.FindFile(ctx, &File{ID: req.Id})
+	if err != nil {
+		return nil, err
+	}
+	return uc.fileLink(ctx, req.Id, one.Path)
+}
+
+func (uc *ToolsUsecase) fileLink(ctx context.Context, id, url string) (*global.IDStr, error) {
+	fileCli := oss.NewFileClient(ctx).SetBucket(uc.oss.Bucket).SetSite(uc.oss.Site).
+		SetOSSClient(uc.oss.Key, uc.oss.Secret, uc.oss.Region)
+	link, _ := fileCli.Temp(url, int(uc.oss.Expire))
+	expire := uc.oss.Expire
+	if link == "" {
+		expire = 10
+	}
+	uc.repo.CacheFile(ctx, id, link, expire)
+	return &global.IDStr{Id: link}, nil
 }

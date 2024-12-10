@@ -26,6 +26,6 @@ func (s *ToolsService) UploadFile(ctx context.Context, in *v1.UploadFileRequest)
 func (s *ToolsService) UploadFileByStream(ctx context.Context, in *v1.StreamRequest) (*v1.UploadFileReply, error) {
 	return s.uc.UploadFileByStream(ctx, in)
 }
-func (s *ToolsService) Files(ctx context.Context, in *global.IDStr) (*global.Byte, error) {
+func (s *ToolsService) Files(ctx context.Context, in *global.IDStr) (*global.IDStr, error) {
 	return s.uc.Files(ctx, in)
 }

@@ -25,7 +25,7 @@ const OperationToolsUploadFile = "/api.tools.v1.Tools/UploadFile"
 const OperationToolsUploadFileByStream = "/api.tools.v1.Tools/UploadFileByStream"
 
 type ToolsHTTPServer interface {
-	Files(context.Context, *global.IDStr) (*global.Byte, error)
+	Files(context.Context, *global.IDStr) (*global.IDStr, error)
 	// UploadFile上传文件流的方式
 	UploadFile(context.Context, *UploadFileRequest) (*UploadFileReply, error)
 	UploadFileByStream(context.Context, *StreamRequest) (*UploadFileReply, error)
@@ -99,13 +99,13 @@ func _Tools_Files0_HTTP_Handler(srv ToolsHTTPServer) func(ctx http.Context) erro
 		if err != nil {
 			return err
 		}
-		reply := out.(*global.Byte)
+		reply := out.(*global.IDStr)
 		return ctx.Result(200, reply)
 	}
 }
 
 type ToolsHTTPClient interface {
-	Files(ctx context.Context, req *global.IDStr, opts ...http.CallOption) (rsp *global.Byte, err error)
+	Files(ctx context.Context, req *global.IDStr, opts ...http.CallOption) (rsp *global.IDStr, err error)
 	UploadFile(ctx context.Context, req *UploadFileRequest, opts ...http.CallOption) (rsp *UploadFileReply, err error)
 	UploadFileByStream(ctx context.Context, req *StreamRequest, opts ...http.CallOption) (rsp *UploadFileReply, err error)
 }
@@ -118,8 +118,8 @@ func NewToolsHTTPClient(client *http.Client) ToolsHTTPClient {
 	return &ToolsHTTPClientImpl{client}
 }
 
-func (c *ToolsHTTPClientImpl) Files(ctx context.Context, in *global.IDStr, opts ...http.CallOption) (*global.Byte, error) {
-	var out global.Byte
+func (c *ToolsHTTPClientImpl) Files(ctx context.Context, in *global.IDStr, opts ...http.CallOption) (*global.IDStr, error) {
+	var out global.IDStr
 	pattern := "/v1/file/{id}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationToolsFiles))

@@ -33,7 +33,7 @@ type ToolsClient interface {
 	UploadFileByStream(ctx context.Context, in *v1.StreamRequest, opts ...grpc.CallOption) (*v1.UploadFileReply, error)
 	// 上传文件流的方式
 	UploadFile(ctx context.Context, in *v1.UploadFileRequest, opts ...grpc.CallOption) (*v1.UploadFileReply, error)
-	Files(ctx context.Context, in *global.IDStr, opts ...grpc.CallOption) (*global.Byte, error)
+	Files(ctx context.Context, in *global.IDStr, opts ...grpc.CallOption) (*global.IDStr, error)
 }
 
 type toolsClient struct {
@@ -64,9 +64,9 @@ func (c *toolsClient) UploadFile(ctx context.Context, in *v1.UploadFileRequest, 
 	return out, nil
 }
 
-func (c *toolsClient) Files(ctx context.Context, in *global.IDStr, opts ...grpc.CallOption) (*global.Byte, error) {
+func (c *toolsClient) Files(ctx context.Context, in *global.IDStr, opts ...grpc.CallOption) (*global.IDStr, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(global.Byte)
+	out := new(global.IDStr)
 	err := c.cc.Invoke(ctx, Tools_Files_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -81,7 +81,7 @@ type ToolsServer interface {
 	UploadFileByStream(context.Context, *v1.StreamRequest) (*v1.UploadFileReply, error)
 	// 上传文件流的方式
 	UploadFile(context.Context, *v1.UploadFileRequest) (*v1.UploadFileReply, error)
-	Files(context.Context, *global.IDStr) (*global.Byte, error)
+	Files(context.Context, *global.IDStr) (*global.IDStr, error)
 	mustEmbedUnimplementedToolsServer()
 }
 
@@ -98,7 +98,7 @@ func (UnimplementedToolsServer) UploadFileByStream(context.Context, *v1.StreamRe
 func (UnimplementedToolsServer) UploadFile(context.Context, *v1.UploadFileRequest) (*v1.UploadFileReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UploadFile not implemented")
 }
-func (UnimplementedToolsServer) Files(context.Context, *global.IDStr) (*global.Byte, error) {
+func (UnimplementedToolsServer) Files(context.Context, *global.IDStr) (*global.IDStr, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Files not implemented")
 }
 func (UnimplementedToolsServer) mustEmbedUnimplementedToolsServer() {}

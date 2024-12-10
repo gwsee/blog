@@ -1,11 +1,13 @@
 package v1
 
 import (
+	"blog/api/global"
 	v1 "blog/api/tools/v1"
 	"blog/internal/constx"
 	"context"
 	"github.com/go-kratos/kratos/v2/transport/http"
 	"io"
+	http2 "net/http"
 )
 
 func _Tools_UploadFile0_HTTP_Handler(srv ToolsHTTPServer) func(ctx http.Context) error {
@@ -38,5 +40,30 @@ func _Tools_UploadFile0_HTTP_Handler(srv ToolsHTTPServer) func(ctx http.Context)
 		}
 		reply := out.(*v1.UploadFileReply)
 		return ctx.Result(200, reply)
+	}
+}
+func _Tools_Files0_HTTP_Handler(srv ToolsHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in global.IDStr
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationToolsFiles)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.Files(ctx, req.(*global.IDStr))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*global.IDStr)
+		//fmt.Println("响应为", reply.Id)
+		//http.NewRedirect(reply.Id, http2.StatusSeeOther)
+		http2.Redirect(ctx.Response(), ctx.Request(), reply.Id, http2.StatusTemporaryRedirect)
+		ctx.Done()
+		return nil
 	}
 }
