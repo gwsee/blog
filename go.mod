@@ -6,6 +6,7 @@ toolchain go1.23.4
 
 require (
 	entgo.io/ent v0.14.1
+	github.com/aliyun/alibabacloud-oss-go-sdk-v2 v1.1.3
 	github.com/go-kratos/kratos/contrib/registry/etcd/v2 v2.0.0-20241031100207-f3c4b23a08df
 	github.com/go-kratos/kratos/v2 v2.8.2
 	github.com/go-redis/redis/v8 v8.11.5
@@ -13,6 +14,7 @@ require (
 	github.com/golang-jwt/jwt/v5 v5.1.0
 	github.com/google/wire v0.6.0
 	github.com/gorilla/handlers v1.5.2
+	github.com/h2non/filetype v1.1.3
 	github.com/jackc/pgx/v5 v5.7.1
 	go.etcd.io/etcd/client/v3 v3.5.11
 	go.opentelemetry.io/otel v1.24.0
@@ -74,6 +76,7 @@ require (
 	golang.org/x/sync v0.10.0 // indirect
 	golang.org/x/sys v0.28.0 // indirect
 	golang.org/x/text v0.21.0 // indirect
+	golang.org/x/time v0.4.0 // indirect
 	golang.org/x/tools v0.28.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240528184218-531527333157 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect

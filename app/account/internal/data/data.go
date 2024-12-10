@@ -1,7 +1,7 @@
 package data
 
 import (
-	"blog/app/account/internal/conf"
+	"blog/api/global"
 	"blog/internal/ent"
 	_ "blog/internal/ent/runtime"
 	"context"
@@ -27,7 +27,7 @@ type Data struct {
 }
 
 // NewData .
-func NewData(c *conf.Data, logger log.Logger) (*Data, func(), error) {
+func NewData(c *global.Data, logger log.Logger) (*Data, func(), error) {
 	dbCli, err := NewEntClient(c, logger)
 	if err != nil {
 		return nil, nil, err
@@ -42,7 +42,7 @@ func NewData(c *conf.Data, logger log.Logger) (*Data, func(), error) {
 	}
 	return &Data{db: dbCli, redisCli: redisCli}, cleanup, nil
 }
-func NewEntClient(conf *conf.Data, logger log.Logger) (*ent.Client, error) {
+func NewEntClient(conf *global.Data, logger log.Logger) (*ent.Client, error) {
 	logs := log.NewHelper(log.With(logger, "module", "account/data/ent"))
 	db, err := sql.Open(conf.Database.Driver, conf.Database.Source)
 	if err != nil {
@@ -66,12 +66,12 @@ func NewEntClient(conf *conf.Data, logger log.Logger) (*ent.Client, error) {
 	}))
 	return client, nil
 }
-func NewRedisCmd(conf *conf.Data, logger log.Logger) (redis.Cmdable, error) {
+func NewRedisCmd(conf *global.Data, logger log.Logger) (redis.Cmdable, error) {
 	logs := log.NewHelper(log.With(logger, "module", "account/data/redis"))
 	client := redis.NewClient(&redis.Options{
 		Addr:         conf.Redis.Addr,
 		Username:     conf.Redis.UserName,
-		Password:     conf.Redis.Pws,
+		Password:     conf.Redis.Password,
 		ReadTimeout:  conf.Redis.ReadTimeout.AsDuration(),
 		WriteTimeout: conf.Redis.WriteTimeout.AsDuration(),
 		DialTimeout:  time.Second * 2,

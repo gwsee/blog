@@ -80,6 +80,8 @@ protoc --go_out=./ conf.proto --go_opt=paths=source_relative
 protoc --go_out=./ page.proto --go_opt=paths=source_relative
 
 protoc --go_out=./ index.proto --go_opt=paths=source_relative
-
+protoc --go_out=./ cfg.proto --go_opt=paths=source_relative
 protoc --go_out=./ ./app/user/internal/conf/conf.proto --go_opt=paths=source_relative   
+protoc --go_out=./ ./app/tools/internal/conf/conf.proto --go_opt=paths=source_relative   
+protoc --go_out=./ ./api/global/cfg.proto --go_opt=paths=source_relative   
 ```

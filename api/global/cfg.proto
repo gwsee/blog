@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+package api.global;
+
+option go_package = "blog/api/global";
+option java_multiple_files = true;
+option java_package = "api.global";
+
+import "third_party/google/protobuf/duration.proto";
+
+message Etcd {
+  repeated string Hosts =1;
+  string Key =2;
+  int64 Id =3;
+  string User =4;
+  string  Pass =5;
+  string CertFile =6;
+  string CertKeyFile =7;
+  string CACertFile =8;
+  bool InsecureSkipVerify =9;
+}
+
+message Auth {
+  string service_key = 1;
+  string api_key = 2;
+}
+
+message Server {
+  HTTP http = 1;
+  GRPC grpc = 2;
+}
+message GRPC {
+  string network = 1;
+  string addr = 2;
+  google.protobuf.Duration timeout = 3;
+}
+message HTTP {
+  string network = 1;
+  string addr = 2;
+  google.protobuf.Duration timeout = 3;
+}
+message Trace {
+  string endpoint = 1;
+}
+
+message Data {
+  Database database = 1;
+  Redis redis = 2;
+}
+
+message Database {
+  string driver = 1;
+  string source = 2;
+}
+
+message Redis {
+  string network = 1;
+  string addr = 2;
+  google.protobuf.Duration read_timeout = 3;
+  google.protobuf.Duration write_timeout = 4;
+  string user_name = 5;
+  string password = 6;
+}
+
+message Oss {
+  string region = 1;
+  string bucket = 2;
+  string key = 3;
+  string secret =4;
+  string site = 5;
+}
