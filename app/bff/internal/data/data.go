@@ -3,11 +3,11 @@ package data
 import (
 	account "blog/api/account/v1"
 	blogs "blog/api/blogs/v1"
+	"blog/api/global"
 	tools "blog/api/tools/v1"
 	travel "blog/api/travel/v1"
 	user "blog/api/user/v1"
 
-	"blog/app/bff/internal/conf"
 	"context"
 	"github.com/go-kratos/kratos/contrib/registry/etcd/v2"
 	"github.com/go-kratos/kratos/v2/log"
@@ -36,7 +36,7 @@ type Data struct {
 }
 
 // NewData .
-func NewData(c *conf.Etcd, logger log.Logger) (*Data, func(), error) {
+func NewData(c *global.Etcd, logger log.Logger) (*Data, func(), error) {
 	data := &Data{}
 	cleanup := func() {
 		log.NewHelper(logger).Info("closing the data resources")

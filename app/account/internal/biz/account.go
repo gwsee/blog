@@ -3,7 +3,6 @@ package biz
 import (
 	"blog/api/account/v1"
 	"blog/api/global"
-	"blog/app/account/internal/conf"
 	"blog/internal/common"
 	"blog/internal/constx"
 	"context"
@@ -38,7 +37,7 @@ type AccountUseCase struct {
 	key  string
 }
 
-func NewAccountUseCase(conf *conf.Auth, repo AccountRepo, logger log.Logger) *AccountUseCase {
+func NewAccountUseCase(conf *global.Auth, repo AccountRepo, logger log.Logger) *AccountUseCase {
 	return &AccountUseCase{
 		key:  conf.ApiKey,
 		repo: repo,

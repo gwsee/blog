@@ -18,6 +18,8 @@ var whiteList = map[string]struct{}{
 	"/api.bff.v1.Account/CreateAccount":  {},
 	"/api.bff.v1.Account/ResetPassword":  {},
 	"/api.bff.v1.Account/LoginByAccount": {},
+
+	"/api.bff.v1.Tools/UploadFile": {},
 }
 
 func NewWhiteListMatcher() selector.MatchFunc {

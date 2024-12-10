@@ -1,8 +1,8 @@
 package server
 
 import (
+	"blog/api/global"
 	v1 "blog/api/tools/v1"
-	"blog/app/tools/internal/conf"
 	"blog/app/tools/internal/service"
 
 	"github.com/go-kratos/kratos/v2/log"
@@ -11,7 +11,7 @@ import (
 )
 
 // NewHTTPServer new an HTTP server.
-func NewHTTPServer(c *conf.Server, greeter *service.ToolsService, logger log.Logger) *http.Server {
+func NewHTTPServer(c *global.Server, greeter *service.ToolsService, logger log.Logger) *http.Server {
 	var opts = []http.ServerOption{
 		http.Middleware(
 			recovery.Recovery(),

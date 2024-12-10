@@ -23,3 +23,7 @@ etcd:
   Hosts:
     - 47.100.14.57:2379
   Key: app.tools.rpc
+oss:
+  region: cn-chengdu
+  bucket: gwsee-blog
+  site: https://gwsee-blog.oss-cn-chengdu.aliyuncs.com/
