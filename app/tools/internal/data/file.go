@@ -2,6 +2,7 @@ package data
 
 import (
 	"blog/internal/constx"
+	gen "blog/internal/ent"
 	"blog/internal/ent/files"
 	"context"
 	"fmt"
@@ -33,6 +34,9 @@ func (r *toolsRepo) SaveFile(ctx context.Context, g *biz.File) error {
 func (r *toolsRepo) ExistFile(ctx context.Context, g *biz.File) (string, error) {
 	f, err := r.data.db.Files.Query().Where(files.IDEQ(g.ID)).Only(ctx)
 	if err != nil {
+		if gen.IsNotFound(err) {
+			return "", nil
+		}
 		return "", err
 	}
 	return f.Path, nil

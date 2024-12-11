@@ -34,5 +34,6 @@ func (o *toolsRepo) Files(ctx context.Context, in *global.IDStr) (*global.IDStr,
 		fmt.Println("获取缓存失败")
 		return o.data.t.Files(ctx, in)
 	}
+	fmt.Println("获取缓存成功")
 	return &global.IDStr{Id: res}, nil
 }
