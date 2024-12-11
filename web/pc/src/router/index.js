@@ -81,6 +81,18 @@ export const constantRoutes = [
                 meta: { title: '旅行',  affix: true }
             },
             {
+                path: 'travel/manage/:id(\\d+)',
+                component: () => import('@/views/travel/manage.vue'),
+                name: 'travel-manage',
+                meta: { title: '旅行管理',  affix: true }
+            },
+            {
+                path: 'travel/info/:id(\\d+)',
+                component: () => import('@/views/travel/info.vue'),
+                name: 'travel-info',
+                meta: { title: '日记',  affix: true }
+            },
+            {
                 path: 'picture',
                 component: () => import('@/views/picture/index.vue'),
                 name: 'picture',

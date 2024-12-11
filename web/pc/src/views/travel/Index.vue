@@ -99,6 +99,7 @@
                 class="action-button !bg-white/90 hover:!bg-white"
                 shape="circle"
                 size="large"
+                @click="toRoute('/travel/manage/0')"
             >
              NEW
             </a-button>
@@ -118,6 +119,11 @@ import {
   SaveOutlined
 } from '@ant-design/icons-vue'
 import avatar from "@/assets/image/default-avatar.png"
+import {useRouter} from "vue-router";
+const router = useRouter();
+const toRoute=(path)=> {
+  router.push(path)
+}
 const projects = ref([
   {
     id: 1,

@@ -131,7 +131,7 @@ onMounted(function (){
     return
   }
   loading.value = true;
-  blogGet({ID:id}).then(res=>{
+  blogGet({id:id}).then(res=>{
     if(res&&res.code===200){
       formState.content = res.data.content
       const obj = res.data.header
