@@ -28,15 +28,15 @@
       </div>
 
       <!-- 图片轮播 -->
-      <div class="relative mb-6 rounded-3xl overflow-hidden shadow-xl bg-white/80 backdrop-blur-sm">
+      <div class="relative mb-6 rounded-3xl overflow-hidden shadow-xl bg-black/5 backdrop-blur-sm">
         <a-carousel class="w-full" :autoplay="false" ref="carouselRef">
           <div v-for="(image, index) in travel.images" :key="index"
                class="relative group cursor-zoom-in"
                @click="showLightbox(index)">
-            <div class="aspect-[16/9] relative">
+            <div class="w-full aspect-[16/9] relative">
               <img :src="image.url"
                    :alt="image.description"
-                   class="w-full h-full object-cover" />
+                   class="w-full h-full object-contain bg-black/30" />
               <!-- 渐变遮罩 -->
               <div class="absolute inset-0 bg-gradient-to-b from-black/10 to-black/60 opacity-0 group-hover:opacity-100 transition-all duration-300">
                 <div class="absolute bottom-8 left-8 right-8 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
@@ -211,7 +211,7 @@ const travel = ref({
   每一处都是摄影爱好者的天堂。我们不仅会分享这些地方的美，还会为您介绍当地的文化习俗和美食推荐。`,
   images: [
     {
-      url: 'http://127.0.0.1:1000/v1/file/43837c94ef2ed8ba75ca1bcc6dd55c52',
+      url: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=1080&q=80',
       title: '金巴兰海滩日落',
       description: '日落时分的金巴兰海滩，天空被染成金色，海浪轻轻拍打着沙滩。'
     },
@@ -289,8 +289,19 @@ onMounted(() => {
 }
 
 /* 自定义轮播样式 */
+:deep(.ant-carousel) {
+  width: 100%;
+}
+
 :deep(.ant-carousel .slick-slide) {
   overflow: hidden;
+}
+
+:deep(.ant-carousel .slick-slide > div) {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* 卡片样式优化 */
