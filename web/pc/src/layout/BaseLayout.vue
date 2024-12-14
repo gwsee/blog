@@ -17,12 +17,12 @@
 
             <!-- Logo -->
             <router-link to="/" class="flex items-center -ml-3 md:ml-0">
-              <img src="@/assets/image/logo.png" alt="Logo" class="h-12 w-auto" />
+              <img src="@/assets/image/logo.png" alt="Logo" class="h-20 w-auto" />
             </router-link>
           </div>
 
           <!-- 中间区域：搜索框 -->
-          <div class="hidden md:flex flex-1 justify-center max-w-3xl mx-8">
+          <div class="hidden md:flex flex-1 justify-center max-w-3xl mx-8" v-if="false">
             <div class="relative w-full group">
               <input
                   type="search"
@@ -57,6 +57,7 @@
           <div class="flex items-center gap-8">
             <!-- 移动端搜索按钮 -->
             <a-button
+                v-if="false"
                 type="text"
                 class="md:hidden"
                 @click="showMobileSearch = true"
@@ -72,16 +73,12 @@
                   :to="item.href"
                   class="text-gray-500/60 hover:text-gray-900 transition-colors duration-300"
               >
-                {{ item.label }}
+                <a-avatar :size="50" class="layout-content-menu-item" :src="item.img"  > {{ item.label }}</a-avatar>
               </router-link>
             </nav>
 
-            <!-- 头像 -->
-            <a-avatar
-                :src="'/avatar.jpg'"
-                :size="44"
-                class="cursor-pointer ring-1 ring-white/20 hover:ring-white/40 transition-all duration-300"
-            />
+            <a-avatar :size="50" class="layout-content-menu-item" @click="showLoginDialog" v-if="!isLoggedIn" >登陆</a-avatar>
+            <a-avatar :size="50" class="layout-content-menu-item" :src="avatar" v-else @click="goToAbout('/about')"></a-avatar>
           </div>
         </div>
       </div>
@@ -149,9 +146,6 @@
             </a-button>
             <img src="@/assets/image/logo.png" alt="Logo" class="h-12 w-auto" />
           </div>
-          <a-button type="primary" class="rounded-full">
-            登录
-          </a-button>
         </div>
 
         <!-- 菜单项 -->
@@ -175,11 +169,40 @@
 
     <!-- 内容区域 -->
     <router-view class="layout-content" />
+    <!-- 登陆 -->
+    <Login ref="loginRef"/>
   </div>
 </template>
 
 <script setup>
-import {ref} from 'vue'
+import Login from "@/components/Login.vue";
+import avatar from "@/assets/image/default-avatar.png"
+import logo from "@/assets/image/logo.png"
+import {onMounted, ref, watch} from "vue"
+import { useRouter } from 'vue-router';
+import { useAuthStore  } from '@/store/auth.js'
+const { isLoggedIn, state, setLoginData, getLoginToken } = useAuthStore();
+const router = useRouter();
+const loginRef = ref(null);
+
+const showLoginDialog =()=>{
+  loginRef.value.show()
+}
+
+onMounted(function () {
+  if(isLoggedIn){
+    const tk = getLoginToken()
+    if(!tk||tk=='undefined'){
+      return
+    }
+    setLoginData(tk)
+  }
+})
+
+const goToAbout=(path)=> {
+  router.push(path)
+}
+
 import {
   MenuOutlined,
   CloseOutlined,
@@ -190,12 +213,13 @@ import {
 
 const showMobileMenu = ref(false)
 const showMobileSearch = ref(false)
-
 const navItems = [
-  {key: 'diary', label: '日记', href: '/diary'},
-  {key: 'travel', label: '旅行', href: '/travel'},
-  {key: 'photo', label: '图片墙', href: '/photos'},
+  {key: 'diary', label: '日记', href: '/blog',requireLogin:false},
+  {key: 'travel', label: '旅行', href: '/travel',requireLogin:false},
+  {key: 'photo', label: '墙', href: '/picture',requireLogin:false},
 ]
+
+
 </script>
 
 <style scoped>
