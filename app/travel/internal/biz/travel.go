@@ -21,28 +21,29 @@ type Travel struct {
 }
 
 type TravelBase struct {
-	Id          int
-	Title       string
-	IsHidden    bool
-	Description string
-	Video       string
-	Photos      []string
-	AccountId   int
-	CreatedAt   int64
-	UpdatedAt   int64
+	Id          int      `json:"id"`
+	Title       string   `json:"title"`
+	IsHidden    bool     `json:"is_hidden"`
+	Description string   `json:"description"`
+	Video       string   `json:"video"`
+	Photos      []string `json:"photos"`
+	AccountId   int      `json:"account_id"`
+	CreatedAt   int64    `json:"created_at"`
+	UpdatedAt   int64    `json:"updated_at"`
 }
 
 type TravelAccount struct {
-	Nickname string
-	Avatar   string
+	Nickname    string `json:"nickname"`
+	Avatar      string `json:"avatar"`
+	Description string `json:"description"`
 }
 
 type TravelExtend struct {
-	IsThumb    bool
-	ThumbNum   int
-	IsCollect  bool
-	CollectNum int
-	BrowseNum  int
+	IsThumb    bool `json:"is_thumb"`
+	ThumbNum   int  `json:"thumb_num"`
+	IsCollect  bool `json:"is_collect"`
+	CollectNum int  `json:"collect_num"`
+	BrowseNum  int  `json:"browse_num"`
 }
 type TravelDo struct {
 	Id        int
@@ -111,7 +112,7 @@ func (o *TravelUsecase) Get(ctx context.Context, req *global.ID) (*v1.GetTravelR
 		Id:          int64(info.Id),
 		Title:       info.Title,
 		IsHidden:    info.IsHidden,
-		Description: info.Description,
+		Description: info.TravelBase.Description,
 		Video:       info.Video,
 		Photos:      info.Photos,
 		BrowseNum:   int64(info.BrowseNum),
@@ -121,9 +122,10 @@ func (o *TravelUsecase) Get(ctx context.Context, req *global.ID) (*v1.GetTravelR
 		IsCollect:   info.IsCollect,
 		AccountId:   int64(info.AccountId),
 		Account: &pb.AccountInfoReply{
-			Id:       int64(info.AccountId),
-			Nickname: info.Nickname,
-			Avatar:   info.Avatar,
+			Id:          int64(info.AccountId),
+			Nickname:    info.Nickname,
+			Avatar:      info.Avatar,
+			Description: info.TravelAccount.Description,
 		},
 		CreatedAt: info.CreatedAt,
 		UpdatedAt: info.UpdatedAt,
@@ -153,7 +155,7 @@ func (o *TravelUsecase) List(ctx context.Context, req *v1.ListTravelRequest) (*v
 		one := &v1.ListTravel{
 			Id:          int64(info.Id),
 			Title:       info.Title,
-			Description: info.Description,
+			Description: info.TravelBase.Description,
 			Video:       info.Video,
 			BrowseNum:   int64(info.BrowseNum),
 			ThumbNum:    int64(info.ThumbNum),

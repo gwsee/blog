@@ -81,8 +81,8 @@ const list =()=>{
   loading.value=true
   blogList({"page":{"pageNum":current.value,"pageSize":pageSize.value},"title":Title.value,"tags":Tags.value}).then(res=>{
     if(res&&res.code===200){
-     data.value = res.data.list
-     total.value = res.data.total
+     data.value = res.data.list||[]
+     total.value = res.data.total||0
     }
   }).finally(()=>{
     loading.value = false

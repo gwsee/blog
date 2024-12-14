@@ -589,24 +589,14 @@ func AccountIDNotIn(vs ...int) predicate.Travels {
 	return predicate.Travels(sql.FieldNotIn(FieldAccountID, vs...))
 }
 
-// AccountIDGT applies the GT predicate on the "account_id" field.
-func AccountIDGT(v int) predicate.Travels {
-	return predicate.Travels(sql.FieldGT(FieldAccountID, v))
+// AccountIDIsNil applies the IsNil predicate on the "account_id" field.
+func AccountIDIsNil() predicate.Travels {
+	return predicate.Travels(sql.FieldIsNull(FieldAccountID))
 }
 
-// AccountIDGTE applies the GTE predicate on the "account_id" field.
-func AccountIDGTE(v int) predicate.Travels {
-	return predicate.Travels(sql.FieldGTE(FieldAccountID, v))
-}
-
-// AccountIDLT applies the LT predicate on the "account_id" field.
-func AccountIDLT(v int) predicate.Travels {
-	return predicate.Travels(sql.FieldLT(FieldAccountID, v))
-}
-
-// AccountIDLTE applies the LTE predicate on the "account_id" field.
-func AccountIDLTE(v int) predicate.Travels {
-	return predicate.Travels(sql.FieldLTE(FieldAccountID, v))
+// AccountIDNotNil applies the NotNil predicate on the "account_id" field.
+func AccountIDNotNil() predicate.Travels {
+	return predicate.Travels(sql.FieldNotNull(FieldAccountID))
 }
 
 // BrowseNumEQ applies the EQ predicate on the "browse_num" field.
@@ -752,21 +742,21 @@ func HasTravelExtendsWith(preds ...predicate.TravelExtends) predicate.Travels {
 	})
 }
 
-// HasAccountTravels applies the HasEdge predicate on the "account_travels" edge.
-func HasAccountTravels() predicate.Travels {
+// HasTravelAccount applies the HasEdge predicate on the "travel_account" edge.
+func HasTravelAccount() predicate.Travels {
 	return predicate.Travels(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, AccountTravelsTable, AccountTravelsColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, TravelAccountTable, TravelAccountColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
 
-// HasAccountTravelsWith applies the HasEdge predicate on the "account_travels" edge with a given conditions (other predicates).
-func HasAccountTravelsWith(preds ...predicate.Account) predicate.Travels {
+// HasTravelAccountWith applies the HasEdge predicate on the "travel_account" edge with a given conditions (other predicates).
+func HasTravelAccountWith(preds ...predicate.Account) predicate.Travels {
 	return predicate.Travels(func(s *sql.Selector) {
-		step := newAccountTravelsStep()
+		step := newTravelAccountStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)

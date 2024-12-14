@@ -7,6 +7,7 @@ import autoprefixer from 'autoprefixer'
 export default defineConfig({
   plugins: [vue()],
   css: {
+    devSourcemap: true,
     postcss: {
       plugins: [
         tailwindcss,
@@ -20,6 +21,7 @@ export default defineConfig({
     }
   },
   server:{
+    hmr: true,
     https:false,
     proxy:{
       "/api":{

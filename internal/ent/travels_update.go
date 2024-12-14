@@ -164,7 +164,6 @@ func (tu *TravelsUpdate) SetNillableIsHidden(b *bool) *TravelsUpdate {
 
 // SetAccountID sets the "account_id" field.
 func (tu *TravelsUpdate) SetAccountID(i int) *TravelsUpdate {
-	tu.mutation.ResetAccountID()
 	tu.mutation.SetAccountID(i)
 	return tu
 }
@@ -177,9 +176,9 @@ func (tu *TravelsUpdate) SetNillableAccountID(i *int) *TravelsUpdate {
 	return tu
 }
 
-// AddAccountID adds i to the "account_id" field.
-func (tu *TravelsUpdate) AddAccountID(i int) *TravelsUpdate {
-	tu.mutation.AddAccountID(i)
+// ClearAccountID clears the value of the "account_id" field.
+func (tu *TravelsUpdate) ClearAccountID() *TravelsUpdate {
+	tu.mutation.ClearAccountID()
 	return tu
 }
 
@@ -273,23 +272,23 @@ func (tu *TravelsUpdate) AddTravelExtends(t ...*TravelExtends) *TravelsUpdate {
 	return tu.AddTravelExtendIDs(ids...)
 }
 
-// SetAccountTravelsID sets the "account_travels" edge to the Account entity by ID.
-func (tu *TravelsUpdate) SetAccountTravelsID(id int) *TravelsUpdate {
-	tu.mutation.SetAccountTravelsID(id)
+// SetTravelAccountID sets the "travel_account" edge to the Account entity by ID.
+func (tu *TravelsUpdate) SetTravelAccountID(id int) *TravelsUpdate {
+	tu.mutation.SetTravelAccountID(id)
 	return tu
 }
 
-// SetNillableAccountTravelsID sets the "account_travels" edge to the Account entity by ID if the given value is not nil.
-func (tu *TravelsUpdate) SetNillableAccountTravelsID(id *int) *TravelsUpdate {
+// SetNillableTravelAccountID sets the "travel_account" edge to the Account entity by ID if the given value is not nil.
+func (tu *TravelsUpdate) SetNillableTravelAccountID(id *int) *TravelsUpdate {
 	if id != nil {
-		tu = tu.SetAccountTravelsID(*id)
+		tu = tu.SetTravelAccountID(*id)
 	}
 	return tu
 }
 
-// SetAccountTravels sets the "account_travels" edge to the Account entity.
-func (tu *TravelsUpdate) SetAccountTravels(a *Account) *TravelsUpdate {
-	return tu.SetAccountTravelsID(a.ID)
+// SetTravelAccount sets the "travel_account" edge to the Account entity.
+func (tu *TravelsUpdate) SetTravelAccount(a *Account) *TravelsUpdate {
+	return tu.SetTravelAccountID(a.ID)
 }
 
 // Mutation returns the TravelsMutation object of the builder.
@@ -318,9 +317,9 @@ func (tu *TravelsUpdate) RemoveTravelExtends(t ...*TravelExtends) *TravelsUpdate
 	return tu.RemoveTravelExtendIDs(ids...)
 }
 
-// ClearAccountTravels clears the "account_travels" edge to the Account entity.
-func (tu *TravelsUpdate) ClearAccountTravels() *TravelsUpdate {
-	tu.mutation.ClearAccountTravels()
+// ClearTravelAccount clears the "travel_account" edge to the Account entity.
+func (tu *TravelsUpdate) ClearTravelAccount() *TravelsUpdate {
+	tu.mutation.ClearTravelAccount()
 	return tu
 }
 
@@ -368,19 +367,14 @@ func (tu *TravelsUpdate) defaults() error {
 
 // check runs all checks and user-defined validators on the builder.
 func (tu *TravelsUpdate) check() error {
+	if v, ok := tu.mutation.Title(); ok {
+		if err := travels.TitleValidator(v); err != nil {
+			return &ValidationError{Name: "title", err: fmt.Errorf(`ent: validator failed for field "Travels.title": %w`, err)}
+		}
+	}
 	if v, ok := tu.mutation.Description(); ok {
 		if err := travels.DescriptionValidator(v); err != nil {
 			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Travels.description": %w`, err)}
-		}
-	}
-	if v, ok := tu.mutation.Video(); ok {
-		if err := travels.VideoValidator(v); err != nil {
-			return &ValidationError{Name: "video", err: fmt.Errorf(`ent: validator failed for field "Travels.video": %w`, err)}
-		}
-	}
-	if v, ok := tu.mutation.AccountID(); ok {
-		if err := travels.AccountIDValidator(v); err != nil {
-			return &ValidationError{Name: "account_id", err: fmt.Errorf(`ent: validator failed for field "Travels.account_id": %w`, err)}
 		}
 	}
 	return nil
@@ -433,12 +427,6 @@ func (tu *TravelsUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := tu.mutation.IsHidden(); ok {
 		_spec.SetField(travels.FieldIsHidden, field.TypeBool, value)
-	}
-	if value, ok := tu.mutation.AccountID(); ok {
-		_spec.SetField(travels.FieldAccountID, field.TypeInt, value)
-	}
-	if value, ok := tu.mutation.AddedAccountID(); ok {
-		_spec.AddField(travels.FieldAccountID, field.TypeInt, value)
 	}
 	if value, ok := tu.mutation.Photos(); ok {
 		_spec.SetField(travels.FieldPhotos, field.TypeJSON, value)
@@ -511,12 +499,12 @@ func (tu *TravelsUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if tu.mutation.AccountTravelsCleared() {
+	if tu.mutation.TravelAccountCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   travels.AccountTravelsTable,
-			Columns: []string{travels.AccountTravelsColumn},
+			Table:   travels.TravelAccountTable,
+			Columns: []string{travels.TravelAccountColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(account.FieldID, field.TypeInt),
@@ -524,12 +512,12 @@ func (tu *TravelsUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := tu.mutation.AccountTravelsIDs(); len(nodes) > 0 {
+	if nodes := tu.mutation.TravelAccountIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   travels.AccountTravelsTable,
-			Columns: []string{travels.AccountTravelsColumn},
+			Table:   travels.TravelAccountTable,
+			Columns: []string{travels.TravelAccountColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(account.FieldID, field.TypeInt),
@@ -694,7 +682,6 @@ func (tuo *TravelsUpdateOne) SetNillableIsHidden(b *bool) *TravelsUpdateOne {
 
 // SetAccountID sets the "account_id" field.
 func (tuo *TravelsUpdateOne) SetAccountID(i int) *TravelsUpdateOne {
-	tuo.mutation.ResetAccountID()
 	tuo.mutation.SetAccountID(i)
 	return tuo
 }
@@ -707,9 +694,9 @@ func (tuo *TravelsUpdateOne) SetNillableAccountID(i *int) *TravelsUpdateOne {
 	return tuo
 }
 
-// AddAccountID adds i to the "account_id" field.
-func (tuo *TravelsUpdateOne) AddAccountID(i int) *TravelsUpdateOne {
-	tuo.mutation.AddAccountID(i)
+// ClearAccountID clears the value of the "account_id" field.
+func (tuo *TravelsUpdateOne) ClearAccountID() *TravelsUpdateOne {
+	tuo.mutation.ClearAccountID()
 	return tuo
 }
 
@@ -803,23 +790,23 @@ func (tuo *TravelsUpdateOne) AddTravelExtends(t ...*TravelExtends) *TravelsUpdat
 	return tuo.AddTravelExtendIDs(ids...)
 }
 
-// SetAccountTravelsID sets the "account_travels" edge to the Account entity by ID.
-func (tuo *TravelsUpdateOne) SetAccountTravelsID(id int) *TravelsUpdateOne {
-	tuo.mutation.SetAccountTravelsID(id)
+// SetTravelAccountID sets the "travel_account" edge to the Account entity by ID.
+func (tuo *TravelsUpdateOne) SetTravelAccountID(id int) *TravelsUpdateOne {
+	tuo.mutation.SetTravelAccountID(id)
 	return tuo
 }
 
-// SetNillableAccountTravelsID sets the "account_travels" edge to the Account entity by ID if the given value is not nil.
-func (tuo *TravelsUpdateOne) SetNillableAccountTravelsID(id *int) *TravelsUpdateOne {
+// SetNillableTravelAccountID sets the "travel_account" edge to the Account entity by ID if the given value is not nil.
+func (tuo *TravelsUpdateOne) SetNillableTravelAccountID(id *int) *TravelsUpdateOne {
 	if id != nil {
-		tuo = tuo.SetAccountTravelsID(*id)
+		tuo = tuo.SetTravelAccountID(*id)
 	}
 	return tuo
 }
 
-// SetAccountTravels sets the "account_travels" edge to the Account entity.
-func (tuo *TravelsUpdateOne) SetAccountTravels(a *Account) *TravelsUpdateOne {
-	return tuo.SetAccountTravelsID(a.ID)
+// SetTravelAccount sets the "travel_account" edge to the Account entity.
+func (tuo *TravelsUpdateOne) SetTravelAccount(a *Account) *TravelsUpdateOne {
+	return tuo.SetTravelAccountID(a.ID)
 }
 
 // Mutation returns the TravelsMutation object of the builder.
@@ -848,9 +835,9 @@ func (tuo *TravelsUpdateOne) RemoveTravelExtends(t ...*TravelExtends) *TravelsUp
 	return tuo.RemoveTravelExtendIDs(ids...)
 }
 
-// ClearAccountTravels clears the "account_travels" edge to the Account entity.
-func (tuo *TravelsUpdateOne) ClearAccountTravels() *TravelsUpdateOne {
-	tuo.mutation.ClearAccountTravels()
+// ClearTravelAccount clears the "travel_account" edge to the Account entity.
+func (tuo *TravelsUpdateOne) ClearTravelAccount() *TravelsUpdateOne {
+	tuo.mutation.ClearTravelAccount()
 	return tuo
 }
 
@@ -911,19 +898,14 @@ func (tuo *TravelsUpdateOne) defaults() error {
 
 // check runs all checks and user-defined validators on the builder.
 func (tuo *TravelsUpdateOne) check() error {
+	if v, ok := tuo.mutation.Title(); ok {
+		if err := travels.TitleValidator(v); err != nil {
+			return &ValidationError{Name: "title", err: fmt.Errorf(`ent: validator failed for field "Travels.title": %w`, err)}
+		}
+	}
 	if v, ok := tuo.mutation.Description(); ok {
 		if err := travels.DescriptionValidator(v); err != nil {
 			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Travels.description": %w`, err)}
-		}
-	}
-	if v, ok := tuo.mutation.Video(); ok {
-		if err := travels.VideoValidator(v); err != nil {
-			return &ValidationError{Name: "video", err: fmt.Errorf(`ent: validator failed for field "Travels.video": %w`, err)}
-		}
-	}
-	if v, ok := tuo.mutation.AccountID(); ok {
-		if err := travels.AccountIDValidator(v); err != nil {
-			return &ValidationError{Name: "account_id", err: fmt.Errorf(`ent: validator failed for field "Travels.account_id": %w`, err)}
 		}
 	}
 	return nil
@@ -993,12 +975,6 @@ func (tuo *TravelsUpdateOne) sqlSave(ctx context.Context) (_node *Travels, err e
 	}
 	if value, ok := tuo.mutation.IsHidden(); ok {
 		_spec.SetField(travels.FieldIsHidden, field.TypeBool, value)
-	}
-	if value, ok := tuo.mutation.AccountID(); ok {
-		_spec.SetField(travels.FieldAccountID, field.TypeInt, value)
-	}
-	if value, ok := tuo.mutation.AddedAccountID(); ok {
-		_spec.AddField(travels.FieldAccountID, field.TypeInt, value)
 	}
 	if value, ok := tuo.mutation.Photos(); ok {
 		_spec.SetField(travels.FieldPhotos, field.TypeJSON, value)
@@ -1071,12 +1047,12 @@ func (tuo *TravelsUpdateOne) sqlSave(ctx context.Context) (_node *Travels, err e
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if tuo.mutation.AccountTravelsCleared() {
+	if tuo.mutation.TravelAccountCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   travels.AccountTravelsTable,
-			Columns: []string{travels.AccountTravelsColumn},
+			Table:   travels.TravelAccountTable,
+			Columns: []string{travels.TravelAccountColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(account.FieldID, field.TypeInt),
@@ -1084,12 +1060,12 @@ func (tuo *TravelsUpdateOne) sqlSave(ctx context.Context) (_node *Travels, err e
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := tuo.mutation.AccountTravelsIDs(); len(nodes) > 0 {
+	if nodes := tuo.mutation.TravelAccountIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   travels.AccountTravelsTable,
-			Columns: []string{travels.AccountTravelsColumn},
+			Table:   travels.TravelAccountTable,
+			Columns: []string{travels.TravelAccountColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(account.FieldID, field.TypeInt),

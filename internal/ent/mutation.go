@@ -6728,8 +6728,6 @@ type TravelExtendsMutation struct {
 	adddeleted_by  *int64
 	account_id     *int
 	addaccount_id  *int
-	travel_id      *int
-	addtravel_id   *int
 	is_thumb       *bool
 	is_collect     *bool
 	clearedFields  map[string]struct{}
@@ -7232,13 +7230,12 @@ func (m *TravelExtendsMutation) ResetAccountID() {
 
 // SetTravelID sets the "travel_id" field.
 func (m *TravelExtendsMutation) SetTravelID(i int) {
-	m.travel_id = &i
-	m.addtravel_id = nil
+	m.extends = &i
 }
 
 // TravelID returns the value of the "travel_id" field in the mutation.
 func (m *TravelExtendsMutation) TravelID() (r int, exists bool) {
-	v := m.travel_id
+	v := m.extends
 	if v == nil {
 		return
 	}
@@ -7262,28 +7259,22 @@ func (m *TravelExtendsMutation) OldTravelID(ctx context.Context) (v int, err err
 	return oldValue.TravelID, nil
 }
 
-// AddTravelID adds i to the "travel_id" field.
-func (m *TravelExtendsMutation) AddTravelID(i int) {
-	if m.addtravel_id != nil {
-		*m.addtravel_id += i
-	} else {
-		m.addtravel_id = &i
-	}
+// ClearTravelID clears the value of the "travel_id" field.
+func (m *TravelExtendsMutation) ClearTravelID() {
+	m.extends = nil
+	m.clearedFields[travelextends.FieldTravelID] = struct{}{}
 }
 
-// AddedTravelID returns the value that was added to the "travel_id" field in this mutation.
-func (m *TravelExtendsMutation) AddedTravelID() (r int, exists bool) {
-	v := m.addtravel_id
-	if v == nil {
-		return
-	}
-	return *v, true
+// TravelIDCleared returns if the "travel_id" field was cleared in this mutation.
+func (m *TravelExtendsMutation) TravelIDCleared() bool {
+	_, ok := m.clearedFields[travelextends.FieldTravelID]
+	return ok
 }
 
 // ResetTravelID resets all changes to the "travel_id" field.
 func (m *TravelExtendsMutation) ResetTravelID() {
-	m.travel_id = nil
-	m.addtravel_id = nil
+	m.extends = nil
+	delete(m.clearedFields, travelextends.FieldTravelID)
 }
 
 // SetIsThumb sets the "is_thumb" field.
@@ -7366,11 +7357,12 @@ func (m *TravelExtendsMutation) SetExtendsID(id int) {
 // ClearExtends clears the "extends" edge to the Travels entity.
 func (m *TravelExtendsMutation) ClearExtends() {
 	m.clearedextends = true
+	m.clearedFields[travelextends.FieldTravelID] = struct{}{}
 }
 
 // ExtendsCleared reports if the "extends" edge to the Travels entity was cleared.
 func (m *TravelExtendsMutation) ExtendsCleared() bool {
-	return m.clearedextends
+	return m.TravelIDCleared() || m.clearedextends
 }
 
 // ExtendsID returns the "extends" edge ID in the mutation.
@@ -7453,7 +7445,7 @@ func (m *TravelExtendsMutation) Fields() []string {
 	if m.account_id != nil {
 		fields = append(fields, travelextends.FieldAccountID)
 	}
-	if m.travel_id != nil {
+	if m.extends != nil {
 		fields = append(fields, travelextends.FieldTravelID)
 	}
 	if m.is_thumb != nil {
@@ -7627,9 +7619,6 @@ func (m *TravelExtendsMutation) AddedFields() []string {
 	if m.addaccount_id != nil {
 		fields = append(fields, travelextends.FieldAccountID)
 	}
-	if m.addtravel_id != nil {
-		fields = append(fields, travelextends.FieldTravelID)
-	}
 	return fields
 }
 
@@ -7652,8 +7641,6 @@ func (m *TravelExtendsMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedDeletedBy()
 	case travelextends.FieldAccountID:
 		return m.AddedAccountID()
-	case travelextends.FieldTravelID:
-		return m.AddedTravelID()
 	}
 	return nil, false
 }
@@ -7712,13 +7699,6 @@ func (m *TravelExtendsMutation) AddField(name string, value ent.Value) error {
 		}
 		m.AddAccountID(v)
 		return nil
-	case travelextends.FieldTravelID:
-		v, ok := value.(int)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddTravelID(v)
-		return nil
 	}
 	return fmt.Errorf("unknown TravelExtends numeric field %s", name)
 }
@@ -7726,7 +7706,11 @@ func (m *TravelExtendsMutation) AddField(name string, value ent.Value) error {
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
 func (m *TravelExtendsMutation) ClearedFields() []string {
-	return nil
+	var fields []string
+	if m.FieldCleared(travelextends.FieldTravelID) {
+		fields = append(fields, travelextends.FieldTravelID)
+	}
+	return fields
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
@@ -7739,6 +7723,11 @@ func (m *TravelExtendsMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *TravelExtendsMutation) ClearField(name string) error {
+	switch name {
+	case travelextends.FieldTravelID:
+		m.ClearTravelID()
+		return nil
+	}
 	return fmt.Errorf("unknown TravelExtends nullable field %s", name)
 }
 
@@ -7857,44 +7846,42 @@ func (m *TravelExtendsMutation) ResetEdge(name string) error {
 // TravelsMutation represents an operation that mutates the Travels nodes in the graph.
 type TravelsMutation struct {
 	config
-	op                     Op
-	typ                    string
-	id                     *int
-	created_at             *int64
-	addcreated_at          *int64
-	created_by             *int64
-	addcreated_by          *int64
-	updated_at             *int64
-	addupdated_at          *int64
-	updated_by             *int64
-	addupdated_by          *int64
-	deleted_at             *int64
-	adddeleted_at          *int64
-	deleted_by             *int64
-	adddeleted_by          *int64
-	title                  *string
-	description            *string
-	video                  *string
-	is_hidden              *bool
-	account_id             *int
-	addaccount_id          *int
-	photos                 *[]string
-	appendphotos           []string
-	browse_num             *int
-	addbrowse_num          *int
-	thumb_num              *int
-	addthumb_num           *int
-	collect_num            *int
-	addcollect_num         *int
-	clearedFields          map[string]struct{}
-	travel_extends         map[int]struct{}
-	removedtravel_extends  map[int]struct{}
-	clearedtravel_extends  bool
-	account_travels        *int
-	clearedaccount_travels bool
-	done                   bool
-	oldValue               func(context.Context) (*Travels, error)
-	predicates             []predicate.Travels
+	op                    Op
+	typ                   string
+	id                    *int
+	created_at            *int64
+	addcreated_at         *int64
+	created_by            *int64
+	addcreated_by         *int64
+	updated_at            *int64
+	addupdated_at         *int64
+	updated_by            *int64
+	addupdated_by         *int64
+	deleted_at            *int64
+	adddeleted_at         *int64
+	deleted_by            *int64
+	adddeleted_by         *int64
+	title                 *string
+	description           *string
+	video                 *string
+	is_hidden             *bool
+	photos                *[]string
+	appendphotos          []string
+	browse_num            *int
+	addbrowse_num         *int
+	thumb_num             *int
+	addthumb_num          *int
+	collect_num           *int
+	addcollect_num        *int
+	clearedFields         map[string]struct{}
+	travel_extends        map[int]struct{}
+	removedtravel_extends map[int]struct{}
+	clearedtravel_extends bool
+	travel_account        *int
+	clearedtravel_account bool
+	done                  bool
+	oldValue              func(context.Context) (*Travels, error)
+	predicates            []predicate.Travels
 }
 
 var _ ent.Mutation = (*TravelsMutation)(nil)
@@ -8483,13 +8470,12 @@ func (m *TravelsMutation) ResetIsHidden() {
 
 // SetAccountID sets the "account_id" field.
 func (m *TravelsMutation) SetAccountID(i int) {
-	m.account_id = &i
-	m.addaccount_id = nil
+	m.travel_account = &i
 }
 
 // AccountID returns the value of the "account_id" field in the mutation.
 func (m *TravelsMutation) AccountID() (r int, exists bool) {
-	v := m.account_id
+	v := m.travel_account
 	if v == nil {
 		return
 	}
@@ -8513,28 +8499,22 @@ func (m *TravelsMutation) OldAccountID(ctx context.Context) (v int, err error) {
 	return oldValue.AccountID, nil
 }
 
-// AddAccountID adds i to the "account_id" field.
-func (m *TravelsMutation) AddAccountID(i int) {
-	if m.addaccount_id != nil {
-		*m.addaccount_id += i
-	} else {
-		m.addaccount_id = &i
-	}
+// ClearAccountID clears the value of the "account_id" field.
+func (m *TravelsMutation) ClearAccountID() {
+	m.travel_account = nil
+	m.clearedFields[travels.FieldAccountID] = struct{}{}
 }
 
-// AddedAccountID returns the value that was added to the "account_id" field in this mutation.
-func (m *TravelsMutation) AddedAccountID() (r int, exists bool) {
-	v := m.addaccount_id
-	if v == nil {
-		return
-	}
-	return *v, true
+// AccountIDCleared returns if the "account_id" field was cleared in this mutation.
+func (m *TravelsMutation) AccountIDCleared() bool {
+	_, ok := m.clearedFields[travels.FieldAccountID]
+	return ok
 }
 
 // ResetAccountID resets all changes to the "account_id" field.
 func (m *TravelsMutation) ResetAccountID() {
-	m.account_id = nil
-	m.addaccount_id = nil
+	m.travel_account = nil
+	delete(m.clearedFields, travels.FieldAccountID)
 }
 
 // SetPhotos sets the "photos" field.
@@ -8810,43 +8790,44 @@ func (m *TravelsMutation) ResetTravelExtends() {
 	m.removedtravel_extends = nil
 }
 
-// SetAccountTravelsID sets the "account_travels" edge to the Account entity by id.
-func (m *TravelsMutation) SetAccountTravelsID(id int) {
-	m.account_travels = &id
+// SetTravelAccountID sets the "travel_account" edge to the Account entity by id.
+func (m *TravelsMutation) SetTravelAccountID(id int) {
+	m.travel_account = &id
 }
 
-// ClearAccountTravels clears the "account_travels" edge to the Account entity.
-func (m *TravelsMutation) ClearAccountTravels() {
-	m.clearedaccount_travels = true
+// ClearTravelAccount clears the "travel_account" edge to the Account entity.
+func (m *TravelsMutation) ClearTravelAccount() {
+	m.clearedtravel_account = true
+	m.clearedFields[travels.FieldAccountID] = struct{}{}
 }
 
-// AccountTravelsCleared reports if the "account_travels" edge to the Account entity was cleared.
-func (m *TravelsMutation) AccountTravelsCleared() bool {
-	return m.clearedaccount_travels
+// TravelAccountCleared reports if the "travel_account" edge to the Account entity was cleared.
+func (m *TravelsMutation) TravelAccountCleared() bool {
+	return m.AccountIDCleared() || m.clearedtravel_account
 }
 
-// AccountTravelsID returns the "account_travels" edge ID in the mutation.
-func (m *TravelsMutation) AccountTravelsID() (id int, exists bool) {
-	if m.account_travels != nil {
-		return *m.account_travels, true
+// TravelAccountID returns the "travel_account" edge ID in the mutation.
+func (m *TravelsMutation) TravelAccountID() (id int, exists bool) {
+	if m.travel_account != nil {
+		return *m.travel_account, true
 	}
 	return
 }
 
-// AccountTravelsIDs returns the "account_travels" edge IDs in the mutation.
+// TravelAccountIDs returns the "travel_account" edge IDs in the mutation.
 // Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
-// AccountTravelsID instead. It exists only for internal usage by the builders.
-func (m *TravelsMutation) AccountTravelsIDs() (ids []int) {
-	if id := m.account_travels; id != nil {
+// TravelAccountID instead. It exists only for internal usage by the builders.
+func (m *TravelsMutation) TravelAccountIDs() (ids []int) {
+	if id := m.travel_account; id != nil {
 		ids = append(ids, *id)
 	}
 	return
 }
 
-// ResetAccountTravels resets all changes to the "account_travels" edge.
-func (m *TravelsMutation) ResetAccountTravels() {
-	m.account_travels = nil
-	m.clearedaccount_travels = false
+// ResetTravelAccount resets all changes to the "travel_account" edge.
+func (m *TravelsMutation) ResetTravelAccount() {
+	m.travel_account = nil
+	m.clearedtravel_account = false
 }
 
 // Where appends a list predicates to the TravelsMutation builder.
@@ -8914,7 +8895,7 @@ func (m *TravelsMutation) Fields() []string {
 	if m.is_hidden != nil {
 		fields = append(fields, travels.FieldIsHidden)
 	}
-	if m.account_id != nil {
+	if m.travel_account != nil {
 		fields = append(fields, travels.FieldAccountID)
 	}
 	if m.photos != nil {
@@ -9146,9 +9127,6 @@ func (m *TravelsMutation) AddedFields() []string {
 	if m.adddeleted_by != nil {
 		fields = append(fields, travels.FieldDeletedBy)
 	}
-	if m.addaccount_id != nil {
-		fields = append(fields, travels.FieldAccountID)
-	}
 	if m.addbrowse_num != nil {
 		fields = append(fields, travels.FieldBrowseNum)
 	}
@@ -9178,8 +9156,6 @@ func (m *TravelsMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedDeletedAt()
 	case travels.FieldDeletedBy:
 		return m.AddedDeletedBy()
-	case travels.FieldAccountID:
-		return m.AddedAccountID()
 	case travels.FieldBrowseNum:
 		return m.AddedBrowseNum()
 	case travels.FieldThumbNum:
@@ -9237,13 +9213,6 @@ func (m *TravelsMutation) AddField(name string, value ent.Value) error {
 		}
 		m.AddDeletedBy(v)
 		return nil
-	case travels.FieldAccountID:
-		v, ok := value.(int)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddAccountID(v)
-		return nil
 	case travels.FieldBrowseNum:
 		v, ok := value.(int)
 		if !ok {
@@ -9272,7 +9241,11 @@ func (m *TravelsMutation) AddField(name string, value ent.Value) error {
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
 func (m *TravelsMutation) ClearedFields() []string {
-	return nil
+	var fields []string
+	if m.FieldCleared(travels.FieldAccountID) {
+		fields = append(fields, travels.FieldAccountID)
+	}
+	return fields
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
@@ -9285,6 +9258,11 @@ func (m *TravelsMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *TravelsMutation) ClearField(name string) error {
+	switch name {
+	case travels.FieldAccountID:
+		m.ClearAccountID()
+		return nil
+	}
 	return fmt.Errorf("unknown Travels nullable field %s", name)
 }
 
@@ -9347,8 +9325,8 @@ func (m *TravelsMutation) AddedEdges() []string {
 	if m.travel_extends != nil {
 		edges = append(edges, travels.EdgeTravelExtends)
 	}
-	if m.account_travels != nil {
-		edges = append(edges, travels.EdgeAccountTravels)
+	if m.travel_account != nil {
+		edges = append(edges, travels.EdgeTravelAccount)
 	}
 	return edges
 }
@@ -9363,8 +9341,8 @@ func (m *TravelsMutation) AddedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
-	case travels.EdgeAccountTravels:
-		if id := m.account_travels; id != nil {
+	case travels.EdgeTravelAccount:
+		if id := m.travel_account; id != nil {
 			return []ent.Value{*id}
 		}
 	}
@@ -9400,8 +9378,8 @@ func (m *TravelsMutation) ClearedEdges() []string {
 	if m.clearedtravel_extends {
 		edges = append(edges, travels.EdgeTravelExtends)
 	}
-	if m.clearedaccount_travels {
-		edges = append(edges, travels.EdgeAccountTravels)
+	if m.clearedtravel_account {
+		edges = append(edges, travels.EdgeTravelAccount)
 	}
 	return edges
 }
@@ -9412,8 +9390,8 @@ func (m *TravelsMutation) EdgeCleared(name string) bool {
 	switch name {
 	case travels.EdgeTravelExtends:
 		return m.clearedtravel_extends
-	case travels.EdgeAccountTravels:
-		return m.clearedaccount_travels
+	case travels.EdgeTravelAccount:
+		return m.clearedtravel_account
 	}
 	return false
 }
@@ -9422,8 +9400,8 @@ func (m *TravelsMutation) EdgeCleared(name string) bool {
 // if that edge is not defined in the schema.
 func (m *TravelsMutation) ClearEdge(name string) error {
 	switch name {
-	case travels.EdgeAccountTravels:
-		m.ClearAccountTravels()
+	case travels.EdgeTravelAccount:
+		m.ClearTravelAccount()
 		return nil
 	}
 	return fmt.Errorf("unknown Travels unique edge %s", name)
@@ -9436,8 +9414,8 @@ func (m *TravelsMutation) ResetEdge(name string) error {
 	case travels.EdgeTravelExtends:
 		m.ResetTravelExtends()
 		return nil
-	case travels.EdgeAccountTravels:
-		m.ResetAccountTravels()
+	case travels.EdgeTravelAccount:
+		m.ResetTravelAccount()
 		return nil
 	}
 	return fmt.Errorf("unknown Travels edge %s", name)

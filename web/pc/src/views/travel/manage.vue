@@ -1,12 +1,14 @@
 <template>
-  <div class="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-4xl mx-auto">
-      <h1 class="text-3xl font-bold text-gray-900 mb-8 text-center">新增旅行内容</h1>
+  <div class="min-h-screen  py-8 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto" style=" background: linear-gradient(rgb(241 241 241), rgb(173 215 197));height:100%">
+      <h1 class="text-3xl font-bold text-gray-900 p-8 text-center">记录一次有趣的旅行</h1>
       <a-form
+
           :model="formState"
           @finish="onFinish"
-          :label-col="{ span: 24 }"
-          :wrapper-col="{ span: 24 }"
+          ref="formTravelRef"
+          :label-col="labelCol"  :wrapper-col="wrapperCol"
+          style="width: 90%;margin-left: auto;margin-right:auto"
       >
         <!-- 标题 -->
         <a-form-item
@@ -29,21 +31,25 @@
               placeholder="请输入旅行简介"
           />
         </a-form-item>
-
+        <a-form-item name="是否隐藏" label="isHidden">
+          <a-switch :checkedValue="true" :unCheckedValue="false" v-model:checked="formState.isHidden" />
+        </a-form-item>
         <!-- 照片上传 -->
         <a-form-item
-            name="photos"
+            name="photoList"
             label="旅行照片"
             :rules="[{ required: true, message: '请上传至少一张照片' }]"
         >
           <a-upload
-              v-model:fileList="formState.photos"
+              v-model:fileList="formState.photoList"
               list-type="picture-card"
-              :customRequest="customRequest"
+              :max-count="66"
+              :customRequest="customRequestPhoto"
               :before-upload="beforeUpload"
+              @change="handleChangePhoto"
               @preview="handlePreview"
           >
-            <div v-if="formState.photos.length < 8">
+            <div v-if="formState.photoList.length < 66">
               <plus-outlined />
               <div class="mt-2">上传照片</div>
             </div>
@@ -53,23 +59,25 @@
         <!-- 视频上传 -->
         <a-form-item name="video" label="视频">
           <a-upload
-              v-model:fileList="formState.video"
-              :customRequest="customRequest"
+              v-model:fileList="formState.videoList"
+              :customRequest="customRequestVideo"
+              :max-count="1"
+              :multiple="false"
               :before-upload="beforeUploadVideo"
-              @change="handleVideoChange"
+              @change="handleChangeVideo"
           >
-            <a-button icon="<upload-outlined />">上传视频</a-button>
+            <a-button type="default"> 上传视频</a-button>
           </a-upload>
         </a-form-item>
 
-        <!-- 提交按钮 -->
-        <a-form-item :wrapper-col="{ span: 24 }">
-          <a-button type="primary" html-type="submit" class="w-full">提交</a-button>
+        <a-form-item :wrapper-col="{ span: 14, offset: 5 }" style="text-align: center">
+          <a-button type="primary" html-type="submit" :loading="loading" :disabled="loading">保存</a-button>
+          <a-button style="margin-left: 10px" @click="toRoute('/travel')" :loading="loading" :disabled="loading">取消</a-button>
         </a-form-item>
       </a-form>
 
       <!-- 图片预览模态框 -->
-      <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+      <a-modal :open="previewVisible" :footer="null" @cancel="handleCancel">
         <img alt="example" style="width: 100%" :src="previewImage" />
       </a-modal>
     </div>
@@ -77,17 +85,59 @@
 </template>
 
 <script setup>
-import {ref, reactive} from 'vue';
+import {ref, reactive, onMounted} from 'vue';
 import {message} from 'ant-design-vue';
 import {PlusOutlined, UploadOutlined} from '@ant-design/icons-vue';
-
+import {travelSave,travelGet} from "@/api/travel";
+import {fileUpload,filePrefix} from "@/api/tool";
 const formState = reactive({
+  id: 0,
   title: '',
+  isHidden: false,
   description: '',
-  photos: [],
-  video: []
+  photoList: [],
+  photo:[],
+  videoList: [],
+  video:'',
 });
+const formTravelRef = ref(null);
 
+onMounted(function (){
+  if(formTravelRef.value){
+    formTravelRef.value.resetFields();
+  }
+  const route = useRoute();
+  let id = route.params.id;
+  id = id - 0
+  if(!id){
+    return
+  }
+  loading.value = true;
+  travelGet({id:id}).then(res=>{
+    if(res&&res.code===200){
+      console.log(res.data)
+      let obj = res.data
+      formState.id = id
+      formState.title = obj.title
+      formState.description = obj.description
+      formState.isHidden = obj.isHidden
+      let photoList = []
+      let videoList = []
+      if(obj.video){
+        videoList.push({uuid:obj.video,url:filePrefix+obj.video,name:obj.video})
+      }
+      obj.photos.forEach((item)=>{
+        photoList.push({uuid:item,url:filePrefix+item})
+      })
+      formState.photoList = photoList
+      formState.videoList = videoList
+    }
+  }).finally(()=>{
+    loading.value = false;
+  })
+})
+
+const loading = ref(false);
 const previewVisible = ref(false);
 const previewImage = ref('');
 
@@ -104,49 +154,145 @@ const handlePreview = async (file) => {
 };
 
 const beforeUpload = (file) => {
-  const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-  if (!isJpgOrPng) {
-    message.error('只能上传 JPG/PNG 文件!');
+  const isImage = file.type.split("/")[0]==='image'
+  if (!isImage) {
+    console.log(file)
+    message.error('只能上传 图片 文件!');
+    return false
   }
-  const isLt2M = file.size / 1024 / 1024 < 2;
-  if (!isLt2M) {
-    message.error('图片必须小于 2MB!');
+  const isLt20M = file.size / 1024 / 1024 < 20;
+  if (!isLt20M) {
+    message.error('图片必须小于 20MB!');
+    return false
   }
-  return isJpgOrPng && isLt2M;
+  return true;
 };
 
 const beforeUploadVideo = (file) => {
-  const isMP4 = file.type === 'video/mp4';
-  if (!isMP4) {
-    message.error('只能上传 MP4 文件!');
+  const isVideo = file.type.split("/")[0]==='video'
+  if (!isVideo) {
+    console.log(file)
+    message.error('只能上传 视频 文件!');
+    return false
   }
-  const isLt50M = file.size / 1024 / 1024 < 50;
-  if (!isLt50M) {
-    message.error('视频必须小于 50MB!');
+  const isLt500M = file.size / 1024 / 1024 < 500;
+  if (!isLt500M) {
+    message.error('视频必须小于 500MB!');
+    return false
   }
-  return isMP4 && isLt50M;
+  return true;
+};
+const handleChangePhoto = (info) => {
+  if (info.file&&info.file.status === "uploading"){
+    return false
+  }
+  let resFileList = [...info.fileList];
+  const includes = [];
+  resFileList = resFileList.filter(function (item) {
+    if(item.status==='error'){
+      return false
+    }
+    let uuid = item.uuid||item.response.uuid
+    let url = item.url||item.response.url
+    if(!uuid){
+      console.log(item,"哪里出现问题了")
+      return false
+    }
+    if(!includes.includes(uuid)){
+      item.uuid = uuid
+      item.url = url
+      includes.push(item.uuid)
+      return true
+    }
+    return false
+  })
+  formState.photoList = resFileList
+};
+const customRequestPhoto = ({file, onSuccess,onError}) => {
+  let formData = new FormData();
+  formData.append('file',file)
+  fileUpload(formData).then(res=>{
+    if(res&&res.code===200){
+      onSuccess({uuid:res.data.uuid,name:file.name,url:filePrefix+res.data.uuid})
+    }else{
+      onError(res.message||'上传失败')
+    }
+  }).finally(()=>{
+  }).catch((e)=>{
+    onError(e)
+  })
+};
+const customRequestVideo = ({file, onSuccess}) => {
+  let formData = new FormData();
+  formData.append('file',file)
+  fileUpload(formData).then(res=>{
+    if(res&&res.code===200){
+      onSuccess({uuid:res.data.uuid,name:file.name,url:filePrefix+res.data.uuid})
+    }else{
+      onError(res.message||'上传失败')
+    }
+  }).finally(()=>{
+  }).catch((e)=>{
+    onError(e)
+  })
+};
+const handleChangeVideo = (info) => {
+  if (info.file&&info.file.status === "uploading"){
+    return false
+  }
+  let resFileList = [...info.fileList];
+  const includes = [];
+  resFileList = resFileList.filter(function (item) {
+    if(item.status==='error'){
+      return false
+    }
+    let uuid = item.uuid||item.response.uuid
+    let url = item.url||item.response.url
+    if(!uuid){
+      console.log(item,"哪里出现问题了")
+      return false
+    }
+    if(!includes.includes(uuid)){
+      item.uuid = uuid
+      item.url = url
+      includes.push(item.uuid)
+      return true
+    }
+    return false
+  })
+  if(resFileList.length>0){
+    formState.videoList = [resFileList[resFileList.length-1]]
+    return
+  }
+  formState.videoList = resFileList
 };
 
-const customRequest = ({file, onSuccess}) => {
-  // 这里应该是您的文件上传逻辑
-  // 为了演示，我们只是模拟一个成功的上传
-  setTimeout(() => {
-    onSuccess("ok");
-  }, 0);
-};
-
-const handleVideoChange = (info) => {
-  if (info.file.status === 'done') {
-    message.success(`${info.file.name} 文件上传成功`);
-  } else if (info.file.status === 'error') {
-    message.error(`${info.file.name} 文件上传失败`);
-  }
-};
-
+import { useRouter,useRoute } from 'vue-router';
+const router = useRouter();
+const toRoute=(path)=> {
+  router.push(path)
+}
 const onFinish = (values) => {
-  console.log('Success:', values);
-  // 这里应该是您的表单提交逻辑
-  message.success('表单提交成功！');
+  let form = Object.assign({},formState,values)
+  form.photo = []
+  for (let i in form.photoList){
+    let item = form.photoList[i].uuid
+    form.photo.push(item)
+  }
+  if(form.videoList.length>0){
+    form.video = form.videoList[0].uuid
+  }
+  delete form['photoList']
+  delete form['videoList']
+
+   loading.value = true
+   travelSave(form).then(res=>{
+     if(res&&res.code==200){
+       toRoute('/travel')
+     }
+   }).finally(()=>{
+     loading.value = false
+   })
 };
 
 const getBase64 = (file) => {
@@ -157,6 +303,8 @@ const getBase64 = (file) => {
     reader.onerror = error => reject(error);
   });
 };
+const labelCol = { style: { width: '80px' } };
+const wrapperCol = { span: 24 };
 </script>
 
 <style scoped>

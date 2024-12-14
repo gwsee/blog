@@ -1383,15 +1383,15 @@ func (c *TravelsClient) QueryTravelExtends(t *Travels) *TravelExtendsQuery {
 	return query
 }
 
-// QueryAccountTravels queries the account_travels edge of a Travels.
-func (c *TravelsClient) QueryAccountTravels(t *Travels) *AccountQuery {
+// QueryTravelAccount queries the travel_account edge of a Travels.
+func (c *TravelsClient) QueryTravelAccount(t *Travels) *AccountQuery {
 	query := (&AccountClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := t.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(travels.Table, travels.FieldID, id),
 			sqlgraph.To(account.Table, account.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, travels.AccountTravelsTable, travels.AccountTravelsColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, travels.TravelAccountTable, travels.TravelAccountColumn),
 		)
 		fromV = sqlgraph.Neighbors(t.driver.Dialect(), step)
 		return fromV, nil

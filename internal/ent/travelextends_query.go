@@ -24,7 +24,6 @@ type TravelExtendsQuery struct {
 	inters      []Interceptor
 	predicates  []predicate.TravelExtends
 	withExtends *TravelsQuery
-	withFKs     bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -370,18 +369,11 @@ func (teq *TravelExtendsQuery) prepareQuery(ctx context.Context) error {
 func (teq *TravelExtendsQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*TravelExtends, error) {
 	var (
 		nodes       = []*TravelExtends{}
-		withFKs     = teq.withFKs
 		_spec       = teq.querySpec()
 		loadedTypes = [1]bool{
 			teq.withExtends != nil,
 		}
 	)
-	if teq.withExtends != nil {
-		withFKs = true
-	}
-	if withFKs {
-		_spec.Node.Columns = append(_spec.Node.Columns, travelextends.ForeignKeys...)
-	}
 	_spec.ScanValues = func(columns []string) ([]any, error) {
 		return (*TravelExtends).scanValues(nil, columns)
 	}
@@ -413,10 +405,7 @@ func (teq *TravelExtendsQuery) loadExtends(ctx context.Context, query *TravelsQu
 	ids := make([]int, 0, len(nodes))
 	nodeids := make(map[int][]*TravelExtends)
 	for i := range nodes {
-		if nodes[i].travels_travel_extends == nil {
-			continue
-		}
-		fk := *nodes[i].travels_travel_extends
+		fk := nodes[i].TravelID
 		if _, ok := nodeids[fk]; !ok {
 			ids = append(ids, fk)
 		}
@@ -433,7 +422,7 @@ func (teq *TravelExtendsQuery) loadExtends(ctx context.Context, query *TravelsQu
 	for _, n := range neighbors {
 		nodes, ok := nodeids[n.ID]
 		if !ok {
-			return fmt.Errorf(`unexpected foreign-key "travels_travel_extends" returned %v`, n.ID)
+			return fmt.Errorf(`unexpected foreign-key "travel_id" returned %v`, n.ID)
 		}
 		for i := range nodes {
 			assign(nodes[i], n)
@@ -466,6 +455,9 @@ func (teq *TravelExtendsQuery) querySpec() *sqlgraph.QuerySpec {
 			if fields[i] != travelextends.FieldID {
 				_spec.Node.Columns = append(_spec.Node.Columns, fields[i])
 			}
+		}
+		if teq.withExtends != nil {
+			_spec.Node.AddColumnOnce(travelextends.FieldTravelID)
 		}
 	}
 	if ps := teq.predicates; len(ps) > 0 {

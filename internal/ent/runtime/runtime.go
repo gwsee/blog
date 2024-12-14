@@ -363,6 +363,14 @@ func init() {
 	travelextendsDescAccountID := travelextendsFields[0].Descriptor()
 	// travelextends.AccountIDValidator is a validator for the "account_id" field. It is called by the builders before save.
 	travelextends.AccountIDValidator = travelextendsDescAccountID.Validators[0].(func(int) error)
+	// travelextendsDescIsThumb is the schema descriptor for is_thumb field.
+	travelextendsDescIsThumb := travelextendsFields[2].Descriptor()
+	// travelextends.DefaultIsThumb holds the default value on creation for the is_thumb field.
+	travelextends.DefaultIsThumb = travelextendsDescIsThumb.Default.(bool)
+	// travelextendsDescIsCollect is the schema descriptor for is_collect field.
+	travelextendsDescIsCollect := travelextendsFields[3].Descriptor()
+	// travelextends.DefaultIsCollect holds the default value on creation for the is_collect field.
+	travelextends.DefaultIsCollect = travelextendsDescIsCollect.Default.(bool)
 	travelsMixin := schema.Travels{}.Mixin()
 	travelsMixinHooks0 := travelsMixin[0].Hooks()
 	travelsMixinHooks1 := travelsMixin[1].Hooks()
@@ -403,24 +411,32 @@ func init() {
 	travels.DefaultDeletedBy = travelsDescDeletedBy.Default.(int64)
 	// travelsDescTitle is the schema descriptor for title field.
 	travelsDescTitle := travelsFields[1].Descriptor()
-	// travels.DefaultTitle holds the default value on creation for the title field.
-	travels.DefaultTitle = travelsDescTitle.Default.(string)
+	// travels.TitleValidator is a validator for the "title" field. It is called by the builders before save.
+	travels.TitleValidator = travelsDescTitle.Validators[0].(func(string) error)
 	// travelsDescDescription is the schema descriptor for description field.
 	travelsDescDescription := travelsFields[2].Descriptor()
 	// travels.DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
 	travels.DescriptionValidator = travelsDescDescription.Validators[0].(func(string) error)
 	// travelsDescVideo is the schema descriptor for video field.
 	travelsDescVideo := travelsFields[3].Descriptor()
-	// travels.VideoValidator is a validator for the "video" field. It is called by the builders before save.
-	travels.VideoValidator = travelsDescVideo.Validators[0].(func(string) error)
+	// travels.DefaultVideo holds the default value on creation for the video field.
+	travels.DefaultVideo = travelsDescVideo.Default.(string)
 	// travelsDescIsHidden is the schema descriptor for is_hidden field.
 	travelsDescIsHidden := travelsFields[4].Descriptor()
 	// travels.DefaultIsHidden holds the default value on creation for the is_hidden field.
 	travels.DefaultIsHidden = travelsDescIsHidden.Default.(bool)
-	// travelsDescAccountID is the schema descriptor for account_id field.
-	travelsDescAccountID := travelsFields[5].Descriptor()
-	// travels.AccountIDValidator is a validator for the "account_id" field. It is called by the builders before save.
-	travels.AccountIDValidator = travelsDescAccountID.Validators[0].(func(int) error)
+	// travelsDescBrowseNum is the schema descriptor for browse_num field.
+	travelsDescBrowseNum := travelsFields[7].Descriptor()
+	// travels.DefaultBrowseNum holds the default value on creation for the browse_num field.
+	travels.DefaultBrowseNum = travelsDescBrowseNum.Default.(int)
+	// travelsDescThumbNum is the schema descriptor for thumb_num field.
+	travelsDescThumbNum := travelsFields[8].Descriptor()
+	// travels.DefaultThumbNum holds the default value on creation for the thumb_num field.
+	travels.DefaultThumbNum = travelsDescThumbNum.Default.(int)
+	// travelsDescCollectNum is the schema descriptor for collect_num field.
+	travelsDescCollectNum := travelsFields[9].Descriptor()
+	// travels.DefaultCollectNum holds the default value on creation for the collect_num field.
+	travels.DefaultCollectNum = travelsDescCollectNum.Default.(int)
 	userMixin := schema.User{}.Mixin()
 	userMixinHooks0 := userMixin[0].Hooks()
 	userMixinHooks1 := userMixin[1].Hooks()

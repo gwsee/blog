@@ -127,7 +127,6 @@ func (teu *TravelExtendsUpdate) AddAccountID(i int) *TravelExtendsUpdate {
 
 // SetTravelID sets the "travel_id" field.
 func (teu *TravelExtendsUpdate) SetTravelID(i int) *TravelExtendsUpdate {
-	teu.mutation.ResetTravelID()
 	teu.mutation.SetTravelID(i)
 	return teu
 }
@@ -140,9 +139,9 @@ func (teu *TravelExtendsUpdate) SetNillableTravelID(i *int) *TravelExtendsUpdate
 	return teu
 }
 
-// AddTravelID adds i to the "travel_id" field.
-func (teu *TravelExtendsUpdate) AddTravelID(i int) *TravelExtendsUpdate {
-	teu.mutation.AddTravelID(i)
+// ClearTravelID clears the value of the "travel_id" field.
+func (teu *TravelExtendsUpdate) ClearTravelID() *TravelExtendsUpdate {
+	teu.mutation.ClearTravelID()
 	return teu
 }
 
@@ -298,12 +297,6 @@ func (teu *TravelExtendsUpdate) sqlSave(ctx context.Context) (n int, err error) 
 	if value, ok := teu.mutation.AddedAccountID(); ok {
 		_spec.AddField(travelextends.FieldAccountID, field.TypeInt, value)
 	}
-	if value, ok := teu.mutation.TravelID(); ok {
-		_spec.SetField(travelextends.FieldTravelID, field.TypeInt, value)
-	}
-	if value, ok := teu.mutation.AddedTravelID(); ok {
-		_spec.AddField(travelextends.FieldTravelID, field.TypeInt, value)
-	}
 	if value, ok := teu.mutation.IsThumb(); ok {
 		_spec.SetField(travelextends.FieldIsThumb, field.TypeBool, value)
 	}
@@ -458,7 +451,6 @@ func (teuo *TravelExtendsUpdateOne) AddAccountID(i int) *TravelExtendsUpdateOne 
 
 // SetTravelID sets the "travel_id" field.
 func (teuo *TravelExtendsUpdateOne) SetTravelID(i int) *TravelExtendsUpdateOne {
-	teuo.mutation.ResetTravelID()
 	teuo.mutation.SetTravelID(i)
 	return teuo
 }
@@ -471,9 +463,9 @@ func (teuo *TravelExtendsUpdateOne) SetNillableTravelID(i *int) *TravelExtendsUp
 	return teuo
 }
 
-// AddTravelID adds i to the "travel_id" field.
-func (teuo *TravelExtendsUpdateOne) AddTravelID(i int) *TravelExtendsUpdateOne {
-	teuo.mutation.AddTravelID(i)
+// ClearTravelID clears the value of the "travel_id" field.
+func (teuo *TravelExtendsUpdateOne) ClearTravelID() *TravelExtendsUpdateOne {
+	teuo.mutation.ClearTravelID()
 	return teuo
 }
 
@@ -658,12 +650,6 @@ func (teuo *TravelExtendsUpdateOne) sqlSave(ctx context.Context) (_node *TravelE
 	}
 	if value, ok := teuo.mutation.AddedAccountID(); ok {
 		_spec.AddField(travelextends.FieldAccountID, field.TypeInt, value)
-	}
-	if value, ok := teuo.mutation.TravelID(); ok {
-		_spec.SetField(travelextends.FieldTravelID, field.TypeInt, value)
-	}
-	if value, ok := teuo.mutation.AddedTravelID(); ok {
-		_spec.AddField(travelextends.FieldTravelID, field.TypeInt, value)
 	}
 	if value, ok := teuo.mutation.IsThumb(); ok {
 		_spec.SetField(travelextends.FieldIsThumb, field.TypeBool, value)

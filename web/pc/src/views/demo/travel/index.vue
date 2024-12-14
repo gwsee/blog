@@ -22,14 +22,12 @@
               >
                 <!-- travel Card -->
                 <div
-                    @click="toRoute('/travel/info/'+travel.id)"
                     class="travel-card group relative overflow-hidden rounded-lg shadow-lg"
                     :class="{'bg-black': key % 2 !== 0}"
                 >
                   <!-- travel Image Container with Fixed Aspect Ratio -->
                   <div class="relative w-full pb-[75%]">
                     <img
-
                         v-if="travel.photo"
                         :src="filePrefix+travel.photo"
                         :alt="travel.title"
@@ -42,14 +40,16 @@
                       <div class="text-4xl text-gray-400">No Photo</div>
                     </div>
 
-                    <!-- Title and Time Header -->
-                    <div class="absolute top-0 left-0 right-0 p-4 flex justify-between items-center bg-gradient-to-b from-black/70 to-transparent">
-                      <h3 class="text-lg font-medium text-white truncate flex-1 mr-2">
+                    <!-- Creation/Update Time -->
+                    <div class="absolute top-2 right-2 bg-black/50 text-white/80 px-2 py-1 rounded text-xs">
+                      {{ $formatDate(travel.createdAt || travel.updatedAt) }}
+                    </div>
+
+                    <!-- travel Title -->
+                    <div class="absolute top-0 left-0 p-4">
+                      <h3 class="text-lg font-medium text-white max-w-[12em] truncate">
                         {{ travel.title }}
                       </h3>
-                      <span class="text-xs text-white/80 whitespace-nowrap">
-                        {{ $formatDate(travel.createdAt || travel.updatedAt) }}
-                      </span>
                     </div>
 
                     <!-- travel Description (visible on hover) -->
@@ -57,116 +57,97 @@
                       <p class="text-sm text-white/90 line-clamp-3">{{ travel.description }}</p>
                     </div>
 
-                    <!-- Action Buttons (always visible) -->
-                    <div class="absolute  inset-0 flex items-center  space-x-4 justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    <!-- Hover Actions -->
+                    <div
+                        class="absolute top-0 left-0 right-0 bottom-0 bg-black/40 opacity-0
+                           group-hover:opacity-100 transition-opacity duration-200 flex
+                           items-center justify-center gap-2"
+                    >
                       <a-button
                           class="action-button hover:scale-110 transition-transform"
                           :class="[
-                            key % 2 !== 0 ? 'bg-white hover:bg-white/90' : 'bg-black hover:bg-black/90',
-                            travel.isCollect ? '!border-2 !border-red-500' : ''
+                            key % 2 !== 0 ? '!bg-white/90 hover:!bg-white' : '!bg-black/90 hover:!bg-black',
+                            travel.isFavorited ? 'border-2 !border-yellow-500' : ''
                           ]"
                           shape="circle"
                           size="large"
-                          @click.stop="travelCollectAc(travel)"
+                          @click="toggleFavoriteAc(travel)"
                       >
                         <template #icon>
-                          <StarFilled v-if="travel.isCollect"    :class="[
-                              key % 2 !== 0 ? 'text-black' : 'text-white',
-                              travel.isCollect ? '!text-red-500' : ''
-                            ]"/>
-                          <StarOutlined v-else   :class="[
-                              key % 2 !== 0 ? 'text-black' : 'text-white',
-                              travel.isCollect ? '!text-red-500' : ''
-                            ]"/>
+                          <component
+                              :is="travel.isFavorited ? 'SaveFilled' : 'SaveOutlined'"
+                              :class="[
+                              {'text-black': key % 2 !== 0, 'text-white': key % 2 === 0},
+                              travel.isFavorited ? 'text-yellow-500' : ''
+                            ]"
+                          />
                         </template>
                       </a-button>
                       <a-button
                           class="action-button hover:scale-110 transition-transform"
                           :class="[
-                            key % 2 !== 0 ? 'bg-white hover:bg-white/90' : 'bg-black hover:bg-black/90',
-                            travel.isThumb ? '!border-2 !border-red-500' : ''
+                            key % 2 !== 0 ? '!bg-white/90 hover:!bg-white' : '!bg-black/90 hover:!bg-black',
+                            travel.isLiked ? 'border-2 !border-red-500' : ''
                           ]"
                           shape="circle"
                           size="large"
-                          @click.stop="travelThumbAc(travel)"
+                          @click="toggleLikeAc(travel)"
                       >
                         <template #icon>
-                          <HeartFilled v-if="travel.isThumb "  :class="[
-                              key % 2 !== 0 ? 'text-black' : 'text-white',
-                              travel.isThumb ? '!text-red-500' : ''
-                            ]" />
-                          <HeartOutlined v-else  :class="[
-                              key % 2 !== 0 ? 'text-black' : 'text-white',
-                              travel.isThumb ? '!text-red-500' : ''
-                            ]"/>
+                          <component
+                              :is="travel.isLiked ? 'HeartFilled' : 'HeartOutlined'"
+                              :class="[
+                              {'text-black': key % 2 !== 0, 'text-white': key % 2 === 0},
+                              travel.isLiked ? 'text-red-500' : ''
+                            ]"
+                          />
                         </template>
                       </a-button>
                       <a-button
                           v-if="state.user && state.user.id === travel.account.id"
                           class="action-button hover:scale-110 transition-transform"
-                          :class="key % 2 !== 0 ? 'bg-white hover:bg-white/90' : 'bg-black hover:bg-black/90'"
+                          :class="key % 2 !== 0 ? '!bg-white/90 hover:!bg-white' : '!bg-black/90 hover:!bg-black'"
                           shape="circle"
                           size="large"
-                          @click.stop="editTravel(travel)"
+                          @click="editTravel(travel)"
                       >
                         <template #icon>
-                          <EditOutlined :class="key % 2 !== 0 ? 'text-black' : 'text-white'" />
-                        </template>
-                      </a-button>
-                      <a-button
-                          v-if="state.user && state.user.id === travel.account.id"
-                          class="action-button hover:scale-110 transition-transform"
-                          :class="key % 2 !== 0 ? 'bg-white hover:bg-white/90' : 'bg-black hover:bg-black/90'"
-                          shape="circle"
-                          size="large"
-                          @click.stop="editTravel(travel)"
-                      >
-                        <template #icon>
-                          <DeleteOutlined :class="key % 2 !== 0 ? 'text-black' : 'text-white'" />
+                          <EditOutlined :class="{'text-black': key % 2 !== 0, 'text-white': key % 2 === 0}" />
                         </template>
                       </a-button>
                     </div>
                   </div>
 
-                  <!-- User Info Footer -->
-                  <div :class="[
-                    'p-4 flex items-center justify-between',
-                    key % 2 !== 0 ? 'bg-white' : 'bg-black'
-                  ]">
-                    <div class="flex items-center gap-2">
-                      <a-avatar :src="travel.account.avatar||avatar" :size="24" />
-                      <span class="text-sm font-medium truncate max-w-[20ch]" :class="key % 2 !== 0 ? 'text-black' : 'text-white'">
-                        {{ travel.account.nickname }}
-                      </span>
-                      <a-tag
-                          v-if="state.user&&state.user.id === travel.account.id"
-                          class="border-0 text-xs"
-                          :class="key % 2 !== 0 ? 'bg-black text-white' : 'bg-white text-black'"
-                      >
-                        ME
-                      </a-tag>
-                    </div>
-                    <div class="flex items-center gap-3">
-                       <span class="flex items-center gap-1"  :class="[
-                            key % 2 !== 0 ? 'text-black' : 'text-white',
-                            travel.isCollect ? 'text-red-500' : '',
-                          ]" >
-                          <StarFilled v-if="travel.isCollect "  />
-                          <StarOutlined v-else  />
-                        {{ travel.collectNum>999?'999+':(travel.collectNum||0) }}
-                      </span>
-                      <span class="flex items-center gap-1" :class="[
-                            key % 2 !== 0 ? 'text-black' : 'text-white',
-                            travel.isThumb ? 'text-red-500' : '',
-                          ]" >
-                         <HeartFilled v-if="travel.isThumb "   />
-                          <HeartOutlined v-else   />
-                        {{ travel.thumbNum>999?'999+':(travel.thumbNum||0) }}
-                      </span>
-                      <span class="flex items-center gap-1" :class="key % 2 !== 0 ? 'text-black' : 'text-white'">
-                        <EyeOutlined />
-                        {{ travel.browseNum>999?'999+':(travel.browseNum||0) }}
-                      </span>
+                  <!-- travel Info -->
+                  <div
+                      class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 via-black/70 to-transparent"
+                  >
+                    <div class="flex items-center justify-between text-white">
+                      <div class="flex items-center gap-2">
+                        <a-avatar :src="travel.account.avatar||avatar" :size="24" />
+                        <span class="text-sm font-medium">
+                          {{ travel.account.nickname }}
+                        </span>
+                        <a-tag
+                            v-if="state.user&&state.user.id === travel.account.id"
+                            class="border-0 text-xs bg-white/20"
+                        >
+                          ME
+                        </a-tag>
+                      </div>
+                      <div class="flex items-center gap-3">
+                        <span class="flex items-center gap-1">
+                          <component
+                              :is="travel.isLiked ? 'HeartFilled' : 'HeartOutlined'"
+                              :class="travel.isLiked ? 'text-red-500' : ''"
+                          />
+                          {{ travel.thumbNum>999?'999+':(travel.thumbNum) }}
+                        </span>
+                        <span class="flex items-center gap-1">
+                          <EyeOutlined />
+                          {{ travel.browseNum>999?'999+':(travel.browseNum) }}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -174,18 +155,15 @@
             </template>
           </div>
           <div
-              v-if="state.user&&state.user.id"
-              class="sticky float-right bottom-2 right-2 w-12 h-12 text-white flex items-center justify-center rounded-full right">
+              class="sticky float-right bottom-2 right-2 w-12 h-12 bg-blue-500 text-white flex items-center justify-center rounded-full right"
+          >
             <a-button
                 class="action-button !bg-white/90 hover:!bg-white"
                 shape="circle"
                 size="large"
-                style="background-color: gray"
                 @click="toRoute('/travel/manage/0')"
             >
-              <template #icon>
-                <PlusOutlined :class=" 'text-black'" />
-              </template>
+              NEW
             </a-button>
           </div>
         </div>
@@ -196,26 +174,21 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import {travelList, travelDel, travelCollect, travelThumb} from "@/api/travel";
+import {travelList, travelDel, toggleFavorite, toggleLike} from "@/api/travel";
 import {filePrefix} from "@/api/tool";
 import { useAuthStore  } from '@/store/auth'
-const { state } = useAuthStore();
 import {
   HeartOutlined,
   HeartFilled,
-  StarOutlined,
-  StarFilled,
   EyeOutlined,
   SaveOutlined,
   SaveFilled,
-  EditOutlined,
-  PlusOutlined,
-  DeleteOutlined
+  EditOutlined
 } from '@ant-design/icons-vue'
 import avatar from "@/assets/image/default-avatar.png"
 import { useRouter } from "vue-router";
 import { Empty } from 'ant-design-vue';
-
+const { state } = useAuthStore();
 const router = useRouter();
 const toRoute = (path) => {
   router.push(path)
@@ -267,24 +240,20 @@ const list =()=>{
 }
 
 
-const travelCollectAc = async (travel) => {
+const toggleFavoriteAc = async (travel) => {
   try {
-    travel.collectNum=travel.collectNum||0
-    travel.isCollect = !travel.isCollect
-    travel.collectNum +=  travel.isCollect? 1 : -1
-    await travelCollect({id:travel.id,do:travel.isCollect})
+    await toggleFavorite(travel.id)
+    travel.isFavorited = !travel.isFavorited
   } catch (error) {
     console.error('Error toggling favorite:', error)
   }
 }
 
-const travelThumbAc = async (travel) => {
+const toggleLikeAc = async (travel) => {
   try {
-    travel.thumbNum=  travel.thumbNum||0
-    travel.isThumb = !travel.isThumb
-    travel.thumbNum += travel.isThumb ? 1 : -1
-    await travelThumb({id:travel.id,do:travel.isThumb})
-
+    await toggleLike(travel.id)
+    travel.isLiked = !travel.isLiked
+    travel.thumbNum += travel.isLiked ? 1 : -1
   } catch (error) {
     console.error('Error toggling like:', error)
   }

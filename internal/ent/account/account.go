@@ -51,7 +51,7 @@ const (
 	// It exists in this package in order to avoid circular dependency with the "travels" package.
 	TravelsInverseTable = "travels"
 	// TravelsColumn is the table column denoting the travels relation/edge.
-	TravelsColumn = "account_travels"
+	TravelsColumn = "account_id"
 )
 
 // Columns holds all SQL columns for account fields.

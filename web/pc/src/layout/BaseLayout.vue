@@ -66,19 +66,19 @@
             </a-button>
 
             <!-- 桌面端导航菜单 -->
-            <nav class="hidden md:flex items-center gap-8">
+            <nav class="hidden md:flex items-center gap-6">
               <router-link
                   v-for="item in navItems"
                   :key="item.key"
                   :to="item.href"
                   class="text-gray-500/60 hover:text-gray-900 transition-colors duration-300"
               >
-                <a-avatar :size="50" class="layout-content-menu-item" :src="item.img"  > {{ item.label }}</a-avatar>
+                <a-avatar :size="48" class="layout-content-menu-item" :src="item.img"  > {{ item.label }}</a-avatar>
               </router-link>
             </nav>
 
-            <a-avatar :size="50" class="layout-content-menu-item" @click="showLoginDialog" v-if="!isLoggedIn" >登陆</a-avatar>
-            <a-avatar :size="50" class="layout-content-menu-item" :src="avatar" v-else @click="goToAbout('/about')"></a-avatar>
+            <a-avatar :size="48" class="layout-content-menu-item" @click="showLoginDialog" v-if="!isLoggedIn" >登陆</a-avatar>
+            <a-avatar :size="48" class="layout-content-menu-item" :src="avatar" v-else @click="goToAbout('/about')"></a-avatar>
           </div>
         </div>
       </div>
@@ -127,7 +127,7 @@
 
     <!-- 移动端侧边菜单 -->
     <a-drawer
-        :visible="showMobileMenu"
+        :open="showMobileMenu"
         placement="left"
         :closable="false"
         @close="showMobileMenu = false"

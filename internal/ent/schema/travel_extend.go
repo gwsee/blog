@@ -17,9 +17,9 @@ type TravelExtends struct {
 func (TravelExtends) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int("account_id").Positive().Comment("账户ID"),
-		field.Int("travel_id").Comment("旅行的ID"),
-		field.Bool("is_thumb").Comment("是否点赞"),
-		field.Bool("is_collect").Comment("收藏量"),
+		field.Int("travel_id").Optional().Comment("旅行的ID"),
+		field.Bool("is_thumb").Default(false).Comment("是否点赞"),
+		field.Bool("is_collect").Default(false).Comment("收藏量"),
 	}
 }
 func (TravelExtends) Indexes() []ent.Index {
@@ -30,7 +30,7 @@ func (TravelExtends) Indexes() []ent.Index {
 
 func (TravelExtends) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.From("extends", Travels.Type).Ref("travel_extends").Unique(),
+		edge.From("extends", Travels.Type).Field("travel_id").Ref("travel_extends").Unique(),
 	}
 }
 func (TravelExtends) Mixin() []ent.Mixin {

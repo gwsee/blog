@@ -45,8 +45,8 @@ const (
 	FieldCollectNum = "collect_num"
 	// EdgeTravelExtends holds the string denoting the travel_extends edge name in mutations.
 	EdgeTravelExtends = "travel_extends"
-	// EdgeAccountTravels holds the string denoting the account_travels edge name in mutations.
-	EdgeAccountTravels = "account_travels"
+	// EdgeTravelAccount holds the string denoting the travel_account edge name in mutations.
+	EdgeTravelAccount = "travel_account"
 	// Table holds the table name of the travels in the database.
 	Table = "travels"
 	// TravelExtendsTable is the table that holds the travel_extends relation/edge.
@@ -55,14 +55,14 @@ const (
 	// It exists in this package in order to avoid circular dependency with the "travelextends" package.
 	TravelExtendsInverseTable = "travel_extends"
 	// TravelExtendsColumn is the table column denoting the travel_extends relation/edge.
-	TravelExtendsColumn = "travels_travel_extends"
-	// AccountTravelsTable is the table that holds the account_travels relation/edge.
-	AccountTravelsTable = "travels"
-	// AccountTravelsInverseTable is the table name for the Account entity.
+	TravelExtendsColumn = "travel_id"
+	// TravelAccountTable is the table that holds the travel_account relation/edge.
+	TravelAccountTable = "travels"
+	// TravelAccountInverseTable is the table name for the Account entity.
 	// It exists in this package in order to avoid circular dependency with the "account" package.
-	AccountTravelsInverseTable = "account"
-	// AccountTravelsColumn is the table column denoting the account_travels relation/edge.
-	AccountTravelsColumn = "account_travels"
+	TravelAccountInverseTable = "account"
+	// TravelAccountColumn is the table column denoting the travel_account relation/edge.
+	TravelAccountColumn = "account_id"
 )
 
 // Columns holds all SQL columns for travels fields.
@@ -85,21 +85,10 @@ var Columns = []string{
 	FieldCollectNum,
 }
 
-// ForeignKeys holds the SQL foreign-keys that are owned by the "travels"
-// table and are not defined as standalone fields in the schema.
-var ForeignKeys = []string{
-	"account_travels",
-}
-
 // ValidColumn reports if the column name is valid (part of the table columns).
 func ValidColumn(column string) bool {
 	for i := range Columns {
 		if column == Columns[i] {
-			return true
-		}
-	}
-	for i := range ForeignKeys {
-		if column == ForeignKeys[i] {
 			return true
 		}
 	}
@@ -127,16 +116,20 @@ var (
 	DefaultDeletedAt int64
 	// DefaultDeletedBy holds the default value on creation for the "deleted_by" field.
 	DefaultDeletedBy int64
-	// DefaultTitle holds the default value on creation for the "title" field.
-	DefaultTitle string
+	// TitleValidator is a validator for the "title" field. It is called by the builders before save.
+	TitleValidator func(string) error
 	// DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
 	DescriptionValidator func(string) error
-	// VideoValidator is a validator for the "video" field. It is called by the builders before save.
-	VideoValidator func(string) error
+	// DefaultVideo holds the default value on creation for the "video" field.
+	DefaultVideo string
 	// DefaultIsHidden holds the default value on creation for the "is_hidden" field.
 	DefaultIsHidden bool
-	// AccountIDValidator is a validator for the "account_id" field. It is called by the builders before save.
-	AccountIDValidator func(int) error
+	// DefaultBrowseNum holds the default value on creation for the "browse_num" field.
+	DefaultBrowseNum int
+	// DefaultThumbNum holds the default value on creation for the "thumb_num" field.
+	DefaultThumbNum int
+	// DefaultCollectNum holds the default value on creation for the "collect_num" field.
+	DefaultCollectNum int
 )
 
 // OrderOption defines the ordering options for the Travels queries.
@@ -231,10 +224,10 @@ func ByTravelExtends(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 	}
 }
 
-// ByAccountTravelsField orders the results by account_travels field.
-func ByAccountTravelsField(field string, opts ...sql.OrderTermOption) OrderOption {
+// ByTravelAccountField orders the results by travel_account field.
+func ByTravelAccountField(field string, opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborTerms(s, newAccountTravelsStep(), sql.OrderByField(field, opts...))
+		sqlgraph.OrderByNeighborTerms(s, newTravelAccountStep(), sql.OrderByField(field, opts...))
 	}
 }
 func newTravelExtendsStep() *sqlgraph.Step {
@@ -244,10 +237,10 @@ func newTravelExtendsStep() *sqlgraph.Step {
 		sqlgraph.Edge(sqlgraph.O2M, false, TravelExtendsTable, TravelExtendsColumn),
 	)
 }
-func newAccountTravelsStep() *sqlgraph.Step {
+func newTravelAccountStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
-		sqlgraph.To(AccountTravelsInverseTable, FieldID),
-		sqlgraph.Edge(sqlgraph.M2O, true, AccountTravelsTable, AccountTravelsColumn),
+		sqlgraph.To(TravelAccountInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2O, true, TravelAccountTable, TravelAccountColumn),
 	)
 }

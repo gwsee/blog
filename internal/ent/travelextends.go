@@ -39,9 +39,8 @@ type TravelExtends struct {
 	IsCollect bool `json:"is_collect,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the TravelExtendsQuery when eager-loading is set.
-	Edges                  TravelExtendsEdges `json:"edges"`
-	travels_travel_extends *int
-	selectValues           sql.SelectValues
+	Edges        TravelExtendsEdges `json:"edges"`
+	selectValues sql.SelectValues
 }
 
 // TravelExtendsEdges holds the relations/edges for other nodes in the graph.
@@ -72,8 +71,6 @@ func (*TravelExtends) scanValues(columns []string) ([]any, error) {
 		case travelextends.FieldIsThumb, travelextends.FieldIsCollect:
 			values[i] = new(sql.NullBool)
 		case travelextends.FieldID, travelextends.FieldCreatedAt, travelextends.FieldCreatedBy, travelextends.FieldUpdatedAt, travelextends.FieldUpdatedBy, travelextends.FieldDeletedAt, travelextends.FieldDeletedBy, travelextends.FieldAccountID, travelextends.FieldTravelID:
-			values[i] = new(sql.NullInt64)
-		case travelextends.ForeignKeys[0]: // travels_travel_extends
 			values[i] = new(sql.NullInt64)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -155,13 +152,6 @@ func (te *TravelExtends) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field is_collect", values[i])
 			} else if value.Valid {
 				te.IsCollect = value.Bool
-			}
-		case travelextends.ForeignKeys[0]:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for edge-field travels_travel_extends", value)
-			} else if value.Valid {
-				te.travels_travel_extends = new(int)
-				*te.travels_travel_extends = int(value.Int64)
 			}
 		default:
 			te.selectValues.Set(columns[i], values[i])

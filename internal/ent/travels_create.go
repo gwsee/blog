@@ -113,14 +113,6 @@ func (tc *TravelsCreate) SetTitle(s string) *TravelsCreate {
 	return tc
 }
 
-// SetNillableTitle sets the "title" field if the given value is not nil.
-func (tc *TravelsCreate) SetNillableTitle(s *string) *TravelsCreate {
-	if s != nil {
-		tc.SetTitle(*s)
-	}
-	return tc
-}
-
 // SetDescription sets the "description" field.
 func (tc *TravelsCreate) SetDescription(s string) *TravelsCreate {
 	tc.mutation.SetDescription(s)
@@ -130,6 +122,14 @@ func (tc *TravelsCreate) SetDescription(s string) *TravelsCreate {
 // SetVideo sets the "video" field.
 func (tc *TravelsCreate) SetVideo(s string) *TravelsCreate {
 	tc.mutation.SetVideo(s)
+	return tc
+}
+
+// SetNillableVideo sets the "video" field if the given value is not nil.
+func (tc *TravelsCreate) SetNillableVideo(s *string) *TravelsCreate {
+	if s != nil {
+		tc.SetVideo(*s)
+	}
 	return tc
 }
 
@@ -153,6 +153,14 @@ func (tc *TravelsCreate) SetAccountID(i int) *TravelsCreate {
 	return tc
 }
 
+// SetNillableAccountID sets the "account_id" field if the given value is not nil.
+func (tc *TravelsCreate) SetNillableAccountID(i *int) *TravelsCreate {
+	if i != nil {
+		tc.SetAccountID(*i)
+	}
+	return tc
+}
+
 // SetPhotos sets the "photos" field.
 func (tc *TravelsCreate) SetPhotos(s []string) *TravelsCreate {
 	tc.mutation.SetPhotos(s)
@@ -165,15 +173,39 @@ func (tc *TravelsCreate) SetBrowseNum(i int) *TravelsCreate {
 	return tc
 }
 
+// SetNillableBrowseNum sets the "browse_num" field if the given value is not nil.
+func (tc *TravelsCreate) SetNillableBrowseNum(i *int) *TravelsCreate {
+	if i != nil {
+		tc.SetBrowseNum(*i)
+	}
+	return tc
+}
+
 // SetThumbNum sets the "thumb_num" field.
 func (tc *TravelsCreate) SetThumbNum(i int) *TravelsCreate {
 	tc.mutation.SetThumbNum(i)
 	return tc
 }
 
+// SetNillableThumbNum sets the "thumb_num" field if the given value is not nil.
+func (tc *TravelsCreate) SetNillableThumbNum(i *int) *TravelsCreate {
+	if i != nil {
+		tc.SetThumbNum(*i)
+	}
+	return tc
+}
+
 // SetCollectNum sets the "collect_num" field.
 func (tc *TravelsCreate) SetCollectNum(i int) *TravelsCreate {
 	tc.mutation.SetCollectNum(i)
+	return tc
+}
+
+// SetNillableCollectNum sets the "collect_num" field if the given value is not nil.
+func (tc *TravelsCreate) SetNillableCollectNum(i *int) *TravelsCreate {
+	if i != nil {
+		tc.SetCollectNum(*i)
+	}
 	return tc
 }
 
@@ -198,23 +230,23 @@ func (tc *TravelsCreate) AddTravelExtends(t ...*TravelExtends) *TravelsCreate {
 	return tc.AddTravelExtendIDs(ids...)
 }
 
-// SetAccountTravelsID sets the "account_travels" edge to the Account entity by ID.
-func (tc *TravelsCreate) SetAccountTravelsID(id int) *TravelsCreate {
-	tc.mutation.SetAccountTravelsID(id)
+// SetTravelAccountID sets the "travel_account" edge to the Account entity by ID.
+func (tc *TravelsCreate) SetTravelAccountID(id int) *TravelsCreate {
+	tc.mutation.SetTravelAccountID(id)
 	return tc
 }
 
-// SetNillableAccountTravelsID sets the "account_travels" edge to the Account entity by ID if the given value is not nil.
-func (tc *TravelsCreate) SetNillableAccountTravelsID(id *int) *TravelsCreate {
+// SetNillableTravelAccountID sets the "travel_account" edge to the Account entity by ID if the given value is not nil.
+func (tc *TravelsCreate) SetNillableTravelAccountID(id *int) *TravelsCreate {
 	if id != nil {
-		tc = tc.SetAccountTravelsID(*id)
+		tc = tc.SetTravelAccountID(*id)
 	}
 	return tc
 }
 
-// SetAccountTravels sets the "account_travels" edge to the Account entity.
-func (tc *TravelsCreate) SetAccountTravels(a *Account) *TravelsCreate {
-	return tc.SetAccountTravelsID(a.ID)
+// SetTravelAccount sets the "travel_account" edge to the Account entity.
+func (tc *TravelsCreate) SetTravelAccount(a *Account) *TravelsCreate {
+	return tc.SetTravelAccountID(a.ID)
 }
 
 // Mutation returns the TravelsMutation object of the builder.
@@ -278,13 +310,25 @@ func (tc *TravelsCreate) defaults() error {
 		v := travels.DefaultDeletedBy
 		tc.mutation.SetDeletedBy(v)
 	}
-	if _, ok := tc.mutation.Title(); !ok {
-		v := travels.DefaultTitle
-		tc.mutation.SetTitle(v)
+	if _, ok := tc.mutation.Video(); !ok {
+		v := travels.DefaultVideo
+		tc.mutation.SetVideo(v)
 	}
 	if _, ok := tc.mutation.IsHidden(); !ok {
 		v := travels.DefaultIsHidden
 		tc.mutation.SetIsHidden(v)
+	}
+	if _, ok := tc.mutation.BrowseNum(); !ok {
+		v := travels.DefaultBrowseNum
+		tc.mutation.SetBrowseNum(v)
+	}
+	if _, ok := tc.mutation.ThumbNum(); !ok {
+		v := travels.DefaultThumbNum
+		tc.mutation.SetThumbNum(v)
+	}
+	if _, ok := tc.mutation.CollectNum(); !ok {
+		v := travels.DefaultCollectNum
+		tc.mutation.SetCollectNum(v)
 	}
 	return nil
 }
@@ -312,6 +356,11 @@ func (tc *TravelsCreate) check() error {
 	if _, ok := tc.mutation.Title(); !ok {
 		return &ValidationError{Name: "title", err: errors.New(`ent: missing required field "Travels.title"`)}
 	}
+	if v, ok := tc.mutation.Title(); ok {
+		if err := travels.TitleValidator(v); err != nil {
+			return &ValidationError{Name: "title", err: fmt.Errorf(`ent: validator failed for field "Travels.title": %w`, err)}
+		}
+	}
 	if _, ok := tc.mutation.Description(); !ok {
 		return &ValidationError{Name: "description", err: errors.New(`ent: missing required field "Travels.description"`)}
 	}
@@ -323,21 +372,8 @@ func (tc *TravelsCreate) check() error {
 	if _, ok := tc.mutation.Video(); !ok {
 		return &ValidationError{Name: "video", err: errors.New(`ent: missing required field "Travels.video"`)}
 	}
-	if v, ok := tc.mutation.Video(); ok {
-		if err := travels.VideoValidator(v); err != nil {
-			return &ValidationError{Name: "video", err: fmt.Errorf(`ent: validator failed for field "Travels.video": %w`, err)}
-		}
-	}
 	if _, ok := tc.mutation.IsHidden(); !ok {
 		return &ValidationError{Name: "is_hidden", err: errors.New(`ent: missing required field "Travels.is_hidden"`)}
-	}
-	if _, ok := tc.mutation.AccountID(); !ok {
-		return &ValidationError{Name: "account_id", err: errors.New(`ent: missing required field "Travels.account_id"`)}
-	}
-	if v, ok := tc.mutation.AccountID(); ok {
-		if err := travels.AccountIDValidator(v); err != nil {
-			return &ValidationError{Name: "account_id", err: fmt.Errorf(`ent: validator failed for field "Travels.account_id": %w`, err)}
-		}
 	}
 	if _, ok := tc.mutation.Photos(); !ok {
 		return &ValidationError{Name: "photos", err: errors.New(`ent: missing required field "Travels.photos"`)}
@@ -424,10 +460,6 @@ func (tc *TravelsCreate) createSpec() (*Travels, *sqlgraph.CreateSpec) {
 		_spec.SetField(travels.FieldIsHidden, field.TypeBool, value)
 		_node.IsHidden = value
 	}
-	if value, ok := tc.mutation.AccountID(); ok {
-		_spec.SetField(travels.FieldAccountID, field.TypeInt, value)
-		_node.AccountID = value
-	}
 	if value, ok := tc.mutation.Photos(); ok {
 		_spec.SetField(travels.FieldPhotos, field.TypeJSON, value)
 		_node.Photos = value
@@ -460,12 +492,12 @@ func (tc *TravelsCreate) createSpec() (*Travels, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := tc.mutation.AccountTravelsIDs(); len(nodes) > 0 {
+	if nodes := tc.mutation.TravelAccountIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   travels.AccountTravelsTable,
-			Columns: []string{travels.AccountTravelsColumn},
+			Table:   travels.TravelAccountTable,
+			Columns: []string{travels.TravelAccountColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(account.FieldID, field.TypeInt),
@@ -474,7 +506,7 @@ func (tc *TravelsCreate) createSpec() (*Travels, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		_node.account_travels = &nodes[0]
+		_node.AccountID = nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec
@@ -661,9 +693,9 @@ func (u *TravelsUpsert) UpdateAccountID() *TravelsUpsert {
 	return u
 }
 
-// AddAccountID adds v to the "account_id" field.
-func (u *TravelsUpsert) AddAccountID(v int) *TravelsUpsert {
-	u.Add(travels.FieldAccountID, v)
+// ClearAccountID clears the value of the "account_id" field.
+func (u *TravelsUpsert) ClearAccountID() *TravelsUpsert {
+	u.SetNull(travels.FieldAccountID)
 	return u
 }
 
@@ -934,17 +966,17 @@ func (u *TravelsUpsertOne) SetAccountID(v int) *TravelsUpsertOne {
 	})
 }
 
-// AddAccountID adds v to the "account_id" field.
-func (u *TravelsUpsertOne) AddAccountID(v int) *TravelsUpsertOne {
-	return u.Update(func(s *TravelsUpsert) {
-		s.AddAccountID(v)
-	})
-}
-
 // UpdateAccountID sets the "account_id" field to the value that was provided on create.
 func (u *TravelsUpsertOne) UpdateAccountID() *TravelsUpsertOne {
 	return u.Update(func(s *TravelsUpsert) {
 		s.UpdateAccountID()
+	})
+}
+
+// ClearAccountID clears the value of the "account_id" field.
+func (u *TravelsUpsertOne) ClearAccountID() *TravelsUpsertOne {
+	return u.Update(func(s *TravelsUpsert) {
+		s.ClearAccountID()
 	})
 }
 
@@ -1392,17 +1424,17 @@ func (u *TravelsUpsertBulk) SetAccountID(v int) *TravelsUpsertBulk {
 	})
 }
 
-// AddAccountID adds v to the "account_id" field.
-func (u *TravelsUpsertBulk) AddAccountID(v int) *TravelsUpsertBulk {
-	return u.Update(func(s *TravelsUpsert) {
-		s.AddAccountID(v)
-	})
-}
-
 // UpdateAccountID sets the "account_id" field to the value that was provided on create.
 func (u *TravelsUpsertBulk) UpdateAccountID() *TravelsUpsertBulk {
 	return u.Update(func(s *TravelsUpsert) {
 		s.UpdateAccountID()
+	})
+}
+
+// ClearAccountID clears the value of the "account_id" field.
+func (u *TravelsUpsertBulk) ClearAccountID() *TravelsUpsertBulk {
+	return u.Update(func(s *TravelsUpsert) {
+		s.ClearAccountID()
 	})
 }
 

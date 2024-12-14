@@ -43,7 +43,7 @@ const (
 	// It exists in this package in order to avoid circular dependency with the "travels" package.
 	ExtendsInverseTable = "travels"
 	// ExtendsColumn is the table column denoting the extends relation/edge.
-	ExtendsColumn = "travels_travel_extends"
+	ExtendsColumn = "travel_id"
 )
 
 // Columns holds all SQL columns for travelextends fields.
@@ -61,21 +61,10 @@ var Columns = []string{
 	FieldIsCollect,
 }
 
-// ForeignKeys holds the SQL foreign-keys that are owned by the "travel_extends"
-// table and are not defined as standalone fields in the schema.
-var ForeignKeys = []string{
-	"travels_travel_extends",
-}
-
 // ValidColumn reports if the column name is valid (part of the table columns).
 func ValidColumn(column string) bool {
 	for i := range Columns {
 		if column == Columns[i] {
-			return true
-		}
-	}
-	for i := range ForeignKeys {
-		if column == ForeignKeys[i] {
 			return true
 		}
 	}
@@ -105,6 +94,10 @@ var (
 	DefaultDeletedBy int64
 	// AccountIDValidator is a validator for the "account_id" field. It is called by the builders before save.
 	AccountIDValidator func(int) error
+	// DefaultIsThumb holds the default value on creation for the "is_thumb" field.
+	DefaultIsThumb bool
+	// DefaultIsCollect holds the default value on creation for the "is_collect" field.
+	DefaultIsCollect bool
 )
 
 // OrderOption defines the ordering options for the TravelExtends queries.

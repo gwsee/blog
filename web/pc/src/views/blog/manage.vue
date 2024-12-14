@@ -5,20 +5,20 @@
     </a-col>
     <a-col :md="14" :sm="24" :xs="24"  style="text-align: center;    background: linear-gradient(rgb(241 241 241), rgb(173 215 197));" >
       <a-form :label-col="labelCol"  :wrapper-col="wrapperCol"  ref="formBlogRef" :model="formState"   autocomplete="off"  class="blog-card-edit">
-        <a-form-item label="Title" :rules="[{ required: true, message: '请输入博客标题' }]">
+        <a-form-item label="title" :rules="[{ required: true, message: '请输入博客标题' }]">
           <a-input  v-model:value="formState.title"   placeholder="请输入博客标题"/>
         </a-form-item>
-        <a-form-item label="Description">
+        <a-form-item label="description">
           <a-textarea v-model:value="formState.description"   placeholder="请输入博客简介"/>
         </a-form-item>
         <a-row  >
           <a-col :md="12" :sm="24" :xs="24"   >
-            <a-form-item label="IsHidden">
+            <a-form-item label="isHidden">
               <a-switch :checkedValue="1" :unCheckedValue="0" v-model:checked="formState.isHidden" />
             </a-form-item>
           </a-col>
           <a-col :md="12" :sm="24" :xs="24"   >
-            <a-form-item label="Tags"  :rules="[{ required: true, message: '请输入至少一个标签' }]">
+            <a-form-item label="tags"  :rules="[{ required: true, message: '请输入至少一个标签' }]">
               <a-select
                   v-model:value="formState.tags"
                   mode="tags"
@@ -29,7 +29,7 @@
             </a-form-item>
           </a-col>
         </a-row>
-        <a-form-item label="Cover">
+        <a-form-item label="cover">
           <a-upload action="/upload.do" :maxCount="1" list-type="picture-card" >
             <div>
               <PlusOutlined />
@@ -38,7 +38,7 @@
           </a-upload>
         </a-form-item>
 
-        <a-form-item label="Content"  :rules="[{ required: true, message: '请输入博客内容' }]">
+        <a-form-item label="content"  :rules="[{ required: true, message: '请输入博客内容' }]">
           <div style="border: 1px solid #ccc;background-color: white;min-height: 40vh" id="editor" >
           </div>
         </a-form-item>
@@ -175,8 +175,7 @@ const onSubmit = () => {
         confirmLoading.value = true
        if(formState.id>0){
          blogUpdate(formState).then(res=>{
-           console.log(res,"....")
-           if(res&&res.code===200){
+             if(res&&res.code===200){
              toRoute('/blog')
            }
          }).finally(()=>{
@@ -184,7 +183,6 @@ const onSubmit = () => {
          })
        }else{
          blogCreate(formState).then(res=>{
-           console.log(res,"....")
            if(res&&res.code===200){
              toRoute('/blog')
            }

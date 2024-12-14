@@ -6,7 +6,7 @@ export const constantRoutes = [
     {
         path: '',
         component: BaseLayout,
-        redirect: 'index',
+        redirect: '/index',
         children: [
             {
                 path: 'index',

@@ -404,24 +404,14 @@ func TravelIDNotIn(vs ...int) predicate.TravelExtends {
 	return predicate.TravelExtends(sql.FieldNotIn(FieldTravelID, vs...))
 }
 
-// TravelIDGT applies the GT predicate on the "travel_id" field.
-func TravelIDGT(v int) predicate.TravelExtends {
-	return predicate.TravelExtends(sql.FieldGT(FieldTravelID, v))
+// TravelIDIsNil applies the IsNil predicate on the "travel_id" field.
+func TravelIDIsNil() predicate.TravelExtends {
+	return predicate.TravelExtends(sql.FieldIsNull(FieldTravelID))
 }
 
-// TravelIDGTE applies the GTE predicate on the "travel_id" field.
-func TravelIDGTE(v int) predicate.TravelExtends {
-	return predicate.TravelExtends(sql.FieldGTE(FieldTravelID, v))
-}
-
-// TravelIDLT applies the LT predicate on the "travel_id" field.
-func TravelIDLT(v int) predicate.TravelExtends {
-	return predicate.TravelExtends(sql.FieldLT(FieldTravelID, v))
-}
-
-// TravelIDLTE applies the LTE predicate on the "travel_id" field.
-func TravelIDLTE(v int) predicate.TravelExtends {
-	return predicate.TravelExtends(sql.FieldLTE(FieldTravelID, v))
+// TravelIDNotNil applies the NotNil predicate on the "travel_id" field.
+func TravelIDNotNil() predicate.TravelExtends {
+	return predicate.TravelExtends(sql.FieldNotNull(FieldTravelID))
 }
 
 // IsThumbEQ applies the EQ predicate on the "is_thumb" field.

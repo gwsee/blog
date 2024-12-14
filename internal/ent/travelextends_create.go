@@ -118,15 +118,39 @@ func (tec *TravelExtendsCreate) SetTravelID(i int) *TravelExtendsCreate {
 	return tec
 }
 
+// SetNillableTravelID sets the "travel_id" field if the given value is not nil.
+func (tec *TravelExtendsCreate) SetNillableTravelID(i *int) *TravelExtendsCreate {
+	if i != nil {
+		tec.SetTravelID(*i)
+	}
+	return tec
+}
+
 // SetIsThumb sets the "is_thumb" field.
 func (tec *TravelExtendsCreate) SetIsThumb(b bool) *TravelExtendsCreate {
 	tec.mutation.SetIsThumb(b)
 	return tec
 }
 
+// SetNillableIsThumb sets the "is_thumb" field if the given value is not nil.
+func (tec *TravelExtendsCreate) SetNillableIsThumb(b *bool) *TravelExtendsCreate {
+	if b != nil {
+		tec.SetIsThumb(*b)
+	}
+	return tec
+}
+
 // SetIsCollect sets the "is_collect" field.
 func (tec *TravelExtendsCreate) SetIsCollect(b bool) *TravelExtendsCreate {
 	tec.mutation.SetIsCollect(b)
+	return tec
+}
+
+// SetNillableIsCollect sets the "is_collect" field if the given value is not nil.
+func (tec *TravelExtendsCreate) SetNillableIsCollect(b *bool) *TravelExtendsCreate {
+	if b != nil {
+		tec.SetIsCollect(*b)
+	}
 	return tec
 }
 
@@ -210,6 +234,14 @@ func (tec *TravelExtendsCreate) defaults() error {
 		v := travelextends.DefaultDeletedBy
 		tec.mutation.SetDeletedBy(v)
 	}
+	if _, ok := tec.mutation.IsThumb(); !ok {
+		v := travelextends.DefaultIsThumb
+		tec.mutation.SetIsThumb(v)
+	}
+	if _, ok := tec.mutation.IsCollect(); !ok {
+		v := travelextends.DefaultIsCollect
+		tec.mutation.SetIsCollect(v)
+	}
 	return nil
 }
 
@@ -240,9 +272,6 @@ func (tec *TravelExtendsCreate) check() error {
 		if err := travelextends.AccountIDValidator(v); err != nil {
 			return &ValidationError{Name: "account_id", err: fmt.Errorf(`ent: validator failed for field "TravelExtends.account_id": %w`, err)}
 		}
-	}
-	if _, ok := tec.mutation.TravelID(); !ok {
-		return &ValidationError{Name: "travel_id", err: errors.New(`ent: missing required field "TravelExtends.travel_id"`)}
 	}
 	if _, ok := tec.mutation.IsThumb(); !ok {
 		return &ValidationError{Name: "is_thumb", err: errors.New(`ent: missing required field "TravelExtends.is_thumb"`)}
@@ -305,10 +334,6 @@ func (tec *TravelExtendsCreate) createSpec() (*TravelExtends, *sqlgraph.CreateSp
 		_spec.SetField(travelextends.FieldAccountID, field.TypeInt, value)
 		_node.AccountID = value
 	}
-	if value, ok := tec.mutation.TravelID(); ok {
-		_spec.SetField(travelextends.FieldTravelID, field.TypeInt, value)
-		_node.TravelID = value
-	}
 	if value, ok := tec.mutation.IsThumb(); ok {
 		_spec.SetField(travelextends.FieldIsThumb, field.TypeBool, value)
 		_node.IsThumb = value
@@ -331,7 +356,7 @@ func (tec *TravelExtendsCreate) createSpec() (*TravelExtends, *sqlgraph.CreateSp
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		_node.travels_travel_extends = &nodes[0]
+		_node.TravelID = nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec
@@ -488,9 +513,9 @@ func (u *TravelExtendsUpsert) UpdateTravelID() *TravelExtendsUpsert {
 	return u
 }
 
-// AddTravelID adds v to the "travel_id" field.
-func (u *TravelExtendsUpsert) AddTravelID(v int) *TravelExtendsUpsert {
-	u.Add(travelextends.FieldTravelID, v)
+// ClearTravelID clears the value of the "travel_id" field.
+func (u *TravelExtendsUpsert) ClearTravelID() *TravelExtendsUpsert {
+	u.SetNull(travelextends.FieldTravelID)
 	return u
 }
 
@@ -678,17 +703,17 @@ func (u *TravelExtendsUpsertOne) SetTravelID(v int) *TravelExtendsUpsertOne {
 	})
 }
 
-// AddTravelID adds v to the "travel_id" field.
-func (u *TravelExtendsUpsertOne) AddTravelID(v int) *TravelExtendsUpsertOne {
-	return u.Update(func(s *TravelExtendsUpsert) {
-		s.AddTravelID(v)
-	})
-}
-
 // UpdateTravelID sets the "travel_id" field to the value that was provided on create.
 func (u *TravelExtendsUpsertOne) UpdateTravelID() *TravelExtendsUpsertOne {
 	return u.Update(func(s *TravelExtendsUpsert) {
 		s.UpdateTravelID()
+	})
+}
+
+// ClearTravelID clears the value of the "travel_id" field.
+func (u *TravelExtendsUpsertOne) ClearTravelID() *TravelExtendsUpsertOne {
+	return u.Update(func(s *TravelExtendsUpsert) {
+		s.ClearTravelID()
 	})
 }
 
@@ -1046,17 +1071,17 @@ func (u *TravelExtendsUpsertBulk) SetTravelID(v int) *TravelExtendsUpsertBulk {
 	})
 }
 
-// AddTravelID adds v to the "travel_id" field.
-func (u *TravelExtendsUpsertBulk) AddTravelID(v int) *TravelExtendsUpsertBulk {
-	return u.Update(func(s *TravelExtendsUpsert) {
-		s.AddTravelID(v)
-	})
-}
-
 // UpdateTravelID sets the "travel_id" field to the value that was provided on create.
 func (u *TravelExtendsUpsertBulk) UpdateTravelID() *TravelExtendsUpsertBulk {
 	return u.Update(func(s *TravelExtendsUpsert) {
 		s.UpdateTravelID()
+	})
+}
+
+// ClearTravelID clears the value of the "travel_id" field.
+func (u *TravelExtendsUpsertBulk) ClearTravelID() *TravelExtendsUpsertBulk {
+	return u.Update(func(s *TravelExtendsUpsert) {
+		s.ClearTravelID()
 	})
 }
 

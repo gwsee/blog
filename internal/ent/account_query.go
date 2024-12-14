@@ -413,7 +413,9 @@ func (aq *AccountQuery) loadTravels(ctx context.Context, query *TravelsQuery, no
 			init(nodes[i])
 		}
 	}
-	query.withFKs = true
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(travels.FieldAccountID)
+	}
 	query.Where(predicate.Travels(func(s *sql.Selector) {
 		s.Where(sql.InValues(s.C(account.TravelsColumn), fks...))
 	}))
@@ -422,13 +424,10 @@ func (aq *AccountQuery) loadTravels(ctx context.Context, query *TravelsQuery, no
 		return err
 	}
 	for _, n := range neighbors {
-		fk := n.account_travels
-		if fk == nil {
-			return fmt.Errorf(`foreign-key "account_travels" is nil for node %v`, n.ID)
-		}
-		node, ok := nodeids[*fk]
+		fk := n.AccountID
+		node, ok := nodeids[fk]
 		if !ok {
-			return fmt.Errorf(`unexpected referenced foreign-key "account_travels" returned %v for node %v`, *fk, n.ID)
+			return fmt.Errorf(`unexpected referenced foreign-key "account_id" returned %v for node %v`, fk, n.ID)
 		}
 		assign(node, n)
 	}
