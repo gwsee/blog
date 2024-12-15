@@ -96,6 +96,7 @@
 </template>
 
 <script setup>
+import {userGet,projectList,experienceList} from "@/api/user";
 import {ref} from 'vue'
 import {useRouter} from 'vue-router'
 const router = useRouter()
@@ -105,8 +106,6 @@ import {
   CodeOutlined,
   AppstoreOutlined,
 } from '@ant-design/icons-vue'
-
-
 
 const projects = ref([
   {

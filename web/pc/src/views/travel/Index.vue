@@ -173,9 +173,32 @@
               </div>
             </template>
           </div>
+          <div v-if="false&&total>pageSize">
+            <!--后续做成滚动刷新 -->
+            <a-pagination style="float: right" v-model:current="current" :total="total" :page-size-options="pageSizeOptions"  v-model:pageSize="pageSize" />
+          </div>
           <div
               v-if="state.user&&state.user.id"
               class="sticky float-right bottom-2 right-2 w-12 h-12 text-white flex items-center justify-center rounded-full right">
+            <a-button
+                class="action-button !bg-white/90 hover:!bg-white"
+                shape="circle"
+                size="large"
+                style="background-color: gray"
+                @click="toRoute('/travel/manage/0')"
+            >
+              <template #icon>
+                <PlusOutlined :class=" 'text-black'" />
+              </template>
+            </a-button>
+          </div>
+
+          <!-- Pagination and New Button Container -->
+          <div class="mt-8 flex justify-between items-center" v-if="false">
+            <a-pagination
+                v-show="total>0"
+                v-model:current="current" :total="total" :page-size-options="pageSizeOptions"  v-model:pageSize="pageSize"
+            />
             <a-button
                 class="action-button !bg-white/90 hover:!bg-white"
                 shape="circle"
@@ -195,7 +218,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import {ref, computed, onMounted, watch} from 'vue'
 import {travelList, travelDel, travelCollect, travelThumb} from "@/api/travel";
 import {filePrefix} from "@/api/tool";
 import { useAuthStore  } from '@/store/auth'
@@ -250,13 +273,23 @@ const travelCardClasses = computed(() => {
 onMounted(()=>{
   list()
 })
-const pageSizeOptions = ref([ '20', '30', '40', '50']);
+const pageSizeOptions = ref([ '1','4', '20', '40', '100']);
 const current = ref(1)
 const total = ref(0)
-const pageSize = ref(20)
+const pageSize = ref(1)
 const loading = ref(false)
 const params = ref({my:false,title:undefined,myCollect:false,sort:"",myThumb:false,description:""})
 const travels = ref([])
+watch(pageSize, () => {
+  if(current.value===1){
+    list()
+  }else{
+    current.value = 1
+  }
+});
+watch(current, () => {
+  list()
+});
 const list =()=>{
   travelList(Object.assign({},params.value,{"page":{"pageNum":current.value,"pageSize":pageSize.value}})).then(res=>{
     if(res&&res.code===200){
