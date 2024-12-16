@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gray-50 py-12">
+  <div class="min-h-screen  py-12">
     <div class="container mx-auto px-4">
       <h1 class="text-3xl font-bold mb-8 text-center"  v-if="false">Add Work Experience</h1>
       <a-form

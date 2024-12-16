@@ -173,10 +173,7 @@
               </div>
             </template>
           </div>
-          <div v-if="false&&total>pageSize">
-            <!--后续做成滚动刷新 -->
-            <a-pagination style="float: right" v-model:current="current" :total="total" :page-size-options="pageSizeOptions"  v-model:pageSize="pageSize" />
-          </div>
+          <div ref="observerTarget" class="h-10 mt-4"></div>
           <div
               v-if="state.user&&state.user.id"
               class="sticky float-right bottom-2 right-2 w-12 h-12 text-white flex items-center justify-center rounded-full right">
@@ -184,25 +181,8 @@
                 class="action-button !bg-white/90 hover:!bg-white"
                 shape="circle"
                 size="large"
-                style="background-color: gray"
-                @click="toRoute('/travel/manage/0')"
-            >
-              <template #icon>
-                <PlusOutlined :class=" 'text-black'" />
-              </template>
-            </a-button>
-          </div>
-
-          <!-- Pagination and New Button Container -->
-          <div class="mt-8 flex justify-between items-center" v-if="false">
-            <a-pagination
-                v-show="total>0"
-                v-model:current="current" :total="total" :page-size-options="pageSizeOptions"  v-model:pageSize="pageSize"
-            />
-            <a-button
-                class="action-button !bg-white/90 hover:!bg-white"
-                shape="circle"
-                size="large"
+                :loading="loading"
+                :disabled="loading"
                 style="background-color: gray"
                 @click="toRoute('/travel/manage/0')"
             >
@@ -218,7 +198,7 @@
 </template>
 
 <script setup>
-import {ref, computed, onMounted, watch} from 'vue'
+import {ref, computed, onMounted, onUnmounted,watch} from 'vue'
 import {travelList, travelDel, travelCollect, travelThumb} from "@/api/travel";
 import {filePrefix} from "@/api/tool";
 import { useAuthStore  } from '@/store/auth'
@@ -270,34 +250,67 @@ const travelCardClasses = computed(() => {
     return 'w-full';
   }
 })
+let observer = null;
+
+const setupIntersectionObserver = () => {
+  observer = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting && !loading.value && hasMore.value) {
+      list();
+    }
+  }, {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.1
+  });
+
+  if (observerTarget.value) {
+    observer.observe(observerTarget.value);
+  }
+}
 onMounted(()=>{
   list()
+  setupIntersectionObserver();
 })
-const pageSizeOptions = ref([ '1','4', '20', '40', '100']);
+onUnmounted(() => {
+  if (observer) {
+    observer.disconnect();
+  }
+})
+const observerTarget = ref(null)
+const pageSizeOptions = ref([  '20', '40', '100']);
 const current = ref(1)
 const total = ref(0)
-const pageSize = ref(1)
+const pageSize = ref(16)
 const loading = ref(false)
 const params = ref({my:false,title:undefined,myCollect:false,sort:"",myThumb:false,description:""})
 const travels = ref([])
-watch(pageSize, () => {
-  if(current.value===1){
-    list()
-  }else{
-    current.value = 1
-  }
-});
-watch(current, () => {
-  list()
-});
+const hasMore = ref(true)
+// watch(pageSize, () => {
+//   if(current.value===1){
+//     list()
+//   }else{
+//     current.value = 1
+//   }
+// });
+// watch(current, () => {
+//   list()
+// });
 const list =()=>{
+  if (loading.value || !hasMore.value) return;
+  loading.value = true;
   travelList(Object.assign({},params.value,{"page":{"pageNum":current.value,"pageSize":pageSize.value}})).then(res=>{
     if(res&&res.code===200){
-      travels.value = res.data.list||[]
+      let data = res.data.list || []
+      travels.value = [...travels.value, ...data]; // res.data.list||[]
       total.value = res.data.total||0
+      hasMore.value = data.length === pageSize.value;
+      current.value++
     }
+  }).finally(()=>{
+    loading.value = false
   })
 }
+
 
 
 const travelCollectAc = async (travel) => {

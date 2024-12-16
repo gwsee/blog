@@ -8,7 +8,7 @@
           <div class="md:w-1/3">
             <div class="relative w-48 h-48 mx-auto rounded-full overflow-hidden border-4 border-white shadow-lg">
               <img
-                  src="/src/assets/image/bg.jpg?height=200&width=200"
+                  :src="userInfo.avatar?(filePrefix+userInfo.avatar):avatar"
                   alt="Profile"
                   class="object-cover w-full h-full"
               />
@@ -17,10 +17,12 @@
           <!-- Text Content -->
           <div class="md:w-2/3 text-center md:text-left">
             <h1 class="text-3xl md:text-4xl font-bold mb-4">
-              John Doe
+              {{ userInfo.name || '天天开心' }}
             </h1>
             <p class="text-lg text-gray-600 mb-6">
-              Experienced Mobile App Developer specializing in creating innovative solutions with cutting-edge technology.
+              {{
+               userInfo.description || '我稍微偷点懒哈!'
+              }}
             </p>
             <div class="flex justify-center md:justify-start gap-4">
               <a-button type="primary" size="large">View Projects</a-button>
@@ -33,14 +35,14 @@
     </section>
 
     <!-- Projects Grid -->
-    <section class="py-20">
+    <section class="py-20" v-if="projects.length>0">
       <div class="container mx-auto px-4">
         <h2 class="text-3xl font-bold mb-12">Featured Projects</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <div v-for="project in projects" :key="project.id" class="group relative">
             <div class="relative aspect-[4/3] rounded-lg overflow-hidden bg-white shadow-lg">
               <img
-                  :src="project.image"
+                  :src="filePrefix+project.photo"
                   :alt="project.title"
                   class="w-full h-full object-cover"
               />
@@ -56,7 +58,7 @@
     </section>
 
     <!-- Experience Timeline -->
-    <section class="py-20 ">
+    <section class="py-20 " v-if="experiences.length>0">
       <div class="container mx-auto px-4">
         <h2 class="text-3xl font-bold mb-12 text-center">Work Experience</h2>
         <div class="relative">
@@ -79,7 +81,7 @@
                   <template #description>
                     <div>
                       <p class="text-gray-600">{{ experience.company }}</p>
-                      <p class="text-sm text-gray-500">{{ experience.period }}</p>
+                      <p class="text-sm text-gray-500">{{ $formatDate(experience.start)  }} - {{experience.end?$formatDate(experience.end):'until now'}}</p>
                     </div>
                   </template>
                 </a-card-meta>
@@ -97,9 +99,11 @@
 
 <script setup>
 import {userGet,projectList,experienceList} from "@/api/user";
-import {ref} from 'vue'
+import {ref,onMounted} from 'vue'
 import {useRouter} from 'vue-router'
+import avatar from "@/assets/image/default-avatar.png"
 const router = useRouter()
+import {filePrefix} from "@/api/tool";
 import {
   UserOutlined,
   MailOutlined,
@@ -108,51 +112,75 @@ import {
 } from '@ant-design/icons-vue'
 
 const projects = ref([
-  {
-    id: 1,
-    title: 'E-commerce App',
-    image: '/src/assets/image/bg.jpg?height=400&width=600',
-  },
-  {
-    id: 2,
-    title: 'Social Media Platform',
-    image: '/src/assets/image/bg.jpg?height=400&width=600',
-  },
-  {
-    id: 3,
-    title: 'Fitness Tracker',
-    image: '/src/assets/image/bg.jpg?height=400&width=600',
-  },
-  {
-    id: 4,
-    title: 'Task Management',
-    image: '/src/assets/image/bg.jpg?height=400&width=600',
-  },
+  // {
+  //   id: 1,
+  //   title: 'E-commerce App',
+  //   image: '/src/assets/image/bg.jpg?height=400&width=600',
+  // },
+  // {
+  //   id: 2,
+  //   title: 'Social Media Platform',
+  //   image: '/src/assets/image/bg.jpg?height=400&width=600',
+  // },
+  // {
+  //   id: 3,
+  //   title: 'Fitness Tracker',
+  //   image: '/src/assets/image/bg.jpg?height=400&width=600',
+  // },
+  // {
+  //   id: 4,
+  //   title: 'Task Management',
+  //   image: '/src/assets/image/bg.jpg?height=400&width=600',
+  // },
 ])
-
+const projectsMore = ref(false)
 const experiences = ref([
-  {
-    id: 1,
-    role: 'Senior Mobile Developer',
-    company: 'Tech Corp',
-    period: '2020 - Present',
-    description: 'Led the development of multiple high-profile mobile applications, managing a team of developers and implementing cutting-edge technologies.'
-  },
-  {
-    id: 2,
-    role: 'Mobile Developer',
-    company: 'App Studio',
-    period: '2018 - 2020',
-    description: 'Developed and maintained various mobile applications for iOS and Android platforms, focusing on performance optimization and user experience.'
-  },
-  {
-    id: 3,
-    role: 'Junior Developer',
-    company: 'Startup Inc',
-    period: '2016 - 2018',
-    description: 'Assisted in the development of mobile applications, learned best practices in mobile development, and contributed to the growth of a fast-paced startup.'
-  },
+  // {
+  //   id: 1,
+  //   role: 'Senior Mobile Developer',
+  //   company: 'Tech Corp',
+  //   period: '2020 - Present',
+  //   description: 'Led the development of multiple high-profile mobile applications, managing a team of developers and implementing cutting-edge technologies.'
+  // },
+  // {
+  //   id: 2,
+  //   role: 'Mobile Developer',
+  //   company: 'App Studio',
+  //   period: '2018 - 2020',
+  //   description: 'Developed and maintained various mobile applications for iOS and Android platforms, focusing on performance optimization and user experience.'
+  // },
+  // {
+  //   id: 3,
+  //   role: 'Junior Developer',
+  //   company: 'Startup Inc',
+  //   period: '2016 - 2018',
+  //   description: 'Assisted in the development of mobile applications, learned best practices in mobile development, and contributed to the growth of a fast-paced startup.'
+  // },
 ])
+const experiencesMore = ref(false)
+const userInfo = ref({})
+
+onMounted(()=>{
+  userGet({}).then(res=>{
+      if(res&&res.code===200){
+        userInfo.value =res.data
+      }
+  })
+  projectList({"page":{"pageNum":1,"pageSize":4}}).then(res=>{
+    if(res&&res.code===200){
+      let data =res.data
+      projects.value = data.list || []
+      projectsMore.value = projects.value.length<(data.total || 0)
+    }
+  })
+  experienceList({"page":{"pageNum":1,"pageSize":4}}).then(res=>{
+    if(res&&res.code===200){
+      let data =res.data
+      experiences.value = data.list || []
+      experiencesMore.value = experiences.value.length<(data.total || 0)
+    }
+  })
+})
 
 const toRoute = (path) => {
   router.push(path)

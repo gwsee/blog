@@ -5,7 +5,6 @@ import (
 	"blog/internal/ent/userexperience"
 	"blog/internal/ent/userproject"
 	"context"
-	"database/sql"
 	sql2 "entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqljson"
 	"errors"
@@ -37,11 +36,12 @@ func (o *userRepo) SaveUser(ctx context.Context, data *biz.User) (err error) {
 }
 func (o *userRepo) GetUser(ctx context.Context, data *biz.User) (user *biz.User, err error) {
 	info, err := o.data.db.User.Get(ctx, data.ID)
-	if err != nil && !errors.Is(err, sql.ErrNoRows) {
-		return
-	}
-	user = &biz.User{ID: data.ID}
-	if info == nil {
+	if err != nil {
+		if ent.IsNotFound(err) {
+			err = nil
+			user = &biz.User{ID: data.ID}
+			return
+		}
 		return
 	}
 	user.Name = info.Name
