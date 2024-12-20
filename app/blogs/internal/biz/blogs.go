@@ -20,6 +20,7 @@ type Blogs struct {
 	Tags        []string
 	Cover       string
 	Content     string
+	Files       []string
 }
 
 type BlogsQuery struct {
@@ -64,6 +65,7 @@ func (s *BlogsUseCase) CreateBlogs(ctx context.Context, req *pb.CreateBlogsReque
 		Tags:        req.Tags,
 		Cover:       req.Cover,
 		Content:     req.Content,
+		Files:       req.Files,
 	})
 }
 func (s *BlogsUseCase) UpdateBlogs(ctx context.Context, req *pb.UpdateBlogsRequest) (*global.Empty, error) {
@@ -81,6 +83,7 @@ func (s *BlogsUseCase) UpdateBlogs(ctx context.Context, req *pb.UpdateBlogsReque
 		Tags:        req.Tags,
 		Cover:       req.Cover,
 		Content:     req.Content,
+		Files:       req.Files,
 	})
 }
 func (s *BlogsUseCase) DeleteBlogs(ctx context.Context, req *global.ID) (*global.Empty, error) {
@@ -115,6 +118,7 @@ func (s *BlogsUseCase) GetBlogs(ctx context.Context, req *global.ID) (*pb.GetBlo
 			UpdatedAt:   info.UpdatedAt,
 		},
 		Content: info.Content,
+		Files:   info.Files,
 	}, nil
 }
 func (s *BlogsUseCase) ListBlogs(ctx context.Context, req *pb.ListBlogsRequest) (*pb.ListBlogsReply, error) {

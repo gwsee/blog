@@ -5,6 +5,7 @@ export function fileUpload(data) {
         url: '/v1/upload/file',
         method: 'post',
         data: data,
+        IsAllowedRepeat:true,
         headers: {
             'Content-type': 'multipart/form-data',
         },

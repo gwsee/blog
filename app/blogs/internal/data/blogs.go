@@ -56,7 +56,7 @@ func (o *blogsRepo) CreateBlogs(ctx context.Context, data *biz.Blogs) error {
 	if err != nil {
 		return err
 	}
-	_, err = tx.BlogsContent.Create().SetID(blog.ID).SetContent(data.Content).Save(ctx)
+	_, err = tx.BlogsContent.Create().SetID(blog.ID).SetContent(data.Content).SetFiles(data.Files).Save(ctx)
 	if err != nil {
 		return err
 	}
@@ -85,7 +85,7 @@ func (o *blogsRepo) UpdateBlogs(ctx context.Context, data *biz.Blogs) error {
 	if err != nil {
 		return err
 	}
-	_, err = tx.BlogsContent.UpdateOneID(int(data.Id)).SetContent(data.Content).Save(ctx)
+	_, err = tx.BlogsContent.UpdateOneID(int(data.Id)).SetContent(data.Content).SetFiles(data.Files).Save(ctx)
 	return err
 }
 func (o *blogsRepo) DeleteBlogs(ctx context.Context, data *biz.Blogs) error {
@@ -135,6 +135,7 @@ func (o *blogsRepo) GetBlogs(ctx context.Context, data *biz.Blogs) (*biz.Blogs, 
 		Tags:        blog.Tags,
 		Cover:       blog.Cover,
 		Content:     content.Content,
+		Files:       content.Files,
 	}, err
 }
 func (o *blogsRepo) ListBlogs(ctx context.Context, query *biz.BlogsQuery) (int64, []*biz.Blogs, error) {

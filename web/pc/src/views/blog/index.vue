@@ -18,7 +18,7 @@
       <a-card :title="item.title" class="blog-card" :hoverable="true" :bodyStyle="{padding:0}" v-for="(item,key) in data">
         <template #extra><a @click="toRoute('/blog/manage/'+item.id)" v-if="state.user&&state.user.id === item.accountId">编辑</a></template>
         <div style="height: 130px;display: flex">
-          <a-avatar :size="100"  style="margin: 15px;" :src="item.cover||defaultCover">
+          <a-avatar :size="100"  style="margin: 15px;" :src="(item.cover&&(filePrefix+item.cover))||defaultCover">
           </a-avatar>
           <div class="blog-content-eclipses" @click="toRoute('/blog/detail/'+item.id)">
            &nbsp; &nbsp;  {{item.description||'这个人很烂什么都没写'}}
@@ -50,6 +50,7 @@ import {blogList} from "@/api/blog";
 import {onMounted, ref,watch} from "vue";
 import defaultCover from "@/assets/image/default-cover.jpg"
 import { useAuthStore  } from '@/store/auth'
+import {filePrefix} from "@/api/tool.js";
 const { state } = useAuthStore();
 const router = useRouter();
 const toRoute=(path)=> {

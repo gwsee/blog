@@ -30,10 +30,19 @@
           </a-col>
         </a-row>
         <a-form-item label="cover">
-          <a-upload action="/upload.do" :maxCount="1" list-type="picture-card" >
-            <div>
+          <a-upload  :max-count="1"
+                     :multiple="false"
+                     list-type="picture-card"
+                     v-model:fileList="formState.coverList"
+                    :customRequest="customRequestCover"
+                    :before-upload="beforeUpload"
+                    @change="handleChangeCover"
+                    @preview="handlePreview"
+
+          >
+            <div v-if="formState.coverList<1">
               <PlusOutlined />
-              <div style="margin-top: 8px">Upload</div>
+              <div style="margin-top: 8px">上传封面</div>
             </div>
           </a-upload>
         </a-form-item>
@@ -64,24 +73,23 @@ import Quill from 'quill';
 import { blogUpdate,blogCreate, blogGet} from "@/api/blog";
 const editorRef = shallowRef()
 import { useRouter,useRoute } from 'vue-router';
+import {message} from "ant-design-vue";
+import {filePrefix, fileUpload} from "@/api/tool.js";
 const router = useRouter();
 const toRoute=(path)=> {
   router.push(path)
 }
 
-
-
 const handleChange = (value) => {
   console.log(`selected ${value}`);
 };
-
-
 
 const formState = reactive({
   id: 0,
   title: '',
   description: '',
   isHidden: 0,
+  coverList:[],
   tags:[],
   content: '',
   cover: '',
@@ -137,23 +145,13 @@ onMounted(function (){
       formState.content= quill.getSemanticHTML()
     }
   });
-  // quill.on('text-change', (delta, oldDelta, source) => {
-  //   if (source == 'api') {
-  //     console.log('An API call triggered this change.');
-  //     formState.Content = delta
-  //   } else if (source == 'user') {
-  //     console.log('A user action triggered this change.');
-  //     formState.Content = delta
-  //   }
-  // });
-  console.log("here, on Mounted")
   const route = useRoute();
   let id = route.params.id;
   id = id - 0
   if(!id){
     return
   }
-  blogGet({ID:id}).then(res=>{
+  blogGet({id:id}).then(res=>{
     if(res&&res.code===200){
       formState.content = res.data.content
       quill.clipboard.dangerouslyPasteHTML(res.data.content);
@@ -162,6 +160,9 @@ onMounted(function (){
       formState.tags = obj.tags
       formState.id = id
       formState.title = obj.title
+      if(obj.cover!==""){
+        formState.coverList = [{uuid:obj.cover,url:filePrefix+obj.cover}]
+      }
       formState.description = obj.description
       formState.isHidden = obj.isHidden-0
     }
@@ -172,6 +173,9 @@ const onSubmit = () => {
   formBlogRef.value
       .validate()
       .then(() => {
+        if(formState.coverList.length>0){
+          formState.cover = formState.coverList[0].uuid;
+        }
         confirmLoading.value = true
        if(formState.id>0){
          blogUpdate(formState).then(res=>{
@@ -197,7 +201,78 @@ const onSubmit = () => {
 };
 const labelCol = { style: { width: '80px' } };
 const wrapperCol = { span: 24 };
+const handlePreview = async (file) => {
+  if (!file.url && !file.preview) {
+    file.preview = await getBase64(file.originFileObj);
+  }
+  previewImage.value = file.url || file.preview;
+  previewVisible.value = true;
+};
+const previewVisible = ref(false);
+const previewImage = ref('');
 
+const handleCancel = () => {
+  previewVisible.value = false;
+};
+const beforeUpload = (file) => {
+  const isImage = file.type.split("/")[0]==='image'
+  if (!isImage) {
+    console.log(file)
+    message.error('只能上传 图片 文件!');
+    return false
+  }
+  const isLt20M = file.size / 1024 / 1024 < 20;
+  if (!isLt20M) {
+    message.error('图片必须小于 20MB!');
+    return false
+  }
+  return true;
+};
+
+const customRequestCover = ({file, onSuccess,onError}) => {
+  let formData = new FormData();
+  formData.append('file',file)
+  fileUpload(formData).then(res=>{
+    if(res&&res.code===200){
+      onSuccess({uuid:res.data.uuid,name:file.name,url:filePrefix+res.data.uuid})
+    }else{
+      onError(res.message||'上传失败')
+    }
+  }).finally(()=>{
+  }).catch((e)=>{
+    onError(e)
+  })
+};
+const handleChangeCover = (info) => {
+  if (info.file&&info.file.status === "uploading"){
+    return false
+  }
+  let resFileList = [...info.fileList];
+  const includes = [];
+  resFileList = resFileList.filter(function (item) {
+    if(item.status==='error'){
+      return false
+    }
+    let uuid = item.uuid||item.response.uuid
+    let url = item.url||item.response.url
+    if(!uuid){
+      console.log(item,"哪里出现问题了")
+      return false
+    }
+    if(!includes.includes(uuid)){
+      item.uuid = uuid
+      item.url = url
+      includes.push(item.uuid)
+      return true
+    }
+    return false
+  })
+  if(resFileList.length>0){
+    formState.coverList = [resFileList[resFileList.length-1]]
+    return
+  }
+  formState.coverList = resFileList
+};
 
 </script>
 

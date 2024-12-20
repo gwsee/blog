@@ -44,6 +44,7 @@
               v-model:fileList="formState.photoList"
               list-type="picture-card"
               :max-count="66"
+              :multiple="true"
               :customRequest="customRequestPhoto"
               :before-upload="beforeUpload"
               @change="handleChangePhoto"
@@ -182,20 +183,24 @@ const beforeUploadVideo = (file) => {
   }
   return true;
 };
-const handleChangePhoto = (info) => {
+const uploadsData = {};
+const handleChangePhoto = async  (info) => {
   if (info.file&&info.file.status === "uploading"){
     return false
   }
+  if(info.file&&info.file.status === "removed"){
+    delete uploadsData[info.file.uuid]
+  }
+  console.log(info.file,info.fileList);
   let resFileList = [...info.fileList];
   const includes = [];
   resFileList = resFileList.filter(function (item) {
     if(item.status==='error'){
       return false
     }
-    let uuid = item.uuid||item.response.uuid
-    let url = item.url||item.response.url
+    let uuid = item.uuid||item.response&&item.response.uuid||''
+    let url = item.url||item.response&&item.response.url||''
     if(!uuid){
-      console.log(item,"哪里出现问题了")
       return false
     }
     if(!includes.includes(uuid)){
@@ -206,6 +211,22 @@ const handleChangePhoto = (info) => {
     }
     return false
   })
+  // // // 检查是否已存在相同UUID的文件
+  // // const existingIndex = formState.value.photoList.findIndex(item => item.uuid === uuid);
+  // for(let i in uploadsData){
+  //   let item = uploadsData[i];
+  //   let contain = false;
+  //   for(let j in resFileList){
+  //     if(resFileList[j].uuid === item.uuid){
+  //       contain = true;
+  //       break;
+  //     }
+  //   }
+  //   if(contain){
+  //     continue
+  //   }
+  //   resFileList.push({uuid:uploadsData[i].uuid,url:uploadsData[i].url})
+  // }
   formState.photoList = resFileList
 };
 const customRequestPhoto = ({file, onSuccess,onError}) => {
@@ -213,7 +234,9 @@ const customRequestPhoto = ({file, onSuccess,onError}) => {
   formData.append('file',file)
   fileUpload(formData).then(res=>{
     if(res&&res.code===200){
-      onSuccess({uuid:res.data.uuid,name:file.name,url:filePrefix+res.data.uuid})
+      const item = {uuid:res.data.uuid,name:file.name,url:filePrefix+res.data.uuid}
+      uploadsData[item.uuid] = item;
+      onSuccess(item)
     }else{
       onError(res.message||'上传失败')
     }
