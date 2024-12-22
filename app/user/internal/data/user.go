@@ -44,6 +44,7 @@ func (o *userRepo) GetUser(ctx context.Context, data *biz.User) (user *biz.User,
 		}
 		return
 	}
+	user = &biz.User{}
 	user.Name = info.Name
 	user.Avatar = info.Avatar
 	user.Email = info.Email
