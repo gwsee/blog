@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen  py-8 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-4xl mx-auto" style=" background: linear-gradient(rgb(241 241 241), rgb(173 215 197));height:100%">
+    <div class="max-w-4xl mx-auto" style=" background: linear-gradient(rgb(241 241 241), rgb(173 215 197));min-height:100%">
       <h1 class="text-3xl font-bold text-gray-900 p-8 text-center">记录一次有趣的旅行</h1>
       <a-form
 
@@ -71,7 +71,7 @@
           </a-upload>
         </a-form-item>
 
-        <a-form-item :wrapper-col="{ span: 14, offset: 5 }" style="text-align: center">
+        <a-form-item :wrapper-col="{ span: 14, offset: 5 }" style="text-align: center;margin-bottom: 10px">
           <a-button type="primary" html-type="submit" :loading="loading" :disabled="loading">保存</a-button>
           <a-button style="margin-left: 10px" @click="toRoute('/travel')" :loading="loading" :disabled="loading">取消</a-button>
         </a-form-item>
@@ -128,7 +128,8 @@ onMounted(function (){
         videoList.push({uuid:obj.video,url:filePrefix+obj.video,name:obj.video})
       }
       obj.photos.forEach((item)=>{
-        photoList.push({uuid:item,url:filePrefix+item})
+        const obj = {uuid:item,url:filePrefix+item}
+        photoList.push(obj)
       })
       formState.photoList = photoList
       formState.videoList = videoList
@@ -183,51 +184,43 @@ const beforeUploadVideo = (file) => {
   }
   return true;
 };
-const uploadsData = {};
 const handleChangePhoto = async  (info) => {
-  if (info.file&&info.file.status === "uploading"){
-    return false
+  if (info.file && info.file.status === "removed") {
+    // Handle file removal
+    formState.photoList = formState.photoList.filter(item => item.uid !== info.file.uid);
+    return;
   }
-  if(info.file&&info.file.status === "removed"){
-    delete uploadsData[info.file.uuid]
+
+  let fileList = [...info.fileList];
+  const uuids = new Set();
+  let hasUploading = false;
+
+  fileList = fileList.filter(item => {
+    if (item.status === 'uploading') {
+      hasUploading = true;
+      return true; // Keep uploading files in the list
+    }
+    if (item.status === 'error') {
+      return false;
+    }
+    const uuid = item.uuid || (item.response && item.response.uuid) || '';
+    const url = item.url || (item.response && item.response.url) || '';
+    if (!uuid) {
+      return false;
+    }
+    // Check for duplicates
+    if (uuids.has(uuid)) {
+      return false;
+    }
+
+    uuids.add(uuid);
+    item.uuid = uuid;
+    item.url = url;
+    return true;
+  });
+  if (!hasUploading) {
+    formState.photoList = [...fileList];
   }
-  console.log(info.file,info.fileList);
-  let resFileList = [...info.fileList];
-  const includes = [];
-  resFileList = resFileList.filter(function (item) {
-    if(item.status==='error'){
-      return false
-    }
-    let uuid = item.uuid||item.response&&item.response.uuid||''
-    let url = item.url||item.response&&item.response.url||''
-    if(!uuid){
-      return false
-    }
-    if(!includes.includes(uuid)){
-      item.uuid = uuid
-      item.url = url
-      includes.push(item.uuid)
-      return true
-    }
-    return false
-  })
-  // // // 检查是否已存在相同UUID的文件
-  // // const existingIndex = formState.value.photoList.findIndex(item => item.uuid === uuid);
-  // for(let i in uploadsData){
-  //   let item = uploadsData[i];
-  //   let contain = false;
-  //   for(let j in resFileList){
-  //     if(resFileList[j].uuid === item.uuid){
-  //       contain = true;
-  //       break;
-  //     }
-  //   }
-  //   if(contain){
-  //     continue
-  //   }
-  //   resFileList.push({uuid:uploadsData[i].uuid,url:uploadsData[i].url})
-  // }
-  formState.photoList = resFileList
 };
 const customRequestPhoto = ({file, onSuccess,onError}) => {
   let formData = new FormData();
@@ -235,7 +228,6 @@ const customRequestPhoto = ({file, onSuccess,onError}) => {
   fileUpload(formData).then(res=>{
     if(res&&res.code===200){
       const item = {uuid:res.data.uuid,name:file.name,url:filePrefix+res.data.uuid}
-      uploadsData[item.uuid] = item;
       onSuccess(item)
     }else{
       onError(res.message||'上传失败')
