@@ -4,12 +4,13 @@
       <a-form
           :label-col="labelCol"  :wrapper-col="wrapperCol"
           :model="formState"
+          ref="formRef"
           @finish="onFinish"
           class="max-w-2xl mx-auto bg-white  rounded-lg shadow-md"
       >
         <a-card title="基本信息">
           <template #extra>
-            <a href="#">编辑</a>
+            <a-button  v-if="false">编辑</a-button>
           </template>
           <a-form-item name="name" label="姓名" :rules="[{ required: true }]">
             <a-input v-model:value="formState.name" />
@@ -19,19 +20,19 @@
           </a-form-item>
           <a-form-item name="avatar" label="头像">
             <a-upload
-                v-model:fileList="fileList"
+                v-model:fileList="formState.avatarList"
                 name="avatar"
+                :max-count="1"
+                :multiple="false"
                 list-type="picture-card"
-                class="avatar-uploader"
-                :show-upload-list="false"
-                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                :customRequest="customRequest"
                 :before-upload="beforeUpload"
                 @change="handleChange"
+                @preview="handlePreview"
             >
-              <img v-if="imageUrl" :src="imageUrl" alt="avatar" />
-              <div v-else>
+              <div v-if="formState.avatarList<1">
                 <plus-outlined />
-                <div style="margin-top: 8px">Upload</div>
+                <div style="margin-top: 8px">上传头像</div>
               </div>
             </a-upload>
           </a-form-item>
@@ -46,9 +47,6 @@
                 style="width: 100%"
                 placeholder="Enter skills"
             >
-              <a-select-option v-for="skill in predefinedSkills" :key="skill" :value="skill">
-                {{ skill }}
-              </a-select-option>
             </a-select>
           </a-form-item>
           <a-form-item name="description" label="个人经历" :rules="[{ required: true }]">
@@ -91,80 +89,150 @@
           <a-button type="primary" html-type="submit" block>保    存</a-button>
         </a-form-item>
       </a-form>
+      <!-- 图片预览模态框 -->
+      <a-modal :open="previewVisible" :footer="null" @cancel="handleCancel">
+        <img alt="example" style="width: 100%" :src="previewImage" />
+      </a-modal>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
+import {userGet,userSave,projectList,experienceList} from "@/api/user";
 import {useRouter} from 'vue-router'
 const router = useRouter()
 import { message } from 'ant-design-vue'
 import { PlusOutlined } from '@ant-design/icons-vue'
+import {filePrefix,fileUpload} from "@/api/tool";
 const labelCol = { style: { width: '80px' } };
 const wrapperCol = { span: 24 };
+const toRoute = (path) => {
+  router.push(path)
+}
+const maxVisibleProjects = ref(3)
+const allProjectNames=(projects)=>{
+  return projects.map(project => project).join(', ');
+}
+const predefinedSkills = []
 const formState = reactive({
+  avatarList: [],
+  avatar: '',
   name: '',
   title: '',
-  bio: '',
   email: '',
   location: '',
   skills: [],
   experiences: [],
 })
-const toRoute = (path) => {
-  router.push(path)
-}
-const maxVisibleProjects = ref(3)
-const visibleProjects = (projects)=> {
-  return projects.slice(0, maxVisibleProjects);
-}
-const allProjectNames=(projects)=>{
-  return projects.map(project => project).join(', ');
-}
-const predefinedSkills = [
-  'JavaScript', 'React Native', 'iOS Development', 'Android Development',
-  'Node.js', 'Python', 'UI/UX Design', 'Project Management'
-]
-
-const fileList = ref([])
-const imageUrl = ref('')
-
-const beforeUpload = (file) => {
-  const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
-  if (!isJpgOrPng) {
-    message.error('You can only upload JPG or PNG files!')
+const formRef = ref(null)
+onMounted(()=> {
+  if(formRef.value){
+    formRef.value.resetFields();
   }
-  const isLt2M = file.size / 1024 / 1024 < 2
-  if (!isLt2M) {
-    message.error('Image must be smaller than 2MB!')
-  }
-  return isJpgOrPng && isLt2M
-}
-
-const handleChange = (info) => {
-  if (info.file.status === 'uploading') {
-    return
-  }
-  if (info.file.status === 'done') {
-    // Get this url from response in real world.
-    getBase64(info.file.originFileObj, (url) => {
-      imageUrl.value = url
-    })
-  }
-}
-
+  userGet({}).then(res => {
+    if (res && res.code === 200) {
+      const data =res.data || {}
+      formState.name  =data.name
+      formState.email =data.email
+      formState.avatar = data.avatar
+      if(data.avatar){
+        formState.avatarList = [{uuid:data.avatar,url:filePrefix+data.avatar}]
+      }
+      formState.professional = data.professional
+      formState.skills = data.skills
+      formState.description = data.description
+      formState.address = data.address
+    }
+  })
+})
 const getBase64 = (img, callback) => {
   const reader = new FileReader()
   reader.addEventListener('load', () => callback(reader.result))
   reader.readAsDataURL(img)
 }
-
+const loading = ref(false)
 const onFinish = (values) => {
-  console.log('Success:', values)
-  message.success('Profile saved successfully!')
-  // Here you would typically send the data to your backend
+  loading.value = true
+  if(formState.avatarList.length>0){
+    formState.avatar = formState.avatarList[0].uuid
+  }
+  console.log(values,formState)
+  userSave(formState).then(res=>{
+    if(res){
+      message.success('saved successfully!')
+    }
+  })
 }
+
+// <!--图片部分-->
+const customRequest = ({file, onSuccess,onError}) => {
+  let formData = new FormData();
+  formData.append('file',file)
+  fileUpload(formData).then(res=>{
+    if(res&&res.code===200){
+      onSuccess({uuid:res.data.uuid,name:file.name,url:filePrefix+res.data.uuid})
+    }else{
+      onError(res.message||'上传失败')
+    }
+  }).finally(()=>{
+  }).catch((e)=>{
+    onError(e)
+  })
+};
+const handleChange = (info) => {
+  if (info.file&&info.file.status === "uploading"){
+    return false
+  }
+  let resFileList = [...info.fileList];
+  const includes = [];
+  resFileList = resFileList.filter(function (item) {
+    if(item.status==='error'){
+      return false
+    }
+    let uuid = item.uuid||item.response.uuid
+    let url = item.url||item.response.url
+    if(!uuid){
+      return false
+    }
+    if(!includes.includes(uuid)){
+      item.uuid = uuid
+      item.url = url
+      includes.push(item.uuid)
+      return true
+    }
+    return false
+  })
+  formState.avatarList = resFileList
+};
+const previewVisible = ref(false);
+const previewImage = ref('');
+const handlePreview = async (file) => {
+  if (!file.url && !file.preview) {
+    file.preview = await getBase64(file.originFileObj);
+  }
+  previewImage.value = file.url || file.preview;
+  previewVisible.value = true;
+};
+const handleCancel = () => {
+  previewVisible.value = false;
+};
+
+const beforeUpload = (file) => {
+  const isImage = file.type.split("/")[0]==='image'
+  if (!isImage) {
+    console.log(file)
+    message.error('只能上传 图片 文件!');
+    return false
+  }
+  const isLt20M = file.size / 1024 / 1024 < 20;
+  if (!isLt20M) {
+    message.error('图片必须小于 20MB!');
+    return false
+  }
+  return true;
+};
+
 </script>
 
 <style scoped>

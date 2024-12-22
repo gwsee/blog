@@ -61,6 +61,10 @@
     <a-col :md="5" :sm="24" :xs="24"   >
       <span/>
     </a-col>
+    <!-- 图片预览模态框 -->
+    <a-modal :open="previewVisible" :footer="null" @cancel="handleCancel">
+      <img alt="example" style="width: 100%" :src="previewImage" />
+    </a-modal>
   </a-row>
 </template>
 
