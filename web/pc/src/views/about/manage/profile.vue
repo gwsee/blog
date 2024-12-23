@@ -25,7 +25,7 @@
                 :max-count="1"
                 :multiple="false"
                 list-type="picture-card"
-                :customRequest="customRequest"
+                :customRequest="$customRequest"
                 :before-upload="beforeUpload"
                 @change="handleChange"
                 @preview="handlePreview"
@@ -68,18 +68,16 @@
               <a-list-item class="a-list-item-action">
                 <template #actions >
                   <a key="list-loadmore-edit" @click="toRoute('/about/experience/manage/'+item.id)">edit</a>&nbsp;
-                  <a key="list-loadmore-more">more</a>
+                  <a key="list-loadmore-more" v-if="false">more</a>
                 </template>
                 <a-skeleton avatar :title="false"  :loading="false" class="relative">
-                  <a-list-item-meta
-                      :description="`${item.company} | ${item.period}`"
-                  >
+                  <a-list-item-meta :description="`${item.role} | ${$formatDate(item.start,'{y}-{m}-{d}')} ~ ${item.end&&$formatDate(item.end,'{y}-{m}-{d}')||'至今'} `">
                     <template #title>
-                      <a href="https://www.antdv.com/">{{ item.role }}</a>
+                      {{ item.company }}
                     </template>
                   </a-list-item-meta>
                 </a-skeleton>
-                <div class=" content-wrapper truncate overflow-hidden whitespace-nowrap">ddd</div>
+                <div class=" content-wrapper truncate overflow-hidden whitespace-nowrap">{{ item.description }}</div>
               </a-list-item>
             </template>
           </a-list>
@@ -97,13 +95,12 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import {ref, reactive, onMounted, getCurrentInstance} from 'vue'
 import {userGet,userSave,projectList,experienceList} from "@/api/user";
 import {useRouter} from 'vue-router'
 const router = useRouter()
 import { message } from 'ant-design-vue'
 import { PlusOutlined } from '@ant-design/icons-vue'
-import {filePrefix,fileUpload} from "@/api/tool";
 const labelCol = { style: { width: '80px' } };
 const wrapperCol = { span: 24 };
 const toRoute = (path) => {
@@ -131,6 +128,8 @@ onMounted(()=> {
   if(formRef.value){
     formRef.value.resetFields();
   }
+  const { appContext } = getCurrentInstance();
+  const $fileFull = appContext.config.globalProperties.$fileFull;
   userGet({}).then(res => {
     if (res && res.code === 200) {
       const data =res.data || {}
@@ -138,7 +137,7 @@ onMounted(()=> {
       formState.email =data.email
       formState.avatar = data.avatar
       if(data.avatar){
-        formState.avatarList = [{uuid:data.avatar,url:filePrefix+data.avatar}]
+        formState.avatarList = [{uuid:data.avatar,url:$fileFull(data.avatar)}]
       }
       formState.professional = data.professional
       formState.skills = data.skills
@@ -146,11 +145,10 @@ onMounted(()=> {
       formState.address = data.address
     }
   })
-  experienceList({"page":{"pageNum":1,"pageSize":10}}).then(res=>{
+  experienceList({}).then(res=>{
     if(res&&res.code===200){
       let data =res.data
       formState.experiences = data.list || []
-      // experiencesMore.value = experiences.value.length<(data.total || 0)
     }
   })
 })
@@ -165,7 +163,6 @@ const onFinish = (values) => {
   if(formState.avatarList.length>0){
     formState.avatar = formState.avatarList[0].uuid
   }
-  console.log(values,formState)
   userSave(formState).then(res=>{
     if(res){
       message.success('saved successfully!')
@@ -173,21 +170,6 @@ const onFinish = (values) => {
   })
 }
 
-// <!--图片部分-->
-const customRequest = ({file, onSuccess,onError}) => {
-  let formData = new FormData();
-  formData.append('file',file)
-  fileUpload(formData).then(res=>{
-    if(res&&res.code===200){
-      onSuccess({uuid:res.data.uuid,name:file.name,url:filePrefix+res.data.uuid})
-    }else{
-      onError(res.message||'上传失败')
-    }
-  }).finally(()=>{
-  }).catch((e)=>{
-    onError(e)
-  })
-};
 const handleChange = (info) => {
   if (info.file&&info.file.status === "uploading"){
     return false

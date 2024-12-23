@@ -2,6 +2,7 @@ package oss
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"github.com/aliyun/alibabacloud-oss-go-sdk-v2/oss"
 	"strings"
@@ -14,7 +15,7 @@ func (o *File) UploadFile(filePath string, content []byte) (string, error) {
 		Key:    oss.Ptr(filePath),        // 对象名称
 		Body:   bytes.NewReader(content), // 要上传的内容
 	}
-	_, err := o.cli.PutObject(o.ctx, request)
+	_, err := o.cli.PutObject(context.TODO(), request)
 	if err != nil {
 		return "", err
 	}
@@ -23,7 +24,7 @@ func (o *File) UploadFile(filePath string, content []byte) (string, error) {
 }
 func (o *File) Temp(path string, expireMinute int) (string, error) {
 	key := strings.ReplaceAll(path, o.site, "")
-	result, err := o.cli.Presign(o.ctx, &oss.GetObjectRequest{
+	result, err := o.cli.Presign(context.TODO(), &oss.GetObjectRequest{
 		Bucket: oss.Ptr(o.bucket),
 		Key:    oss.Ptr(key),
 	}, oss.PresignExpires(time.Duration(expireMinute)*time.Minute))

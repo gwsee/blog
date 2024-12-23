@@ -45,7 +45,7 @@
               list-type="picture-card"
               :max-count="66"
               :multiple="true"
-              :customRequest="customRequestPhoto"
+              :customRequest="$customRequest"
               :before-upload="beforeUpload"
               @change="handleChangePhoto"
               @preview="handlePreview"
@@ -61,7 +61,7 @@
         <a-form-item name="video" label="视频">
           <a-upload
               v-model:fileList="formState.videoList"
-              :customRequest="customRequestVideo"
+              :customRequest="$customRequest"
               :max-count="1"
               :multiple="false"
               :before-upload="beforeUploadVideo"
@@ -86,11 +86,10 @@
 </template>
 
 <script setup>
-import {ref, reactive, onMounted} from 'vue';
+import {ref, reactive, onMounted, getCurrentInstance} from 'vue';
 import {message} from 'ant-design-vue';
 import {PlusOutlined, UploadOutlined} from '@ant-design/icons-vue';
 import {travelSave,travelGet} from "@/api/travel";
-import {fileUpload,filePrefix} from "@/api/tool";
 const formState = reactive({
   id: 0,
   title: '',
@@ -107,6 +106,8 @@ onMounted(function (){
   if(formTravelRef.value){
     formTravelRef.value.resetFields();
   }
+  const { appContext } = getCurrentInstance();
+  const $fileFull = appContext.config.globalProperties.$fileFull;
   const route = useRoute();
   let id = route.params.id;
   id = id - 0
@@ -125,10 +126,10 @@ onMounted(function (){
       let photoList = []
       let videoList = []
       if(obj.video){
-        videoList.push({uuid:obj.video,url:filePrefix+obj.video,name:obj.video})
+        videoList.push({uuid:obj.video,url:$fileFull(obj.video),name:obj.video})
       }
       obj.photos.forEach((item)=>{
-        const obj = {uuid:item,url:filePrefix+item}
+        const obj = {uuid:item,url:$fileFull(item)}
         photoList.push(obj)
       })
       formState.photoList = photoList
@@ -212,7 +213,6 @@ const handleChangePhoto = async  (info) => {
     if (uuids.has(uuid)) {
       return false;
     }
-
     uuids.add(uuid);
     item.uuid = uuid;
     item.url = url;
@@ -221,35 +221,6 @@ const handleChangePhoto = async  (info) => {
   if (!hasUploading) {
     formState.photoList = [...fileList];
   }
-};
-const customRequestPhoto = ({file, onSuccess,onError}) => {
-  let formData = new FormData();
-  formData.append('file',file)
-  fileUpload(formData).then(res=>{
-    if(res&&res.code===200){
-      const item = {uuid:res.data.uuid,name:file.name,url:filePrefix+res.data.uuid}
-      onSuccess(item)
-    }else{
-      onError(res.message||'上传失败')
-    }
-  }).finally(()=>{
-  }).catch((e)=>{
-    onError(e)
-  })
-};
-const customRequestVideo = ({file, onSuccess}) => {
-  let formData = new FormData();
-  formData.append('file',file)
-  fileUpload(formData).then(res=>{
-    if(res&&res.code===200){
-      onSuccess({uuid:res.data.uuid,name:file.name,url:filePrefix+res.data.uuid})
-    }else{
-      onError(res.message||'上传失败')
-    }
-  }).finally(()=>{
-  }).catch((e)=>{
-    onError(e)
-  })
 };
 const handleChangeVideo = (info) => {
   if (info.file&&info.file.status === "uploading"){

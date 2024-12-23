@@ -65,19 +65,20 @@
               <a-list-item class="a-list-item-action">
                 <template #actions >
                   <a key="list-loadmore-edit" @click="showProject(item.id,item.experienceId)">edit</a>&nbsp;
-                  <a key="list-loadmore-more">more</a>
+                  <a key="list-loadmore-more" v-if="false">more</a>
                 </template>
                 <a-skeleton avatar :title="false"  :loading="false" class="relative">
                   <a-list-item-meta
-
-                      :description="`${item.company} | ${item.period}`"
+                    :description="`${$formatDate(item.start,'{y}-{m}-{d}')}  | ${item.end&&$formatDate(item.end,'{y}-{m}-{d}')||'至今'} `"
                   >
                     <template #title>
-                      <a href="https://www.antdv.com/">{{ item.role }}</a>
+                      <a :href="item.link">{{ item.title }}</a>
                     </template>
                   </a-list-item-meta>
                 </a-skeleton>
-                <div class=" content-wrapper truncate overflow-hidden whitespace-nowrap">contentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontent</div>
+                <div class=" content-wrapper truncate overflow-hidden whitespace-nowrap">
+                  {{item.description}}
+                </div>
               </a-list-item>
             </template>
           </a-list>
@@ -98,7 +99,6 @@
 <script setup>
 import {experienceGet, experienceSave, experienceList, projectList} from "@/api/user";
 import project from "./project.vue"
-import {filePrefix} from "@/api/tool";
 import {reactive, ref, onMounted} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 const router = useRouter()
@@ -152,7 +152,7 @@ onMounted(()=>{
       formState.period = data.period;
     }
   })
-  projectList({experienceId: id,page:{"pageNum":1,"pageSize":10}}).then((res) => {
+  projectList({experienceId: id}).then((res) => {
       if(res){
         formState.projects = res.data&&res.data.list || [];
       }

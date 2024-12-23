@@ -31,7 +31,7 @@
                     <img
 
                         v-if="travel.photo"
-                        :src="filePrefix+travel.photo"
+                        :src="$fileFull(travel.photo)"
                         :alt="travel.title"
                         class="absolute inset-0 w-full h-full object-cover"
                     />
@@ -200,7 +200,6 @@
 <script setup>
 import {ref, computed, onMounted, onUnmounted,watch} from 'vue'
 import {travelList, travelDel, travelCollect, travelThumb} from "@/api/travel";
-import {filePrefix} from "@/api/tool";
 import { useAuthStore  } from '@/store/auth'
 const { state } = useAuthStore();
 import {

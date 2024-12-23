@@ -8,7 +8,7 @@
           <div class="md:w-1/3">
             <div class="relative w-48 h-48 mx-auto rounded-full overflow-hidden border-4 border-white shadow-lg">
               <img
-                  :src="userInfo.avatar?(filePrefix+userInfo.avatar):avatar"
+                  :src="userInfo.avatar?($fileFull(userInfo.avatar)):avatar"
                   alt="Profile"
                   class="object-cover w-full h-full"
               />
@@ -42,7 +42,7 @@
           <div v-for="project in projects" :key="project.id" class="group relative">
             <div class="relative aspect-[4/3] rounded-lg overflow-hidden bg-white shadow-lg">
               <img
-                  :src="filePrefix+project.photo"
+                  :src="$fileFull(project.photo)"
                   :alt="project.title"
                   class="w-full h-full object-cover"
               />
@@ -81,11 +81,11 @@
                   <template #description>
                     <div>
                       <p class="text-gray-600">{{ experience.company }}</p>
-                      <p class="text-sm text-gray-500">{{ $formatDate(experience.start)  }} - {{experience.end?$formatDate(experience.end):'until now'}}</p>
+                      <p class="text-sm text-gray-500">{{ $formatDate(experience.start,'{y}-{m}-{d}')  }} - {{experience.end?$formatDate(experience.end,'{y}-{m}-{d}'):'至今'}}</p>
                     </div>
                   </template>
                 </a-card-meta>
-                <div class="mt-4 experience-details opacity-0 transition-opacity duration-300">
+                <div class="mt-4 experience-details duration-300">
                   <p class="text-sm text-gray-600">{{ experience.description }}</p>
                 </div>
               </a-card>
@@ -103,7 +103,6 @@ import {ref,onMounted} from 'vue'
 import {useRouter} from 'vue-router'
 import avatar from "@/assets/image/default-avatar.png"
 const router = useRouter()
-import {filePrefix} from "@/api/tool";
 import {
   UserOutlined,
   MailOutlined,
@@ -166,14 +165,14 @@ onMounted(()=>{
         userInfo.value =res.data
       }
   })
-  projectList({"page":{"pageNum":1,"pageSize":4}}).then(res=>{
+  projectList({}).then(res=>{
     if(res&&res.code===200){
       let data =res.data
       projects.value = data.list || []
       projectsMore.value = projects.value.length<(data.total || 0)
     }
   })
-  experienceList({"page":{"pageNum":1,"pageSize":4}}).then(res=>{
+  experienceList({}).then(res=>{
     if(res&&res.code===200){
       let data =res.data
       experiences.value = data.list || []

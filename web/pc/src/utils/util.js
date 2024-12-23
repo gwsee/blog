@@ -1,3 +1,5 @@
+import {fileUpload,filePrefix} from "@/api/tool.js";
+
 export function parseTime(time, pattern) {
     if (arguments.length === 0 || !time) {
         return null
@@ -36,4 +38,28 @@ export function parseTime(time, pattern) {
         return value || 0
     })
     return time_str
+}
+export function fileFull(uuid) {
+    if (!uuid) {
+        return uuid
+    }
+    if(uuid.indexOf('http') !== -1) {
+        return uuid
+    }
+    return filePrefix+uuid
+}
+export function  customRequest ({file, onSuccess,onError})  {
+    let formData = new FormData();
+    formData.append('file',file)
+    fileUpload(formData).then(res=>{
+        if(res&&res.code===200){
+            const item = {uuid:res.data.uuid,name:file.name,url:fileFull(res.data.uuid)}
+            onSuccess(item)
+        }else{
+            onError(res.message||'上传失败')
+        }
+    }).finally(()=>{
+    }).catch((e)=>{
+        onError(e)
+    })
 }

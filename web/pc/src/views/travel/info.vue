@@ -36,7 +36,7 @@
                class="relative group cursor-zoom-in"
                @click="showLightbox(index)">
             <div class="w-full aspect-[16/9] relative">
-              <img :src="filePrefix+image"
+              <img :src="$fileFull(image)"
                    class="w-full h-full object-contain bg-black/30" />
               <!-- 渐变遮罩 -->
               <div class="absolute inset-0 bg-gradient-to-b from-black/10 to-black/60 opacity-0 group-hover:opacity-100 transition-all duration-300">
@@ -99,8 +99,8 @@
               <video
                   controls
                   class="w-full h-full object-cover object-center"
-                  :poster="filePrefix+travel.photos[0]">
-                <source :src="filePrefix+travel.video" type="video/mp4">
+                  :poster="$fileFull(travel.photos[0])">
+                <source :src="$fileFull(travel.video)" type="video/mp4">
                 您的浏览器不支持视频播放。
               </video>
             </div>
@@ -186,7 +186,7 @@
     <!-- 图片查看器 -->
     <vue-easy-lightbox
         :visible="visibleLightbox"
-        :imgs="travel.photos.map(img => (filePrefix+img))"
+        :imgs="travel.photos.map(img => ($fileFull(img)))"
         :index="lightboxIndex"
         @hide="hideLightbox"
         moveDisabled
@@ -202,7 +202,6 @@ import {ref, onMounted, watch, reactive} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import { useAuthStore  } from '@/store/auth'
 const { state } = useAuthStore();
-import {filePrefix} from "@/api/tool";
 import VueEasyLightbox from 'vue-easy-lightbox'
 import {
   EditOutlined,
@@ -307,7 +306,6 @@ const travelThumbAc = async (travel) => {
     travel.isThumb = !travel.isThumb
     travel.thumbNum += travel.isThumb ? 1 : -1
     await travelThumb({id:travel.id,do:travel.isThumb})
-
   } catch (error) {
     console.error('Error toggling like:', error)
   }

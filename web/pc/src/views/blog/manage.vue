@@ -34,7 +34,7 @@
                      :multiple="false"
                      list-type="picture-card"
                      v-model:fileList="formState.coverList"
-                    :customRequest="customRequestCover"
+                    :customRequest="$customRequest"
                     :before-upload="beforeUpload"
                     @change="handleChangeCover"
                     @preview="handlePreview"
@@ -72,13 +72,12 @@
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.bubble.css";
-import { onBeforeUnmount,  shallowRef, onMounted ,reactive, toRaw, ref } from 'vue'
+import {onBeforeUnmount, shallowRef, onMounted, reactive, toRaw, ref, getCurrentInstance} from 'vue'
 import Quill from 'quill';
 import { blogUpdate,blogCreate, blogGet} from "@/api/blog";
 const editorRef = shallowRef()
 import { useRouter,useRoute } from 'vue-router';
 import {message} from "ant-design-vue";
-import {filePrefix, fileUpload} from "@/api/tool.js";
 const router = useRouter();
 const toRoute=(path)=> {
   router.push(path)
@@ -155,6 +154,8 @@ onMounted(function (){
   if(!id){
     return
   }
+  const { appContext } = getCurrentInstance();
+  const $fileFull = appContext.config.globalProperties.$fileFull;
   blogGet({id:id}).then(res=>{
     if(res&&res.code===200){
       formState.content = res.data.content
@@ -165,7 +166,7 @@ onMounted(function (){
       formState.id = id
       formState.title = obj.title
       if(obj.cover!==""){
-        formState.coverList = [{uuid:obj.cover,url:filePrefix+obj.cover}]
+        formState.coverList = [{uuid:obj.cover,url:$fileFull(obj.cover)}]
       }
       formState.description = obj.description
       formState.isHidden = obj.isHidden-0
@@ -233,20 +234,6 @@ const beforeUpload = (file) => {
   return true;
 };
 
-const customRequestCover = ({file, onSuccess,onError}) => {
-  let formData = new FormData();
-  formData.append('file',file)
-  fileUpload(formData).then(res=>{
-    if(res&&res.code===200){
-      onSuccess({uuid:res.data.uuid,name:file.name,url:filePrefix+res.data.uuid})
-    }else{
-      onError(res.message||'上传失败')
-    }
-  }).finally(()=>{
-  }).catch((e)=>{
-    onError(e)
-  })
-};
 const handleChangeCover = (info) => {
   if (info.file&&info.file.status === "uploading"){
     return false

@@ -44,7 +44,7 @@
               :multiple="false"
               :before-upload="beforeUpload"
               @change="handleChange"
-              :customRequest="customRequest"
+              :customRequest="$customRequest"
               @preview="handlePreview"
           >
             <div >
@@ -67,8 +67,7 @@
 
 <script setup>
 import {userGet, userSave, projectList, experienceList, projectGet, projectSave} from "@/api/user";
-import {filePrefix, fileUpload} from "@/api/tool";
-import { ref, reactive, onMounted } from 'vue'
+import {ref, reactive, onMounted, getCurrentInstance} from 'vue'
 import { message } from 'ant-design-vue'
 import { PlusOutlined } from '@ant-design/icons-vue'
 const open = ref(false)
@@ -128,6 +127,8 @@ const show = (id,experienceId) => {
   if(!id){
     return
   }
+  const { appContext } = getCurrentInstance();
+  const $fileFull = appContext.config.globalProperties.$fileFull;
   projectGet({id}).then((res) => {
     if(res){
       const data = res.data||{}
@@ -141,7 +142,7 @@ const show = (id,experienceId) => {
       formState.photos = data.photos;
       if(formState.photos.length > 0){
         formState.photos.forEach(photo => {
-          formState.photosList.push({uuid:photo,url:filePrefix+photo});
+          formState.photosList.push({uuid:photo,url:$fileFull(photo)});
         })
       }
     }
@@ -153,20 +154,6 @@ const close = ()=>{
 defineExpose({
   show
 })
-const customRequest = ({file, onSuccess,onError}) => {
-  let formData = new FormData();
-  formData.append('file',file)
-  fileUpload(formData).then(res=>{
-    if(res&&res.code===200){
-      onSuccess({uuid:res.data.uuid,name:file.name,url:filePrefix+res.data.uuid})
-    }else{
-      onError(res.message||'上传失败')
-    }
-  }).finally(()=>{
-  }).catch((e)=>{
-    onError(e)
-  })
-};
 const handleChange = (info) => {
   if (info.file&&info.file.status === "uploading"){
     return false
