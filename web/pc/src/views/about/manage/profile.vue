@@ -67,12 +67,11 @@
             <template #renderItem="{ item }">
               <a-list-item class="a-list-item-action">
                 <template #actions >
-                  <a key="list-loadmore-edit">edit</a>&nbsp;
+                  <a key="list-loadmore-edit" @click="toRoute('/about/experience/manage/'+item.id)">edit</a>&nbsp;
                   <a key="list-loadmore-more">more</a>
                 </template>
                 <a-skeleton avatar :title="false"  :loading="false" class="relative">
                   <a-list-item-meta
-
                       :description="`${item.company} | ${item.period}`"
                   >
                     <template #title>
@@ -80,7 +79,7 @@
                     </template>
                   </a-list-item-meta>
                 </a-skeleton>
-                <div class=" content-wrapper truncate overflow-hidden whitespace-nowrap">contentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontent</div>
+                <div class=" content-wrapper truncate overflow-hidden whitespace-nowrap">ddd</div>
               </a-list-item>
             </template>
           </a-list>
@@ -125,8 +124,10 @@ const formState = reactive({
   skills: [],
   experiences: [],
 })
+
 const formRef = ref(null)
 onMounted(()=> {
+  formState.experiences = [];
   if(formRef.value){
     formRef.value.resetFields();
   }
@@ -143,6 +144,13 @@ onMounted(()=> {
       formState.skills = data.skills
       formState.description = data.description
       formState.address = data.address
+    }
+  })
+  experienceList({"page":{"pageNum":1,"pageSize":10}}).then(res=>{
+    if(res&&res.code===200){
+      let data =res.data
+      formState.experiences = data.list || []
+      // experiencesMore.value = experiences.value.length<(data.total || 0)
     }
   })
 })

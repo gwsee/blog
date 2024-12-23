@@ -13,44 +13,41 @@
         <a-form-item name="description" label="项目描述" :rules="[{ required: true }]">
           <a-textarea v-model:value="formState.description" :rows="4" />
         </a-form-item>
-        <a-form-item name="technologies" label="使用技能">
+        <a-form-item name="skills" label="使用技能">
           <a-select
-              v-model:value="formState.technologies"
+              v-model:value="formState.skills"
               mode="tags"
               style="width: 100%"
-              placeholder="Enter technologies"
+              placeholder="Enter skills"
           >
-            <a-select-option v-for="tech in predefinedTechnologies" :key="tech" :value="tech">
-              {{ tech }}
-            </a-select-option>
           </a-select>
         </a-form-item>
 
-        <a-form-item name="startDate" label="开始日期">
-          <a-date-picker v-model:value="formState.startDate" />
+        <a-form-item name="start" label="开始日期">
+          <a-date-picker placeholder="开始日期"  v-model:value="formState.start" value-format="X" />
         </a-form-item>
 
-        <a-form-item name="endDate" label="结束日期">
-          <a-date-picker v-model:value="formState.endDate" />
+        <a-form-item name="end" label="结束日期">
+          <a-date-picker placeholder="至今" v-model:value="formState.end" value-format="X" />
         </a-form-item>
 
-        <a-form-item name="projectUrl" label="项目地址">
-          <a-input v-model:value="formState.projectUrl" />
+        <a-form-item name="link" label="项目地址">
+          <a-input v-model:value="formState.link" />
         </a-form-item>
 
-        <a-form-item name="image" label="项目快照">
+        <a-form-item name="photosList" label="项目快照">
           <a-upload
-              v-model:fileList="fileList"
-              name="image"
+              v-model:fileList="formState.photosList"
+              name="file"
               list-type="picture-card"
               class="project-image-uploader"
-              :show-upload-list="false"
-              action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+              :multiple="false"
               :before-upload="beforeUpload"
               @change="handleChange"
+              :customRequest="customRequest"
+              @preview="handlePreview"
           >
-            <img v-if="imageUrl" :src="imageUrl" alt="project" />
-            <div v-else>
+            <div >
               <plus-outlined />
               <div style="margin-top: 8px">Upload</div>
             </div>
@@ -69,32 +66,37 @@
 </template>
 
 <script setup>
-import {userGet,userSave,projectList,experienceList} from "@/api/user";
-import {filePrefix} from "@/api/tool";
+import {userGet, userSave, projectList, experienceList, projectGet, projectSave} from "@/api/user";
+import {filePrefix, fileUpload} from "@/api/tool";
 import { ref, reactive, onMounted } from 'vue'
 import { message } from 'ant-design-vue'
 import { PlusOutlined } from '@ant-design/icons-vue'
 const open = ref(false)
 const confirmLoading = ref(false)
 const handleOk = ()=>{
-  confirmLoading.value = true
+  formRef.
+  value.
+  validate().
+  then(()=>{
+    confirmLoading.value = true
+    const photos = []
+    if(formState.photosList.length>0){
+      formState.photosList.forEach(item=>{
+        photos.push(item.uuid)
+      })
+      formState.photos = photos
+    }
+    projectSave(formState).then((res)=>{
+      if(res){
+        confirmLoading.value = false
+        open.value = false
+        message.success('saved successfully!')
+      }
+    }).finally(()=>{
+      confirmLoading.value = false
+    })
+  })
 }
-const formState = reactive({
-  title: '',
-  description: '',
-  technologies: [],
-  startDate: null,
-  endDate: null,
-  projectUrl: '',
-})
-
-const predefinedTechnologies = [
-  'JavaScript', 'React Native', 'iOS', 'Android', 'Node.js', 'Python',
-  'Vue.js', 'Angular', 'Express', 'MongoDB', 'PostgreSQL', 'AWS'
-]
-
-const fileList = ref([])
-const imageUrl = ref('')
 const onFinish = (values) => {
   console.log('Success:', values)
   message.success('Project saved successfully!')
@@ -104,11 +106,46 @@ const labelCol = { style: { width: '80px' } };
 const wrapperCol = { span: 24 };
 // 通过storage来控制弹出的显隐 就不用show 来暴露
 const formRef = ref(null)
-const show = () => {
+const formState = reactive({
+  id: 0,
+  experienceId: 0,
+  title: '',
+  description: '',
+  skills: [],
+  start: 0,
+  end: 0,
+  link: '',
+  photos: [],
+  photosList: [],
+})
+const show = (id,experienceId) => {
+  confirmLoading.value = false
   open.value = true;
   if(formRef.value){
     formRef.value.resetFields();
   }
+  formState.experienceId = experienceId;
+  if(!id){
+    return
+  }
+  projectGet({id}).then((res) => {
+    if(res){
+      const data = res.data||{}
+      formState.id = data.id;
+      formState.title = data.title;
+      formState.description = data.description;
+      formState.skills = data.skills;
+      formState.start = data.start;
+      formState.end = data.end;
+      formState.link = data.link;
+      formState.photos = data.photos;
+      if(formState.photos.length > 0){
+        formState.photos.forEach(photo => {
+          formState.photosList.push({uuid:photo,url:filePrefix+photo});
+        })
+      }
+    }
+  })
 };
 const close = ()=>{
   open.value = false
@@ -116,7 +153,20 @@ const close = ()=>{
 defineExpose({
   show
 })
-
+const customRequest = ({file, onSuccess,onError}) => {
+  let formData = new FormData();
+  formData.append('file',file)
+  fileUpload(formData).then(res=>{
+    if(res&&res.code===200){
+      onSuccess({uuid:res.data.uuid,name:file.name,url:filePrefix+res.data.uuid})
+    }else{
+      onError(res.message||'上传失败')
+    }
+  }).finally(()=>{
+  }).catch((e)=>{
+    onError(e)
+  })
+};
 const handleChange = (info) => {
   if (info.file&&info.file.status === "uploading"){
     return false
@@ -127,8 +177,8 @@ const handleChange = (info) => {
     if(item.status==='error'){
       return false
     }
-    let uuid = item.uuid||item.response.uuid
-    let url = item.url||item.response.url
+    let uuid = item.uuid||item.response&&item.response.uuid||''
+    let url = item.url||item.response&&item.response.url||''
     if(!uuid){
       return false
     }
@@ -140,7 +190,7 @@ const handleChange = (info) => {
     }
     return false
   })
-  formState.avatarList = resFileList
+  formState.photosList = resFileList
 };
 const previewVisible = ref(false);
 const previewImage = ref('');

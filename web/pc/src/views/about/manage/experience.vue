@@ -22,9 +22,20 @@
           <a-form-item name="location" label="公司地址">
             <a-input v-model:value="formState.location" />
           </a-form-item>
-          <a-form-item name="period" label="在职时间" :rules="[{ required: true }]">
-            <a-range-picker v-model:value="formState.period" />
-          </a-form-item>
+          <a-row  >
+            <a-col :md="11" :sm="24" :xs="24"   >
+              <a-form-item name="start" label="在职时间" :rules="[{ required: true }]">
+                  <a-date-picker placeholder="Start Date" format="YYYY-MM-DD" value-format="X" v-model:value="formState.start">
+                  </a-date-picker>
+              </a-form-item>
+          </a-col>
+            <a-col :md="11" :sm="24" :xs="24"   >
+              <a-form-item name="start" label="" :rules="[{ required: false }]">
+                <a-date-picker placeholder="至今" format="YYYY-MM-DD" value-format="X" v-model:value="formState.end">
+                </a-date-picker>
+              </a-form-item>
+            </a-col>
+          </a-row>
           <a-form-item name="description" label="职位描述" :rules="[{ required: true }]">
             <a-textarea v-model:value="formState.description" :rows="4" />
           </a-form-item>
@@ -40,24 +51,20 @@
                 mode="tags"
                 style="width: 100%"
                 placeholder="Enter skills"
-            >
-              <a-select-option v-for="skill in predefinedSkills" :key="skill" :value="skill">
-                {{ skill }}
-              </a-select-option>
-            </a-select>
+            ></a-select>
           </a-form-item>
         </a-card>
-        <a-card title="项目经历">
+        <a-card title="项目经历" v-if="formState.id>0">
           <template #extra>
-            <a-button @click="showProject">add more</a-button>
+            <a-button @click="showProject(0,formState.id)">add more</a-button>
           </template>
           <a-list
-              :data-source="formState.experiences"
+              :data-source="formState.projects"
           >
             <template #renderItem="{ item }">
               <a-list-item class="a-list-item-action">
                 <template #actions >
-                  <a key="list-loadmore-edit">edit</a>&nbsp;
+                  <a key="list-loadmore-edit" @click="showProject(item.id,item.experienceId)">edit</a>&nbsp;
                   <a key="list-loadmore-more">more</a>
                 </template>
                 <a-skeleton avatar :title="false"  :loading="false" class="relative">
@@ -89,41 +96,79 @@
 </template>
 
 <script setup>
-import {userGet,projectList,experienceList} from "@/api/user";
+import {experienceGet, experienceSave, experienceList, projectList} from "@/api/user";
 import project from "./project.vue"
 import {filePrefix} from "@/api/tool";
 import {reactive, ref, onMounted} from 'vue'
-import {useRouter} from 'vue-router'
+import {useRoute, useRouter} from 'vue-router'
 const router = useRouter()
 const projectRef = ref(null);
 import { message } from 'ant-design-vue'
 const labelCol = { style: { width: '90px' } };
 const wrapperCol = { span: 24 };
+const formRef = ref(null)
+const showProject = (id,experienceId)=>{
+  projectRef.value?.show(id,experienceId)
+}
+const predefinedSkills = []
 const formState = reactive({
-  role: '',
+  id: 0,
   company: '',
+  role: '',
   location: '',
-  period: [],
+  start:0,
+  end:0,
   description: '',
   responsibilities: '',
   achievements: '',
   skills: [],
-  experiences:[],
+
+  period: [],
+  projects:[],
 })
-const formRef = ref(null)
-const showProject = ()=>{
-  projectRef.value?.show()
-}
-const predefinedSkills = [
-  'JavaScript', 'React Native', 'iOS Development', 'Android Development',
-  'Node.js', 'Python', 'UI/UX Design', 'Project Management'
-]
 onMounted(()=>{
   if(formRef.value){
     formRef.value.resetFields();
   }
+  const route = useRoute();
+  let id = route.params.id;
+  id = id - 0
+  if(!id){
+    return
+  }
+  experienceGet({id:id}).then((res) => {
+    if(res){
+      const data = res.data || {}
+      formState.id = data.id;
+      formState.company = data.company;
+      formState.role = data.role;
+      formState.location = data.location;
+      formState.start = data.start;
+      formState.end = data.end;
+      formState.description = data.description;
+      formState.skills = data.skills;
+      formState.responsibilities = data.responsibilities;
+      formState.achievements = data.achievements;
+      formState.period = data.period;
+    }
+  })
+  projectList({experienceId: id,page:{"pageNum":1,"pageSize":10}}).then((res) => {
+      if(res){
+        formState.projects = res.data&&res.data.list || [];
+      }
+  })
 })
+const loading = ref(false);
 const onFinish = (values) => {
+  loading.value = true;
+  experienceSave(formState).then((res) => {
+    if(res){
+      message.success('saved successfully!')
+      router.back()
+    }
+  }).finally(() => {
+    loading.value = false;
+  })
   // Convert period to string format
   values.period = `${values.period[0].format('YYYY-MM')} - ${values.period[1].format('YYYY-MM')}`
   // Split responsibilities and achievements into arrays
