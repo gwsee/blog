@@ -157,6 +157,9 @@ func (o *userRepo) ListProject(ctx context.Context, data *biz.ProjectQuery) (tot
 			selector.Where(sqljson.ValueContains(userproject.FieldSkills, data.Skills))
 		})
 	}
+	if data.ExperienceId > 0 {
+		tx = tx.Where(userproject.ExperienceIDEQ(data.ExperienceId))
+	}
 	total, err = tx.Count(ctx)
 	if err != nil {
 		return

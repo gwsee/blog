@@ -69,6 +69,7 @@
 import {userGet, userSave, projectList, experienceList, projectGet, projectSave} from "@/api/user";
 import {ref, reactive, onMounted, getCurrentInstance} from 'vue'
 import { message } from 'ant-design-vue'
+import {filePrefix} from "@/api/tool.js";
 import { PlusOutlined } from '@ant-design/icons-vue'
 const open = ref(false)
 const confirmLoading = ref(false)
@@ -127,8 +128,6 @@ const show = (id,experienceId) => {
   if(!id){
     return
   }
-  const { appContext } = getCurrentInstance();
-  const $fileFull = appContext.config.globalProperties.$fileFull;
   projectGet({id}).then((res) => {
     if(res){
       const data = res.data||{}
@@ -142,7 +141,7 @@ const show = (id,experienceId) => {
       formState.photos = data.photos;
       if(formState.photos.length > 0){
         formState.photos.forEach(photo => {
-          formState.photosList.push({uuid:photo,url:$fileFull(photo)});
+          formState.photosList.push({uuid:photo,url:filePrefix+(photo)});
         })
       }
     }
