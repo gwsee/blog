@@ -51,7 +51,7 @@ service.interceptors.request.use(config => {
             const s_url = sessionObj.url;                  // 请求地址
             const s_data = sessionObj.data;                // 请求数据
             const s_time = sessionObj.time;                // 请求时间
-            const interval = 1000;                         // 间隔时间(ms)，小于此时间视为重复提交
+            const interval = 200;                         // 间隔时间(ms)，小于此时间视为重复提交
             if (s_data === requestObj.data && requestObj.time - s_time < interval && s_url === requestObj.url) {
                 const message = '数据正在处理，请勿重复提交';
                 console.warn(`[${s_url}]: ` + message)
@@ -91,6 +91,12 @@ service.interceptors.response.use(res => {
     },
     error => {
         let { response } = error;
+        console.log(error,"??????????????")
+        if(error.status === 401) {
+            message.error("请登录");
+            setLoginShow(true)
+            return
+        }
         if(response&&response.data){
             let data = response.data
             if(data.message){
@@ -98,6 +104,8 @@ service.interceptors.response.use(res => {
                 return
             }
         }else{
+            console.log(error,"xxxx")
+
             let msg = error.message || ''
             if (msg === "Network Error") {
                 msg = "后端接口连接异常";

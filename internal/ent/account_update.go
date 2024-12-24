@@ -325,11 +325,6 @@ func (au *AccountUpdate) check() error {
 			return &ValidationError{Name: "password", err: fmt.Errorf(`ent: validator failed for field "Account.password": %w`, err)}
 		}
 	}
-	if v, ok := au.mutation.Description(); ok {
-		if err := account.DescriptionValidator(v); err != nil {
-			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Account.description": %w`, err)}
-		}
-	}
 	return nil
 }
 
@@ -772,11 +767,6 @@ func (auo *AccountUpdateOne) check() error {
 	if v, ok := auo.mutation.Password(); ok {
 		if err := account.PasswordValidator(v); err != nil {
 			return &ValidationError{Name: "password", err: fmt.Errorf(`ent: validator failed for field "Account.password": %w`, err)}
-		}
-	}
-	if v, ok := auo.mutation.Description(); ok {
-		if err := account.DescriptionValidator(v); err != nil {
-			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Account.description": %w`, err)}
 		}
 	}
 	return nil

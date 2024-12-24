@@ -55,7 +55,7 @@ func (uc *AccountUseCase) CreateAccount(ctx context.Context, req *v1.CreateAccou
 		Account:     req.Account,
 		Password:    req.Password,
 		Email:       req.Email,
-		Nickname:    req.NickName,
+		Nickname:    req.Nickname,
 		Avatar:      req.Avatar,
 		Description: req.Description,
 	})
@@ -69,6 +69,10 @@ func (uc *AccountUseCase) ResetPassword(ctx context.Context, req *v1.ResetPasswo
 	if err != nil {
 		return nil, err
 	}
+	if user.Account != req.Account {
+		return &global.Empty{}, nil
+	}
+	req.Password = common.MD5(req.Password)
 	err = uc.repo.ResetPassword(ctx, &Account{
 		Id:       int(user.Id),
 		Password: req.Password,
@@ -125,7 +129,8 @@ func (uc *AccountUseCase) UpdateAccount(ctx context.Context, req *v1.UpdateAccou
 	}
 	err = uc.repo.UpdateAccount(ctx, &Account{
 		Id:          int(user.Id),
-		Nickname:    req.NickName,
+		Nickname:    req.Nickname,
+		Email:       req.Email,
 		Avatar:      req.Avatar,
 		Description: req.Description,
 	})

@@ -12,6 +12,8 @@ const showLogin = ref(false)
 
 const setLoginData = (token) => {
     if(!token){
+        state.user = null
+        state.token = null
         return
     }
     localStorage.setItem('token', token)

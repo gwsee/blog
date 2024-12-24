@@ -77,6 +77,8 @@ kratos proto client api/blog/v1/demo.proto  -- --go-http_opt=omitempty=false ##ä
 kratos proto server api/blog/v1/demo.proto -t internal/service
 kratos proto client api/tools/v1/tools.proto  -- --go-http_opt=omitempty=false
 
+kratos proto client api/account/v1/account.proto  -- --go-http_opt=omitempty=false
+
 protoc --go_out=./ conf.proto --go_opt=paths=source_relative
 protoc --go_out=./ page.proto --go_opt=paths=source_relative
 

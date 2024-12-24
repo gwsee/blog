@@ -37,7 +37,7 @@ message CreateAccountRequest {
 	string account = 1;
 	string password = 2;
 	string email = 3;
-	string nickName = 4;
+	string nickname = 4;
 	string avatar = 5;
 	string description = 6;
 }
@@ -57,9 +57,10 @@ message LoginByAccountReply {
 }
 
 message UpdateAccountRequest {
-	string nickName = 1;
+	string nickname = 1;
 	string avatar = 2;
-	string description = 3;
+	string email = 3;
+	string description = 4;
 }
 
 message AccountInfoReply{

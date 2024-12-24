@@ -71,6 +71,7 @@
                   v-for="item in navItems"
                   :key="item.key"
                   :to="item.href"
+                  v-show="isLoggedIn||!item.login"
                   class="text-gray-500/60 hover:text-gray-900 transition-colors duration-300"
               >
                 <a-avatar :size="48" class="layout-content-menu-item" :src="item.img"  > {{ item.label }}</a-avatar>
@@ -78,7 +79,7 @@
             </nav>
 
             <a-avatar :size="48" class="layout-content-menu-item" @click="showLoginDialog" v-if="!isLoggedIn" >登陆</a-avatar>
-            <a-avatar :size="48" class="layout-content-menu-item" :src="avatar" v-else @click="goToAbout('/about')"></a-avatar>
+            <a-avatar :size="48" class="layout-content-menu-item" @click="showAccountDialog" :src="avatar" v-else ></a-avatar>
           </div>
         </div>
       </div>
@@ -150,8 +151,8 @@
 
         <!-- 菜单项 -->
         <div class="flex-1 space-y-6">
-          <div v-for="item in navItems" :key="item.key">
-            <div class="flex items-center justify-between">
+          <div v-for="item in navItems" :key="item.key" >
+            <div class="flex items-center justify-between" v-show="isLoggedIn||!item.login">
               <router-link
                   :to="item.href"
                   class="text-lg font-medium text-gray-900 hover:text-primary transition-colors"
@@ -171,24 +172,29 @@
     <router-view class="layout-content" />
     <!-- 登陆 -->
     <Login ref="loginRef"/>
+    <Account ref="accountRef"/>
   </div>
 </template>
 
 <script setup>
 import Login from "@/components/Login.vue";
+import Account from "@/components/Account.vue"
 import avatar from "@/assets/image/default-avatar.png"
 import logo from "@/assets/image/logo.png"
 import {onMounted, ref, watch} from "vue"
 import { useRouter } from 'vue-router';
+const router = useRouter();
 import { useAuthStore  } from '@/store/auth.js'
 const { isLoggedIn, state, setLoginData, getLoginToken } = useAuthStore();
-const router = useRouter();
-const loginRef = ref(null);
 
+const loginRef = ref(null);
+const accountRef = ref(null);
 const showLoginDialog =()=>{
   loginRef.value.show()
 }
-
+const showAccountDialog = ()=>{
+  accountRef.value.show()
+}
 onMounted(function () {
   if(isLoggedIn){
     const tk = getLoginToken()
@@ -214,9 +220,10 @@ import {
 const showMobileMenu = ref(false)
 const showMobileSearch = ref(false)
 const navItems = [
-  {key: 'diary', label: '日记', href: '/blog',requireLogin:false},
-  {key: 'travel', label: '旅行', href: '/travel',requireLogin:false},
-  {key: 'photo', label: '墙', href: '/picture',requireLogin:false},
+  {key: 'diary', label: '日记', href: '/blog',login:false},
+  {key: 'travel', label: '旅行', href: '/travel',login:false},
+  {key: 'photo', label: '墙', href: '/picture',login:false},
+  {key: 'about', label: '关于', href: '/about',login:true},
 ]
 
 

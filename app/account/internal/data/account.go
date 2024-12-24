@@ -69,7 +69,7 @@ func (o *accountRepo) Info(ctx context.Context, id int64) (*biz.Account, error) 
 	}, err
 }
 func (o *accountRepo) UpdateAccount(ctx context.Context, data *biz.Account) error {
-	_, err := o.data.db.Account.UpdateOneID(data.Id).SetAvatar(data.Nickname).
-		SetNickname(data.Nickname).SetDescription(data.Description).Save(ctx)
+	_, err := o.data.db.Account.UpdateOneID(data.Id).SetAvatar(data.Avatar).
+		SetNickname(data.Nickname).SetEmail(data.Email).SetDescription(data.Description).Save(ctx)
 	return err
 }

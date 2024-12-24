@@ -21,6 +21,9 @@ var whiteList = map[string]struct{}{
 
 	"/api.bff.v1.Tools/UploadFile": {},
 	"/api.bff.v1.Tools/Files":      {},
+
+	"/api.bff.v1.Travels/GetTravel":  {},
+	"/api.bff.v1.Travels/ListTravel": {},
 }
 
 func NewWhiteListMatcher() selector.MatchFunc {

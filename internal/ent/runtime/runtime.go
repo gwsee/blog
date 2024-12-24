@@ -75,10 +75,6 @@ func init() {
 	accountDescEmail := accountFields[4].Descriptor()
 	// account.DefaultEmail holds the default value on creation for the email field.
 	account.DefaultEmail = accountDescEmail.Default.(string)
-	// accountDescDescription is the schema descriptor for description field.
-	accountDescDescription := accountFields[5].Descriptor()
-	// account.DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
-	account.DescriptionValidator = accountDescDescription.Validators[0].(func(string) error)
 	// accountDescAvatar is the schema descriptor for avatar field.
 	accountDescAvatar := accountFields[6].Descriptor()
 	// account.DefaultAvatar holds the default value on creation for the avatar field.

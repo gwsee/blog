@@ -344,11 +344,6 @@ func (ac *AccountCreate) check() error {
 	if _, ok := ac.mutation.Description(); !ok {
 		return &ValidationError{Name: "description", err: errors.New(`ent: missing required field "Account.description"`)}
 	}
-	if v, ok := ac.mutation.Description(); ok {
-		if err := account.DescriptionValidator(v); err != nil {
-			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Account.description": %w`, err)}
-		}
-	}
 	if _, ok := ac.mutation.Avatar(); !ok {
 		return &ValidationError{Name: "avatar", err: errors.New(`ent: missing required field "Account.avatar"`)}
 	}

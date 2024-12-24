@@ -34,3 +34,11 @@ export function info(data){
         data: data
     })
 }
+
+export function updateAccount(data){
+    return request({
+        url: '/v1/update_account',
+        method: 'post',
+        data: data
+    })
+}

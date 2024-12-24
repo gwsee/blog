@@ -30,7 +30,7 @@ func (Account) Fields() []ent.Field {
 			SchemaType(map[string]string{
 				dialect.MySQL: "varchar(100)",
 			}),
-		field.String("description").NotEmpty().Comment("想说啥?").
+		field.String("description").Comment("想说啥?").
 			SchemaType(map[string]string{
 				dialect.MySQL: "tinytext",
 			}),

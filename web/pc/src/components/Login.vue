@@ -7,24 +7,31 @@
         autocomplete="off"
     >
       <a-form-item
-          name="Account"
+          v-if="isRegister"
+          name="nickname"
+          :rules="[{ required: true,  message:'请输入昵称'}]"
+      >
+        <a-input placeholder="昵称" v-model:value="formState.nickname" />
+      </a-form-item>
+      <a-form-item
+          name="account"
           :rules="[{ required: true, message: '请输入账户名称' }]"
       >
-        <a-input placeholder="请输入账户名称" v-model:value="formState.Account" />
+        <a-input placeholder="请输入账户名称" v-model:value="formState.account" />
       </a-form-item>
 
       <a-form-item
-          name="Password"
+          name="password"
           :rules="[{ required: true, message: isRegister?'请输入新密码':'请输入密码' }]"
       >
-        <a-input-password  :placeholder="isRegister?'请输入新密码':'请输入密码'" v-model:value="formState.Password" />
+        <a-input-password  :placeholder="isRegister?'请输入新密码':'请输入密码'" v-model:value="formState.password" />
       </a-form-item>
       <a-form-item
           v-if="isRegister"
-          name="Confirm"
-          :rules="[{ required: true,   validator: validatePassConfirm }]"
+          name="confirm"
+          :rules="[{ required: true,   validator: validatePassconfirm }]"
       >
-        <a-input-password  placeholder="请再次确认密码" v-model:value="formState.Confirm" />
+        <a-input-password  placeholder="请再次确认密码" v-model:value="formState.confirm" />
       </a-form-item>
     </a-form>
     <template #footer>
@@ -45,19 +52,20 @@ const formRef = ref(null)
 const confirmLoading = ref(false);
 const isRegister = ref(false);
 const formState = reactive({
-  Account: '',
-  Password: '',
-  Confirm: '',
+  account: '',
+  nickname: '',
+  password: '',
+  confirm: '',
 });
 const labelCol = { style: { width: '90px' } };
 const wrapperCol = { span: 24 };
-const validatePassConfirm= async (_rule, value) => {
+const validatePassconfirm= async (_rule, value) => {
   if (!isRegister.value){
     return Promise.resolve();
   }
   if (value === '') {
     return Promise.reject('请再次确认密码');
-  } else if (value !== formState.Password) {
+  } else if (value !== formState.password) {
     return Promise.reject("两次密码输入不一致!");
   } else {
     return Promise.resolve();

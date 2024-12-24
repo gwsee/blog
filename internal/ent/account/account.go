@@ -112,8 +112,6 @@ var (
 	PasswordValidator func(string) error
 	// DefaultEmail holds the default value on creation for the "email" field.
 	DefaultEmail string
-	// DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
-	DescriptionValidator func(string) error
 	// DefaultAvatar holds the default value on creation for the "avatar" field.
 	DefaultAvatar string
 	// DefaultBlogNum holds the default value on creation for the "blog_num" field.
