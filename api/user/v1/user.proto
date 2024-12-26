@@ -64,8 +64,20 @@ service User {
 			body: "*"
 		};
 	};
+	rpc Photos(PhotosReq) returns(PhotosReply){
+		option (google.api.http) = {
+			body: "*"
+		};
+	}
 }
-
+message PhotosReq {
+	int64	 pageSize = 1; //默认返回66个
+	string type = 2; //默认返回方式是最新的3成数据 加随机的7成数据
+	bool   me =3; //是否只查看自己的
+}
+message PhotosReply {
+	repeated string images = 1;
+}
 message SaveExperienceRequest {
 	int64 id =1;//ID
 	string company =2;//公司名称

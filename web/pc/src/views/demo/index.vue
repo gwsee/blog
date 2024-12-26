@@ -1,140 +1,224 @@
 <template>
-  <div ref="container" class="w-full h-screen"></div>
+  <div class="relative w-full h-screen">
+    <canvas ref="canvas" class="w-full h-full"></canvas>
+
+    <!-- Loading Screen -->
+    <div v-if="!sceneReady" class="absolute inset-0 flex items-center justify-center bg-orange-500">
+      <div class="text-white text-2xl">Loading... {{ Math.round(loadingProgress) }}%</div>
+    </div>
+
+    <!-- Navigation UI -->
+    <div v-show="sceneReady" class="absolute bottom-4 left-4 space-y-2">
+      <button
+          v-for="section in sections"
+          :key="section.id"
+          @click="navigateToSection(section.id)"
+          class="px-4 py-2 bg-white/90 rounded-full text-orange-500 hover:bg-white transition-colors"
+      >
+        {{ section.title }}
+      </button>
+    </div>
+
+    <!-- Info Panel -->
+    <div
+        v-if="activeSection && sceneReady"
+        class="absolute top-4 right-4 w-80 bg-white/90 p-6 rounded-lg shadow-lg"
+    >
+      <h2 class="text-xl font-bold text-orange-500 mb-4">{{ activeSection.title }}</h2>
+      <div class="space-y-4">
+        <div v-for="(item, index) in activeSection.content" :key="index">
+          <h3 class="font-semibold">{{ item.title }}</h3>
+          <p class="text-sm text-gray-600">{{ item.description }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
-import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { ref, onMounted, onBeforeUnmount } from 'vue'
+import * as THREE from 'three'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
-const container = ref(null);
-let scene, camera, renderer, controls, book, pages;
+// Scene setup
+const canvas = ref(null)
+const sceneReady = ref(false)
+const loadingProgress = ref(0)
+const activeSection = ref(null)
 
-const createScene = () => {
-  scene = new THREE.Scene();
-  camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-  renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setClearColor(0xf0f0f0);
-  container.value.appendChild(renderer.domElement);
-
-  camera.position.set(0, 0, 5);
-  controls = new OrbitControls(camera, renderer.domElement);
-  controls.enableDamping = true;
-  controls.dampingFactor = 0.05;
-
-  const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-  scene.add(ambientLight);
-
-  const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-  directionalLight.position.set(5, 5, 5);
-  scene.add(directionalLight);
-};
-
-const loadBook = () => {
-  const loader = new GLTFLoader();
-  loader.load(
-      '/assets/3d/book_model.glb',
-      (gltf) => {
-        book = gltf.scene;
-        book.scale.set(2, 2, 2);
-        scene.add(book);
-
-        // Find and store references to book pages
-        pages = [];
-        book.traverse((child) => {
-          if (child.isMesh && child.name.startsWith('Page')) {
-            pages.push(child);
-          }
-        });
-
-        // Sort pages by their names
-        pages.sort((a, b) => {
-          const aNum = parseInt(a.name.replace('Page', ''));
-          const bNum = parseInt(b.name.replace('Page', ''));
-          return aNum - bNum;
-        });
-
-        // Set up page turning animation
-        setupPageTurning();
-      },
-      undefined,
-      (error) => {
-        console.error('An error occurred while loading the book model:', error);
+// Portfolio content
+const sections = ref([
+  {
+    id: 'about',
+    title: 'About Me',
+    position: new THREE.Vector3(-10, 0, 0),
+    content: [
+      {
+        title: 'Introduction',
+        description: 'A passionate developer with expertise in Vue.js and 3D web experiences.'
       }
-  );
-};
+    ]
+  },
+  {
+    id: 'experience',
+    title: 'Experience',
+    position: new THREE.Vector3(0, 0, 0),
+    content: [
+      {
+        title: 'Senior Frontend Developer',
+        description: '2020-Present: Leading development of interactive web applications'
+      },
+      {
+        title: 'Web Developer',
+        description: '2018-2020: Full-stack development with Vue.js and Node.js'
+      }
+    ]
+  },
+  {
+    id: 'projects',
+    title: 'Projects',
+    position: new THREE.Vector3(10, 0, 0),
+    content: [
+      {
+        title: '3D Portfolio',
+        description: 'Interactive portfolio website built with Three.js and Vue'
+      },
+      {
+        title: 'E-commerce Platform',
+        description: 'Modern shopping experience with Vue 3 and Tailwind CSS'
+      }
+    ]
+  }
+])
 
-const setupPageTurning = () => {
-  let currentPage = 0;
-  const turnDuration = 1000; // ms
+// Three.js variables
+let scene, camera, renderer, controls
+let mixer, clock
+const models = new Map()
 
-  const turnPage = (direction) => {
-    if (direction === 'next' && currentPage < pages.length - 1) {
-      const page = pages[currentPage];
-      new THREE.TWEEN.Tween(page.rotation)
-          .to({ y: Math.PI }, turnDuration)
-          .easing(THREE.TWEEN.Easing.Quadratic.InOut)
-          .start();
-      currentPage++;
-    } else if (direction === 'prev' && currentPage > 0) {
-      currentPage--;
-      const page = pages[currentPage];
-      new THREE.TWEEN.Tween(page.rotation)
-          .to({ y: 0 }, turnDuration)
-          .easing(THREE.TWEEN.Easing.Quadratic.InOut)
-          .start();
-    }
-  };
+// Initialize Three.js scene
+const initScene = () => {
+  // Scene
+  scene = new THREE.Scene()
+  scene.background = new THREE.Color('#ff7b4d') // Orange background
 
-  window.addEventListener('keydown', (event) => {
-    if (event.key === 'ArrowRight') {
-      turnPage('next');
-    } else if (event.key === 'ArrowLeft') {
-      turnPage('prev');
-    }
-  });
+  // Camera
+  camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
+  camera.position.set(0, 5, 20)
 
-  renderer.domElement.addEventListener('click', (event) => {
-    const rect = renderer.domElement.getBoundingClientRect();
-    const x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-    if (x > 0) {
-      turnPage('next');
-    } else {
-      turnPage('prev');
-    }
-  });
-};
+  // Renderer
+  renderer = new THREE.WebGLRenderer({
+    canvas: canvas.value,
+    antialias: true
+  })
+  renderer.setSize(window.innerWidth, window.innerHeight)
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
-const animate = () => {
-  requestAnimationFrame(animate);
-  controls.update();
-  THREE.TWEEN.update();
-  renderer.render(scene, camera);
-};
+  // Controls
+  controls = new OrbitControls(camera, renderer.domElement)
+  controls.enableDamping = true
+  controls.dampingFactor = 0.05
+  controls.maxPolarAngle = Math.PI / 2
 
-const handleResize = () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-};
+  // Lighting
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
+  scene.add(ambientLight)
 
-onMounted(() => {
-  createScene();
-  loadBook();
-  animate();
-  window.addEventListener('resize', handleResize);
-});
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 1)
+  directionalLight.position.set(5, 5, 5)
+  scene.add(directionalLight)
 
-onUnmounted(() => {
-  window.removeEventListener('resize', handleResize);
-  renderer.dispose();
-});
-</script>
+  // Clock for animations
+  clock = new THREE.Clock()
 
-<style scoped>
-canvas {
-  display: block;
+  // Load 3D models
+  loadModels()
 }
-</style>
+
+// Load 3D models and setup scene
+const loadModels = () => {
+  const loader = new GLTFLoader()
+  const totalModels = sections.value.length
+  let loadedModels = 0
+
+  sections.value.forEach(section => {
+    // Create platform for each section
+    const platform = new THREE.Mesh(
+        new THREE.BoxGeometry(5, 0.5, 5),
+        new THREE.MeshStandardMaterial({ color: 0xffffff })
+    )
+    platform.position.copy(section.position)
+    scene.add(platform)
+
+    // Add simple figure placeholder (can be replaced with actual GLTF models)
+    const figure = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.5, 0.5, 2, 8),
+        new THREE.MeshStandardMaterial({ color: 0xffa07a })
+    )
+    figure.position.copy(section.position)
+    figure.position.y += 1.25
+    scene.add(figure)
+
+    models.set(section.id, { platform, figure })
+
+    loadedModels++
+    loadingProgress.value = (loadedModels / totalModels) * 100
+  })
+
+  sceneReady.value = true
+}
+
+// Animation loop
+const animate = () => {
+  if (!sceneReady.value) return
+
+  const delta = clock.getDelta()
+  if (mixer) mixer.update(delta)
+
+  controls.update()
+  renderer.render(scene, camera)
+  requestAnimationFrame(animate)
+}
+
+// Navigation
+const navigateToSection = (sectionId) => {
+  const section = sections.value.find(s => s.id === sectionId)
+  if (!section) return
+
+  activeSection.value = section
+
+  // Animate camera to new position
+  const targetPosition = section.position.clone()
+  targetPosition.add(new THREE.Vector3(0, 5, 10))
+
+  gsap.to(camera.position, {
+    duration: 1.5,
+    x: targetPosition.x,
+    y: targetPosition.y,
+    z: targetPosition.z,
+    ease: 'power2.inOut'
+  })
+}
+
+// Resize handler
+const handleResize = () => {
+  if (!camera || !renderer) return
+
+  camera.aspect = window.innerWidth / window.innerHeight
+  camera.updateProjectionMatrix()
+  renderer.setSize(window.innerWidth, window.innerHeight)
+}
+
+// Lifecycle hooks
+onMounted(() => {
+  initScene()
+  animate()
+  window.addEventListener('resize', handleResize)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', handleResize)
+  if (renderer) renderer.dispose()
+})
+</script>

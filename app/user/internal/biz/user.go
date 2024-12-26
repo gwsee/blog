@@ -68,6 +68,11 @@ type Experience struct {
 	Achievements     string
 	Skills           []string
 }
+type PhotosQuery struct {
+	PageSize int64
+	Me       bool
+	Type     string
+}
 
 // UserRepo is a Greater repo.
 type UserRepo interface {

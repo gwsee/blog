@@ -49,3 +49,6 @@ func (o *userRepo) GetExperience(ctx context.Context, in *global.ID) (*v1.GetExp
 func (o *userRepo) ListExperience(ctx context.Context, in *v1.ListExperienceRequest) (*v1.ListExperienceReply, error) {
 	return o.data.uc.ListExperience(ctx, in)
 }
+func (o *userRepo) Photos(ctx context.Context, in *v1.PhotosReq) (*v1.PhotosReply, error) {
+	return o.data.uc.Photos(ctx, in)
+}

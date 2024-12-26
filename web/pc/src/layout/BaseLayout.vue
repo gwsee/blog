@@ -223,6 +223,7 @@ const navItems = [
   {key: 'diary', label: '日记', href: '/blog',login:false},
   {key: 'travel', label: '旅行', href: '/travel',login:false},
   {key: 'photo', label: '墙', href: '/picture',login:false},
+  {key: 'demo', label: 'DEMO', href: '/demo',login:true},
   {key: 'about', label: '关于', href: '/about',login:true},
 ]
 

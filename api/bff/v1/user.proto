@@ -75,4 +75,10 @@ service User {
       body: "*"
     };
   };
+  rpc Photos(user.v1.PhotosReq) returns(user.v1.PhotosReply){
+    option (google.api.http) = {
+      post: "/v1/photos"
+      body: "*"
+    };
+  }
 }
