@@ -48,3 +48,6 @@ func (s *UserService) GetExperience(ctx context.Context, req *global.ID) (*v1.Ge
 func (s *UserService) ListExperience(ctx context.Context, req *v1.ListExperienceRequest) (*v1.ListExperienceReply, error) {
 	return s.uc.ListExperience(ctx, req)
 }
+func (s *UserService) Photos(ctx context.Context, req *v1.PhotosReq) (*v1.PhotosReply, error) {
+	return s.uc.Photos(ctx, req)
+}

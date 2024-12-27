@@ -310,3 +310,6 @@ func (o *userRepo) ListExperience(ctx context.Context, data *biz.ExperienceQuery
 	}
 	return
 }
+func (o *userRepo) Photos(ctx context.Context, data *biz.PhotosQuery) ([]string, error) {
+	return nil, nil
+}

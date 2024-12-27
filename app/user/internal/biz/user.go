@@ -71,6 +71,7 @@ type Experience struct {
 type PhotosQuery struct {
 	PageSize int64
 	Me       bool
+	UserId   int64
 	Type     string
 }
 
@@ -88,6 +89,7 @@ type UserRepo interface {
 	GetExperience(context.Context, *Experience) (*Experience, error)
 	DeleteExperience(context.Context, *Experience) error
 	ListExperience(context.Context, *ExperienceQuery) (int, []*Experience, error)
+	Photos(context.Context, *PhotosQuery) ([]string, error)
 }
 
 // UserUsecase is a User usecase.
@@ -321,4 +323,20 @@ func (uc *UserUsecase) ListExperience(ctx context.Context, req *v1.ListExperienc
 		})
 	}
 	return resp, nil
+}
+func (uc *UserUsecase) Photos(ctx context.Context, req *v1.PhotosReq) (*v1.PhotosReply, error) {
+	u, err := constx.DefaultUser.User(ctx)
+	if err != nil {
+		return nil, err
+	}
+	query := &PhotosQuery{
+		PageSize: req.PageSize,
+		Me:       req.Me,
+		UserId:   u.Id,
+		Type:     req.Type,
+	}
+	list, err := uc.repo.Photos(ctx, query)
+	return &v1.PhotosReply{
+		Images: list,
+	}, nil
 }
