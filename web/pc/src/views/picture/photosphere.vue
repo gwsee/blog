@@ -37,7 +37,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, onBeforeUnmount } from 'vue';
+import {ref, onMounted, onUnmounted, onBeforeUnmount, watch} from 'vue';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
@@ -105,6 +105,16 @@ const loadTexture = (url) => {
   });
 };
 
+// 监听 props 的变化
+watch(
+    () => props.photos, // 监听 photos
+    (newPhotos, oldPhotos) => {
+      // 触发的方法
+      createPhotoSphere()
+    },
+    { deep: true } // 深度监听，确保数组内容变化时也能触发
+);
+
 const createPhotoMesh = async (photo, phi, theta) => {
   const texture = await loadTexture(photo.url);
   const photoGeometry = new THREE.CircleGeometry(0.2, 16);
@@ -126,7 +136,7 @@ const createPhotoMesh = async (photo, phi, theta) => {
 const createPhotoSphere = async () => {
   photoGroup = new THREE.Group();
   scene.add(photoGroup);
-
+  console.log(props.photos.length)
   for (let i = 0; i < props.photos.length; i++) {
     const photo = props.photos[i];
     const phi = Math.acos(-1 + (2 * i) / props.photos.length);

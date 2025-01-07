@@ -3,6 +3,7 @@
 package ent
 
 import (
+	"blog/internal/ent/files"
 	"blog/internal/ent/filesextend"
 	"blog/internal/ent/predicate"
 	"context"
@@ -22,6 +23,7 @@ type FilesExtendQuery struct {
 	order      []filesextend.OrderOption
 	inters     []Interceptor
 	predicates []predicate.FilesExtend
+	withFiles  *FilesQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -56,6 +58,28 @@ func (feq *FilesExtendQuery) Unique(unique bool) *FilesExtendQuery {
 func (feq *FilesExtendQuery) Order(o ...filesextend.OrderOption) *FilesExtendQuery {
 	feq.order = append(feq.order, o...)
 	return feq
+}
+
+// QueryFiles chains the current query on the "files" edge.
+func (feq *FilesExtendQuery) QueryFiles() *FilesQuery {
+	query := (&FilesClient{config: feq.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := feq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := feq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(filesextend.Table, filesextend.FieldID, selector),
+			sqlgraph.To(files.Table, files.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, filesextend.FilesTable, filesextend.FilesColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(feq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
 }
 
 // First returns the first FilesExtend entity from the query.
@@ -250,10 +274,22 @@ func (feq *FilesExtendQuery) Clone() *FilesExtendQuery {
 		order:      append([]filesextend.OrderOption{}, feq.order...),
 		inters:     append([]Interceptor{}, feq.inters...),
 		predicates: append([]predicate.FilesExtend{}, feq.predicates...),
+		withFiles:  feq.withFiles.Clone(),
 		// clone intermediate query.
 		sql:  feq.sql.Clone(),
 		path: feq.path,
 	}
+}
+
+// WithFiles tells the query-builder to eager-load the nodes that are connected to
+// the "files" edge. The optional arguments are used to configure the query builder of the edge.
+func (feq *FilesExtendQuery) WithFiles(opts ...func(*FilesQuery)) *FilesExtendQuery {
+	query := (&FilesClient{config: feq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	feq.withFiles = query
+	return feq
 }
 
 // GroupBy is used to group vertices by one or more fields/columns.
@@ -332,8 +368,11 @@ func (feq *FilesExtendQuery) prepareQuery(ctx context.Context) error {
 
 func (feq *FilesExtendQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*FilesExtend, error) {
 	var (
-		nodes = []*FilesExtend{}
-		_spec = feq.querySpec()
+		nodes       = []*FilesExtend{}
+		_spec       = feq.querySpec()
+		loadedTypes = [1]bool{
+			feq.withFiles != nil,
+		}
 	)
 	_spec.ScanValues = func(columns []string) ([]any, error) {
 		return (*FilesExtend).scanValues(nil, columns)
@@ -341,6 +380,7 @@ func (feq *FilesExtendQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]
 	_spec.Assign = func(columns []string, values []any) error {
 		node := &FilesExtend{config: feq.config}
 		nodes = append(nodes, node)
+		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
 	for i := range hooks {
@@ -352,7 +392,43 @@ func (feq *FilesExtendQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+	if query := feq.withFiles; query != nil {
+		if err := feq.loadFiles(ctx, query, nodes, nil,
+			func(n *FilesExtend, e *Files) { n.Edges.Files = e }); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
+}
+
+func (feq *FilesExtendQuery) loadFiles(ctx context.Context, query *FilesQuery, nodes []*FilesExtend, init func(*FilesExtend), assign func(*FilesExtend, *Files)) error {
+	ids := make([]string, 0, len(nodes))
+	nodeids := make(map[string][]*FilesExtend)
+	for i := range nodes {
+		fk := nodes[i].FileID
+		if _, ok := nodeids[fk]; !ok {
+			ids = append(ids, fk)
+		}
+		nodeids[fk] = append(nodeids[fk], nodes[i])
+	}
+	if len(ids) == 0 {
+		return nil
+	}
+	query.Where(files.IDIn(ids...))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		nodes, ok := nodeids[n.ID]
+		if !ok {
+			return fmt.Errorf(`unexpected foreign-key "file_id" returned %v`, n.ID)
+		}
+		for i := range nodes {
+			assign(nodes[i], n)
+		}
+	}
+	return nil
 }
 
 func (feq *FilesExtendQuery) sqlCount(ctx context.Context) (int, error) {
@@ -379,6 +455,9 @@ func (feq *FilesExtendQuery) querySpec() *sqlgraph.QuerySpec {
 			if fields[i] != filesextend.FieldID {
 				_spec.Node.Columns = append(_spec.Node.Columns, fields[i])
 			}
+		}
+		if feq.withFiles != nil {
+			_spec.Node.AddColumnOnce(filesextend.FieldFileID)
 		}
 	}
 	if ps := feq.predicates; len(ps) > 0 {

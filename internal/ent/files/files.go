@@ -5,6 +5,7 @@ package files
 import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 )
 
 const (
@@ -32,8 +33,17 @@ const (
 	FieldName = "name"
 	// FieldPath holds the string denoting the path field in the database.
 	FieldPath = "path"
+	// EdgeExtends holds the string denoting the extends edge name in mutations.
+	EdgeExtends = "extends"
 	// Table holds the table name of the files in the database.
 	Table = "files"
+	// ExtendsTable is the table that holds the extends relation/edge.
+	ExtendsTable = "files_extend"
+	// ExtendsInverseTable is the table name for the FilesExtend entity.
+	// It exists in this package in order to avoid circular dependency with the "filesextend" package.
+	ExtendsInverseTable = "files_extend"
+	// ExtendsColumn is the table column denoting the extends relation/edge.
+	ExtendsColumn = "file_id"
 )
 
 // Columns holds all SQL columns for files fields.
@@ -148,4 +158,25 @@ func ByName(opts ...sql.OrderTermOption) OrderOption {
 // ByPath orders the results by the path field.
 func ByPath(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldPath, opts...).ToFunc()
+}
+
+// ByExtendsCount orders the results by extends count.
+func ByExtendsCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newExtendsStep(), opts...)
+	}
+}
+
+// ByExtends orders the results by extends terms.
+func ByExtends(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newExtendsStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+func newExtendsStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(ExtendsInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, ExtendsTable, ExtendsColumn),
+	)
 }

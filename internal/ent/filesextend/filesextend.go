@@ -5,6 +5,7 @@ package filesextend
 import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 )
 
 const (
@@ -34,8 +35,17 @@ const (
 	FieldFromID = "from_id"
 	// FieldIsHidden holds the string denoting the is_hidden field in the database.
 	FieldIsHidden = "is_hidden"
+	// EdgeFiles holds the string denoting the files edge name in mutations.
+	EdgeFiles = "files"
 	// Table holds the table name of the filesextend in the database.
 	Table = "files_extend"
+	// FilesTable is the table that holds the files relation/edge.
+	FilesTable = "files_extend"
+	// FilesInverseTable is the table name for the Files entity.
+	// It exists in this package in order to avoid circular dependency with the "files" package.
+	FilesInverseTable = "files"
+	// FilesColumn is the table column denoting the files relation/edge.
+	FilesColumn = "file_id"
 )
 
 // Columns holds all SQL columns for filesextend fields.
@@ -85,8 +95,6 @@ var (
 	DefaultDeletedAt int64
 	// DefaultDeletedBy holds the default value on creation for the "deleted_by" field.
 	DefaultDeletedBy int64
-	// DefaultFileID holds the default value on creation for the "file_id" field.
-	DefaultFileID string
 	// DefaultUserID holds the default value on creation for the "user_id" field.
 	DefaultUserID int
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
@@ -154,4 +162,18 @@ func ByFromID(opts ...sql.OrderTermOption) OrderOption {
 // ByIsHidden orders the results by the is_hidden field.
 func ByIsHidden(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldIsHidden, opts...).ToFunc()
+}
+
+// ByFilesField orders the results by files field.
+func ByFilesField(field string, opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newFilesStep(), sql.OrderByField(field, opts...))
+	}
+}
+func newFilesStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(FilesInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2O, true, FilesTable, FilesColumn),
+	)
 }

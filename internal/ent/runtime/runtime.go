@@ -305,10 +305,6 @@ func init() {
 	filesextendDescDeletedBy := filesextendMixinFields1[1].Descriptor()
 	// filesextend.DefaultDeletedBy holds the default value on creation for the deleted_by field.
 	filesextend.DefaultDeletedBy = filesextendDescDeletedBy.Default.(int64)
-	// filesextendDescFileID is the schema descriptor for file_id field.
-	filesextendDescFileID := filesextendFields[1].Descriptor()
-	// filesextend.DefaultFileID holds the default value on creation for the file_id field.
-	filesextend.DefaultFileID = filesextendDescFileID.Default.(string)
 	// filesextendDescUserID is the schema descriptor for user_id field.
 	filesextendDescUserID := filesextendFields[2].Descriptor()
 	// filesextend.DefaultUserID holds the default value on creation for the user_id field.

@@ -4,6 +4,7 @@ package ent
 
 import (
 	"blog/internal/ent/files"
+	"blog/internal/ent/filesextend"
 	"context"
 	"errors"
 	"fmt"
@@ -166,6 +167,21 @@ func (fc *FilesCreate) SetNillablePath(s *string) *FilesCreate {
 func (fc *FilesCreate) SetID(s string) *FilesCreate {
 	fc.mutation.SetID(s)
 	return fc
+}
+
+// AddExtendIDs adds the "extends" edge to the FilesExtend entity by IDs.
+func (fc *FilesCreate) AddExtendIDs(ids ...int) *FilesCreate {
+	fc.mutation.AddExtendIDs(ids...)
+	return fc
+}
+
+// AddExtends adds the "extends" edges to the FilesExtend entity.
+func (fc *FilesCreate) AddExtends(f ...*FilesExtend) *FilesCreate {
+	ids := make([]int, len(f))
+	for i := range f {
+		ids[i] = f[i].ID
+	}
+	return fc.AddExtendIDs(ids...)
 }
 
 // Mutation returns the FilesMutation object of the builder.
@@ -355,6 +371,22 @@ func (fc *FilesCreate) createSpec() (*Files, *sqlgraph.CreateSpec) {
 	if value, ok := fc.mutation.Path(); ok {
 		_spec.SetField(files.FieldPath, field.TypeString, value)
 		_node.Path = value
+	}
+	if nodes := fc.mutation.ExtendsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   files.ExtendsTable,
+			Columns: []string{files.ExtendsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(filesextend.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec
 }

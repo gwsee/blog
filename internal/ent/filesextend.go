@@ -3,6 +3,7 @@
 package ent
 
 import (
+	"blog/internal/ent/files"
 	"blog/internal/ent/filesextend"
 	"fmt"
 	"strings"
@@ -38,8 +39,31 @@ type FilesExtend struct {
 	// 文件来源表的ID
 	FromID int `json:"from_id,omitempty"`
 	// 是否隐藏
-	IsHidden     bool `json:"is_hidden,omitempty"`
+	IsHidden bool `json:"is_hidden,omitempty"`
+	// Edges holds the relations/edges for other nodes in the graph.
+	// The values are being populated by the FilesExtendQuery when eager-loading is set.
+	Edges        FilesExtendEdges `json:"edges"`
 	selectValues sql.SelectValues
+}
+
+// FilesExtendEdges holds the relations/edges for other nodes in the graph.
+type FilesExtendEdges struct {
+	// Files holds the value of the files edge.
+	Files *Files `json:"files,omitempty"`
+	// loadedTypes holds the information for reporting if a
+	// type was loaded (or requested) in eager-loading or not.
+	loadedTypes [1]bool
+}
+
+// FilesOrErr returns the Files value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e FilesExtendEdges) FilesOrErr() (*Files, error) {
+	if e.Files != nil {
+		return e.Files, nil
+	} else if e.loadedTypes[0] {
+		return nil, &NotFoundError{label: files.Label}
+	}
+	return nil, &NotLoadedError{edge: "files"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -151,6 +175,11 @@ func (fe *FilesExtend) assignValues(columns []string, values []any) error {
 // This includes values selected through modifiers, order, etc.
 func (fe *FilesExtend) Value(name string) (ent.Value, error) {
 	return fe.selectValues.Get(name)
+}
+
+// QueryFiles queries the "files" edge of the FilesExtend entity.
+func (fe *FilesExtend) QueryFiles() *FilesQuery {
+	return NewFilesExtendClient(fe.config).QueryFiles(fe)
 }
 
 // Update returns a builder for updating this FilesExtend.

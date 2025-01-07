@@ -3,6 +3,7 @@
 package ent
 
 import (
+	"blog/internal/ent/files"
 	"blog/internal/ent/filesextend"
 	"blog/internal/ent/predicate"
 	"context"
@@ -117,6 +118,12 @@ func (feu *FilesExtendUpdate) SetNillableFileID(s *string) *FilesExtendUpdate {
 	return feu
 }
 
+// ClearFileID clears the value of the "file_id" field.
+func (feu *FilesExtendUpdate) ClearFileID() *FilesExtendUpdate {
+	feu.mutation.ClearFileID()
+	return feu
+}
+
 // SetUserID sets the "user_id" field.
 func (feu *FilesExtendUpdate) SetUserID(i int) *FilesExtendUpdate {
 	feu.mutation.ResetUserID()
@@ -187,9 +194,34 @@ func (feu *FilesExtendUpdate) SetNillableIsHidden(b *bool) *FilesExtendUpdate {
 	return feu
 }
 
+// SetFilesID sets the "files" edge to the Files entity by ID.
+func (feu *FilesExtendUpdate) SetFilesID(id string) *FilesExtendUpdate {
+	feu.mutation.SetFilesID(id)
+	return feu
+}
+
+// SetNillableFilesID sets the "files" edge to the Files entity by ID if the given value is not nil.
+func (feu *FilesExtendUpdate) SetNillableFilesID(id *string) *FilesExtendUpdate {
+	if id != nil {
+		feu = feu.SetFilesID(*id)
+	}
+	return feu
+}
+
+// SetFiles sets the "files" edge to the Files entity.
+func (feu *FilesExtendUpdate) SetFiles(f *Files) *FilesExtendUpdate {
+	return feu.SetFilesID(f.ID)
+}
+
 // Mutation returns the FilesExtendMutation object of the builder.
 func (feu *FilesExtendUpdate) Mutation() *FilesExtendMutation {
 	return feu.mutation
+}
+
+// ClearFiles clears the "files" edge to the Files entity.
+func (feu *FilesExtendUpdate) ClearFiles() *FilesExtendUpdate {
+	feu.mutation.ClearFiles()
+	return feu
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -267,9 +299,6 @@ func (feu *FilesExtendUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := feu.mutation.AddedDeletedBy(); ok {
 		_spec.AddField(filesextend.FieldDeletedBy, field.TypeInt64, value)
 	}
-	if value, ok := feu.mutation.FileID(); ok {
-		_spec.SetField(filesextend.FieldFileID, field.TypeString, value)
-	}
 	if value, ok := feu.mutation.UserID(); ok {
 		_spec.SetField(filesextend.FieldUserID, field.TypeInt, value)
 	}
@@ -287,6 +316,35 @@ func (feu *FilesExtendUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := feu.mutation.IsHidden(); ok {
 		_spec.SetField(filesextend.FieldIsHidden, field.TypeBool, value)
+	}
+	if feu.mutation.FilesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   filesextend.FilesTable,
+			Columns: []string{filesextend.FilesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(files.FieldID, field.TypeString),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := feu.mutation.FilesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   filesextend.FilesTable,
+			Columns: []string{filesextend.FilesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(files.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, feu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -398,6 +456,12 @@ func (feuo *FilesExtendUpdateOne) SetNillableFileID(s *string) *FilesExtendUpdat
 	return feuo
 }
 
+// ClearFileID clears the value of the "file_id" field.
+func (feuo *FilesExtendUpdateOne) ClearFileID() *FilesExtendUpdateOne {
+	feuo.mutation.ClearFileID()
+	return feuo
+}
+
 // SetUserID sets the "user_id" field.
 func (feuo *FilesExtendUpdateOne) SetUserID(i int) *FilesExtendUpdateOne {
 	feuo.mutation.ResetUserID()
@@ -468,9 +532,34 @@ func (feuo *FilesExtendUpdateOne) SetNillableIsHidden(b *bool) *FilesExtendUpdat
 	return feuo
 }
 
+// SetFilesID sets the "files" edge to the Files entity by ID.
+func (feuo *FilesExtendUpdateOne) SetFilesID(id string) *FilesExtendUpdateOne {
+	feuo.mutation.SetFilesID(id)
+	return feuo
+}
+
+// SetNillableFilesID sets the "files" edge to the Files entity by ID if the given value is not nil.
+func (feuo *FilesExtendUpdateOne) SetNillableFilesID(id *string) *FilesExtendUpdateOne {
+	if id != nil {
+		feuo = feuo.SetFilesID(*id)
+	}
+	return feuo
+}
+
+// SetFiles sets the "files" edge to the Files entity.
+func (feuo *FilesExtendUpdateOne) SetFiles(f *Files) *FilesExtendUpdateOne {
+	return feuo.SetFilesID(f.ID)
+}
+
 // Mutation returns the FilesExtendMutation object of the builder.
 func (feuo *FilesExtendUpdateOne) Mutation() *FilesExtendMutation {
 	return feuo.mutation
+}
+
+// ClearFiles clears the "files" edge to the Files entity.
+func (feuo *FilesExtendUpdateOne) ClearFiles() *FilesExtendUpdateOne {
+	feuo.mutation.ClearFiles()
+	return feuo
 }
 
 // Where appends a list predicates to the FilesExtendUpdate builder.
@@ -578,9 +667,6 @@ func (feuo *FilesExtendUpdateOne) sqlSave(ctx context.Context) (_node *FilesExte
 	if value, ok := feuo.mutation.AddedDeletedBy(); ok {
 		_spec.AddField(filesextend.FieldDeletedBy, field.TypeInt64, value)
 	}
-	if value, ok := feuo.mutation.FileID(); ok {
-		_spec.SetField(filesextend.FieldFileID, field.TypeString, value)
-	}
 	if value, ok := feuo.mutation.UserID(); ok {
 		_spec.SetField(filesextend.FieldUserID, field.TypeInt, value)
 	}
@@ -598,6 +684,35 @@ func (feuo *FilesExtendUpdateOne) sqlSave(ctx context.Context) (_node *FilesExte
 	}
 	if value, ok := feuo.mutation.IsHidden(); ok {
 		_spec.SetField(filesextend.FieldIsHidden, field.TypeBool, value)
+	}
+	if feuo.mutation.FilesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   filesextend.FilesTable,
+			Columns: []string{filesextend.FilesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(files.FieldID, field.TypeString),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := feuo.mutation.FilesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   filesextend.FilesTable,
+			Columns: []string{filesextend.FilesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(files.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	_node = &FilesExtend{config: feuo.config}
 	_spec.Assign = _node.assignValues

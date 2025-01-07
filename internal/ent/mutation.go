@@ -4520,30 +4520,33 @@ func (m *BlogsContentMutation) ResetEdge(name string) error {
 // FilesMutation represents an operation that mutates the Files nodes in the graph.
 type FilesMutation struct {
 	config
-	op            Op
-	typ           string
-	id            *string
-	created_at    *int64
-	addcreated_at *int64
-	created_by    *int64
-	addcreated_by *int64
-	updated_at    *int64
-	addupdated_at *int64
-	updated_by    *int64
-	addupdated_by *int64
-	deleted_at    *int64
-	adddeleted_at *int64
-	deleted_by    *int64
-	adddeleted_by *int64
-	_type         *string
-	size          *int64
-	addsize       *int64
-	name          *string
-	_path         *string
-	clearedFields map[string]struct{}
-	done          bool
-	oldValue      func(context.Context) (*Files, error)
-	predicates    []predicate.Files
+	op             Op
+	typ            string
+	id             *string
+	created_at     *int64
+	addcreated_at  *int64
+	created_by     *int64
+	addcreated_by  *int64
+	updated_at     *int64
+	addupdated_at  *int64
+	updated_by     *int64
+	addupdated_by  *int64
+	deleted_at     *int64
+	adddeleted_at  *int64
+	deleted_by     *int64
+	adddeleted_by  *int64
+	_type          *string
+	size           *int64
+	addsize        *int64
+	name           *string
+	_path          *string
+	clearedFields  map[string]struct{}
+	extends        map[int]struct{}
+	removedextends map[int]struct{}
+	clearedextends bool
+	done           bool
+	oldValue       func(context.Context) (*Files, error)
+	predicates     []predicate.Files
 }
 
 var _ ent.Mutation = (*FilesMutation)(nil)
@@ -5150,6 +5153,60 @@ func (m *FilesMutation) ResetPath() {
 	m._path = nil
 }
 
+// AddExtendIDs adds the "extends" edge to the FilesExtend entity by ids.
+func (m *FilesMutation) AddExtendIDs(ids ...int) {
+	if m.extends == nil {
+		m.extends = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.extends[ids[i]] = struct{}{}
+	}
+}
+
+// ClearExtends clears the "extends" edge to the FilesExtend entity.
+func (m *FilesMutation) ClearExtends() {
+	m.clearedextends = true
+}
+
+// ExtendsCleared reports if the "extends" edge to the FilesExtend entity was cleared.
+func (m *FilesMutation) ExtendsCleared() bool {
+	return m.clearedextends
+}
+
+// RemoveExtendIDs removes the "extends" edge to the FilesExtend entity by IDs.
+func (m *FilesMutation) RemoveExtendIDs(ids ...int) {
+	if m.removedextends == nil {
+		m.removedextends = make(map[int]struct{})
+	}
+	for i := range ids {
+		delete(m.extends, ids[i])
+		m.removedextends[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedExtends returns the removed IDs of the "extends" edge to the FilesExtend entity.
+func (m *FilesMutation) RemovedExtendsIDs() (ids []int) {
+	for id := range m.removedextends {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ExtendsIDs returns the "extends" edge IDs in the mutation.
+func (m *FilesMutation) ExtendsIDs() (ids []int) {
+	for id := range m.extends {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetExtends resets all changes to the "extends" edge.
+func (m *FilesMutation) ResetExtends() {
+	m.extends = nil
+	m.clearedextends = false
+	m.removedextends = nil
+}
+
 // Where appends a list predicates to the FilesMutation builder.
 func (m *FilesMutation) Where(ps ...predicate.Files) {
 	m.predicates = append(m.predicates, ps...)
@@ -5523,49 +5580,85 @@ func (m *FilesMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *FilesMutation) AddedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
+	if m.extends != nil {
+		edges = append(edges, files.EdgeExtends)
+	}
 	return edges
 }
 
 // AddedIDs returns all IDs (to other nodes) that were added for the given edge
 // name in this mutation.
 func (m *FilesMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case files.EdgeExtends:
+		ids := make([]ent.Value, 0, len(m.extends))
+		for id := range m.extends {
+			ids = append(ids, id)
+		}
+		return ids
+	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *FilesMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
+	if m.removedextends != nil {
+		edges = append(edges, files.EdgeExtends)
+	}
 	return edges
 }
 
 // RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
 // the given name in this mutation.
 func (m *FilesMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	case files.EdgeExtends:
+		ids := make([]ent.Value, 0, len(m.removedextends))
+		for id := range m.removedextends {
+			ids = append(ids, id)
+		}
+		return ids
+	}
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *FilesMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
+	if m.clearedextends {
+		edges = append(edges, files.EdgeExtends)
+	}
 	return edges
 }
 
 // EdgeCleared returns a boolean which indicates if the edge with the given name
 // was cleared in this mutation.
 func (m *FilesMutation) EdgeCleared(name string) bool {
+	switch name {
+	case files.EdgeExtends:
+		return m.clearedextends
+	}
 	return false
 }
 
 // ClearEdge clears the value of the edge with the given name. It returns an error
 // if that edge is not defined in the schema.
 func (m *FilesMutation) ClearEdge(name string) error {
+	switch name {
+	}
 	return fmt.Errorf("unknown Files unique edge %s", name)
 }
 
 // ResetEdge resets all changes to the edge with the given name in this mutation.
 // It returns an error if the edge is not defined in the schema.
 func (m *FilesMutation) ResetEdge(name string) error {
+	switch name {
+	case files.EdgeExtends:
+		m.ResetExtends()
+		return nil
+	}
 	return fmt.Errorf("unknown Files edge %s", name)
 }
 
@@ -5587,7 +5680,6 @@ type FilesExtendMutation struct {
 	adddeleted_at *int64
 	deleted_by    *int64
 	adddeleted_by *int64
-	file_id       *string
 	user_id       *int
 	adduser_id    *int
 	from          *string
@@ -5595,6 +5687,8 @@ type FilesExtendMutation struct {
 	addfrom_id    *int
 	is_hidden     *bool
 	clearedFields map[string]struct{}
+	files         *string
+	clearedfiles  bool
 	done          bool
 	oldValue      func(context.Context) (*FilesExtend, error)
 	predicates    []predicate.FilesExtend
@@ -6042,12 +6136,12 @@ func (m *FilesExtendMutation) ResetDeletedBy() {
 
 // SetFileID sets the "file_id" field.
 func (m *FilesExtendMutation) SetFileID(s string) {
-	m.file_id = &s
+	m.files = &s
 }
 
 // FileID returns the value of the "file_id" field in the mutation.
 func (m *FilesExtendMutation) FileID() (r string, exists bool) {
-	v := m.file_id
+	v := m.files
 	if v == nil {
 		return
 	}
@@ -6071,9 +6165,22 @@ func (m *FilesExtendMutation) OldFileID(ctx context.Context) (v string, err erro
 	return oldValue.FileID, nil
 }
 
+// ClearFileID clears the value of the "file_id" field.
+func (m *FilesExtendMutation) ClearFileID() {
+	m.files = nil
+	m.clearedFields[filesextend.FieldFileID] = struct{}{}
+}
+
+// FileIDCleared returns if the "file_id" field was cleared in this mutation.
+func (m *FilesExtendMutation) FileIDCleared() bool {
+	_, ok := m.clearedFields[filesextend.FieldFileID]
+	return ok
+}
+
 // ResetFileID resets all changes to the "file_id" field.
 func (m *FilesExtendMutation) ResetFileID() {
-	m.file_id = nil
+	m.files = nil
+	delete(m.clearedFields, filesextend.FieldFileID)
 }
 
 // SetUserID sets the "user_id" field.
@@ -6260,6 +6367,46 @@ func (m *FilesExtendMutation) ResetIsHidden() {
 	m.is_hidden = nil
 }
 
+// SetFilesID sets the "files" edge to the Files entity by id.
+func (m *FilesExtendMutation) SetFilesID(id string) {
+	m.files = &id
+}
+
+// ClearFiles clears the "files" edge to the Files entity.
+func (m *FilesExtendMutation) ClearFiles() {
+	m.clearedfiles = true
+	m.clearedFields[filesextend.FieldFileID] = struct{}{}
+}
+
+// FilesCleared reports if the "files" edge to the Files entity was cleared.
+func (m *FilesExtendMutation) FilesCleared() bool {
+	return m.FileIDCleared() || m.clearedfiles
+}
+
+// FilesID returns the "files" edge ID in the mutation.
+func (m *FilesExtendMutation) FilesID() (id string, exists bool) {
+	if m.files != nil {
+		return *m.files, true
+	}
+	return
+}
+
+// FilesIDs returns the "files" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// FilesID instead. It exists only for internal usage by the builders.
+func (m *FilesExtendMutation) FilesIDs() (ids []string) {
+	if id := m.files; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetFiles resets all changes to the "files" edge.
+func (m *FilesExtendMutation) ResetFiles() {
+	m.files = nil
+	m.clearedfiles = false
+}
+
 // Where appends a list predicates to the FilesExtendMutation builder.
 func (m *FilesExtendMutation) Where(ps ...predicate.FilesExtend) {
 	m.predicates = append(m.predicates, ps...)
@@ -6313,7 +6460,7 @@ func (m *FilesExtendMutation) Fields() []string {
 	if m.deleted_by != nil {
 		fields = append(fields, filesextend.FieldDeletedBy)
 	}
-	if m.file_id != nil {
+	if m.files != nil {
 		fields = append(fields, filesextend.FieldFileID)
 	}
 	if m.user_id != nil {
@@ -6603,7 +6750,11 @@ func (m *FilesExtendMutation) AddField(name string, value ent.Value) error {
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
 func (m *FilesExtendMutation) ClearedFields() []string {
-	return nil
+	var fields []string
+	if m.FieldCleared(filesextend.FieldFileID) {
+		fields = append(fields, filesextend.FieldFileID)
+	}
+	return fields
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
@@ -6616,6 +6767,11 @@ func (m *FilesExtendMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *FilesExtendMutation) ClearField(name string) error {
+	switch name {
+	case filesextend.FieldFileID:
+		m.ClearFileID()
+		return nil
+	}
 	return fmt.Errorf("unknown FilesExtend nullable field %s", name)
 }
 
@@ -6662,19 +6818,28 @@ func (m *FilesExtendMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *FilesExtendMutation) AddedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
+	if m.files != nil {
+		edges = append(edges, filesextend.EdgeFiles)
+	}
 	return edges
 }
 
 // AddedIDs returns all IDs (to other nodes) that were added for the given edge
 // name in this mutation.
 func (m *FilesExtendMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case filesextend.EdgeFiles:
+		if id := m.files; id != nil {
+			return []ent.Value{*id}
+		}
+	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *FilesExtendMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
 	return edges
 }
 
@@ -6686,25 +6851,42 @@ func (m *FilesExtendMutation) RemovedIDs(name string) []ent.Value {
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *FilesExtendMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
+	if m.clearedfiles {
+		edges = append(edges, filesextend.EdgeFiles)
+	}
 	return edges
 }
 
 // EdgeCleared returns a boolean which indicates if the edge with the given name
 // was cleared in this mutation.
 func (m *FilesExtendMutation) EdgeCleared(name string) bool {
+	switch name {
+	case filesextend.EdgeFiles:
+		return m.clearedfiles
+	}
 	return false
 }
 
 // ClearEdge clears the value of the edge with the given name. It returns an error
 // if that edge is not defined in the schema.
 func (m *FilesExtendMutation) ClearEdge(name string) error {
+	switch name {
+	case filesextend.EdgeFiles:
+		m.ClearFiles()
+		return nil
+	}
 	return fmt.Errorf("unknown FilesExtend unique edge %s", name)
 }
 
 // ResetEdge resets all changes to the edge with the given name in this mutation.
 // It returns an error if the edge is not defined in the schema.
 func (m *FilesExtendMutation) ResetEdge(name string) error {
+	switch name {
+	case filesextend.EdgeFiles:
+		m.ResetFiles()
+		return nil
+	}
 	return fmt.Errorf("unknown FilesExtend edge %s", name)
 }
 

@@ -6,6 +6,7 @@ import (
 	"blog/internal/ent/predicate"
 
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 )
 
 // ID filters vertices based on their ID field.
@@ -586,6 +587,29 @@ func PathEqualFold(v string) predicate.Files {
 // PathContainsFold applies the ContainsFold predicate on the "path" field.
 func PathContainsFold(v string) predicate.Files {
 	return predicate.Files(sql.FieldContainsFold(FieldPath, v))
+}
+
+// HasExtends applies the HasEdge predicate on the "extends" edge.
+func HasExtends() predicate.Files {
+	return predicate.Files(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, ExtendsTable, ExtendsColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasExtendsWith applies the HasEdge predicate on the "extends" edge with a given conditions (other predicates).
+func HasExtendsWith(preds ...predicate.FilesExtend) predicate.Files {
+	return predicate.Files(func(s *sql.Selector) {
+		step := newExtendsStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
 }
 
 // And groups predicates with the AND operator between them.

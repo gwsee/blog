@@ -6,6 +6,7 @@ import (
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema"
+	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 )
 
@@ -50,6 +51,13 @@ func (Files) Mixin() []ent.Mixin {
 		mixin.SoftDelete{},
 	}
 }
+
+func (Files) Edges() []ent.Edge {
+	return []ent.Edge{
+		edge.To("extends", FilesExtend.Type),
+	}
+}
+
 func (Files) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entsql.Annotation{Table: "files"},

@@ -6,6 +6,7 @@ import (
 	"blog/internal/ent/predicate"
 
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 )
 
 // ID filters vertices based on their ID field.
@@ -403,6 +404,16 @@ func FileIDHasSuffix(v string) predicate.FilesExtend {
 	return predicate.FilesExtend(sql.FieldHasSuffix(FieldFileID, v))
 }
 
+// FileIDIsNil applies the IsNil predicate on the "file_id" field.
+func FileIDIsNil() predicate.FilesExtend {
+	return predicate.FilesExtend(sql.FieldIsNull(FieldFileID))
+}
+
+// FileIDNotNil applies the NotNil predicate on the "file_id" field.
+func FileIDNotNil() predicate.FilesExtend {
+	return predicate.FilesExtend(sql.FieldNotNull(FieldFileID))
+}
+
 // FileIDEqualFold applies the EqualFold predicate on the "file_id" field.
 func FileIDEqualFold(v string) predicate.FilesExtend {
 	return predicate.FilesExtend(sql.FieldEqualFold(FieldFileID, v))
@@ -566,6 +577,29 @@ func IsHiddenEQ(v bool) predicate.FilesExtend {
 // IsHiddenNEQ applies the NEQ predicate on the "is_hidden" field.
 func IsHiddenNEQ(v bool) predicate.FilesExtend {
 	return predicate.FilesExtend(sql.FieldNEQ(FieldIsHidden, v))
+}
+
+// HasFiles applies the HasEdge predicate on the "files" edge.
+func HasFiles() predicate.FilesExtend {
+	return predicate.FilesExtend(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, FilesTable, FilesColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasFilesWith applies the HasEdge predicate on the "files" edge with a given conditions (other predicates).
+func HasFilesWith(preds ...predicate.Files) predicate.FilesExtend {
+	return predicate.FilesExtend(func(s *sql.Selector) {
+		step := newFilesStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
 }
 
 // And groups predicates with the AND operator between them.

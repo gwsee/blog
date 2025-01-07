@@ -36,8 +36,29 @@ type Files struct {
 	// 文件名称
 	Name string `json:"name,omitempty"`
 	// 文件真实存放地址
-	Path         string `json:"path,omitempty"`
+	Path string `json:"path,omitempty"`
+	// Edges holds the relations/edges for other nodes in the graph.
+	// The values are being populated by the FilesQuery when eager-loading is set.
+	Edges        FilesEdges `json:"edges"`
 	selectValues sql.SelectValues
+}
+
+// FilesEdges holds the relations/edges for other nodes in the graph.
+type FilesEdges struct {
+	// Extends holds the value of the extends edge.
+	Extends []*FilesExtend `json:"extends,omitempty"`
+	// loadedTypes holds the information for reporting if a
+	// type was loaded (or requested) in eager-loading or not.
+	loadedTypes [1]bool
+}
+
+// ExtendsOrErr returns the Extends value or an error if the edge
+// was not loaded in eager-loading.
+func (e FilesEdges) ExtendsOrErr() ([]*FilesExtend, error) {
+	if e.loadedTypes[0] {
+		return e.Extends, nil
+	}
+	return nil, &NotLoadedError{edge: "extends"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -141,6 +162,11 @@ func (f *Files) assignValues(columns []string, values []any) error {
 // This includes values selected through modifiers, order, etc.
 func (f *Files) Value(name string) (ent.Value, error) {
 	return f.selectValues.Get(name)
+}
+
+// QueryExtends queries the "extends" edge of the Files entity.
+func (f *Files) QueryExtends() *FilesExtendQuery {
+	return NewFilesClient(f.config).QueryExtends(f)
 }
 
 // Update returns a builder for updating this Files.

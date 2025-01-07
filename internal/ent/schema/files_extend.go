@@ -6,6 +6,7 @@ import (
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema"
+	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
 )
@@ -17,7 +18,7 @@ type FilesExtend struct {
 func (FilesExtend) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int("id").Unique().Positive().Comment("当前账户关联的文件的ID"),
-		field.String("file_id").Default("").Comment("文件的ID").
+		field.String("file_id").Optional().Comment("文件的ID").
 			SchemaType(map[string]string{
 				dialect.MySQL: "varchar(200)",
 			}),
@@ -32,6 +33,12 @@ func (FilesExtend) Indexes() []ent.Index {
 		index.Fields("file_id", "user_id", "from").Unique(),
 	}
 }
+func (FilesExtend) Edges() []ent.Edge {
+	return []ent.Edge{
+		edge.From("files", Files.Type).Field("file_id").Ref("extends").Unique(),
+	}
+}
+
 func (FilesExtend) Mixin() []ent.Mixin {
 	return []ent.Mixin{
 		mixin.Time{},

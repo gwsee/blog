@@ -1,16 +1,15 @@
 package data
 
 import (
+	"blog/app/user/internal/biz"
 	"blog/internal/ent"
+	"blog/internal/ent/filesextend"
 	"blog/internal/ent/userexperience"
 	"blog/internal/ent/userproject"
 	"context"
 	sql2 "entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqljson"
 	"errors"
-
-	"blog/app/user/internal/biz"
-
 	"github.com/go-kratos/kratos/v2/log"
 )
 
@@ -310,6 +309,53 @@ func (o *userRepo) ListExperience(ctx context.Context, data *biz.ExperienceQuery
 	}
 	return
 }
+
+const sortNum = 30
+
 func (o *userRepo) Photos(ctx context.Context, data *biz.PhotosQuery) ([]string, error) {
-	return nil, nil
+	pageSort := sortNum
+	if data.PageSize > sortNum {
+		pageSort = sortNum
+	} else {
+		pageSort = int(data.PageSize)
+	}
+	//sql2.Select("").From(sql2.Table("")).Where(sql2.And()).OrderBy().Limit(pageSort)
+	var images []string
+	files, err := o.data.db.FilesExtend.Query().Where(filesextend.Or(filesextend.UserIDEQ(int(data.UserId))),
+		filesextend.Or(filesextend.IsHiddenEQ(false))).
+		Aggregate(ent.Max(filesextend.FieldUpdatedAt)).
+		Select(filesextend.FieldFileID, filesextend.FieldUpdatedAt).
+		Unique(true).
+		Order(ent.Desc(filesextend.FieldUpdatedAt)).
+		Limit(pageSort).All(ctx) // 按最大更新时间聚合
+	if err != nil {
+		return nil, err
+	}
+	for _, file := range files {
+		images = append(images, file.FileID)
+	}
+	if len(images) < int(data.PageSize) {
+		return images, nil
+	}
+	if len(images) >= pageSort {
+		return images, nil
+	}
+	randNum := int(data.PageSize) - len(images)
+	if randNum <= 0 {
+		return images, nil
+	}
+	files, err = o.data.db.FilesExtend.Query().Where(filesextend.Or(filesextend.UserIDEQ(int(data.UserId))),
+		filesextend.Or(filesextend.IsHiddenEQ(false))).
+		Aggregate(ent.Max(filesextend.FieldUpdatedAt)).
+		Select(filesextend.FieldFileID, filesextend.FieldUpdatedAt).
+		Unique(true).
+		Order(ent.Desc("rand()")).
+		Limit(pageSort).All(ctx) // 按最大更新时间聚合
+	if err != nil {
+		return nil, err
+	}
+	for _, file := range files {
+		images = append(images, file.FileID)
+	}
+	return images, nil
 }

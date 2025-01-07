@@ -949,6 +949,22 @@ func (c *FilesClient) GetX(ctx context.Context, id string) *Files {
 	return obj
 }
 
+// QueryExtends queries the extends edge of a Files.
+func (c *FilesClient) QueryExtends(f *Files) *FilesExtendQuery {
+	query := (&FilesExtendClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := f.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(files.Table, files.FieldID, id),
+			sqlgraph.To(filesextend.Table, filesextend.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, files.ExtendsTable, files.ExtendsColumn),
+		)
+		fromV = sqlgraph.Neighbors(f.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *FilesClient) Hooks() []Hook {
 	hooks := c.hooks.Files
@@ -1081,6 +1097,22 @@ func (c *FilesExtendClient) GetX(ctx context.Context, id int) *FilesExtend {
 		panic(err)
 	}
 	return obj
+}
+
+// QueryFiles queries the files edge of a FilesExtend.
+func (c *FilesExtendClient) QueryFiles(fe *FilesExtend) *FilesQuery {
+	query := (&FilesClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := fe.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(filesextend.Table, filesextend.FieldID, id),
+			sqlgraph.To(files.Table, files.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, filesextend.FilesTable, filesextend.FilesColumn),
+		)
+		fromV = sqlgraph.Neighbors(fe.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
 }
 
 // Hooks returns the client hooks.

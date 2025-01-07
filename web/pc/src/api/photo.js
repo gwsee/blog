@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 // 列表
-export function blogList(data) {
+export function photosList(data) {
     return request({
-        url: '/v1/blogs/list',
+        url: '/v1/photos',
         method: 'post',
         data: data
     })

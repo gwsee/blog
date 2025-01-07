@@ -4,152 +4,23 @@
 
 <script setup>
 import PhotoSphere from './photosphere.vue'
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
+import {photosList} from "@/api/photo.js";
+import {filePrefix} from "@/api/tool.js";
 // Example photos array
-const photos = ref([
-  {   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },
-  {   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },{   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },{   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },{   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },{   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },{   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },{   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },{   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },{   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },{   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },{   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },{   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },{   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },{   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },{   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },{   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },{   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },{   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },{   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },{   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },{   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },{   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },{   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },{   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },{   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },{   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },{   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },{   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },{   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },{   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },{   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },{   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },{   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },{   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },{   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },{   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },{   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },{   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },{   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },{   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },{   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },{   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },{   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },{   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },{   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },{   url: '/src/assets/image/bg.jpg?height=300&width=300',
-    title: 'Photo 1',
-    description: 'Description for photo 1'
-  },
-])
+const photos = ref([])
+onMounted(()=>{
+  photosList({pageSize:66}).then(res=>{
+    if(res&&res.data){
+      let data = []
+      const images = res.data.images||[]
+      for(let i=0;i<images;i++){
+        data.push({url:filePrefix+images[i],title:"",description:""})
+      }
 
+      photos.value = data
+      console.log(photos)
+    }
+  })
+})
 </script>

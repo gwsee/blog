@@ -3,6 +3,7 @@
 package ent
 
 import (
+	"blog/internal/ent/files"
 	"blog/internal/ent/filesextend"
 	"context"
 	"errors"
@@ -157,6 +158,25 @@ func (fec *FilesExtendCreate) SetID(i int) *FilesExtendCreate {
 	return fec
 }
 
+// SetFilesID sets the "files" edge to the Files entity by ID.
+func (fec *FilesExtendCreate) SetFilesID(id string) *FilesExtendCreate {
+	fec.mutation.SetFilesID(id)
+	return fec
+}
+
+// SetNillableFilesID sets the "files" edge to the Files entity by ID if the given value is not nil.
+func (fec *FilesExtendCreate) SetNillableFilesID(id *string) *FilesExtendCreate {
+	if id != nil {
+		fec = fec.SetFilesID(*id)
+	}
+	return fec
+}
+
+// SetFiles sets the "files" edge to the Files entity.
+func (fec *FilesExtendCreate) SetFiles(f *Files) *FilesExtendCreate {
+	return fec.SetFilesID(f.ID)
+}
+
 // Mutation returns the FilesExtendMutation object of the builder.
 func (fec *FilesExtendCreate) Mutation() *FilesExtendMutation {
 	return fec.mutation
@@ -218,10 +238,6 @@ func (fec *FilesExtendCreate) defaults() error {
 		v := filesextend.DefaultDeletedBy
 		fec.mutation.SetDeletedBy(v)
 	}
-	if _, ok := fec.mutation.FileID(); !ok {
-		v := filesextend.DefaultFileID
-		fec.mutation.SetFileID(v)
-	}
 	if _, ok := fec.mutation.UserID(); !ok {
 		v := filesextend.DefaultUserID
 		fec.mutation.SetUserID(v)
@@ -248,9 +264,6 @@ func (fec *FilesExtendCreate) check() error {
 	}
 	if _, ok := fec.mutation.DeletedBy(); !ok {
 		return &ValidationError{Name: "deleted_by", err: errors.New(`ent: missing required field "FilesExtend.deleted_by"`)}
-	}
-	if _, ok := fec.mutation.FileID(); !ok {
-		return &ValidationError{Name: "file_id", err: errors.New(`ent: missing required field "FilesExtend.file_id"`)}
 	}
 	if _, ok := fec.mutation.UserID(); !ok {
 		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "FilesExtend.user_id"`)}
@@ -326,10 +339,6 @@ func (fec *FilesExtendCreate) createSpec() (*FilesExtend, *sqlgraph.CreateSpec) 
 		_spec.SetField(filesextend.FieldDeletedBy, field.TypeInt64, value)
 		_node.DeletedBy = value
 	}
-	if value, ok := fec.mutation.FileID(); ok {
-		_spec.SetField(filesextend.FieldFileID, field.TypeString, value)
-		_node.FileID = value
-	}
 	if value, ok := fec.mutation.UserID(); ok {
 		_spec.SetField(filesextend.FieldUserID, field.TypeInt, value)
 		_node.UserID = value
@@ -345,6 +354,23 @@ func (fec *FilesExtendCreate) createSpec() (*FilesExtend, *sqlgraph.CreateSpec) 
 	if value, ok := fec.mutation.IsHidden(); ok {
 		_spec.SetField(filesextend.FieldIsHidden, field.TypeBool, value)
 		_node.IsHidden = value
+	}
+	if nodes := fec.mutation.FilesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   filesextend.FilesTable,
+			Columns: []string{filesextend.FilesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(files.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_node.FileID = nodes[0]
+		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec
 }
@@ -479,6 +505,12 @@ func (u *FilesExtendUpsert) SetFileID(v string) *FilesExtendUpsert {
 // UpdateFileID sets the "file_id" field to the value that was provided on create.
 func (u *FilesExtendUpsert) UpdateFileID() *FilesExtendUpsert {
 	u.SetExcluded(filesextend.FieldFileID)
+	return u
+}
+
+// ClearFileID clears the value of the "file_id" field.
+func (u *FilesExtendUpsert) ClearFileID() *FilesExtendUpsert {
+	u.SetNull(filesextend.FieldFileID)
 	return u
 }
 
@@ -691,6 +723,13 @@ func (u *FilesExtendUpsertOne) SetFileID(v string) *FilesExtendUpsertOne {
 func (u *FilesExtendUpsertOne) UpdateFileID() *FilesExtendUpsertOne {
 	return u.Update(func(s *FilesExtendUpsert) {
 		s.UpdateFileID()
+	})
+}
+
+// ClearFileID clears the value of the "file_id" field.
+func (u *FilesExtendUpsertOne) ClearFileID() *FilesExtendUpsertOne {
+	return u.Update(func(s *FilesExtendUpsert) {
+		s.ClearFileID()
 	})
 }
 
@@ -1079,6 +1118,13 @@ func (u *FilesExtendUpsertBulk) SetFileID(v string) *FilesExtendUpsertBulk {
 func (u *FilesExtendUpsertBulk) UpdateFileID() *FilesExtendUpsertBulk {
 	return u.Update(func(s *FilesExtendUpsert) {
 		s.UpdateFileID()
+	})
+}
+
+// ClearFileID clears the value of the "file_id" field.
+func (u *FilesExtendUpsertBulk) ClearFileID() *FilesExtendUpsertBulk {
+	return u.Update(func(s *FilesExtendUpsert) {
+		s.ClearFileID()
 	})
 }
 

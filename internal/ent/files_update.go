@@ -4,6 +4,7 @@ package ent
 
 import (
 	"blog/internal/ent/files"
+	"blog/internal/ent/filesextend"
 	"blog/internal/ent/predicate"
 	"context"
 	"errors"
@@ -166,9 +167,45 @@ func (fu *FilesUpdate) SetNillablePath(s *string) *FilesUpdate {
 	return fu
 }
 
+// AddExtendIDs adds the "extends" edge to the FilesExtend entity by IDs.
+func (fu *FilesUpdate) AddExtendIDs(ids ...int) *FilesUpdate {
+	fu.mutation.AddExtendIDs(ids...)
+	return fu
+}
+
+// AddExtends adds the "extends" edges to the FilesExtend entity.
+func (fu *FilesUpdate) AddExtends(f ...*FilesExtend) *FilesUpdate {
+	ids := make([]int, len(f))
+	for i := range f {
+		ids[i] = f[i].ID
+	}
+	return fu.AddExtendIDs(ids...)
+}
+
 // Mutation returns the FilesMutation object of the builder.
 func (fu *FilesUpdate) Mutation() *FilesMutation {
 	return fu.mutation
+}
+
+// ClearExtends clears all "extends" edges to the FilesExtend entity.
+func (fu *FilesUpdate) ClearExtends() *FilesUpdate {
+	fu.mutation.ClearExtends()
+	return fu
+}
+
+// RemoveExtendIDs removes the "extends" edge to FilesExtend entities by IDs.
+func (fu *FilesUpdate) RemoveExtendIDs(ids ...int) *FilesUpdate {
+	fu.mutation.RemoveExtendIDs(ids...)
+	return fu
+}
+
+// RemoveExtends removes "extends" edges to FilesExtend entities.
+func (fu *FilesUpdate) RemoveExtends(f ...*FilesExtend) *FilesUpdate {
+	ids := make([]int, len(f))
+	for i := range f {
+		ids[i] = f[i].ID
+	}
+	return fu.RemoveExtendIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -260,6 +297,51 @@ func (fu *FilesUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := fu.mutation.Path(); ok {
 		_spec.SetField(files.FieldPath, field.TypeString, value)
+	}
+	if fu.mutation.ExtendsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   files.ExtendsTable,
+			Columns: []string{files.ExtendsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(filesextend.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := fu.mutation.RemovedExtendsIDs(); len(nodes) > 0 && !fu.mutation.ExtendsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   files.ExtendsTable,
+			Columns: []string{files.ExtendsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(filesextend.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := fu.mutation.ExtendsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   files.ExtendsTable,
+			Columns: []string{files.ExtendsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(filesextend.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, fu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -420,9 +502,45 @@ func (fuo *FilesUpdateOne) SetNillablePath(s *string) *FilesUpdateOne {
 	return fuo
 }
 
+// AddExtendIDs adds the "extends" edge to the FilesExtend entity by IDs.
+func (fuo *FilesUpdateOne) AddExtendIDs(ids ...int) *FilesUpdateOne {
+	fuo.mutation.AddExtendIDs(ids...)
+	return fuo
+}
+
+// AddExtends adds the "extends" edges to the FilesExtend entity.
+func (fuo *FilesUpdateOne) AddExtends(f ...*FilesExtend) *FilesUpdateOne {
+	ids := make([]int, len(f))
+	for i := range f {
+		ids[i] = f[i].ID
+	}
+	return fuo.AddExtendIDs(ids...)
+}
+
 // Mutation returns the FilesMutation object of the builder.
 func (fuo *FilesUpdateOne) Mutation() *FilesMutation {
 	return fuo.mutation
+}
+
+// ClearExtends clears all "extends" edges to the FilesExtend entity.
+func (fuo *FilesUpdateOne) ClearExtends() *FilesUpdateOne {
+	fuo.mutation.ClearExtends()
+	return fuo
+}
+
+// RemoveExtendIDs removes the "extends" edge to FilesExtend entities by IDs.
+func (fuo *FilesUpdateOne) RemoveExtendIDs(ids ...int) *FilesUpdateOne {
+	fuo.mutation.RemoveExtendIDs(ids...)
+	return fuo
+}
+
+// RemoveExtends removes "extends" edges to FilesExtend entities.
+func (fuo *FilesUpdateOne) RemoveExtends(f ...*FilesExtend) *FilesUpdateOne {
+	ids := make([]int, len(f))
+	for i := range f {
+		ids[i] = f[i].ID
+	}
+	return fuo.RemoveExtendIDs(ids...)
 }
 
 // Where appends a list predicates to the FilesUpdate builder.
@@ -544,6 +662,51 @@ func (fuo *FilesUpdateOne) sqlSave(ctx context.Context) (_node *Files, err error
 	}
 	if value, ok := fuo.mutation.Path(); ok {
 		_spec.SetField(files.FieldPath, field.TypeString, value)
+	}
+	if fuo.mutation.ExtendsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   files.ExtendsTable,
+			Columns: []string{files.ExtendsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(filesextend.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := fuo.mutation.RemovedExtendsIDs(); len(nodes) > 0 && !fuo.mutation.ExtendsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   files.ExtendsTable,
+			Columns: []string{files.ExtendsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(filesextend.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := fuo.mutation.ExtendsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   files.ExtendsTable,
+			Columns: []string{files.ExtendsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(filesextend.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	_node = &Files{config: fuo.config}
 	_spec.Assign = _node.assignValues
