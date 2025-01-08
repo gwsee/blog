@@ -119,7 +119,7 @@
             </template>
             <div class="text-center">
               <a-avatar
-                  :src="travel.account.avatar||avatar"
+                  :src="$fileFull(travel.account.avatar)||avatar"
                   :size="64"
                   class="mb-4 ring-4 ring-white shadow-lg" />
               <h3 class="text-lg font-semibold mb-2">{{ travel.account.nickname }}</h3>
@@ -221,6 +221,7 @@ import {
   BarChartOutlined,
   LeftCircleOutlined, RightCircleOutlined
 } from '@ant-design/icons-vue'
+import {fileFull} from "@/utils/util.js";
 
 const router = useRouter()
 const carouselRef = ref(null)

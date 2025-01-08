@@ -1,34 +1,76 @@
 <template>
-  <div class="relative w-full h-screen">
-    <canvas ref="canvas" class="w-full h-full"></canvas>
+  <div class="min-h-screen bg-black text-white p-8">
+    <div class="max-w-7xl mx-auto">
+      <div class="mb-12">
+        <h1 class="text-5xl md:text-7xl font-bold">Experience</h1>
+        <p class="text-xl text-gray-400 mt-4">Places I've worked and grown</p>
+      </div>
 
-    <!-- Loading Screen -->
-    <div v-if="!sceneReady" class="absolute inset-0 flex items-center justify-center bg-orange-500">
-      <div class="text-white text-2xl">Loading... {{ Math.round(loadingProgress) }}%</div>
-    </div>
+      <div class="space-y-24">
+        <div
+            v-for="(experience, index) in experiences"
+            :key="experience.id"
+            class="relative"
+            :class="index % 2 === 0 ? 'text-left' : 'text-right'"
+        >
+          <!-- Background number -->
+          <div
+              class="absolute -top-20 opacity-10 text-[12rem] font-bold"
+              :class="index % 2 === 0 ? '-left-8' : '-right-8'"
+          >
+            {{ experience.number }}
+          </div>
 
-    <!-- Navigation UI -->
-    <div v-show="sceneReady" class="absolute bottom-4 left-4 space-y-2">
-      <button
-          v-for="section in sections"
-          :key="section.id"
-          @click="navigateToSection(section.id)"
-          class="px-4 py-2 bg-white/90 rounded-full text-orange-500 hover:bg-white transition-colors"
-      >
-        {{ section.title }}
-      </button>
-    </div>
+          <!-- Content -->
+          <div class="relative z-10">
+            <div class="flex items-center justify-between mb-8">
+              <h2 class="text-4xl font-bold" :class="index % 2 === 1 ? 'order-2' : ''">
+                {{ experience.company }}
+              </h2>
+              <span class="text-gray-400">{{ experience.period }}</span>
+            </div>
 
-    <!-- Info Panel -->
-    <div
-        v-if="activeSection && sceneReady"
-        class="absolute top-4 right-4 w-80 bg-white/90 p-6 rounded-lg shadow-lg"
-    >
-      <h2 class="text-xl font-bold text-orange-500 mb-4">{{ activeSection.title }}</h2>
-      <div class="space-y-4">
-        <div v-for="(item, index) in activeSection.content" :key="index">
-          <h3 class="font-semibold">{{ item.title }}</h3>
-          <p class="text-sm text-gray-600">{{ item.description }}</p>
+            <div class="grid md:grid-cols-2 gap-8" :class="index % 2 === 1 ? 'md:text-right' : ''">
+              <div :class="index % 2 === 1 ? 'md:order-2' : ''">
+                <h3 class="text-2xl font-bold mb-4">{{ experience.role }}</h3>
+                <p class="text-gray-400 leading-relaxed mb-6">{{ experience.description }}</p>
+
+                <!-- Project Cards -->
+                <div class="grid grid-cols-2 gap-4 mt-6">
+                  <div
+                      v-for="project in experience.projects"
+                      :key="project.id"
+                      class="group relative bg-gray-800 rounded-lg overflow-hidden cursor-pointer"
+                  >
+                    <div class="aspect-square">
+                      <img
+                          :src="project.image"
+                          :alt="project.title"
+                          class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      />
+                      <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+                      <div class="absolute inset-0 p-4 flex flex-col justify-end">
+                        <span class="text-sm font-medium">{{ project.title }}</span>
+                        <span class="text-xs text-gray-400">{{ project.date }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                  class="relative aspect-square rounded-lg overflow-hidden"
+                  :class="index % 2 === 1 ? 'md:order-1' : ''"
+              >
+                <img
+                    :src="experience.image"
+                    :alt="experience.company"
+                    class="absolute inset-0 w-full h-full object-cover"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -36,189 +78,112 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
-import * as THREE from 'three'
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import { ref } from 'vue'
 
-// Scene setup
-const canvas = ref(null)
-const sceneReady = ref(false)
-const loadingProgress = ref(0)
-const activeSection = ref(null)
-
-// Portfolio content
-const sections = ref([
+const experiences = ref([
   {
-    id: 'about',
-    title: 'About Me',
-    position: new THREE.Vector3(-10, 0, 0),
-    content: [
+    id: 1,
+    number: '01',
+    company: 'Aris Digital',
+    role: 'Senior Developer',
+    period: '2022 - Present',
+    description: 'Led development of enterprise-scale applications, mentored junior developers, and implemented best practices across multiple projects.',
+    image: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?height=600&width=400',
+    projects: [
       {
-        title: 'Introduction',
-        description: 'A passionate developer with expertise in Vue.js and 3D web experiences.'
-      }
-    ]
-  },
-  {
-    id: 'experience',
-    title: 'Experience',
-    position: new THREE.Vector3(0, 0, 0),
-    content: [
-      {
-        title: 'Senior Frontend Developer',
-        description: '2020-Present: Leading development of interactive web applications'
-      },
-      {
-        title: 'Web Developer',
-        description: '2018-2020: Full-stack development with Vue.js and Node.js'
-      }
-    ]
-  },
-  {
-    id: 'projects',
-    title: 'Projects',
-    position: new THREE.Vector3(10, 0, 0),
-    content: [
-      {
-        title: '3D Portfolio',
-        description: 'Interactive portfolio website built with Three.js and Vue'
-      },
-      {
+        id: 1,
         title: 'E-commerce Platform',
-        description: 'Modern shopping experience with Vue 3 and Tailwind CSS'
+        date: '2023',
+        image: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?height=300&width=300'
+      },
+      {
+        id: 2,
+        title: 'Banking App',
+        date: '2023',
+        image: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?height=300&width=300'
+      },
+      {
+        id: 3,
+        title: 'CRM System',
+        date: '2022',
+        image: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?height=300&width=300'
+      },
+      {
+        id: 4,
+        title: 'Analytics Dashboard',
+        date: '2022',
+        image: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?height=300&width=300'
       }
     ]
-  }
+  },{
+    id: 1,
+    number: '01',
+    company: 'Aris Digital',
+    role: 'Senior Developer',
+    period: '2022 - Present',
+    description: 'Led development of enterprise-scale applications, mentored junior developers, and implemented best practices across multiple projects.',
+    image: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?height=600&width=400',
+    projects: [
+      {
+        id: 1,
+        title: 'E-commerce Platform',
+        date: '2023',
+        image: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?height=300&width=300'
+      },
+      {
+        id: 2,
+        title: 'Banking App',
+        date: '2023',
+        image: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?height=300&width=300'
+      },
+      {
+        id: 3,
+        title: 'CRM System',
+        date: '2022',
+        image: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?height=300&width=300'
+      },
+      {
+        id: 4,
+        title: 'Analytics Dashboard',
+        date: '2022',
+        image: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?height=300&width=300'
+      }
+    ]
+  },{
+    id: 1,
+    number: '01',
+    company: 'Aris Digital',
+    role: 'Senior Developer',
+    period: '2022 - Present',
+    description: 'Led development of enterprise-scale applications, mentored junior developers, and implemented best practices across multiple projects.',
+    image: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?height=600&width=400',
+    projects: [
+      {
+        id: 1,
+        title: 'E-commerce Platform',
+        date: '2023',
+        image: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?height=300&width=300'
+      },
+      {
+        id: 2,
+        title: 'Banking App',
+        date: '2023',
+        image: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?height=300&width=300'
+      },
+      {
+        id: 3,
+        title: 'CRM System',
+        date: '2022',
+        image: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?height=300&width=300'
+      },
+      {
+        id: 4,
+        title: 'Analytics Dashboard',
+        date: '2022',
+        image: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?height=300&width=300'
+      }
+    ]
+  },
+  // ... more experiences
 ])
-
-// Three.js variables
-let scene, camera, renderer, controls
-let mixer, clock
-const models = new Map()
-
-// Initialize Three.js scene
-const initScene = () => {
-  // Scene
-  scene = new THREE.Scene()
-  scene.background = new THREE.Color('#ff7b4d') // Orange background
-
-  // Camera
-  camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
-  camera.position.set(0, 5, 20)
-
-  // Renderer
-  renderer = new THREE.WebGLRenderer({
-    canvas: canvas.value,
-    antialias: true
-  })
-  renderer.setSize(window.innerWidth, window.innerHeight)
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-
-  // Controls
-  controls = new OrbitControls(camera, renderer.domElement)
-  controls.enableDamping = true
-  controls.dampingFactor = 0.05
-  controls.maxPolarAngle = Math.PI / 2
-
-  // Lighting
-  const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
-  scene.add(ambientLight)
-
-  const directionalLight = new THREE.DirectionalLight(0xffffff, 1)
-  directionalLight.position.set(5, 5, 5)
-  scene.add(directionalLight)
-
-  // Clock for animations
-  clock = new THREE.Clock()
-
-  // Load 3D models
-  loadModels()
-}
-
-// Load 3D models and setup scene
-const loadModels = () => {
-  const loader = new GLTFLoader()
-  const totalModels = sections.value.length
-  let loadedModels = 0
-
-  sections.value.forEach(section => {
-    // Create platform for each section
-    const platform = new THREE.Mesh(
-        new THREE.BoxGeometry(5, 0.5, 5),
-        new THREE.MeshStandardMaterial({ color: 0xffffff })
-    )
-    platform.position.copy(section.position)
-    scene.add(platform)
-
-    // Add simple figure placeholder (can be replaced with actual GLTF models)
-    const figure = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.5, 0.5, 2, 8),
-        new THREE.MeshStandardMaterial({ color: 0xffa07a })
-    )
-    figure.position.copy(section.position)
-    figure.position.y += 1.25
-    scene.add(figure)
-
-    models.set(section.id, { platform, figure })
-
-    loadedModels++
-    loadingProgress.value = (loadedModels / totalModels) * 100
-  })
-
-  sceneReady.value = true
-}
-
-// Animation loop
-const animate = () => {
-  if (!sceneReady.value) return
-
-  const delta = clock.getDelta()
-  if (mixer) mixer.update(delta)
-
-  controls.update()
-  renderer.render(scene, camera)
-  requestAnimationFrame(animate)
-}
-
-// Navigation
-const navigateToSection = (sectionId) => {
-  const section = sections.value.find(s => s.id === sectionId)
-  if (!section) return
-
-  activeSection.value = section
-
-  // Animate camera to new position
-  const targetPosition = section.position.clone()
-  targetPosition.add(new THREE.Vector3(0, 5, 10))
-
-  gsap.to(camera.position, {
-    duration: 1.5,
-    x: targetPosition.x,
-    y: targetPosition.y,
-    z: targetPosition.z,
-    ease: 'power2.inOut'
-  })
-}
-
-// Resize handler
-const handleResize = () => {
-  if (!camera || !renderer) return
-
-  camera.aspect = window.innerWidth / window.innerHeight
-  camera.updateProjectionMatrix()
-  renderer.setSize(window.innerWidth, window.innerHeight)
-}
-
-// Lifecycle hooks
-onMounted(() => {
-  initScene()
-  animate()
-  window.addEventListener('resize', handleResize)
-})
-
-onBeforeUnmount(() => {
-  window.removeEventListener('resize', handleResize)
-  if (renderer) renderer.dispose()
-})
 </script>
