@@ -50,5 +50,15 @@ func (o *userRepo) ListExperience(ctx context.Context, in *v1.ListExperienceRequ
 	return o.data.uc.ListExperience(ctx, in)
 }
 func (o *userRepo) Photos(ctx context.Context, in *v1.PhotosReq) (*v1.PhotosReply, error) {
-	return o.data.uc.Photos(ctx, in)
+	res, err := o.data.uc.Photos(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	//for k, v := range res.Images {
+	//	obs, _ := o.data.t.Files(ctx, &global.IDStr{Id: v})
+	//	if obs != nil {
+	//		res.Images[k] = obs.GetId()
+	//	}
+	//}
+	return res, err
 }

@@ -3,7 +3,6 @@
     <div class="max-w-4xl mx-auto" style=" background: linear-gradient(rgb(241 241 241), rgb(173 215 197));min-height:100%">
       <h1 class="text-3xl font-bold text-gray-900 p-8 text-center">记录一次有趣的旅行</h1>
       <a-form
-
           :model="formState"
           @finish="onFinish"
           ref="formTravelRef"

@@ -14,7 +14,7 @@ onMounted(()=>{
     if(res&&res.data){
       let data = []
       const images = res.data.images||[]
-      for(let i=0;i<images;i++){
+      for(let i=0;i<images.length;i++){
         data.push({url:filePrefix+images[i],title:"",description:""})
       }
 

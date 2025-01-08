@@ -98,13 +98,43 @@ const textureLoader = new THREE.TextureLoader();
 const loadTexture = (url) => {
   return new Promise((resolve) => {
     textureLoader.load(url, (texture) => {
+      console.log(texture);
       texture.minFilter = THREE.LinearFilter;
       texture.generateMipmaps = false;
       resolve(texture);
     });
   });
 };
+const loadTextureWithReferer = async (url) => {
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Referer': window.location.origin, // 设置 Referer 为当前域名
+    },
+    redirect: 'follow', // 确保处理重定向
+  });
 
+  if (!response.ok) {
+    throw new Error(`Failed to load texture: ${response.status}`);
+  }
+
+  const blob = await response.blob();
+  const imageUrl = URL.createObjectURL(blob);
+
+  // 使用 TextureLoader 加载从 blob 创建的图片
+  return new Promise((resolve, reject) => {
+    textureLoader.load(
+        imageUrl,
+        (texture) => {
+          texture.minFilter = THREE.LinearFilter;
+          texture.generateMipmaps = false;
+          resolve(texture);
+        },
+        undefined,
+        (err) => reject(err)
+    );
+  });
+};
 // 监听 props 的变化
 watch(
     () => props.photos, // 监听 photos

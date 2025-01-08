@@ -4,8 +4,10 @@
       <span/>
     </a-col>
     <a-col :md="14" :sm="24" :xs="24"  style="text-align: center;    background: linear-gradient(rgb(241 241 241), rgb(173 215 197));" >
-      <a-form :label-col="labelCol"  :wrapper-col="wrapperCol"  ref="formBlogRef" :model="formState"   autocomplete="off"  class="blog-card-edit">
-        <a-form-item label="title" :rules="[{ required: true, message: '请输入博客标题' }]">
+      <a-form :label-col="labelCol"  :wrapper-col="wrapperCol"
+              ref="formBlogRef" :model="formState"
+              class="blog-card-edit">
+        <a-form-item label="title" name="title" :rules="[{ required: true, message: '请输入博客标题' }]">
           <a-input  v-model:value="formState.title"   placeholder="请输入博客标题"/>
         </a-form-item>
         <a-form-item label="description">
@@ -18,7 +20,7 @@
             </a-form-item>
           </a-col>
           <a-col :md="12" :sm="24" :xs="24"   >
-            <a-form-item label="tags"  :rules="[{ required: true, message: '请输入至少一个标签' }]">
+            <a-form-item label="tags"  name="tags"  :rules="[{ required: true, type: 'array', message: '请输入至少一个标签' }]">
               <a-select
                   v-model:value="formState.tags"
                   mode="tags"
@@ -47,13 +49,13 @@
           </a-upload>
         </a-form-item>
 
-        <a-form-item label="content"  :rules="[{ required: true, message: '请输入博客内容' }]">
+        <a-form-item label="content"  name="content"  :rules="[{ required: true, message: '请输入博客内容' }]">
           <div style="border: 1px solid #ccc;background-color: white;min-height: 40vh" id="editor" >
           </div>
         </a-form-item>
 
         <a-form-item :wrapper-col="{ span: 14, offset: 5 }" style="text-align: center">
-          <a-button type="primary" @click="onSubmit">保存</a-button>
+          <a-button type="primary" @click="onSubmit" >保存</a-button>
           <a-button style="margin-left: 10px" @click="toRoute('/blog')">取消</a-button>
         </a-form-item>
       </a-form>
@@ -96,6 +98,7 @@ const formState = reactive({
   tags:[],
   content: '',
   cover: '',
+  files: [],
 });
 const formBlogRef = ref(null)
 const toolbarOptions = [
@@ -174,6 +177,9 @@ onMounted(function (){
   })
 })
 const confirmLoading = ref(false);
+const onFinish = (values) => {
+  console.log(values)
+}
 const onSubmit = () => {
   formBlogRef.value
       .validate()
@@ -182,6 +188,7 @@ const onSubmit = () => {
           formState.cover = formState.coverList[0].uuid;
         }
         confirmLoading.value = true
+        console.log(formState,"formState....")
        if(formState.id>0){
          blogUpdate(formState).then(res=>{
              if(res&&res.code===200){
