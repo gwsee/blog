@@ -74,6 +74,13 @@ type PhotosQuery struct {
 	UserId   int64
 	Type     string
 }
+type PhotosResp struct {
+	Url         string
+	Title       string
+	From        string
+	Id          int64
+	Description string
+}
 
 // UserRepo is a Greater repo.
 type UserRepo interface {
@@ -89,7 +96,7 @@ type UserRepo interface {
 	GetExperience(context.Context, *Experience) (*Experience, error)
 	DeleteExperience(context.Context, *Experience) error
 	ListExperience(context.Context, *ExperienceQuery) (int, []*Experience, error)
-	Photos(context.Context, *PhotosQuery) ([]string, error)
+	Photos(context.Context, *PhotosQuery) ([]*PhotosResp, error)
 }
 
 // UserUsecase is a User usecase.
@@ -336,7 +343,17 @@ func (uc *UserUsecase) Photos(ctx context.Context, req *v1.PhotosReq) (*v1.Photo
 		Type:     req.Type,
 	}
 	list, err := uc.repo.Photos(ctx, query)
+	var res []*v1.PhotosOne
+	for _, v := range list {
+		res = append(res, &v1.PhotosOne{
+			Url:         v.Url,
+			Title:       v.Title,
+			From:        v.From,
+			Id:          v.Id,
+			Description: v.Description,
+		})
+	}
 	return &v1.PhotosReply{
-		Images: list,
+		Images: res,
 	}, nil
 }

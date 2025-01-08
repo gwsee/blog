@@ -22,7 +22,7 @@ export const constantRoutes = [
             },
             {
                 path: 'demo',
-                component: () => import('@/views/demo/index.vue'),
+                component: () => import('@/views/demo/picture/Index2.vue'),
                 name: 'demo',
                 meta: { title: 'demo',  affix: true }
             },

@@ -242,9 +242,10 @@ const updateHoverCard = (intersected) => {
 
   hoverCardStyle.value = {
     display: 'block',
-    left: `${x}px`,
-    top: `${y - 50}px`,
+    left: `${x + 10}px`,
+    top: `${y - 10}px`,
     transform: 'translate(-50%, -50%)'
+    //transform: 'translate(0,0)'
   };
 };
 

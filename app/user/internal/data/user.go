@@ -312,7 +312,7 @@ func (o *userRepo) ListExperience(ctx context.Context, data *biz.ExperienceQuery
 
 const sortNum = 30
 
-func (o *userRepo) Photos(ctx context.Context, data *biz.PhotosQuery) ([]string, error) {
+func (o *userRepo) Photos(ctx context.Context, data *biz.PhotosQuery) ([]*biz.PhotosResp, error) {
 	pageSort := sortNum
 	if data.PageSize > sortNum {
 		pageSort = sortNum
@@ -320,19 +320,28 @@ func (o *userRepo) Photos(ctx context.Context, data *biz.PhotosQuery) ([]string,
 		pageSort = int(data.PageSize)
 	}
 	//sql2.Select("").From(sql2.Table("")).Where(sql2.And()).OrderBy().Limit(pageSort)
-	var images []string
+	var images []*biz.PhotosResp
 	files, err := o.data.db.FilesExtend.Query().Where(filesextend.Or(filesextend.UserIDEQ(int(data.UserId))),
 		filesextend.Or(filesextend.IsHiddenEQ(false))).
 		Aggregate(ent.Max(filesextend.FieldUpdatedAt)).
 		Select(filesextend.FieldFileID, filesextend.FieldUpdatedAt).
 		Unique(true).
-		Order(ent.Desc(filesextend.FieldUpdatedAt)).
+		Order(ent.Desc(filesextend.FieldUpdatedAt)).WithFiles().
 		Limit(pageSort).All(ctx) // 按最大更新时间聚合
 	if err != nil {
 		return nil, err
 	}
 	for _, file := range files {
-		images = append(images, file.FileID)
+		one := &biz.PhotosResp{
+			Url:         file.FileID,
+			From:        file.From,
+			Id:          int64(file.FromID),
+			Description: "",
+		}
+		if file.Edges.Files != nil {
+			one.Title = file.Edges.Files.Name
+		}
+		images = append(images, one)
 	}
 	if len(images) < int(data.PageSize) {
 		return images, nil
@@ -349,13 +358,22 @@ func (o *userRepo) Photos(ctx context.Context, data *biz.PhotosQuery) ([]string,
 		Aggregate(ent.Max(filesextend.FieldUpdatedAt)).
 		Select(filesextend.FieldFileID, filesextend.FieldUpdatedAt).
 		Unique(true).
-		Order(ent.Desc("rand()")).
+		Order(ent.Desc("rand()")).WithFiles().
 		Limit(pageSort).All(ctx) // 按最大更新时间聚合
 	if err != nil {
 		return nil, err
 	}
 	for _, file := range files {
-		images = append(images, file.FileID)
+		one := &biz.PhotosResp{
+			Url:         file.FileID,
+			From:        file.From,
+			Id:          int64(file.FromID),
+			Description: "",
+		}
+		if file.Edges.Files != nil {
+			one.Title = file.Edges.Files.Name
+		}
+		images = append(images, one)
 	}
 	return images, nil
 }

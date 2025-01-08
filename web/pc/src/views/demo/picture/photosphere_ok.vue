@@ -1,173 +1,77 @@
 <template>
-  <div ref="container" class="w-full h-screen bg-transparent">
-    <!-- Loading indicator -->
-    <div v-if="loading" class="absolute inset-0 flex items-center justify-center text-white">
-      Loading photos...
-    </div>
-
-    <!-- Photo detail modal -->
-    <a-modal
-        v-model:open="modalVisible"
-        :footer="null"
-        :closable="true"
-        @cancel="closeModal"
-        width="800px"
-        class="photo-modal"
-    >
-      <div class="flex flex-col items-center space-y-4">
-        <img
-            :src="selectedPhoto?.url"
-            :alt="selectedPhoto?.title"
-            class="w-full h-auto rounded-lg shadow-xl max-h-[60vh] object-contain"
-        />
-        <h3 class="text-xl font-bold mt-4">{{ selectedPhoto?.title }}</h3>
-        <p class="text-gray-600">{{ selectedPhoto?.description }}</p>
-      </div>
-    </a-modal>
-
-    <!-- Hover info card -->
+  <div ref="viewer" class="w-full h-full">
     <div
         v-if="hoveredPhoto"
-        class="fixed px-4 py-2 bg-black/80 text-white rounded-lg text-sm pointer-events-none"
+        class="fixed px-4 py-2 bg-black/80 text-white rounded-lg text-sm pointer-events-none transition-all duration-200 ease-out"
         :style="hoverCardStyle"
     >
-      <p class="font-medium">{{ hoveredPhoto.title }}</p>
+      {{ hoveredPhoto.title }}
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, reactive, onMounted, watch } from 'vue';
 import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
-const props = defineProps({
-  photos: {
-    type: Array,
-    default: () => [],
-    validator: (value) => value.length <= 100
-  }
-});
-
-const container = ref(null);
-const modalVisible = ref(false);
-const selectedPhoto = ref(null);
+const viewer = ref(null);
+let scene, camera, renderer, raycaster, mouse;
+let intersected = null;
 const hoveredPhoto = ref(null);
-const loading = ref(true);
-const hoverCardStyle = ref({
+const hoverCardStyle = reactive({
   display: 'none',
-  left: '0px',
-  top: '0px'
+  left: 0,
+  top: 0,
 });
 
-let scene, camera, renderer, controls;
-let photoGroup;
-let isRotating = true;
-let raycaster;
-let mouse;
-let photoMeshes = [];
+onMounted(() => {
+  init();
+  animate();
+});
 
 const init = () => {
   scene = new THREE.Scene();
-
-  camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-  camera.position.z = 5;
-
-  renderer = new THREE.WebGLRenderer({
-    antialias: true,
-    alpha: true,
-    powerPreference: "high-performance"
-  });
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setClearColor(0x000000, 0); // Set background to fully transparent
-  container.value.appendChild(renderer.domElement);
-
-  controls = new OrbitControls(camera, renderer.domElement);
-  controls.enableDamping = true;
-  controls.dampingFactor = 0.05;
-  controls.rotateSpeed = 0.5;
+  camera = new THREE.PerspectiveCamera(75, viewer.value.offsetWidth / viewer.value.offsetHeight, 0.1, 1000);
+  renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setSize(viewer.value.offsetWidth, viewer.value.offsetHeight);
+  viewer.value.appendChild(renderer.domElement);
 
   raycaster = new THREE.Raycaster();
   mouse = new THREE.Vector2();
 
-  createPhotoSphere();
-  loading.value = false;
-};
+  // Add your photo objects here...  For example:
+  const geometry = new THREE.BoxGeometry(1, 1, 1);
+  const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+  const cube = new THREE.Mesh(geometry, material);
+  cube.position.set(0, 0, -5);
+  cube.userData = { title: 'Photo 1' }; // Add data to identify the photo
+  scene.add(cube);
 
-const createPhotoSphere = () => {
-  photoGroup = new THREE.Group();
-  scene.add(photoGroup);
 
-  props.photos.forEach((photo, index) => {
-    const phi = Math.acos(-1 + (2 * index) / props.photos.length);
-    const theta = Math.sqrt(props.photos.length * Math.PI) * phi;
-
-    // Create circular photo with glow effect
-    const photoGeometry = new THREE.CircleGeometry(0.2, 32);
-    const photoTexture = new THREE.TextureLoader().load(photo.url);
-    const photoMaterial = new THREE.MeshBasicMaterial({
-      map: photoTexture,
-      side: THREE.DoubleSide,
-      transparent: true
-    });
-
-    const photoMesh = new THREE.Mesh(photoGeometry, photoMaterial);
-    const radius = 2;
-    photoMesh.position.setFromSpherical(new THREE.Spherical(radius, phi, theta));
-    photoMesh.lookAt(0, 0, 0);
-    photoMesh.userData = { photo, originalScale: photoMesh.scale.clone() };
-
-    // Add glow effect
-    const glowGeometry = new THREE.CircleGeometry(0.25, 32);
-    const glowMaterial = new THREE.MeshBasicMaterial({
-      color: 0xffffff,
-      transparent: true,
-      opacity: 0.2,
-      side: THREE.DoubleSide
-    });
-    const glowMesh = new THREE.Mesh(glowGeometry, glowMaterial);
-    glowMesh.position.copy(photoMesh.position);
-    glowMesh.lookAt(0, 0, 0);
-
-    photoGroup.add(glowMesh);
-    photoGroup.add(photoMesh);
-    photoMeshes.push(photoMesh);
-  });
+  camera.position.z = 5;
 };
 
 const animate = () => {
   requestAnimationFrame(animate);
-
-  if (isRotating) {
-    photoGroup.rotation.y += 0.001;
-  }
-
-  controls.update();
-  checkIntersection();
-  renderer.render(scene, camera);
+  render();
 };
 
-const checkIntersection = () => {
+const render = () => {
   raycaster.setFromCamera(mouse, camera);
-  const intersects = raycaster.intersectObjects(photoMeshes);
-
-  // Reset all photos to original scale
-  photoMeshes.forEach(mesh => {
-    mesh.scale.copy(mesh.userData.originalScale);
-  });
+  const intersects = raycaster.intersectObjects(scene.children);
 
   if (intersects.length > 0) {
-    const intersected = intersects[0].object;
-    intersected.scale.multiplyScalar(1.2);
-
-    if (!hoveredPhoto.value || hoveredPhoto.value !== intersected.userData.photo) {
-      hoveredPhoto.value = intersected.userData.photo;
+    if (intersected !== intersects[0].object) {
+      intersected = intersects[0].object;
       updateHoverCard(intersected);
+      hoveredPhoto.value = intersected.userData;
     }
   } else {
     hoveredPhoto.value = null;
     hoverCardStyle.value.display = 'none';
+    intersected = null;
   }
+  renderer.render(scene, camera);
 };
 
 const updateHoverCard = (intersected) => {
@@ -177,66 +81,32 @@ const updateHoverCard = (intersected) => {
   const x = (vector.x * 0.5 + 0.5) * window.innerWidth;
   const y = -(vector.y * 0.5 - 0.5) * window.innerHeight;
 
+  // Calculate offset for top-right positioning
+  const offset = 10; // 10px offset from the element
+
   hoverCardStyle.value = {
     display: 'block',
-    left: `${x}px`,
-    top: `${y - 50}px`,
-    transform: 'translate(-50%, -50%)'
+    left: `${x + offset}px`,
+    top: `${y - offset}px`,
+    transform: 'translate(0, 0)' // Remove the -50% translation to keep it anchored
   };
 };
 
-const onMouseMove = (event) => {
+
+window.addEventListener('mousemove', (event) => {
   mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
   mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-  // Check if mouse is over the sphere
-  raycaster.setFromCamera(mouse, camera);
-  const intersects = raycaster.intersectObjects(photoMeshes);
-  isRotating = intersects.length === 0;
-};
-
-const onClick = (event) => {
-  raycaster.setFromCamera(mouse, camera);
-  const intersects = raycaster.intersectObjects(photoMeshes);
-
-  if (intersects.length > 0) {
-    const clicked = intersects[0].object;
-    selectedPhoto.value = clicked.userData.photo;
-    modalVisible.value = true;
-  }
-};
-
-const closeModal = () => {
-  modalVisible.value = false;
-  selectedPhoto.value = null;
-};
-
-const onWindowResize = () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-};
-
-onMounted(() => {
-  init();
-  animate();
-  window.addEventListener('resize', onWindowResize);
-  renderer.domElement.addEventListener('mousemove', onMouseMove);
-  renderer.domElement.addEventListener('click', onClick);
 });
 
-onUnmounted(() => {
-  window.removeEventListener('resize', onWindowResize);
-  renderer.domElement.removeEventListener('mousemove', onMouseMove);
-  renderer.domElement.removeEventListener('click', onClick);
-  renderer.dispose();
+window.addEventListener('resize', () => {
+  camera.aspect = viewer.value.offsetWidth / viewer.value.offsetHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(viewer.value.offsetWidth, viewer.value.offsetHeight);
 });
 </script>
 
 <style scoped>
-.photo-modal :deep(.ant-modal-content) {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
+.fixed {
+  position: fixed;
 }
 </style>
-
