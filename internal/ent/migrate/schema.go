@@ -12,9 +12,9 @@ var (
 	// AccountColumns holds the columns for the "account" table.
 	AccountColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true, Comment: "账户ID"},
-		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1736233839},
+		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1736627068},
 		{Name: "created_by", Type: field.TypeInt64, Comment: "创建人", Default: 0},
-		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1736233839},
+		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1736627068},
 		{Name: "updated_by", Type: field.TypeInt64, Comment: "更新人", Default: 0},
 		{Name: "deleted_at", Type: field.TypeInt64, Comment: "软删除时间", Default: 0},
 		{Name: "deleted_by", Type: field.TypeInt64, Comment: "删除人", Default: 0},
@@ -37,9 +37,9 @@ var (
 	// BlogsColumns holds the columns for the "blogs" table.
 	BlogsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true, Comment: "博客ID"},
-		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1736233839},
+		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1736627068},
 		{Name: "created_by", Type: field.TypeInt64, Comment: "创建人", Default: 0},
-		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1736233839},
+		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1736627068},
 		{Name: "updated_by", Type: field.TypeInt64, Comment: "更新人", Default: 0},
 		{Name: "deleted_at", Type: field.TypeInt64, Comment: "软删除时间", Default: 0},
 		{Name: "deleted_by", Type: field.TypeInt64, Comment: "删除人", Default: 0},
@@ -60,9 +60,9 @@ var (
 	// BlogsCommentsColumns holds the columns for the "blogs_comments" table.
 	BlogsCommentsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true, Comment: "评论ID"},
-		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1736233839},
+		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1736627068},
 		{Name: "created_by", Type: field.TypeInt64, Comment: "创建人", Default: 0},
-		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1736233839},
+		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1736627068},
 		{Name: "updated_by", Type: field.TypeInt64, Comment: "更新人", Default: 0},
 		{Name: "deleted_at", Type: field.TypeInt64, Comment: "软删除时间", Default: 0},
 		{Name: "deleted_by", Type: field.TypeInt64, Comment: "删除人", Default: 0},
@@ -98,9 +98,9 @@ var (
 	// FilesColumns holds the columns for the "files" table.
 	FilesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString, Unique: true, Comment: "文件的ID(内容MD5)"},
-		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1736233839},
+		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1736627068},
 		{Name: "created_by", Type: field.TypeInt64, Comment: "创建人", Default: 0},
-		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1736233839},
+		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1736627068},
 		{Name: "updated_by", Type: field.TypeInt64, Comment: "更新人", Default: 0},
 		{Name: "deleted_at", Type: field.TypeInt64, Comment: "软删除时间", Default: 0},
 		{Name: "deleted_by", Type: field.TypeInt64, Comment: "删除人", Default: 0},
@@ -119,9 +119,9 @@ var (
 	// FilesExtendColumns holds the columns for the "files_extend" table.
 	FilesExtendColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true, Comment: "当前账户关联的文件的ID"},
-		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1736233839},
+		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1736627068},
 		{Name: "created_by", Type: field.TypeInt64, Comment: "创建人", Default: 0},
-		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1736233839},
+		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1736627068},
 		{Name: "updated_by", Type: field.TypeInt64, Comment: "更新人", Default: 0},
 		{Name: "deleted_at", Type: field.TypeInt64, Comment: "软删除时间", Default: 0},
 		{Name: "deleted_by", Type: field.TypeInt64, Comment: "删除人", Default: 0},
@@ -156,9 +156,9 @@ var (
 	// TravelExtendsColumns holds the columns for the "travel_extends" table.
 	TravelExtendsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1736233839},
+		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1736627068},
 		{Name: "created_by", Type: field.TypeInt64, Comment: "创建人", Default: 0},
-		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1736233839},
+		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1736627068},
 		{Name: "updated_by", Type: field.TypeInt64, Comment: "更新人", Default: 0},
 		{Name: "deleted_at", Type: field.TypeInt64, Comment: "软删除时间", Default: 0},
 		{Name: "deleted_by", Type: field.TypeInt64, Comment: "删除人", Default: 0},
@@ -192,9 +192,9 @@ var (
 	// TravelsColumns holds the columns for the "travels" table.
 	TravelsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true, Comment: "旅行记录的ID"},
-		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1736233839},
+		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1736627068},
 		{Name: "created_by", Type: field.TypeInt64, Comment: "创建人", Default: 0},
-		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1736233839},
+		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1736627068},
 		{Name: "updated_by", Type: field.TypeInt64, Comment: "更新人", Default: 0},
 		{Name: "deleted_at", Type: field.TypeInt64, Comment: "软删除时间", Default: 0},
 		{Name: "deleted_by", Type: field.TypeInt64, Comment: "删除人", Default: 0},
@@ -226,9 +226,9 @@ var (
 	// UserColumns holds the columns for the "user" table.
 	UserColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true, Comment: "用户ID=账户ID"},
-		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1736233839},
+		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1736627068},
 		{Name: "created_by", Type: field.TypeInt64, Comment: "创建人", Default: 0},
-		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1736233839},
+		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1736627068},
 		{Name: "updated_by", Type: field.TypeInt64, Comment: "更新人", Default: 0},
 		{Name: "deleted_at", Type: field.TypeInt64, Comment: "软删除时间", Default: 0},
 		{Name: "deleted_by", Type: field.TypeInt64, Comment: "删除人", Default: 0},
@@ -252,9 +252,9 @@ var (
 	// UserExperienceColumns holds the columns for the "user_experience" table.
 	UserExperienceColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true, Comment: "ID"},
-		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1736233839},
+		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1736627068},
 		{Name: "created_by", Type: field.TypeInt64, Comment: "创建人", Default: 0},
-		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1736233839},
+		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1736627068},
 		{Name: "updated_by", Type: field.TypeInt64, Comment: "更新人", Default: 0},
 		{Name: "deleted_at", Type: field.TypeInt64, Comment: "软删除时间", Default: 0},
 		{Name: "deleted_by", Type: field.TypeInt64, Comment: "删除人", Default: 0},
@@ -268,6 +268,8 @@ var (
 		{Name: "responsibilities", Type: field.TypeString, Comment: "主要职责", SchemaType: map[string]string{"mysql": "tinytext"}},
 		{Name: "achievements", Type: field.TypeString, Comment: "工作成就", SchemaType: map[string]string{"mysql": "tinytext"}},
 		{Name: "skills", Type: field.TypeJSON, Comment: "使用技能"},
+		{Name: "project", Type: field.TypeInt, Comment: "项目数", Default: 0},
+		{Name: "image", Type: field.TypeString, Comment: "公司名称", Default: "863f7821fa42eb9d61091b5c6df1c4b0", SchemaType: map[string]string{"mysql": "varchar(255)"}},
 	}
 	// UserExperienceTable holds the schema information for the "user_experience" table.
 	UserExperienceTable = &schema.Table{
@@ -279,9 +281,9 @@ var (
 	// UserProjectColumns holds the columns for the "user_project" table.
 	UserProjectColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true, Comment: "ID"},
-		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1736233839},
+		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1736627068},
 		{Name: "created_by", Type: field.TypeInt64, Comment: "创建人", Default: 0},
-		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1736233839},
+		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1736627068},
 		{Name: "updated_by", Type: field.TypeInt64, Comment: "更新人", Default: 0},
 		{Name: "deleted_at", Type: field.TypeInt64, Comment: "软删除时间", Default: 0},
 		{Name: "deleted_by", Type: field.TypeInt64, Comment: "删除人", Default: 0},

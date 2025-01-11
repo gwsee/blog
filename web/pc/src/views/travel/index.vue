@@ -250,7 +250,6 @@ const travelCardClasses = computed(() => {
   }
 })
 let observer = null;
-
 const setupIntersectionObserver = () => {
   observer = new IntersectionObserver((entries) => {
     if (entries[0].isIntersecting && !loading.value && hasMore.value) {
@@ -276,7 +275,6 @@ onUnmounted(() => {
   }
 })
 const observerTarget = ref(null)
-const pageSizeOptions = ref([  '20', '40', '100']);
 const current = ref(1)
 const total = ref(0)
 const pageSize = ref(16)
@@ -284,16 +282,6 @@ const loading = ref(false)
 const params = ref({my:false,title:undefined,myCollect:false,sort:"",myThumb:false,description:""})
 const travels = ref([])
 const hasMore = ref(true)
-// watch(pageSize, () => {
-//   if(current.value===1){
-//     list()
-//   }else{
-//     current.value = 1
-//   }
-// });
-// watch(current, () => {
-//   list()
-// });
 const list =()=>{
   if (loading.value || !hasMore.value) return;
   loading.value = true;

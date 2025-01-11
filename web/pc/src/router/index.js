@@ -28,9 +28,33 @@ export const constantRoutes = [
             },
             {
                 path: 'about/experience/:id(\\d+)',
+                component: () => import('@/views/about/info/experience.vue'),
+                name: 'about-experience-id',
+                meta: { title: '工作经历管理',  affix: true }
+            },
+            {
+                path: 'about/experience/demo/:id(\\d+)',
+                component: () => import('@/views/about/info/experience_demo.vue'),
+                name: 'about-experience-demo-id',
+                meta: { title: '工作经历管理',  affix: true }
+            },
+            {
+                path: 'about/experience',
                 component: () => import('@/views/about/experience.vue'),
                 name: 'about-experience',
-                meta: { title: '工作经历管理',  affix: true }
+                meta: { title: '工作经历',  affix: true }
+            },
+            {
+                path: 'about/project',
+                component: () => import('@/views/about/project.vue'),
+                name: 'about-project',
+                meta: { title: '项目经历',  affix: true }
+            },
+            {
+                path: 'about/project/:id(\\d+)',
+                component: () => import('@/views/about/info/project.vue'),
+                name: 'about-project-id',
+                meta: { title: '项目详情',  affix: true }
             },
             {
                 path: 'about/experience/manage/:id(\\d+)',

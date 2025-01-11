@@ -128,6 +128,16 @@ func Achievements(v string) predicate.UserExperience {
 	return predicate.UserExperience(sql.FieldEQ(FieldAchievements, v))
 }
 
+// Project applies equality check predicate on the "project" field. It's identical to ProjectEQ.
+func Project(v int) predicate.UserExperience {
+	return predicate.UserExperience(sql.FieldEQ(FieldProject, v))
+}
+
+// Image applies equality check predicate on the "image" field. It's identical to ImageEQ.
+func Image(v string) predicate.UserExperience {
+	return predicate.UserExperience(sql.FieldEQ(FieldImage, v))
+}
+
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
 func CreatedAtEQ(v int64) predicate.UserExperience {
 	return predicate.UserExperience(sql.FieldEQ(FieldCreatedAt, v))
@@ -876,6 +886,111 @@ func AchievementsEqualFold(v string) predicate.UserExperience {
 // AchievementsContainsFold applies the ContainsFold predicate on the "achievements" field.
 func AchievementsContainsFold(v string) predicate.UserExperience {
 	return predicate.UserExperience(sql.FieldContainsFold(FieldAchievements, v))
+}
+
+// ProjectEQ applies the EQ predicate on the "project" field.
+func ProjectEQ(v int) predicate.UserExperience {
+	return predicate.UserExperience(sql.FieldEQ(FieldProject, v))
+}
+
+// ProjectNEQ applies the NEQ predicate on the "project" field.
+func ProjectNEQ(v int) predicate.UserExperience {
+	return predicate.UserExperience(sql.FieldNEQ(FieldProject, v))
+}
+
+// ProjectIn applies the In predicate on the "project" field.
+func ProjectIn(vs ...int) predicate.UserExperience {
+	return predicate.UserExperience(sql.FieldIn(FieldProject, vs...))
+}
+
+// ProjectNotIn applies the NotIn predicate on the "project" field.
+func ProjectNotIn(vs ...int) predicate.UserExperience {
+	return predicate.UserExperience(sql.FieldNotIn(FieldProject, vs...))
+}
+
+// ProjectGT applies the GT predicate on the "project" field.
+func ProjectGT(v int) predicate.UserExperience {
+	return predicate.UserExperience(sql.FieldGT(FieldProject, v))
+}
+
+// ProjectGTE applies the GTE predicate on the "project" field.
+func ProjectGTE(v int) predicate.UserExperience {
+	return predicate.UserExperience(sql.FieldGTE(FieldProject, v))
+}
+
+// ProjectLT applies the LT predicate on the "project" field.
+func ProjectLT(v int) predicate.UserExperience {
+	return predicate.UserExperience(sql.FieldLT(FieldProject, v))
+}
+
+// ProjectLTE applies the LTE predicate on the "project" field.
+func ProjectLTE(v int) predicate.UserExperience {
+	return predicate.UserExperience(sql.FieldLTE(FieldProject, v))
+}
+
+// ImageEQ applies the EQ predicate on the "image" field.
+func ImageEQ(v string) predicate.UserExperience {
+	return predicate.UserExperience(sql.FieldEQ(FieldImage, v))
+}
+
+// ImageNEQ applies the NEQ predicate on the "image" field.
+func ImageNEQ(v string) predicate.UserExperience {
+	return predicate.UserExperience(sql.FieldNEQ(FieldImage, v))
+}
+
+// ImageIn applies the In predicate on the "image" field.
+func ImageIn(vs ...string) predicate.UserExperience {
+	return predicate.UserExperience(sql.FieldIn(FieldImage, vs...))
+}
+
+// ImageNotIn applies the NotIn predicate on the "image" field.
+func ImageNotIn(vs ...string) predicate.UserExperience {
+	return predicate.UserExperience(sql.FieldNotIn(FieldImage, vs...))
+}
+
+// ImageGT applies the GT predicate on the "image" field.
+func ImageGT(v string) predicate.UserExperience {
+	return predicate.UserExperience(sql.FieldGT(FieldImage, v))
+}
+
+// ImageGTE applies the GTE predicate on the "image" field.
+func ImageGTE(v string) predicate.UserExperience {
+	return predicate.UserExperience(sql.FieldGTE(FieldImage, v))
+}
+
+// ImageLT applies the LT predicate on the "image" field.
+func ImageLT(v string) predicate.UserExperience {
+	return predicate.UserExperience(sql.FieldLT(FieldImage, v))
+}
+
+// ImageLTE applies the LTE predicate on the "image" field.
+func ImageLTE(v string) predicate.UserExperience {
+	return predicate.UserExperience(sql.FieldLTE(FieldImage, v))
+}
+
+// ImageContains applies the Contains predicate on the "image" field.
+func ImageContains(v string) predicate.UserExperience {
+	return predicate.UserExperience(sql.FieldContains(FieldImage, v))
+}
+
+// ImageHasPrefix applies the HasPrefix predicate on the "image" field.
+func ImageHasPrefix(v string) predicate.UserExperience {
+	return predicate.UserExperience(sql.FieldHasPrefix(FieldImage, v))
+}
+
+// ImageHasSuffix applies the HasSuffix predicate on the "image" field.
+func ImageHasSuffix(v string) predicate.UserExperience {
+	return predicate.UserExperience(sql.FieldHasSuffix(FieldImage, v))
+}
+
+// ImageEqualFold applies the EqualFold predicate on the "image" field.
+func ImageEqualFold(v string) predicate.UserExperience {
+	return predicate.UserExperience(sql.FieldEqualFold(FieldImage, v))
+}
+
+// ImageContainsFold applies the ContainsFold predicate on the "image" field.
+func ImageContainsFold(v string) predicate.UserExperience {
+	return predicate.UserExperience(sql.FieldContainsFold(FieldImage, v))
 }
 
 // And groups predicates with the AND operator between them.

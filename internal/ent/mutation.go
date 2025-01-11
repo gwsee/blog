@@ -11006,6 +11006,9 @@ type UserExperienceMutation struct {
 	achievements     *string
 	skills           *[]string
 	appendskills     []string
+	project          *int
+	addproject       *int
+	image            *string
 	clearedFields    map[string]struct{}
 	done             bool
 	oldValue         func(context.Context) (*UserExperience, error)
@@ -11887,6 +11890,98 @@ func (m *UserExperienceMutation) ResetSkills() {
 	m.appendskills = nil
 }
 
+// SetProject sets the "project" field.
+func (m *UserExperienceMutation) SetProject(i int) {
+	m.project = &i
+	m.addproject = nil
+}
+
+// Project returns the value of the "project" field in the mutation.
+func (m *UserExperienceMutation) Project() (r int, exists bool) {
+	v := m.project
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldProject returns the old "project" field's value of the UserExperience entity.
+// If the UserExperience object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserExperienceMutation) OldProject(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldProject is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldProject requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldProject: %w", err)
+	}
+	return oldValue.Project, nil
+}
+
+// AddProject adds i to the "project" field.
+func (m *UserExperienceMutation) AddProject(i int) {
+	if m.addproject != nil {
+		*m.addproject += i
+	} else {
+		m.addproject = &i
+	}
+}
+
+// AddedProject returns the value that was added to the "project" field in this mutation.
+func (m *UserExperienceMutation) AddedProject() (r int, exists bool) {
+	v := m.addproject
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetProject resets all changes to the "project" field.
+func (m *UserExperienceMutation) ResetProject() {
+	m.project = nil
+	m.addproject = nil
+}
+
+// SetImage sets the "image" field.
+func (m *UserExperienceMutation) SetImage(s string) {
+	m.image = &s
+}
+
+// Image returns the value of the "image" field in the mutation.
+func (m *UserExperienceMutation) Image() (r string, exists bool) {
+	v := m.image
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldImage returns the old "image" field's value of the UserExperience entity.
+// If the UserExperience object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserExperienceMutation) OldImage(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldImage is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldImage requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldImage: %w", err)
+	}
+	return oldValue.Image, nil
+}
+
+// ResetImage resets all changes to the "image" field.
+func (m *UserExperienceMutation) ResetImage() {
+	m.image = nil
+}
+
 // Where appends a list predicates to the UserExperienceMutation builder.
 func (m *UserExperienceMutation) Where(ps ...predicate.UserExperience) {
 	m.predicates = append(m.predicates, ps...)
@@ -11921,7 +12016,7 @@ func (m *UserExperienceMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *UserExperienceMutation) Fields() []string {
-	fields := make([]string, 0, 16)
+	fields := make([]string, 0, 18)
 	if m.created_at != nil {
 		fields = append(fields, userexperience.FieldCreatedAt)
 	}
@@ -11970,6 +12065,12 @@ func (m *UserExperienceMutation) Fields() []string {
 	if m.skills != nil {
 		fields = append(fields, userexperience.FieldSkills)
 	}
+	if m.project != nil {
+		fields = append(fields, userexperience.FieldProject)
+	}
+	if m.image != nil {
+		fields = append(fields, userexperience.FieldImage)
+	}
 	return fields
 }
 
@@ -12010,6 +12111,10 @@ func (m *UserExperienceMutation) Field(name string) (ent.Value, bool) {
 		return m.Achievements()
 	case userexperience.FieldSkills:
 		return m.Skills()
+	case userexperience.FieldProject:
+		return m.Project()
+	case userexperience.FieldImage:
+		return m.Image()
 	}
 	return nil, false
 }
@@ -12051,6 +12156,10 @@ func (m *UserExperienceMutation) OldField(ctx context.Context, name string) (ent
 		return m.OldAchievements(ctx)
 	case userexperience.FieldSkills:
 		return m.OldSkills(ctx)
+	case userexperience.FieldProject:
+		return m.OldProject(ctx)
+	case userexperience.FieldImage:
+		return m.OldImage(ctx)
 	}
 	return nil, fmt.Errorf("unknown UserExperience field %s", name)
 }
@@ -12172,6 +12281,20 @@ func (m *UserExperienceMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetSkills(v)
 		return nil
+	case userexperience.FieldProject:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetProject(v)
+		return nil
+	case userexperience.FieldImage:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetImage(v)
+		return nil
 	}
 	return fmt.Errorf("unknown UserExperience field %s", name)
 }
@@ -12207,6 +12330,9 @@ func (m *UserExperienceMutation) AddedFields() []string {
 	if m.addend != nil {
 		fields = append(fields, userexperience.FieldEnd)
 	}
+	if m.addproject != nil {
+		fields = append(fields, userexperience.FieldProject)
+	}
 	return fields
 }
 
@@ -12233,6 +12359,8 @@ func (m *UserExperienceMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedStart()
 	case userexperience.FieldEnd:
 		return m.AddedEnd()
+	case userexperience.FieldProject:
+		return m.AddedProject()
 	}
 	return nil, false
 }
@@ -12304,6 +12432,13 @@ func (m *UserExperienceMutation) AddField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddEnd(v)
+		return nil
+	case userexperience.FieldProject:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddProject(v)
 		return nil
 	}
 	return fmt.Errorf("unknown UserExperience numeric field %s", name)
@@ -12379,6 +12514,12 @@ func (m *UserExperienceMutation) ResetField(name string) error {
 		return nil
 	case userexperience.FieldSkills:
 		m.ResetSkills()
+		return nil
+	case userexperience.FieldProject:
+		m.ResetProject()
+		return nil
+	case userexperience.FieldImage:
+		m.ResetImage()
 		return nil
 	}
 	return fmt.Errorf("unknown UserExperience field %s", name)

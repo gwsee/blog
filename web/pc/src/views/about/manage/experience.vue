@@ -22,6 +22,23 @@
           <a-form-item name="location" label="公司地址">
             <a-input v-model:value="formState.location" />
           </a-form-item>
+          <a-form-item label="图片">
+            <a-upload  :max-count="1"
+                       :multiple="false"
+                       list-type="picture-card"
+                       v-model:fileList="formState.imageList"
+                       :customRequest="$customRequest"
+                       :before-upload="beforeUpload"
+                       @change="handleChange"
+                       @preview="handlePreview"
+
+            >
+              <div v-if="formState.imageList<1">
+                <PlusOutlined />
+                <div style="margin-top: 8px">上传封面</div>
+              </div>
+            </a-upload>
+          </a-form-item>
           <a-row  >
             <a-col :md="11" :sm="24" :xs="24"   >
               <a-form-item name="start" label="在职时间" :rules="[{ required: true }]">
@@ -99,7 +116,8 @@
 <script setup>
 import {experienceGet, experienceSave, experienceList, projectList} from "@/api/user";
 import project from "./project.vue"
-import {reactive, ref, onMounted} from 'vue'
+import { PlusOutlined } from '@ant-design/icons-vue'
+import {reactive, ref, onMounted, getCurrentInstance} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 const router = useRouter()
 const projectRef = ref(null);
@@ -122,10 +140,12 @@ const formState = reactive({
   responsibilities: '',
   achievements: '',
   skills: [],
-
+  image:"",
+  imageList:[],
   period: [],
   projects:[],
 })
+const loading = ref(false);
 onMounted(()=>{
   if(formRef.value){
     formRef.value.resetFields();
@@ -136,6 +156,8 @@ onMounted(()=>{
   if(!id){
     return
   }
+  const { appContext } = getCurrentInstance();
+  const $fileFull = appContext.config.globalProperties.$fileFull;
   experienceGet({id:id}).then((res) => {
     if(res){
       const data = res.data || {}
@@ -150,6 +172,9 @@ onMounted(()=>{
       formState.responsibilities = data.responsibilities;
       formState.achievements = data.achievements;
       formState.period = data.period;
+      if(data.image!==""){
+        formState.imageList = [{uuid:data.image,url:$fileFull(data.image)}]
+      }
     }
   })
   projectList({experienceId: id}).then((res) => {
@@ -158,9 +183,12 @@ onMounted(()=>{
       }
   })
 })
-const loading = ref(false);
+
 const onFinish = (values) => {
   loading.value = true;
+  if(formState.imageList.length>0){
+    formState.image = formState.imageList[0].uuid;
+  }
   experienceSave(formState).then((res) => {
     if(res){
       message.success('saved successfully!')
@@ -203,7 +231,7 @@ const handleChange = (info) => {
     }
     return false
   })
-  formState.avatarList = resFileList
+  formState.imageList = resFileList
 };
 const previewVisible = ref(false);
 const previewImage = ref('');

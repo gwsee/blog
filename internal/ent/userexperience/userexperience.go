@@ -44,6 +44,10 @@ const (
 	FieldAchievements = "achievements"
 	// FieldSkills holds the string denoting the skills field in the database.
 	FieldSkills = "skills"
+	// FieldProject holds the string denoting the project field in the database.
+	FieldProject = "project"
+	// FieldImage holds the string denoting the image field in the database.
+	FieldImage = "image"
 	// Table holds the table name of the userexperience in the database.
 	Table = "user_experience"
 )
@@ -67,6 +71,8 @@ var Columns = []string{
 	FieldResponsibilities,
 	FieldAchievements,
 	FieldSkills,
+	FieldProject,
+	FieldImage,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -100,6 +106,10 @@ var (
 	DefaultDeletedAt int64
 	// DefaultDeletedBy holds the default value on creation for the "deleted_by" field.
 	DefaultDeletedBy int64
+	// DefaultProject holds the default value on creation for the "project" field.
+	DefaultProject int
+	// DefaultImage holds the default value on creation for the "image" field.
+	DefaultImage string
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
 	IDValidator func(int) error
 )
@@ -185,4 +195,14 @@ func ByResponsibilities(opts ...sql.OrderTermOption) OrderOption {
 // ByAchievements orders the results by the achievements field.
 func ByAchievements(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldAchievements, opts...).ToFunc()
+}
+
+// ByProject orders the results by the project field.
+func ByProject(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldProject, opts...).ToFunc()
+}
+
+// ByImage orders the results by the image field.
+func ByImage(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldImage, opts...).ToFunc()
 }

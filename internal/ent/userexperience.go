@@ -49,7 +49,11 @@ type UserExperience struct {
 	// 工作成就
 	Achievements string `json:"achievements,omitempty"`
 	// 使用技能
-	Skills       []string `json:"skills,omitempty"`
+	Skills []string `json:"skills,omitempty"`
+	// 项目数
+	Project int `json:"project,omitempty"`
+	// 公司名称
+	Image        string `json:"image,omitempty"`
 	selectValues sql.SelectValues
 }
 
@@ -60,9 +64,9 @@ func (*UserExperience) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case userexperience.FieldSkills:
 			values[i] = new([]byte)
-		case userexperience.FieldID, userexperience.FieldCreatedAt, userexperience.FieldCreatedBy, userexperience.FieldUpdatedAt, userexperience.FieldUpdatedBy, userexperience.FieldDeletedAt, userexperience.FieldDeletedBy, userexperience.FieldUserID, userexperience.FieldStart, userexperience.FieldEnd:
+		case userexperience.FieldID, userexperience.FieldCreatedAt, userexperience.FieldCreatedBy, userexperience.FieldUpdatedAt, userexperience.FieldUpdatedBy, userexperience.FieldDeletedAt, userexperience.FieldDeletedBy, userexperience.FieldUserID, userexperience.FieldStart, userexperience.FieldEnd, userexperience.FieldProject:
 			values[i] = new(sql.NullInt64)
-		case userexperience.FieldCompany, userexperience.FieldRole, userexperience.FieldLocation, userexperience.FieldDescription, userexperience.FieldResponsibilities, userexperience.FieldAchievements:
+		case userexperience.FieldCompany, userexperience.FieldRole, userexperience.FieldLocation, userexperience.FieldDescription, userexperience.FieldResponsibilities, userexperience.FieldAchievements, userexperience.FieldImage:
 			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -183,6 +187,18 @@ func (ue *UserExperience) assignValues(columns []string, values []any) error {
 					return fmt.Errorf("unmarshal field skills: %w", err)
 				}
 			}
+		case userexperience.FieldProject:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field project", values[i])
+			} else if value.Valid {
+				ue.Project = int(value.Int64)
+			}
+		case userexperience.FieldImage:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field image", values[i])
+			} else if value.Valid {
+				ue.Image = value.String
+			}
 		default:
 			ue.selectValues.Set(columns[i], values[i])
 		}
@@ -266,6 +282,12 @@ func (ue *UserExperience) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("skills=")
 	builder.WriteString(fmt.Sprintf("%v", ue.Skills))
+	builder.WriteString(", ")
+	builder.WriteString("project=")
+	builder.WriteString(fmt.Sprintf("%v", ue.Project))
+	builder.WriteString(", ")
+	builder.WriteString("image=")
+	builder.WriteString(ue.Image)
 	builder.WriteByte(')')
 	return builder.String()
 }

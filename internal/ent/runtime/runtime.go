@@ -541,6 +541,14 @@ func init() {
 	userexperienceDescDeletedBy := userexperienceMixinFields1[1].Descriptor()
 	// userexperience.DefaultDeletedBy holds the default value on creation for the deleted_by field.
 	userexperience.DefaultDeletedBy = userexperienceDescDeletedBy.Default.(int64)
+	// userexperienceDescProject is the schema descriptor for project field.
+	userexperienceDescProject := userexperienceFields[11].Descriptor()
+	// userexperience.DefaultProject holds the default value on creation for the project field.
+	userexperience.DefaultProject = userexperienceDescProject.Default.(int)
+	// userexperienceDescImage is the schema descriptor for image field.
+	userexperienceDescImage := userexperienceFields[12].Descriptor()
+	// userexperience.DefaultImage holds the default value on creation for the image field.
+	userexperience.DefaultImage = userexperienceDescImage.Default.(string)
 	// userexperienceDescID is the schema descriptor for id field.
 	userexperienceDescID := userexperienceFields[0].Descriptor()
 	// userexperience.IDValidator is a validator for the "id" field. It is called by the builders before save.

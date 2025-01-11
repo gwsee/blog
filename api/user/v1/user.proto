@@ -96,6 +96,7 @@ message SaveExperienceRequest {
 	string responsibilities = 8;//主要职责
 	string achievements = 9;//工作成就
 	repeated string skills = 10;//使用技能
+	string image = 11;//封面
 }
 
 message GetExperienceReply {
@@ -112,6 +113,7 @@ message GetExperienceReply {
 	int64 createdAt=11;//创建时间
 	int64 updatedAt=12;//编辑时间
 	int64 userId= 13;//用户ID
+	string image = 14;//封面
 }
 
 message ListExperienceRequest {
@@ -133,6 +135,9 @@ message ListExperience {
 	string description = 7;// 职位描述
 	int64 updatedAt=8;//编辑时间
 	int64 userId= 9;//用户ID
+	repeated ListProject project = 10;//项目 默认最多返回4个
+	int64 projectNum = 11;//这个经历下面有的项目数量
+	string image = 12;//封面
 }
 
 message SaveProjectRequest {
@@ -180,6 +185,7 @@ message ListProject {
 	string photo = 8;//项目图片
 	int64 updatedAt=9;//编辑时间
 	int64 userId= 10;//用户ID
+	string description = 11;//项目描述
 }
 message ListProjectReply {
 	repeated ListProject list = 1;

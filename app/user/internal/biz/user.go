@@ -67,6 +67,9 @@ type Experience struct {
 	Responsibilities string
 	Achievements     string
 	Skills           []string
+	Image            string
+	Projects         []Project
+	ProjectNum       int64
 }
 type PhotosQuery struct {
 	PageSize int64
@@ -261,6 +264,7 @@ func (uc *UserUsecase) SaveExperience(ctx context.Context, req *v1.SaveExperienc
 		Location:         req.Location,
 		Start:            req.Start,
 		End:              req.End,
+		Image:            req.Image,
 		Description:      req.Description,
 		Responsibilities: req.Responsibilities,
 		Achievements:     req.Achievements,
@@ -287,6 +291,7 @@ func (uc *UserUsecase) GetExperience(ctx context.Context, req *global.ID) (*v1.G
 		Responsibilities: info.Responsibilities,
 		Achievements:     info.Achievements,
 		Skills:           info.Skills,
+		Image:            info.Image,
 		CreatedAt:        info.CreatedAt,
 		UpdatedAt:        info.UpdatedAt,
 		UserId:           int64(info.UserId),
@@ -317,17 +322,37 @@ func (uc *UserUsecase) ListExperience(ctx context.Context, req *v1.ListExperienc
 		List:  make([]*v1.ListExperience, 0, len(list)),
 	}
 	for _, info := range list {
-		resp.List = append(resp.List, &v1.ListExperience{
+		ex := &v1.ListExperience{
 			Id:          int64(info.ID),
 			Company:     info.Company,
 			Role:        info.Role,
 			Location:    info.Location,
 			Start:       info.Start,
 			End:         info.End,
+			Image:       info.Image,
 			Description: info.Description,
 			UpdatedAt:   info.UpdatedAt,
 			UserId:      int64(info.UserId),
-		})
+			Project:     make([]*v1.ListProject, 0, len(info.Projects)),
+		}
+		for _, info := range info.Projects {
+			one := &v1.ListProject{
+				Id:           int64(info.ID),
+				ExperienceId: int64(info.ExperienceId),
+				Title:        info.Title,
+				Skills:       info.Skills,
+				Start:        info.Start,
+				End:          info.End,
+				Link:         info.Link,
+				UpdatedAt:    info.UpdatedAt,
+				UserId:       int64(info.UserId),
+			}
+			if len(info.Photos) > 0 {
+				one.Photo = info.Photos[0]
+			}
+			ex.Project = append(ex.Project, one)
+		}
+		resp.List = append(resp.List, ex)
 	}
 	return resp, nil
 }

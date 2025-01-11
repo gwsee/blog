@@ -263,6 +263,41 @@ func (ueu *UserExperienceUpdate) AppendSkills(s []string) *UserExperienceUpdate 
 	return ueu
 }
 
+// SetProject sets the "project" field.
+func (ueu *UserExperienceUpdate) SetProject(i int) *UserExperienceUpdate {
+	ueu.mutation.ResetProject()
+	ueu.mutation.SetProject(i)
+	return ueu
+}
+
+// SetNillableProject sets the "project" field if the given value is not nil.
+func (ueu *UserExperienceUpdate) SetNillableProject(i *int) *UserExperienceUpdate {
+	if i != nil {
+		ueu.SetProject(*i)
+	}
+	return ueu
+}
+
+// AddProject adds i to the "project" field.
+func (ueu *UserExperienceUpdate) AddProject(i int) *UserExperienceUpdate {
+	ueu.mutation.AddProject(i)
+	return ueu
+}
+
+// SetImage sets the "image" field.
+func (ueu *UserExperienceUpdate) SetImage(s string) *UserExperienceUpdate {
+	ueu.mutation.SetImage(s)
+	return ueu
+}
+
+// SetNillableImage sets the "image" field if the given value is not nil.
+func (ueu *UserExperienceUpdate) SetNillableImage(s *string) *UserExperienceUpdate {
+	if s != nil {
+		ueu.SetImage(*s)
+	}
+	return ueu
+}
+
 // Mutation returns the UserExperienceMutation object of the builder.
 func (ueu *UserExperienceUpdate) Mutation() *UserExperienceMutation {
 	return ueu.mutation
@@ -386,6 +421,15 @@ func (ueu *UserExperienceUpdate) sqlSave(ctx context.Context) (n int, err error)
 		_spec.AddModifier(func(u *sql.UpdateBuilder) {
 			sqljson.Append(u, userexperience.FieldSkills, value)
 		})
+	}
+	if value, ok := ueu.mutation.Project(); ok {
+		_spec.SetField(userexperience.FieldProject, field.TypeInt, value)
+	}
+	if value, ok := ueu.mutation.AddedProject(); ok {
+		_spec.AddField(userexperience.FieldProject, field.TypeInt, value)
+	}
+	if value, ok := ueu.mutation.Image(); ok {
+		_spec.SetField(userexperience.FieldImage, field.TypeString, value)
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, ueu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -642,6 +686,41 @@ func (ueuo *UserExperienceUpdateOne) AppendSkills(s []string) *UserExperienceUpd
 	return ueuo
 }
 
+// SetProject sets the "project" field.
+func (ueuo *UserExperienceUpdateOne) SetProject(i int) *UserExperienceUpdateOne {
+	ueuo.mutation.ResetProject()
+	ueuo.mutation.SetProject(i)
+	return ueuo
+}
+
+// SetNillableProject sets the "project" field if the given value is not nil.
+func (ueuo *UserExperienceUpdateOne) SetNillableProject(i *int) *UserExperienceUpdateOne {
+	if i != nil {
+		ueuo.SetProject(*i)
+	}
+	return ueuo
+}
+
+// AddProject adds i to the "project" field.
+func (ueuo *UserExperienceUpdateOne) AddProject(i int) *UserExperienceUpdateOne {
+	ueuo.mutation.AddProject(i)
+	return ueuo
+}
+
+// SetImage sets the "image" field.
+func (ueuo *UserExperienceUpdateOne) SetImage(s string) *UserExperienceUpdateOne {
+	ueuo.mutation.SetImage(s)
+	return ueuo
+}
+
+// SetNillableImage sets the "image" field if the given value is not nil.
+func (ueuo *UserExperienceUpdateOne) SetNillableImage(s *string) *UserExperienceUpdateOne {
+	if s != nil {
+		ueuo.SetImage(*s)
+	}
+	return ueuo
+}
+
 // Mutation returns the UserExperienceMutation object of the builder.
 func (ueuo *UserExperienceUpdateOne) Mutation() *UserExperienceMutation {
 	return ueuo.mutation
@@ -795,6 +874,15 @@ func (ueuo *UserExperienceUpdateOne) sqlSave(ctx context.Context) (_node *UserEx
 		_spec.AddModifier(func(u *sql.UpdateBuilder) {
 			sqljson.Append(u, userexperience.FieldSkills, value)
 		})
+	}
+	if value, ok := ueuo.mutation.Project(); ok {
+		_spec.SetField(userexperience.FieldProject, field.TypeInt, value)
+	}
+	if value, ok := ueuo.mutation.AddedProject(); ok {
+		_spec.AddField(userexperience.FieldProject, field.TypeInt, value)
+	}
+	if value, ok := ueuo.mutation.Image(); ok {
+		_spec.SetField(userexperience.FieldImage, field.TypeString, value)
 	}
 	_node = &UserExperience{config: ueuo.config}
 	_spec.Assign = _node.assignValues

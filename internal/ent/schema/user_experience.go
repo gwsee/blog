@@ -44,6 +44,11 @@ func (UserExperience) Fields() []ent.Field {
 				dialect.MySQL: "tinytext",
 			}),
 		field.JSON("skills", []string{}).Comment("使用技能"),
+		field.Int("project").Default(0).Comment("项目数"),
+		field.String("image").Default("863f7821fa42eb9d61091b5c6df1c4b0").Comment("公司名称").
+			SchemaType(map[string]string{
+				dialect.MySQL: "varchar(255)",
+			}),
 	}
 }
 func (UserExperience) Mixin() []ent.Mixin {

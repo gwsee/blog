@@ -165,6 +165,34 @@ func (uec *UserExperienceCreate) SetSkills(s []string) *UserExperienceCreate {
 	return uec
 }
 
+// SetProject sets the "project" field.
+func (uec *UserExperienceCreate) SetProject(i int) *UserExperienceCreate {
+	uec.mutation.SetProject(i)
+	return uec
+}
+
+// SetNillableProject sets the "project" field if the given value is not nil.
+func (uec *UserExperienceCreate) SetNillableProject(i *int) *UserExperienceCreate {
+	if i != nil {
+		uec.SetProject(*i)
+	}
+	return uec
+}
+
+// SetImage sets the "image" field.
+func (uec *UserExperienceCreate) SetImage(s string) *UserExperienceCreate {
+	uec.mutation.SetImage(s)
+	return uec
+}
+
+// SetNillableImage sets the "image" field if the given value is not nil.
+func (uec *UserExperienceCreate) SetNillableImage(s *string) *UserExperienceCreate {
+	if s != nil {
+		uec.SetImage(*s)
+	}
+	return uec
+}
+
 // SetID sets the "id" field.
 func (uec *UserExperienceCreate) SetID(i int) *UserExperienceCreate {
 	uec.mutation.SetID(i)
@@ -232,6 +260,14 @@ func (uec *UserExperienceCreate) defaults() error {
 		v := userexperience.DefaultDeletedBy
 		uec.mutation.SetDeletedBy(v)
 	}
+	if _, ok := uec.mutation.Project(); !ok {
+		v := userexperience.DefaultProject
+		uec.mutation.SetProject(v)
+	}
+	if _, ok := uec.mutation.Image(); !ok {
+		v := userexperience.DefaultImage
+		uec.mutation.SetImage(v)
+	}
 	return nil
 }
 
@@ -284,6 +320,12 @@ func (uec *UserExperienceCreate) check() error {
 	}
 	if _, ok := uec.mutation.Skills(); !ok {
 		return &ValidationError{Name: "skills", err: errors.New(`ent: missing required field "UserExperience.skills"`)}
+	}
+	if _, ok := uec.mutation.Project(); !ok {
+		return &ValidationError{Name: "project", err: errors.New(`ent: missing required field "UserExperience.project"`)}
+	}
+	if _, ok := uec.mutation.Image(); !ok {
+		return &ValidationError{Name: "image", err: errors.New(`ent: missing required field "UserExperience.image"`)}
 	}
 	if v, ok := uec.mutation.ID(); ok {
 		if err := userexperience.IDValidator(v); err != nil {
@@ -386,6 +428,14 @@ func (uec *UserExperienceCreate) createSpec() (*UserExperience, *sqlgraph.Create
 	if value, ok := uec.mutation.Skills(); ok {
 		_spec.SetField(userexperience.FieldSkills, field.TypeJSON, value)
 		_node.Skills = value
+	}
+	if value, ok := uec.mutation.Project(); ok {
+		_spec.SetField(userexperience.FieldProject, field.TypeInt, value)
+		_node.Project = value
+	}
+	if value, ok := uec.mutation.Image(); ok {
+		_spec.SetField(userexperience.FieldImage, field.TypeString, value)
+		_node.Image = value
 	}
 	return _node, _spec
 }
@@ -646,6 +696,36 @@ func (u *UserExperienceUpsert) SetSkills(v []string) *UserExperienceUpsert {
 // UpdateSkills sets the "skills" field to the value that was provided on create.
 func (u *UserExperienceUpsert) UpdateSkills() *UserExperienceUpsert {
 	u.SetExcluded(userexperience.FieldSkills)
+	return u
+}
+
+// SetProject sets the "project" field.
+func (u *UserExperienceUpsert) SetProject(v int) *UserExperienceUpsert {
+	u.Set(userexperience.FieldProject, v)
+	return u
+}
+
+// UpdateProject sets the "project" field to the value that was provided on create.
+func (u *UserExperienceUpsert) UpdateProject() *UserExperienceUpsert {
+	u.SetExcluded(userexperience.FieldProject)
+	return u
+}
+
+// AddProject adds v to the "project" field.
+func (u *UserExperienceUpsert) AddProject(v int) *UserExperienceUpsert {
+	u.Add(userexperience.FieldProject, v)
+	return u
+}
+
+// SetImage sets the "image" field.
+func (u *UserExperienceUpsert) SetImage(v string) *UserExperienceUpsert {
+	u.Set(userexperience.FieldImage, v)
+	return u
+}
+
+// UpdateImage sets the "image" field to the value that was provided on create.
+func (u *UserExperienceUpsert) UpdateImage() *UserExperienceUpsert {
+	u.SetExcluded(userexperience.FieldImage)
 	return u
 }
 
@@ -945,6 +1025,41 @@ func (u *UserExperienceUpsertOne) SetSkills(v []string) *UserExperienceUpsertOne
 func (u *UserExperienceUpsertOne) UpdateSkills() *UserExperienceUpsertOne {
 	return u.Update(func(s *UserExperienceUpsert) {
 		s.UpdateSkills()
+	})
+}
+
+// SetProject sets the "project" field.
+func (u *UserExperienceUpsertOne) SetProject(v int) *UserExperienceUpsertOne {
+	return u.Update(func(s *UserExperienceUpsert) {
+		s.SetProject(v)
+	})
+}
+
+// AddProject adds v to the "project" field.
+func (u *UserExperienceUpsertOne) AddProject(v int) *UserExperienceUpsertOne {
+	return u.Update(func(s *UserExperienceUpsert) {
+		s.AddProject(v)
+	})
+}
+
+// UpdateProject sets the "project" field to the value that was provided on create.
+func (u *UserExperienceUpsertOne) UpdateProject() *UserExperienceUpsertOne {
+	return u.Update(func(s *UserExperienceUpsert) {
+		s.UpdateProject()
+	})
+}
+
+// SetImage sets the "image" field.
+func (u *UserExperienceUpsertOne) SetImage(v string) *UserExperienceUpsertOne {
+	return u.Update(func(s *UserExperienceUpsert) {
+		s.SetImage(v)
+	})
+}
+
+// UpdateImage sets the "image" field to the value that was provided on create.
+func (u *UserExperienceUpsertOne) UpdateImage() *UserExperienceUpsertOne {
+	return u.Update(func(s *UserExperienceUpsert) {
+		s.UpdateImage()
 	})
 }
 
@@ -1410,6 +1525,41 @@ func (u *UserExperienceUpsertBulk) SetSkills(v []string) *UserExperienceUpsertBu
 func (u *UserExperienceUpsertBulk) UpdateSkills() *UserExperienceUpsertBulk {
 	return u.Update(func(s *UserExperienceUpsert) {
 		s.UpdateSkills()
+	})
+}
+
+// SetProject sets the "project" field.
+func (u *UserExperienceUpsertBulk) SetProject(v int) *UserExperienceUpsertBulk {
+	return u.Update(func(s *UserExperienceUpsert) {
+		s.SetProject(v)
+	})
+}
+
+// AddProject adds v to the "project" field.
+func (u *UserExperienceUpsertBulk) AddProject(v int) *UserExperienceUpsertBulk {
+	return u.Update(func(s *UserExperienceUpsert) {
+		s.AddProject(v)
+	})
+}
+
+// UpdateProject sets the "project" field to the value that was provided on create.
+func (u *UserExperienceUpsertBulk) UpdateProject() *UserExperienceUpsertBulk {
+	return u.Update(func(s *UserExperienceUpsert) {
+		s.UpdateProject()
+	})
+}
+
+// SetImage sets the "image" field.
+func (u *UserExperienceUpsertBulk) SetImage(v string) *UserExperienceUpsertBulk {
+	return u.Update(func(s *UserExperienceUpsert) {
+		s.SetImage(v)
+	})
+}
+
+// UpdateImage sets the "image" field to the value that was provided on create.
+func (u *UserExperienceUpsertBulk) UpdateImage() *UserExperienceUpsertBulk {
+	return u.Update(func(s *UserExperienceUpsert) {
+		s.UpdateImage()
 	})
 }
 

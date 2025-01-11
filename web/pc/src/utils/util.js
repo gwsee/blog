@@ -2,7 +2,7 @@ import {fileUpload,filePrefix} from "@/api/tool.js";
 
 export function parseTime(time, pattern) {
     if (arguments.length === 0 || !time) {
-        return null
+        return "至今"
     }
     const format = pattern || '{y}-{m}-{d} {h}:{i}:{s}'
     let date

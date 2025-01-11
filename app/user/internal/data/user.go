@@ -98,6 +98,7 @@ func (o *userRepo) SaveProject(ctx context.Context, data *biz.Project) (err erro
 		return
 	}
 	_, err = tx.User.UpdateOneID(data.UserId).AddProject(1).Save(ctx)
+	_, err = tx.UserExperience.UpdateOneID(int(data.ExperienceId)).AddProject(1).Save(ctx)
 	return
 }
 func (o *userRepo) GetProject(ctx context.Context, data *biz.Project) (project *biz.Project, err error) {
@@ -122,6 +123,10 @@ func (o *userRepo) GetProject(ctx context.Context, data *biz.Project) (project *
 	return
 }
 func (o *userRepo) DeleteProject(ctx context.Context, data *biz.Project) (err error) {
+	info, err := o.data.db.UserProject.Get(ctx, data.ID)
+	if err != nil {
+		return
+	}
 	tx, err := o.data.db.Tx(ctx)
 	if err != nil {
 		return err
@@ -141,6 +146,7 @@ func (o *userRepo) DeleteProject(ctx context.Context, data *biz.Project) (err er
 		return errors.New("project not found")
 	}
 	_, err = tx.User.UpdateOneID(int(data.UserId)).AddProject(-1).Save(ctx)
+	_, err = tx.UserExperience.UpdateOneID(int(info.ExperienceID)).AddProject(-1).Save(ctx)
 	return
 }
 func (o *userRepo) ListProject(ctx context.Context, data *biz.ProjectQuery) (total int, list []*biz.Project, err error) {
@@ -207,6 +213,7 @@ func (o *userRepo) SaveExperience(ctx context.Context, data *biz.Experience) (er
 			SetRole(data.Role).
 			SetLocation(data.Location).
 			SetStart(data.Start).
+			SetImage(data.Image).
 			SetEnd(data.End).
 			SetDescription(data.Description).
 			SetResponsibilities(data.Responsibilities).
@@ -219,6 +226,7 @@ func (o *userRepo) SaveExperience(ctx context.Context, data *biz.Experience) (er
 		SetUserID(int(data.UserId)).
 		SetCompany(data.Company).
 		SetRole(data.Role).
+		SetImage(data.Image).
 		SetLocation(data.Location).
 		SetStart(data.Start).
 		SetEnd(data.End).
@@ -245,10 +253,12 @@ func (o *userRepo) GetExperience(ctx context.Context, data *biz.Experience) (pro
 		Location:         info.Location,
 		Start:            info.Start,
 		End:              info.End,
+		Image:            info.Image,
 		Description:      info.Description,
 		Responsibilities: info.Responsibilities,
 		Achievements:     info.Achievements,
 		Skills:           info.Skills,
+		ProjectNum:       int64(info.Project),
 	}
 	return
 }
@@ -290,7 +300,12 @@ func (o *userRepo) ListExperience(ctx context.Context, data *biz.ExperienceQuery
 	}
 	list = make([]*biz.Experience, 0, len(all))
 	for _, info := range all {
-		project := &biz.Experience{
+		var projects []*ent.UserProject
+		projects, err = o.data.db.UserProject.Query().Where(userproject.ExperienceID(info.ID)).Limit(4).All(ctx)
+		if err != nil {
+			return
+		}
+		ex := &biz.Experience{
 			ID:               info.ID,
 			UserId:           info.UserID,
 			CreatedAt:        info.CreatedAt,
@@ -304,8 +319,27 @@ func (o *userRepo) ListExperience(ctx context.Context, data *biz.ExperienceQuery
 			Responsibilities: info.Responsibilities,
 			Achievements:     info.Achievements,
 			Skills:           info.Skills,
+			Image:            info.Image,
+			ProjectNum:       int64(info.Project),
+			Projects:         make([]biz.Project, 0, len(projects)),
 		}
-		list = append(list, project)
+		for _, pro := range projects {
+			ex.Projects = append(ex.Projects, biz.Project{
+				ID:           pro.ID,
+				UserId:       pro.UserID,
+				CreatedAt:    pro.CreatedAt,
+				UpdatedAt:    pro.UpdatedAt,
+				ExperienceId: pro.ExperienceID,
+				Title:        pro.Title,
+				Description:  pro.Description,
+				Skills:       pro.Skills,
+				Start:        pro.Start,
+				End:          pro.End,
+				Link:         pro.Link,
+				Photos:       pro.Photos,
+			})
+		}
+		list = append(list, ex)
 	}
 	return
 }

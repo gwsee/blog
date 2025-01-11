@@ -223,7 +223,7 @@ const navItems = [
   {key: 'diary', label: '日记', href: '/blog',login:false},
   {key: 'travel', label: '旅行', href: '/travel',login:false},
   {key: 'photo', label: '墙', href: '/picture',login:false},
-  {key: 'demo', label: 'DEMO', href: '/demo',login:true},
+  // {key: 'demo', label: 'DEMO', href: '/demo',login:true},
   {key: 'about', label: '关于', href: '/about',login:true},
 ]
 
@@ -243,7 +243,7 @@ const navItems = [
   height: 100%;
   width: 100%;
   overflow: auto;
-  background: transparent  url("/src/assets/image/bg02.gif");
+  background: transparent  url("/src/assets/image/bg05.jpg");
   background-size: cover;
   display: flex;
   flex-direction: column;
@@ -284,6 +284,7 @@ const navItems = [
 /* 内容区域样式 */
 .layout-content {
   min-height: calc(100vh - 4rem);
+  max-height: max-content;
 }
 
 /* 移动端搜索抽屉样式 */
