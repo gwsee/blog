@@ -21,6 +21,9 @@ const onQuery = () => {
 
 <style scoped>
 .search-content{
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   align-content: space-around;
   text-align: center;
   justify-content: center;

@@ -20,14 +20,14 @@
             }}
           </h2>
           <div class="flex flex-wrap gap-4 justify-center md:justify-start">
-            <button class="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"  @click="toRoute('/about/experience')">
+            <button class="px-6 py-2  rounded-md hover:bg-gray-100 transition-colors"  @click="toRoute('/about/experience')">
               View Experiences
             </button>
-            <button class="px-6 py-2 bg-white text-gray-800 rounded-md hover:bg-gray-100 transition-colors"  @click="toRoute('/about/project')">
+            <button class="px-6 py-2 text-gray-800 rounded-md hover:bg-gray-100 transition-colors"  @click="toRoute('/about/project')">
               View Projects
             </button>
-            <button class="px-6 py-2 bg-white text-gray-800 rounded-md hover:bg-gray-100 transition-colors"  @click="toRoute('/about/profile/manage')">
-              Contact Me
+            <button class="px-6 py-2  text-gray-800 rounded-md hover:bg-gray-100 transition-colors"  @click="toRoute('/about/profile/manage')">
+              Manage
             </button>
           </div>
         </div>

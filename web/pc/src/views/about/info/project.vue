@@ -16,7 +16,7 @@
           <!-- 主要内容区域 -->
           <div class="lg:col-span-2 space-y-8">
             <!-- 项目标题区域 -->
-            <div class="bg-gray-900/80 backdrop-blur-md rounded-2xl p-8 border border-gray-800">
+            <div class="bg-gray-800/50 backdrop-blur-md rounded-2xl p-8 border border-gray-800">
               <h1 class="text-4xl font-bold text-white mb-4">{{ project.title }}</h1>
               <div class="flex flex-wrap gap-4 items-center text-sm text-gray-300">
                 <div class="flex items-center space-x-2" v-if="false">
@@ -41,7 +41,7 @@
                 <span>Technologies & Tools</span>
               </h2>
               <div class="grid gap-4">
-                <div class="bg-gray-900/80 backdrop-blur-md rounded-xl p-6 border border-gray-800">
+                <div class="bg-gray-800/50 backdrop-blur-md rounded-xl p-6 border border-gray-800">
                   <div class="flex flex-wrap gap-3">
                     <span
                         v-for="skill in project.skills"
@@ -94,7 +94,7 @@
           <!-- 右侧信息 -->
           <div class="space-y-6">
             <!-- Key Achievements -->
-            <div class="bg-gray-900/80 backdrop-blur-md rounded-2xl p-6 border border-gray-800">
+            <div class="bg-gray-800/50 backdrop-blur-md rounded-2xl p-6 border border-gray-800">
               <h2 class="text-2xl font-bold text-white mb-6 flex items-center space-x-2">
                 <TrophyIcon class="w-6 h-6" />
                 <span>Key Achievements</span>

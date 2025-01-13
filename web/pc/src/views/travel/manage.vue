@@ -1,7 +1,10 @@
 <template>
   <div class="min-h-screen  py-8 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-4xl mx-auto" style=" background: linear-gradient(rgb(241 241 241), rgb(173 215 197));min-height:100%">
+    <div class="max-w-4xl mx-auto  rounded-xl p-4 sm:p-6 " style=" background: linear-gradient(rgb(241 241 241), rgb(173 215 197));">
+      <a-card >
+
       <h1 class="text-3xl font-bold text-gray-900 p-8 text-center">记录一次有趣的旅行</h1>
+
       <a-form
           :model="formState"
           @finish="onFinish"
@@ -70,16 +73,16 @@
           </a-upload>
         </a-form-item>
 
-        <a-form-item :wrapper-col="{ span: 14, offset: 5 }" style="text-align: center;margin-bottom: 10px">
+        <a-form-item :wrapper-col="{ span: 14, offset: 5 }" style="text-align: center;padding-top: 20px">
           <a-button type="primary" html-type="submit" :loading="loading" :disabled="loading">保存</a-button>
           <a-button style="margin-left: 10px" @click="toRoute('/travel')" :loading="loading" :disabled="loading">取消</a-button>
         </a-form-item>
       </a-form>
-
       <!-- 图片预览模态框 -->
       <a-modal :open="previewVisible" :footer="null" @cancel="handleCancel">
         <img alt="example" style="width: 100%" :src="previewImage" />
       </a-modal>
+      </a-card>
     </div>
   </div>
 </template>

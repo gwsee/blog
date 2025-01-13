@@ -3,7 +3,7 @@
     <a-col :md="5" :sm="24" :xs="24" >
       <span></span>
     </a-col>
-    <a-col :md="14" :sm="24" :xs="24"  style="text-align: center;position: relative;    background: linear-gradient(rgb(241 241 241), rgb(173 215 197));" >
+    <a-col :md="14" :sm="24" :xs="24" class=" rounded-xl p-4 sm:p-6 mb-12"  style="text-align: center;position: relative;    background: linear-gradient(rgb(241 241 241), rgb(173 215 197));" >
       <a-input-group compact  style="margin-top:30px;">
         <a-select   mode="tags"
                     max-tag-count="responsive"

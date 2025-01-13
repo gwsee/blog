@@ -1,6 +1,6 @@
 <template>
-  <div class="min-h-screen  py-12">
-    <div class="container mx-auto px-4">
+  <div class="min-h-screen">
+    <div class="container mx-auto px-4 rounded-xl p-4 sm:p-6">
       <h1 class="text-3xl font-bold mb-8 text-center"  v-if="false">Add Work Experience</h1>
       <a-form
           :label-col="labelCol"  :wrapper-col="wrapperCol"

@@ -23,13 +23,13 @@
           <!-- Content -->
           <div class="relative z-10">
             <!-- Header -->
-            <div class="flex items-center justify-between mb-6">
-              <div :class="index % 2 === 1 ? 'order-2 ' : ''" style="width: 50%">
+            <div class="flex bg-gray-800/50  rounded-xl p-4 sm:p-6 items-center justify-between mb-6">
+              <div  style="width: 50%">
                 <h2 class="text-3xl font-bold">{{ experience.company }}</h2>
-                <h3 class="text-xl text-gray-400 mt-1">{{ experience.role }}</h3>
+                <h3 class="text-gray-400 mt-1 text-sm">{{ $formatDate(experience.start,'{y}-{m}-{d}') }} -{{ $formatDate(experience.end,'{y}-{m}-{d}') }}</h3>
                 <p class="text-gray-400 leading-relaxed mb-6 text-sm md:text-base text-left" v-html="formattedContent(experience.description)"></p>
               </div>
-              <span class="text-gray-400 text-sm" style="width: 50%">{{ $formatDate(experience.start,'{y}-{m}-{d}') }} -{{ $formatDate(experience.end,'{y}-{m}-{d}') }}</span>
+              <span class="text-3xl text-gray-400" style="width: 50%">{{ experience.role }}</span>
             </div>
             <!-- Main content -->
             <div

@@ -5,7 +5,7 @@
           :model="formState"
           ref="formRef"
           @finish="onFinish"
-          class=" py-8 "
+          class=" py-8 rounded-xl p-4 sm:p-6"
       >
         <a-form-item name="title" label="项目名称" :rules="[{ required: true }]">
           <a-input v-model:value="formState.title" />

@@ -1,6 +1,6 @@
 <template>
-  <div class="min-h-screen  px-4 sm:px-6 lg:px-8">
-    <div class="max-w-4xl mx-auto  py-8"  style=" background: linear-gradient(rgb(241 241 241), rgb(173 215 197));">
+  <div class="min-h-screen  px-4 sm:px-6 lg:px-8  mb-12">
+    <div class="max-w-4xl mx-auto  py-8 rounded-xl p-4 sm:p-6 "  style=" background: linear-gradient(rgb(241 241 241), rgb(173 215 197));">
       <a-form
           :label-col="labelCol"  :wrapper-col="wrapperCol"
           :model="formState"

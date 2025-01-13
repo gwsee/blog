@@ -3,7 +3,7 @@
     <a-col :md="5" :sm="24" :xs="24"  >
       <span/>
     </a-col>
-    <a-col :md="14" :sm="24" :xs="24"  style="text-align: unset;" :loading="loading">
+    <a-col :md="14" :sm="24" :xs="24"  class=" mb-12" style="text-align: unset;" :loading="loading">
       <a-spin :spinning="loading">
       <a-layout class="blog-post" style="background: linear-gradient(rgb(241 241 241), rgb(173 215 197));">
         <a-layout-content>

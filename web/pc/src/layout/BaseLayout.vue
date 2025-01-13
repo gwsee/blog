@@ -169,7 +169,7 @@
     </a-drawer>
 
     <!-- 内容区域 -->
-    <router-view class="layout-content" />
+    <router-view  />
     <!-- 登陆 -->
     <Login ref="loginRef"/>
     <Account ref="accountRef"/>
@@ -243,7 +243,7 @@ const navItems = [
   height: 100%;
   width: 100%;
   overflow: auto;
-  background: transparent  url("/src/assets/image/bg05.jpg");
+  background: transparent  url("/src/assets/image/bg02.gif");
   background-size: cover;
   display: flex;
   flex-direction: column;
