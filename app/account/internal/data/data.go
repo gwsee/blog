@@ -82,7 +82,7 @@ func NewRedisCmd(conf *global.Data, logger log.Logger) (redis.Cmdable, error) {
 	err := client.Ping(timeout).Err()
 	if err != nil {
 		logs.Errorf("redis connect error: %v", err)
-		return client, nil
+		return client, err
 	}
 	return client, err
 }
