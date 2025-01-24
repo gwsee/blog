@@ -4,7 +4,9 @@ import (
 	"blog/api/global"
 	v1 "blog/api/tools/v1"
 	"context"
+	"fmt"
 	"github.com/go-kratos/kratos/v2/log"
+	"time"
 )
 
 type ToolUseCase struct {
@@ -25,6 +27,8 @@ func (o *ToolUseCase) UploadFileByStream(ctx context.Context, req *v1.StreamRequ
 	return o.repo.UploadFileByStream(ctx, req)
 }
 func (o *ToolUseCase) UploadFile(ctx context.Context, req *v1.UploadFileRequest) (*v1.UploadFileReply, error) {
+	t, ex := ctx.Deadline()
+	fmt.Println(t.Format(time.DateTime), t.Unix()-time.Now().Unix(), ex)
 	return o.repo.UploadFile(ctx, req)
 }
 func (o *ToolUseCase) Files(ctx context.Context, req *global.IDStr) (*global.IDStr, error) {
