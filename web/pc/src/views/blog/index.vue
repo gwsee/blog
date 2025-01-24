@@ -44,7 +44,7 @@
 </template>
 
 <script setup>
-import {UserOutlined, HeartOutlined, LikeOutlined, DislikeOutlined } from '@ant-design/icons-vue';
+import { HeartOutlined, LikeOutlined, DislikeOutlined } from '@ant-design/icons-vue';
 import { useRouter } from 'vue-router';
 import {blogList} from "@/api/blog";
 import {onMounted, ref,watch} from "vue";

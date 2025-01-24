@@ -50,8 +50,7 @@
         </a-form-item>
 
         <a-form-item label="content"  name="content"  :rules="[{ required: true, message: '请输入博客内容' }]">
-          <div style="border: 1px solid #ccc;background-color: white;min-height: 40vh" id="editor" >
-          </div>
+          <div style="border: 1px solid #ccc;background-color: white;min-height: 40vh" ref="quillEditor" />
         </a-form-item>
 
         <a-form-item :wrapper-col="{ span: 14, offset: 5 }" style="text-align: center">
@@ -71,24 +70,25 @@
 </template>
 
 <script setup>
+import {onBeforeUnmount, shallowRef, onMounted, reactive, toRaw, ref, getCurrentInstance} from 'vue'
+import { useRouter,useRoute } from 'vue-router';
+import {message} from "ant-design-vue";
+import { PlusOutlined } from '@ant-design/icons-vue'
+import { blogUpdate,blogCreate, blogGet} from "@/api/blog";
+import { fileUpload,filePrefix } from "@/api/tool.js";
+import Quill from 'quill';
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.bubble.css";
-import {onBeforeUnmount, shallowRef, onMounted, reactive, toRaw, ref, getCurrentInstance} from 'vue'
-import Quill from 'quill';
-import { blogUpdate,blogCreate, blogGet} from "@/api/blog";
-const editorRef = shallowRef()
-import { useRouter,useRoute } from 'vue-router';
-import {message} from "ant-design-vue";
+import {fileFull} from "@/utils/util.js";
+// import ImageResize from 'quill-image-resize-module';
+// Quill.register('modules/imageResize', ImageResize);
+let quill = null;
+const quillEditor = ref(null);
+// const editorRef = shallowRef()
+const labelCol = { style: { width: '80px' } };
+const wrapperCol = { span: 24 };
 const router = useRouter();
-const toRoute=(path)=> {
-  router.push(path)
-}
-import { PlusOutlined } from '@ant-design/icons-vue'
-const handleChange = (value) => {
-  console.log(`selected ${value}`);
-};
-
 const formState = reactive({
   id: 0,
   title: '',
@@ -101,48 +101,180 @@ const formState = reactive({
   files: [],
 });
 const formBlogRef = ref(null)
-const toolbarOptions = [
-  ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
-  ['blockquote', 'code-block'],
-  ['link', 'image', 'video', 'formula'],
 
-  [{ 'header': 1 }, { 'header': 2 }],               // custom button values
-  [{ 'list': 'ordered'}, { 'list': 'bullet' }, { 'list': 'check' }],
-  [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
-  [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
-  [{ 'direction': 'rtl' }],                         // text direction
-
-  [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
-  [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-
-  [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
-  [{ 'font': [] }],
-  [{ 'align': [] }],
-
-  ['clean']                                         // remove formatting button
-];
-
-const options = {
-  modules: {
-    toolbar: toolbarOptions,
-  },
-  placeholder: '请输入内容',
-  theme: 'snow'
+const toRoute=(path)=> {
+  router.push(path)
+}
+const handleChange = (value) => {
+  console.log(`selected ${value}`);
 };
 
-// 组件销毁时，也及时销毁编辑器
-onBeforeUnmount(() => {
-  const editor = editorRef.value
-  if (editor == null) return
-  editorRef.value = null
-})
+const uploadFile = async (file) => {
+  // 这里应该是您的实际文件上传逻辑
+  console.log('处理文件');
+  return new Promise((resolve,reject) => {
+    let formData = new FormData();
+    formData.append('file',file)
+    fileUpload(formData).then(res=>{
+      if(res&&res.code===200){
+        resolve({ fileName:file.name, fileUrl:filePrefix+res.data.uuid });
+      }else{
+        reject(new Error(res.msg||'上传失败'))
+      }
+      console.log("here")
+    }).finally(()=>{
+    }).catch((e)=>{
+      reject(new Error('上传失败'))
+    })
+  });
+};
 
-onMounted(function (){
-  const quill = new Quill('#editor',options);  // First matching element will be used
-  if(formBlogRef.value){
-    formBlogRef.value.resetFields();
+const insertImage = async (file) => {
+  const range = quill.getSelection(true);
+  const insertIndex = range.index;
+  const loadingText = '正在上传图片...';
+  quill.insertText(range.index,loadingText);
+  try {
+    const { fileUrl } = await uploadFile(file);
+    quill.deleteText(insertIndex, loadingText.length);
+    quill.insertEmbed(insertIndex, 'image', fileUrl);
+    quill.setSelection(insertIndex + 1);
+  } catch (error) {
+    console.error('图片上传失败', error);
+    quill.deleteText(insertIndex, loadingText.length);
+    const errorText = '图片上传失败';
+    quill.insertText(insertIndex, errorText, 'bold', true);
+    setTimeout(() => {
+      quill.deleteText(insertIndex, errorText.length);
+    }, 3000);
   }
-  editorRef.value = quill
+};
+
+const insertVideo = async (file) => {
+  const range = quill.getSelection(true);
+  quill.insertText(range.index, '正在上传视频...');
+  try {
+    const { fileUrl } = await uploadFile(file);
+    quill.deleteText(range.index, '正在上传视频...'.length);
+    quill.insertEmbed(range.index, 'video', fileUrl);
+    quill.setSelection(range.index + 1);
+  } catch (error) {
+    console.error('视频上传失败', error);
+    quill.deleteText(range.index, '正在上传视频...'.length);
+  }
+};
+const insertFile = async (file) => {
+  const range = quill.getSelection(true);
+  quill.insertText(range.index, '正在上传文件...');
+  try {
+    const { fileName, fileUrl } = await uploadFile(file);
+    quill.deleteText(range.index, '正在上传文件...'.length);
+    const fileLink = `<a href="${fileUrl}" target="_blank">${fileName}</a>`;
+    quill.clipboard.dangerouslyPasteHTML(range.index, fileLink);
+    quill.setSelection(range.index + 1);
+  } catch (error) {
+    console.error('文件上传失败', error);
+    quill.deleteText(range.index, '正在上传文件...'.length);
+  }
+};
+
+const imageHandler = () => {
+  const input = document.createElement('input');
+  input.setAttribute('type', 'file');
+  input.setAttribute('accept', 'image/*');
+  input.click();
+
+  input.onchange = () => {
+    const file = input.files[0];
+    if (file) {
+      insertImage(file);
+    }
+  };
+};
+const videoHandler = () => {
+  const input = document.createElement('input');
+  input.setAttribute('type', 'file');
+  input.setAttribute('accept', 'video/*');
+  input.click();
+
+  input.onchange = () => {
+    const file = input.files[0];
+    if (file) {
+      insertVideo(file);
+    }
+  };
+};
+
+const fileHandler = () => {
+  const input = document.createElement('input');
+  input.setAttribute('type', 'file');
+  input.click();
+
+  input.onchange = () => {
+    const file = input.files[0];
+    if (file) {
+      insertFile(file);
+    }
+  };
+};
+
+const pasteHandler = (e) => {
+  const clipboard = e.clipboardData || window.clipboardData;
+  if (clipboard && clipboard.items) {
+    for (let i = 0; i < clipboard.items.length; i++) {
+      const item = clipboard.items[i];
+      if (item.type.indexOf('image') !== -1) {
+        e.preventDefault();
+        const file = item.getAsFile();
+        insertImage(file);
+        return;
+      } else if (item.type.indexOf('video') !== -1) {
+        e.preventDefault();
+        const file = item.getAsFile();
+        insertVideo(file);
+        return;
+      }
+    }
+  }
+};
+const onReadyQuill =  () => {
+  const options = {
+    modules: {
+      toolbar: {
+        container: [
+          ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+          ['blockquote', 'code-block'],
+          ['link', 'image', 'video', 'formula'],
+
+          [{ 'header': 1 }, { 'header': 2 }],               // custom button values
+          [{ 'list': 'ordered'}, { 'list': 'bullet' }, { 'list': 'check' }],
+          [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+          [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+          [{ 'direction': 'rtl' }],                         // text direction
+
+          [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+          [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+
+          [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+          [{ 'font': [] }],
+          [{ 'align': [] }],
+
+          ['clean']                                         // remove formatting button
+        ],
+        handlers: {
+          image: imageHandler,
+          video: videoHandler,
+          file: fileHandler
+        },
+        imageResize: {
+          displaySize: true
+        }
+      },
+    },
+    placeholder: '请输入内容...',
+    theme: 'snow'
+  };
+  quill = quill = new Quill(quillEditor.value,options);  // First matching element will be used
   quill.on('editor-change', (eventName, ...args) => {
     if (eventName === 'text-change') {
       formState.content = quill.getSemanticHTML()
@@ -151,8 +283,16 @@ onMounted(function (){
       formState.content= quill.getSemanticHTML()
     }
   });
+  quill.root.addEventListener('paste', pasteHandler);
+  return quill;
+}
+onMounted(function (){
+  if(formBlogRef.value){
+    formBlogRef.value.resetFields();
+  }
+  onReadyQuill()
   const route = useRoute();
-  let id = route.params.id;
+  let id = route.params&&route.params.id;
   id = id - 0
   if(!id){
     return
@@ -162,7 +302,8 @@ onMounted(function (){
   blogGet({id:id}).then(res=>{
     if(res&&res.code===200){
       formState.content = res.data.content
-      quill.clipboard.dangerouslyPasteHTML(res.data.content);
+      // quill.clipboard.dangerouslyPasteHTML(res.data.content);
+      quill.root.innerHTML = formState.content
       const obj = res.data.header
       formState.cover = obj.cover
       formState.tags = obj.tags
@@ -176,6 +317,13 @@ onMounted(function (){
     }
   })
 })
+onBeforeUnmount(() => {
+  if (quill) {
+    quill.off('text-change');
+    quill.root.removeEventListener('paste', pasteHandler);
+    quill = null;
+  }
+});
 const confirmLoading = ref(false);
 const onFinish = (values) => {
   console.log(values)
@@ -211,8 +359,8 @@ const onSubmit = () => {
         console.log('error', error);
       });
 };
-const labelCol = { style: { width: '80px' } };
-const wrapperCol = { span: 24 };
+
+
 const handlePreview = async (file) => {
   if (!file.url && !file.preview) {
     file.preview = await getBase64(file.originFileObj);
@@ -222,7 +370,6 @@ const handlePreview = async (file) => {
 };
 const previewVisible = ref(false);
 const previewImage = ref('');
-
 const handleCancel = () => {
   previewVisible.value = false;
 };
@@ -240,7 +387,6 @@ const beforeUpload = (file) => {
   }
   return true;
 };
-
 const handleChangeCover = (info) => {
   if (info.file&&info.file.status === "uploading"){
     return false
