@@ -5,7 +5,6 @@ import (
 	gen "blog/internal/ent"
 	"blog/internal/ent/files"
 	"context"
-	"fmt"
 	"time"
 
 	"blog/app/tools/internal/biz"
@@ -56,9 +55,7 @@ func (r *toolsRepo) FindFile(ctx context.Context, g *biz.File) (*biz.File, error
 }
 func (r *toolsRepo) CacheFile(ctx context.Context, origin, path string, expire int64) {
 	if r.data.redisCli == nil {
-		fmt.Println("没有缓存")
 		return
 	}
-	fmt.Println("缓存成功")
 	r.data.redisCli.Set(ctx, constx.FileCachePrefix+origin, path, time.Duration(expire)*time.Minute)
 }

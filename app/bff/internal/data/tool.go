@@ -6,7 +6,6 @@ import (
 	"blog/app/bff/internal/biz"
 	"blog/internal/constx"
 	"context"
-	"fmt"
 	"github.com/go-kratos/kratos/v2/log"
 )
 
@@ -31,9 +30,7 @@ func (o *toolsRepo) Files(ctx context.Context, in *global.IDStr) (*global.IDStr,
 	res, err := o.data.redisCli.Get(ctx, constx.FileCachePrefix+in.Id).Result()
 	if err != nil {
 		//获取缓存失败
-		fmt.Println("获取缓存失败")
 		return o.data.t.Files(ctx, in)
 	}
-	fmt.Println("获取缓存成功")
 	return &global.IDStr{Id: res}, nil
 }

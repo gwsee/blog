@@ -60,8 +60,6 @@ func _Tools_Files0_HTTP_Handler(srv ToolsHTTPServer) func(ctx http.Context) erro
 			return err
 		}
 		reply := out.(*global.IDStr)
-		//fmt.Println("响应为", reply.Id)
-		//http.NewRedirect(reply.Id, http2.StatusSeeOther)
 		http2.Redirect(ctx.Response(), ctx.Request(), reply.Id, http2.StatusTemporaryRedirect)
 		ctx.Done()
 		return nil

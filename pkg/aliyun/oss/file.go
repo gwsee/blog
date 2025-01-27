@@ -3,7 +3,6 @@ package oss
 import (
 	"bytes"
 	"context"
-	"errors"
 	"fmt"
 	"github.com/aliyun/alibabacloud-oss-go-sdk-v2/oss"
 	"strings"
@@ -11,10 +10,6 @@ import (
 )
 
 func (o *File) UploadFile(filePath string, content []byte) (string, error) {
-	t, ex := o.ctx.Deadline()
-	fmt.Println(t.Format(time.DateTime), t.Unix()-time.Now().Unix(), ex)
-	time.Sleep(time.Second * 7)
-	return "", errors.New("not implement")
 	request := &oss.PutObjectRequest{
 		Bucket: oss.Ptr(o.bucket),        // 存储空间名称
 		Key:    oss.Ptr(filePath),        // 对象名称

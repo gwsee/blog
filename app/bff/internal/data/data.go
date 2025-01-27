@@ -195,17 +195,19 @@ func (l *Data) NewTravelClient() error {
 }
 func (l *Data) NewToolsClient() error {
 	endpoint := "discovery:///app-tools"
-	conn, err := grpc.DialInsecure(context.Background(), grpc.WithEndpoint(endpoint), grpc.WithDiscovery(l.dis), grpc.WithMiddleware(
-		recovery.Recovery(),
-		metadata.Client(),
-		jwt.Client(func(token *jwtv5.Token) (interface{}, error) {
-			return []byte("gwsee"), nil
-		}, jwt.WithSigningMethod(jwtv5.SigningMethodHS256),
-			jwt.WithClaims(func() jwtv5.Claims {
-				return &jwtv5.MapClaims{}
-			}),
-		),
-	))
+	conn, err := grpc.DialInsecure(context.Background(), grpc.WithEndpoint(endpoint), grpc.WithDiscovery(l.dis),
+		grpc.WithTimeout(time.Second*60), //client的超时设置
+		grpc.WithMiddleware(
+			recovery.Recovery(),
+			metadata.Client(),
+			jwt.Client(func(token *jwtv5.Token) (interface{}, error) {
+				return []byte("gwsee"), nil
+			}, jwt.WithSigningMethod(jwtv5.SigningMethodHS256),
+				jwt.WithClaims(func() jwtv5.Claims {
+					return &jwtv5.MapClaims{}
+				}),
+			),
+		))
 	if err != nil {
 		return err
 	}
