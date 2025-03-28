@@ -9,7 +9,7 @@ import "api/blogs/v1/blogs.proto";
 import "api/blogs/v1/blogs_comment.proto";
 import "third_party/google/api/annotations.proto";
 import "api/global/index.proto";
-
+import "api/global/page.proto";
 service Blogs {
 	rpc CreateBlogs (blogs.v1.CreateBlogsRequest) returns  (global.Empty){
 		option (google.api.http) = {
@@ -38,6 +38,32 @@ service Blogs {
 	rpc ListBlogs (blogs.v1.ListBlogsRequest) returns  (blogs.v1.ListBlogsReply){
 		option (google.api.http) = {
 			post: "/v1/blogs/list"
+			body: "*"
+		};
+	};
+	rpc HotBlogs (global.PageInfo) returns (blogs.v1.ListBlogsReply) {
+		option (google.api.http) = {
+			post: "/v1/blogs/hot"
+			body: "*"
+		};
+	}
+	rpc ListBlogTags(blogs.v1.ListBlogsRequest)returns(blogs.v1.ListBlogTagsReply){
+		option(google.api.http)={
+			post: "/v1/blogs/tags"
+			body: "*"
+		};
+	}
+	//点赞
+	rpc Thumb(global.Action) returns (global.Empty){
+		option (google.api.http) = {
+			post: "/v1/blog/thumb"
+			body: "*"
+		};
+	};
+	//收藏
+	rpc Collect(global.Action) returns (global.Empty){
+		option (google.api.http) = {
+			post: "/v1/blog/collect"
 			body: "*"
 		};
 	};

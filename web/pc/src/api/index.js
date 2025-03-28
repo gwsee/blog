@@ -7,3 +7,12 @@ export function getInfo() {
         method: 'get'
     })
 }
+//名言警句 或者 通知
+export function messages(data){
+    return request({
+        url: "/v1/messages",
+        method: "post",
+        data:data
+    })
+}
+

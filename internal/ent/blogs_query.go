@@ -5,7 +5,10 @@ package ent
 import (
 	"blog/internal/ent/blogs"
 	"blog/internal/ent/predicate"
+	"blog/internal/ent/tags"
+	"blog/internal/ent/tagsrelation"
 	"context"
+	"database/sql/driver"
 	"fmt"
 	"math"
 
@@ -18,10 +21,12 @@ import (
 // BlogsQuery is the builder for querying Blogs entities.
 type BlogsQuery struct {
 	config
-	ctx        *QueryContext
-	order      []blogs.OrderOption
-	inters     []Interceptor
-	predicates []predicate.Blogs
+	ctx             *QueryContext
+	order           []blogs.OrderOption
+	inters          []Interceptor
+	predicates      []predicate.Blogs
+	withTag         *TagsQuery
+	withTagRelation *TagsRelationQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -56,6 +61,50 @@ func (bq *BlogsQuery) Unique(unique bool) *BlogsQuery {
 func (bq *BlogsQuery) Order(o ...blogs.OrderOption) *BlogsQuery {
 	bq.order = append(bq.order, o...)
 	return bq
+}
+
+// QueryTag chains the current query on the "tag" edge.
+func (bq *BlogsQuery) QueryTag() *TagsQuery {
+	query := (&TagsClient{config: bq.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := bq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := bq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(blogs.Table, blogs.FieldID, selector),
+			sqlgraph.To(tags.Table, tags.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, blogs.TagTable, blogs.TagPrimaryKey...),
+		)
+		fromU = sqlgraph.SetNeighbors(bq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryTagRelation chains the current query on the "tag_relation" edge.
+func (bq *BlogsQuery) QueryTagRelation() *TagsRelationQuery {
+	query := (&TagsRelationClient{config: bq.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := bq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := bq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(blogs.Table, blogs.FieldID, selector),
+			sqlgraph.To(tagsrelation.Table, tagsrelation.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, blogs.TagRelationTable, blogs.TagRelationColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(bq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
 }
 
 // First returns the first Blogs entity from the query.
@@ -245,15 +294,39 @@ func (bq *BlogsQuery) Clone() *BlogsQuery {
 		return nil
 	}
 	return &BlogsQuery{
-		config:     bq.config,
-		ctx:        bq.ctx.Clone(),
-		order:      append([]blogs.OrderOption{}, bq.order...),
-		inters:     append([]Interceptor{}, bq.inters...),
-		predicates: append([]predicate.Blogs{}, bq.predicates...),
+		config:          bq.config,
+		ctx:             bq.ctx.Clone(),
+		order:           append([]blogs.OrderOption{}, bq.order...),
+		inters:          append([]Interceptor{}, bq.inters...),
+		predicates:      append([]predicate.Blogs{}, bq.predicates...),
+		withTag:         bq.withTag.Clone(),
+		withTagRelation: bq.withTagRelation.Clone(),
 		// clone intermediate query.
 		sql:  bq.sql.Clone(),
 		path: bq.path,
 	}
+}
+
+// WithTag tells the query-builder to eager-load the nodes that are connected to
+// the "tag" edge. The optional arguments are used to configure the query builder of the edge.
+func (bq *BlogsQuery) WithTag(opts ...func(*TagsQuery)) *BlogsQuery {
+	query := (&TagsClient{config: bq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	bq.withTag = query
+	return bq
+}
+
+// WithTagRelation tells the query-builder to eager-load the nodes that are connected to
+// the "tag_relation" edge. The optional arguments are used to configure the query builder of the edge.
+func (bq *BlogsQuery) WithTagRelation(opts ...func(*TagsRelationQuery)) *BlogsQuery {
+	query := (&TagsRelationClient{config: bq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	bq.withTagRelation = query
+	return bq
 }
 
 // GroupBy is used to group vertices by one or more fields/columns.
@@ -332,8 +405,12 @@ func (bq *BlogsQuery) prepareQuery(ctx context.Context) error {
 
 func (bq *BlogsQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Blogs, error) {
 	var (
-		nodes = []*Blogs{}
-		_spec = bq.querySpec()
+		nodes       = []*Blogs{}
+		_spec       = bq.querySpec()
+		loadedTypes = [2]bool{
+			bq.withTag != nil,
+			bq.withTagRelation != nil,
+		}
 	)
 	_spec.ScanValues = func(columns []string) ([]any, error) {
 		return (*Blogs).scanValues(nil, columns)
@@ -341,6 +418,7 @@ func (bq *BlogsQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Blogs,
 	_spec.Assign = func(columns []string, values []any) error {
 		node := &Blogs{config: bq.config}
 		nodes = append(nodes, node)
+		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
 	for i := range hooks {
@@ -352,7 +430,113 @@ func (bq *BlogsQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Blogs,
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+	if query := bq.withTag; query != nil {
+		if err := bq.loadTag(ctx, query, nodes,
+			func(n *Blogs) { n.Edges.Tag = []*Tags{} },
+			func(n *Blogs, e *Tags) { n.Edges.Tag = append(n.Edges.Tag, e) }); err != nil {
+			return nil, err
+		}
+	}
+	if query := bq.withTagRelation; query != nil {
+		if err := bq.loadTagRelation(ctx, query, nodes,
+			func(n *Blogs) { n.Edges.TagRelation = []*TagsRelation{} },
+			func(n *Blogs, e *TagsRelation) { n.Edges.TagRelation = append(n.Edges.TagRelation, e) }); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
+}
+
+func (bq *BlogsQuery) loadTag(ctx context.Context, query *TagsQuery, nodes []*Blogs, init func(*Blogs), assign func(*Blogs, *Tags)) error {
+	edgeIDs := make([]driver.Value, len(nodes))
+	byID := make(map[int]*Blogs)
+	nids := make(map[int]map[*Blogs]struct{})
+	for i, node := range nodes {
+		edgeIDs[i] = node.ID
+		byID[node.ID] = node
+		if init != nil {
+			init(node)
+		}
+	}
+	query.Where(func(s *sql.Selector) {
+		joinT := sql.Table(blogs.TagTable)
+		s.Join(joinT).On(s.C(tags.FieldID), joinT.C(blogs.TagPrimaryKey[1]))
+		s.Where(sql.InValues(joinT.C(blogs.TagPrimaryKey[0]), edgeIDs...))
+		columns := s.SelectedColumns()
+		s.Select(joinT.C(blogs.TagPrimaryKey[0]))
+		s.AppendSelect(columns...)
+		s.SetDistinct(false)
+	})
+	if err := query.prepareQuery(ctx); err != nil {
+		return err
+	}
+	qr := QuerierFunc(func(ctx context.Context, q Query) (Value, error) {
+		return query.sqlAll(ctx, func(_ context.Context, spec *sqlgraph.QuerySpec) {
+			assign := spec.Assign
+			values := spec.ScanValues
+			spec.ScanValues = func(columns []string) ([]any, error) {
+				values, err := values(columns[1:])
+				if err != nil {
+					return nil, err
+				}
+				return append([]any{new(sql.NullInt64)}, values...), nil
+			}
+			spec.Assign = func(columns []string, values []any) error {
+				outValue := int(values[0].(*sql.NullInt64).Int64)
+				inValue := int(values[1].(*sql.NullInt64).Int64)
+				if nids[inValue] == nil {
+					nids[inValue] = map[*Blogs]struct{}{byID[outValue]: {}}
+					return assign(columns[1:], values[1:])
+				}
+				nids[inValue][byID[outValue]] = struct{}{}
+				return nil
+			}
+		})
+	})
+	neighbors, err := withInterceptors[[]*Tags](ctx, query, qr, query.inters)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		nodes, ok := nids[n.ID]
+		if !ok {
+			return fmt.Errorf(`unexpected "tag" node returned %v`, n.ID)
+		}
+		for kn := range nodes {
+			assign(kn, n)
+		}
+	}
+	return nil
+}
+func (bq *BlogsQuery) loadTagRelation(ctx context.Context, query *TagsRelationQuery, nodes []*Blogs, init func(*Blogs), assign func(*Blogs, *TagsRelation)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[int]*Blogs)
+	for i := range nodes {
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+		if init != nil {
+			init(nodes[i])
+		}
+	}
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(tagsrelation.FieldRelationID)
+	}
+	query.Where(predicate.TagsRelation(func(s *sql.Selector) {
+		s.Where(sql.InValues(s.C(blogs.TagRelationColumn), fks...))
+	}))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		fk := n.RelationID
+		node, ok := nodeids[fk]
+		if !ok {
+			return fmt.Errorf(`unexpected referenced foreign-key "relation_id" returned %v for node %v`, fk, n.ID)
+		}
+		assign(node, n)
+	}
+	return nil
 }
 
 func (bq *BlogsQuery) sqlCount(ctx context.Context) (int, error) {

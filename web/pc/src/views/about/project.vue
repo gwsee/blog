@@ -1,8 +1,10 @@
 <template>
   <div class="min-h-screen text-white p-8">
     <div class="max-w-7xl mx-auto">
-      <h1 class="text-5xl md:text-7xl font-bold mb-12">Projects</h1>
-
+      <div class="mb-8 md:mb-12 backdrop-blur-md  rounded-xl p-6 shadow-lg">
+        <h1 class="text-4xl md:text-6xl font-bold">Projects</h1>
+        <p class="text-lg text-white/70 mt-4" v-if="false">Places I've worked and grown</p>
+      </div>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <div
             v-for="(project,key) in projects"
@@ -11,7 +13,7 @@
             class="group relative aspect-[3/4] overflow-hidden rounded-lg bg-gray-900"
         >
           <img
-              :src="$fileFull(project.photo)"
+              :src="$fileFull(project.photo)||defaultCover"
               :alt="project.title"
               class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
           />
@@ -45,6 +47,7 @@
 import {userGet,projectList,experienceList} from "@/api/user";
 import {onMounted, onUnmounted, ref} from 'vue'
 import {useRouter} from "vue-router";
+import defaultCover from "@/assets/image/default-cover.jpg";
 const router = useRouter()
 const toRoute = (path) => {
   router.push(path)

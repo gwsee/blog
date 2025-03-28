@@ -34,3 +34,9 @@ func (o *toolsRepo) Files(ctx context.Context, in *global.IDStr) (*global.IDStr,
 	}
 	return &global.IDStr{Id: res}, nil
 }
+func (o *toolsRepo) UploadOssToken(ctx context.Context, req *global.IDStr) (*v1.UploadOssTokenReply, error) {
+	return o.data.t.UploadOssToken(ctx, req)
+}
+func (o *toolsRepo) UploadOssSave(ctx context.Context, req *v1.UploadOssSaveReq) (*global.Empty, error) {
+	return o.data.t.UploadOssSave(ctx, req)
+}

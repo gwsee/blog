@@ -50,3 +50,6 @@ func (uc *UserService) ListExperience(ctx context.Context, req *v1.ListExperienc
 func (uc *UserService) Photos(ctx context.Context, req *v1.PhotosReq) (*v1.PhotosReply, error) {
 	return uc.repo.Photos(ctx, req)
 }
+func (uc *UserService) Messages(ctx context.Context, req *global.PageInfo) (*v1.MessagesReply, error) {
+	return uc.repo.Messages(ctx, req)
+}

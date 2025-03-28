@@ -26,6 +26,37 @@ service Tools {
 			get: "/v1/file/{id}"
 		};
 	}
+	//获取上传文件到oss的token，并且判断文件是否已经上传
+	rpc UploadOssToken(global.IDStr)returns(UploadOssTokenReply){
+		option (google.api.http) = {
+			body: "*"
+		};
+	}
+	rpc UploadOssSave(UploadOssSaveReq)returns(global.Empty){
+		option (google.api.http) = {
+			body: "*"
+		};
+	}
+}
+message UploadOssSaveReq {
+	string id = 1;
+	string type = 2;
+	int64 size = 3;
+	string name = 4;
+	string path = 5;
+}
+message UploadOssTokenReply{
+	bool exist = 1; //为true代表已经存在
+	//基本信息
+	string host = 2;
+	int64 expire = 3;
+	string region = 5;
+	string bucket = 6;
+	//下面是请求接口返回的
+	string expire_str = 4;
+	string key_id = 7;
+	string key_secret =8;
+	string token = 9;
 }
 
 message UploadFileReply{

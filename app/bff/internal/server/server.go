@@ -10,8 +10,12 @@ import (
 var ProviderSet = wire.NewSet(NewGRPCServer, NewHTTPServer)
 
 var whiteList = map[string]struct{}{
+	"/api.bff.v1.User/Messages": {},
+
 	"/api.bff.v1.Blogs/GetBlogs":                {},
 	"/api.bff.v1.Blogs/ListBlogs":               {},
+	"/api.bff.v1.Blogs/HotBlogs":                {},
+	"/api.bff.v1.Blogs/ListBlogTags":            {},
 	"/api.bff.v1.BlogsComment/ListBlogsComment": {},
 	"/api.bff.v1.BlogsComment/GetBlogsComment":  {},
 

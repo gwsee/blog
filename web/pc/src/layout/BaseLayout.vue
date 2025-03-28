@@ -78,7 +78,7 @@
               </router-link>
             </nav>
 
-            <a-avatar :size="48" class="layout-content-menu-item" @click="showLoginDialog" v-if="!isLoggedIn" >登陆</a-avatar>
+            <a-avatar :size="48" class="layout-content-menu-item" @click="showLoginDialog" v-if="!isLoggedIn" >登录</a-avatar>
             <a-avatar :size="48" class="layout-content-menu-item" @click="showAccountDialog" :src="avatar" v-else ></a-avatar>
           </div>
         </div>
@@ -170,7 +170,7 @@
 
     <!-- 内容区域 -->
     <router-view  />
-    <!-- 登陆 -->
+    <!-- 登录 -->
     <Login ref="loginRef"/>
     <Account ref="accountRef"/>
   </div>
@@ -205,10 +205,6 @@ onMounted(function () {
   }
 })
 
-const goToAbout=(path)=> {
-  router.push(path)
-}
-
 import {
   MenuOutlined,
   CloseOutlined,
@@ -222,7 +218,7 @@ const showMobileSearch = ref(false)
 const navItems = [
   {key: 'diary', label: '日记', href: '/blog',login:false},
   {key: 'travel', label: '旅行', href: '/travel',login:false},
-  {key: 'photo', label: '墙', href: '/picture',login:false},
+  {key: 'photo', label: '墙', href: '/picture',login:true},
   // {key: 'demo', label: 'DEMO', href: '/demo',login:true},
   {key: 'about', label: '关于', href: '/about',login:true},
 ]

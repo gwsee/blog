@@ -4,6 +4,7 @@ import (
 	account "blog/api/account/v1"
 	blogs "blog/api/blogs/v1"
 	"blog/api/global"
+	palaces "blog/api/palaces/v1"
 	tools "blog/api/tools/v1"
 	travel "blog/api/travel/v1"
 	user "blog/api/user/v1"
@@ -24,17 +25,21 @@ import (
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(NewData, NewAccountRepo, NewBlogsRepo, NewTravelRepo, NewUserRepo, NewToolsRepo)
+var ProviderSet = wire.NewSet(NewData,
+	NewAccountRepo, NewBlogsRepo, NewTravelRepo,
+	NewUserRepo, NewToolsRepo, NewPalacesRepo)
 
 // Data .
 type Data struct {
-	ac       account.AccountClient
-	bc       blogs.BlogsClient
-	bcm      blogs.BlogsCommentClient
-	uc       user.UserClient
-	tc       travel.TravelClient
-	t        tools.ToolsClient
-	dis      registry.Discovery
+	ac  account.AccountClient
+	bc  blogs.BlogsClient
+	bcm blogs.BlogsCommentClient
+	uc  user.UserClient
+	tc  travel.TravelClient
+	t   tools.ToolsClient
+	dis registry.Discovery
+	pc  palaces.PalacesClient
+
 	redisCli redis.Cmdable
 }
 
@@ -69,7 +74,9 @@ func NewData(c *global.Etcd, r *global.Redis, logger log.Logger) (*Data, func(),
 	if err = data.NewToolsClient(); err != nil {
 		return nil, cleanup, err
 	}
-
+	if err = data.NewPalacesClient(); err != nil {
+		return nil, cleanup, err
+	}
 	redisCli, err := NewRedisCmd(r, logger)
 	if err != nil {
 		return nil, nil, err
@@ -212,5 +219,26 @@ func (l *Data) NewToolsClient() error {
 		return err
 	}
 	l.t = tools.NewToolsClient(conn)
+	return nil
+}
+func (l *Data) NewPalacesClient() error {
+	endpoint := "discovery:///app-palaces"
+	conn, err := grpc.DialInsecure(context.Background(), grpc.WithEndpoint(endpoint), grpc.WithDiscovery(l.dis),
+		grpc.WithTimeout(time.Second*60), //client的超时设置
+		grpc.WithMiddleware(
+			recovery.Recovery(),
+			metadata.Client(),
+			jwt.Client(func(token *jwtv5.Token) (interface{}, error) {
+				return []byte("gwsee"), nil
+			}, jwt.WithSigningMethod(jwtv5.SigningMethodHS256),
+				jwt.WithClaims(func() jwtv5.Claims {
+					return &jwtv5.MapClaims{}
+				}),
+			),
+		))
+	if err != nil {
+		return err
+	}
+	l.pc = palaces.NewPalacesClient(conn)
 	return nil
 }

@@ -43,7 +43,7 @@ const (
 	// FieldPhotos holds the string denoting the photos field in the database.
 	FieldPhotos = "photos"
 	// Table holds the table name of the userproject in the database.
-	Table = "user_project"
+	Table = "users_project"
 )
 
 // Columns holds all SQL columns for userproject fields.
@@ -82,9 +82,12 @@ func ValidColumn(column string) bool {
 //
 //	import _ "blog/internal/ent/runtime"
 var (
-	Hooks [3]ent.Hook
+	Hooks        [3]ent.Hook
+	Interceptors [1]ent.Interceptor
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
 	DefaultCreatedAt int64
+	// UpdateDefaultCreatedAt holds the default value on update for the "created_at" field.
+	UpdateDefaultCreatedAt func() int64
 	// DefaultCreatedBy holds the default value on creation for the "created_by" field.
 	DefaultCreatedBy int64
 	// DefaultUpdatedAt holds the default value on creation for the "updated_at" field.

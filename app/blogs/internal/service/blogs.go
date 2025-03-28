@@ -32,3 +32,15 @@ func (s *BlogsService) GetBlogs(ctx context.Context, req *global.ID) (*pb.GetBlo
 func (s *BlogsService) ListBlogs(ctx context.Context, req *pb.ListBlogsRequest) (*pb.ListBlogsReply, error) {
 	return s.bc.ListBlogs(ctx, req)
 }
+func (s *BlogsService) HotBlogs(ctx context.Context, req *global.PageInfo) (*pb.ListBlogsReply, error) {
+	return s.bc.HotBlogs(ctx, req)
+}
+func (s *BlogsService) Thumb(ctx context.Context, req *global.Action) (*global.Empty, error) {
+	return s.bc.Thumb(ctx, req)
+}
+func (s *BlogsService) Collect(ctx context.Context, req *global.Action) (*global.Empty, error) {
+	return s.bc.Collect(ctx, req)
+}
+func (s *BlogsService) ListBlogTags(ctx context.Context, req *pb.ListBlogsRequest) (*pb.ListBlogTagsReply, error) {
+	return s.bc.ListBlogTags(ctx, req)
+}

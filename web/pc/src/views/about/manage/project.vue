@@ -73,6 +73,7 @@ import {filePrefix} from "@/api/tool.js";
 import { PlusOutlined } from '@ant-design/icons-vue'
 const open = ref(false)
 const confirmLoading = ref(false)
+const emits = defineEmits(["ok"]);
 const handleOk = ()=>{
   formRef.
   value.
@@ -91,6 +92,7 @@ const handleOk = ()=>{
         confirmLoading.value = false
         open.value = false
         message.success('saved successfully!')
+        emits("ok")
       }
     }).finally(()=>{
       confirmLoading.value = false
@@ -139,7 +141,7 @@ const show = (id,experienceId) => {
       formState.end = data.end;
       formState.link = data.link;
       formState.photos = data.photos;
-      if(formState.photos.length > 0){
+      if(formState.photos&&formState.photos.length > 0){
         formState.photos.forEach(photo => {
           formState.photosList.push({uuid:photo,url:filePrefix+(photo)});
         })

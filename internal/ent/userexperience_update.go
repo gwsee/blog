@@ -335,6 +335,13 @@ func (ueu *UserExperienceUpdate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (ueu *UserExperienceUpdate) defaults() error {
+	if _, ok := ueu.mutation.CreatedAt(); !ok {
+		if userexperience.UpdateDefaultCreatedAt == nil {
+			return fmt.Errorf("ent: uninitialized userexperience.UpdateDefaultCreatedAt (forgotten import ent/runtime?)")
+		}
+		v := userexperience.UpdateDefaultCreatedAt()
+		ueu.mutation.SetCreatedAt(v)
+	}
 	if _, ok := ueu.mutation.UpdatedAt(); !ok {
 		if userexperience.UpdateDefaultUpdatedAt == nil {
 			return fmt.Errorf("ent: uninitialized userexperience.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
@@ -353,6 +360,12 @@ func (ueu *UserExperienceUpdate) sqlSave(ctx context.Context) (n int, err error)
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := ueu.mutation.CreatedAt(); ok {
+		_spec.SetField(userexperience.FieldCreatedAt, field.TypeInt64, value)
+	}
+	if value, ok := ueu.mutation.AddedCreatedAt(); ok {
+		_spec.AddField(userexperience.FieldCreatedAt, field.TypeInt64, value)
 	}
 	if value, ok := ueu.mutation.UpdatedAt(); ok {
 		_spec.SetField(userexperience.FieldUpdatedAt, field.TypeInt64, value)
@@ -771,6 +784,13 @@ func (ueuo *UserExperienceUpdateOne) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (ueuo *UserExperienceUpdateOne) defaults() error {
+	if _, ok := ueuo.mutation.CreatedAt(); !ok {
+		if userexperience.UpdateDefaultCreatedAt == nil {
+			return fmt.Errorf("ent: uninitialized userexperience.UpdateDefaultCreatedAt (forgotten import ent/runtime?)")
+		}
+		v := userexperience.UpdateDefaultCreatedAt()
+		ueuo.mutation.SetCreatedAt(v)
+	}
 	if _, ok := ueuo.mutation.UpdatedAt(); !ok {
 		if userexperience.UpdateDefaultUpdatedAt == nil {
 			return fmt.Errorf("ent: uninitialized userexperience.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
@@ -806,6 +826,12 @@ func (ueuo *UserExperienceUpdateOne) sqlSave(ctx context.Context) (_node *UserEx
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := ueuo.mutation.CreatedAt(); ok {
+		_spec.SetField(userexperience.FieldCreatedAt, field.TypeInt64, value)
+	}
+	if value, ok := ueuo.mutation.AddedCreatedAt(); ok {
+		_spec.AddField(userexperience.FieldCreatedAt, field.TypeInt64, value)
 	}
 	if value, ok := ueuo.mutation.UpdatedAt(); ok {
 		_spec.SetField(userexperience.FieldUpdatedAt, field.TypeInt64, value)

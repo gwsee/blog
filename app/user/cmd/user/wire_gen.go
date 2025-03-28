@@ -30,7 +30,7 @@ func wireApp(conf *conf.Bootstrap, tracerProvider *trace.TracerProvider,logger l
 		return nil, nil, err
 	}
 	userRepo := data.NewUserRepo(dataData, logger)
-	userUsecase := biz.NewUserUsecase(userRepo, logger)
+	userUsecase := biz.NewUserUseCase(userRepo, logger)
 	userService := service.NewUserService(userUsecase)
 	grpcServer := server.NewGRPCServer(conf.Server, userService, logger)
 	httpServer := server.NewHTTPServer(conf.Server, userService, logger)

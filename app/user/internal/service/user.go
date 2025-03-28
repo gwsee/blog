@@ -11,11 +11,11 @@ import (
 type UserService struct {
 	v1.UnimplementedUserServer
 
-	uc *biz.UserUsecase
+	uc *biz.UserUseCase
 }
 
 // NewUserService new a greeter service.
-func NewUserService(uc *biz.UserUsecase) *UserService {
+func NewUserService(uc *biz.UserUseCase) *UserService {
 	return &UserService{uc: uc}
 }
 func (s *UserService) SaveUser(ctx context.Context, req *v1.SaveUserRequest) (*global.Empty, error) {
@@ -50,4 +50,7 @@ func (s *UserService) ListExperience(ctx context.Context, req *v1.ListExperience
 }
 func (s *UserService) Photos(ctx context.Context, req *v1.PhotosReq) (*v1.PhotosReply, error) {
 	return s.uc.Photos(ctx, req)
+}
+func (s *UserService) Messages(ctx context.Context, req *global.PageInfo) (*v1.MessagesReply, error) {
+	return s.uc.Messages(ctx, req)
 }

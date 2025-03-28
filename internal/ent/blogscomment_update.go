@@ -301,6 +301,13 @@ func (bcu *BlogsCommentUpdate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (bcu *BlogsCommentUpdate) defaults() error {
+	if _, ok := bcu.mutation.CreatedAt(); !ok {
+		if blogscomment.UpdateDefaultCreatedAt == nil {
+			return fmt.Errorf("ent: uninitialized blogscomment.UpdateDefaultCreatedAt (forgotten import ent/runtime?)")
+		}
+		v := blogscomment.UpdateDefaultCreatedAt()
+		bcu.mutation.SetCreatedAt(v)
+	}
 	if _, ok := bcu.mutation.UpdatedAt(); !ok {
 		if blogscomment.UpdateDefaultUpdatedAt == nil {
 			return fmt.Errorf("ent: uninitialized blogscomment.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
@@ -337,6 +344,12 @@ func (bcu *BlogsCommentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := bcu.mutation.CreatedAt(); ok {
+		_spec.SetField(blogscomment.FieldCreatedAt, field.TypeInt64, value)
+	}
+	if value, ok := bcu.mutation.AddedCreatedAt(); ok {
+		_spec.AddField(blogscomment.FieldCreatedAt, field.TypeInt64, value)
 	}
 	if value, ok := bcu.mutation.UpdatedAt(); ok {
 		_spec.SetField(blogscomment.FieldUpdatedAt, field.TypeInt64, value)
@@ -714,6 +727,13 @@ func (bcuo *BlogsCommentUpdateOne) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (bcuo *BlogsCommentUpdateOne) defaults() error {
+	if _, ok := bcuo.mutation.CreatedAt(); !ok {
+		if blogscomment.UpdateDefaultCreatedAt == nil {
+			return fmt.Errorf("ent: uninitialized blogscomment.UpdateDefaultCreatedAt (forgotten import ent/runtime?)")
+		}
+		v := blogscomment.UpdateDefaultCreatedAt()
+		bcuo.mutation.SetCreatedAt(v)
+	}
 	if _, ok := bcuo.mutation.UpdatedAt(); !ok {
 		if blogscomment.UpdateDefaultUpdatedAt == nil {
 			return fmt.Errorf("ent: uninitialized blogscomment.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
@@ -767,6 +787,12 @@ func (bcuo *BlogsCommentUpdateOne) sqlSave(ctx context.Context) (_node *BlogsCom
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := bcuo.mutation.CreatedAt(); ok {
+		_spec.SetField(blogscomment.FieldCreatedAt, field.TypeInt64, value)
+	}
+	if value, ok := bcuo.mutation.AddedCreatedAt(); ok {
+		_spec.AddField(blogscomment.FieldCreatedAt, field.TypeInt64, value)
 	}
 	if value, ok := bcuo.mutation.UpdatedAt(); ok {
 		_spec.SetField(blogscomment.FieldUpdatedAt, field.TypeInt64, value)

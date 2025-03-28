@@ -6,6 +6,7 @@ import (
 	"blog/internal/ent/predicate"
 
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 )
 
 // ID filters vertices based on their ID field.
@@ -106,6 +107,21 @@ func IsHidden(v int8) predicate.Blogs {
 // Cover applies equality check predicate on the "cover" field. It's identical to CoverEQ.
 func Cover(v string) predicate.Blogs {
 	return predicate.Blogs(sql.FieldEQ(FieldCover, v))
+}
+
+// BrowseNum applies equality check predicate on the "browse_num" field. It's identical to BrowseNumEQ.
+func BrowseNum(v int) predicate.Blogs {
+	return predicate.Blogs(sql.FieldEQ(FieldBrowseNum, v))
+}
+
+// CollectNum applies equality check predicate on the "collect_num" field. It's identical to CollectNumEQ.
+func CollectNum(v int) predicate.Blogs {
+	return predicate.Blogs(sql.FieldEQ(FieldCollectNum, v))
+}
+
+// LoveNum applies equality check predicate on the "love_num" field. It's identical to LoveNumEQ.
+func LoveNum(v int) predicate.Blogs {
+	return predicate.Blogs(sql.FieldEQ(FieldLoveNum, v))
 }
 
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
@@ -621,6 +637,172 @@ func CoverEqualFold(v string) predicate.Blogs {
 // CoverContainsFold applies the ContainsFold predicate on the "cover" field.
 func CoverContainsFold(v string) predicate.Blogs {
 	return predicate.Blogs(sql.FieldContainsFold(FieldCover, v))
+}
+
+// BrowseNumEQ applies the EQ predicate on the "browse_num" field.
+func BrowseNumEQ(v int) predicate.Blogs {
+	return predicate.Blogs(sql.FieldEQ(FieldBrowseNum, v))
+}
+
+// BrowseNumNEQ applies the NEQ predicate on the "browse_num" field.
+func BrowseNumNEQ(v int) predicate.Blogs {
+	return predicate.Blogs(sql.FieldNEQ(FieldBrowseNum, v))
+}
+
+// BrowseNumIn applies the In predicate on the "browse_num" field.
+func BrowseNumIn(vs ...int) predicate.Blogs {
+	return predicate.Blogs(sql.FieldIn(FieldBrowseNum, vs...))
+}
+
+// BrowseNumNotIn applies the NotIn predicate on the "browse_num" field.
+func BrowseNumNotIn(vs ...int) predicate.Blogs {
+	return predicate.Blogs(sql.FieldNotIn(FieldBrowseNum, vs...))
+}
+
+// BrowseNumGT applies the GT predicate on the "browse_num" field.
+func BrowseNumGT(v int) predicate.Blogs {
+	return predicate.Blogs(sql.FieldGT(FieldBrowseNum, v))
+}
+
+// BrowseNumGTE applies the GTE predicate on the "browse_num" field.
+func BrowseNumGTE(v int) predicate.Blogs {
+	return predicate.Blogs(sql.FieldGTE(FieldBrowseNum, v))
+}
+
+// BrowseNumLT applies the LT predicate on the "browse_num" field.
+func BrowseNumLT(v int) predicate.Blogs {
+	return predicate.Blogs(sql.FieldLT(FieldBrowseNum, v))
+}
+
+// BrowseNumLTE applies the LTE predicate on the "browse_num" field.
+func BrowseNumLTE(v int) predicate.Blogs {
+	return predicate.Blogs(sql.FieldLTE(FieldBrowseNum, v))
+}
+
+// CollectNumEQ applies the EQ predicate on the "collect_num" field.
+func CollectNumEQ(v int) predicate.Blogs {
+	return predicate.Blogs(sql.FieldEQ(FieldCollectNum, v))
+}
+
+// CollectNumNEQ applies the NEQ predicate on the "collect_num" field.
+func CollectNumNEQ(v int) predicate.Blogs {
+	return predicate.Blogs(sql.FieldNEQ(FieldCollectNum, v))
+}
+
+// CollectNumIn applies the In predicate on the "collect_num" field.
+func CollectNumIn(vs ...int) predicate.Blogs {
+	return predicate.Blogs(sql.FieldIn(FieldCollectNum, vs...))
+}
+
+// CollectNumNotIn applies the NotIn predicate on the "collect_num" field.
+func CollectNumNotIn(vs ...int) predicate.Blogs {
+	return predicate.Blogs(sql.FieldNotIn(FieldCollectNum, vs...))
+}
+
+// CollectNumGT applies the GT predicate on the "collect_num" field.
+func CollectNumGT(v int) predicate.Blogs {
+	return predicate.Blogs(sql.FieldGT(FieldCollectNum, v))
+}
+
+// CollectNumGTE applies the GTE predicate on the "collect_num" field.
+func CollectNumGTE(v int) predicate.Blogs {
+	return predicate.Blogs(sql.FieldGTE(FieldCollectNum, v))
+}
+
+// CollectNumLT applies the LT predicate on the "collect_num" field.
+func CollectNumLT(v int) predicate.Blogs {
+	return predicate.Blogs(sql.FieldLT(FieldCollectNum, v))
+}
+
+// CollectNumLTE applies the LTE predicate on the "collect_num" field.
+func CollectNumLTE(v int) predicate.Blogs {
+	return predicate.Blogs(sql.FieldLTE(FieldCollectNum, v))
+}
+
+// LoveNumEQ applies the EQ predicate on the "love_num" field.
+func LoveNumEQ(v int) predicate.Blogs {
+	return predicate.Blogs(sql.FieldEQ(FieldLoveNum, v))
+}
+
+// LoveNumNEQ applies the NEQ predicate on the "love_num" field.
+func LoveNumNEQ(v int) predicate.Blogs {
+	return predicate.Blogs(sql.FieldNEQ(FieldLoveNum, v))
+}
+
+// LoveNumIn applies the In predicate on the "love_num" field.
+func LoveNumIn(vs ...int) predicate.Blogs {
+	return predicate.Blogs(sql.FieldIn(FieldLoveNum, vs...))
+}
+
+// LoveNumNotIn applies the NotIn predicate on the "love_num" field.
+func LoveNumNotIn(vs ...int) predicate.Blogs {
+	return predicate.Blogs(sql.FieldNotIn(FieldLoveNum, vs...))
+}
+
+// LoveNumGT applies the GT predicate on the "love_num" field.
+func LoveNumGT(v int) predicate.Blogs {
+	return predicate.Blogs(sql.FieldGT(FieldLoveNum, v))
+}
+
+// LoveNumGTE applies the GTE predicate on the "love_num" field.
+func LoveNumGTE(v int) predicate.Blogs {
+	return predicate.Blogs(sql.FieldGTE(FieldLoveNum, v))
+}
+
+// LoveNumLT applies the LT predicate on the "love_num" field.
+func LoveNumLT(v int) predicate.Blogs {
+	return predicate.Blogs(sql.FieldLT(FieldLoveNum, v))
+}
+
+// LoveNumLTE applies the LTE predicate on the "love_num" field.
+func LoveNumLTE(v int) predicate.Blogs {
+	return predicate.Blogs(sql.FieldLTE(FieldLoveNum, v))
+}
+
+// HasTag applies the HasEdge predicate on the "tag" edge.
+func HasTag() predicate.Blogs {
+	return predicate.Blogs(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, TagTable, TagPrimaryKey...),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasTagWith applies the HasEdge predicate on the "tag" edge with a given conditions (other predicates).
+func HasTagWith(preds ...predicate.Tags) predicate.Blogs {
+	return predicate.Blogs(func(s *sql.Selector) {
+		step := newTagStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasTagRelation applies the HasEdge predicate on the "tag_relation" edge.
+func HasTagRelation() predicate.Blogs {
+	return predicate.Blogs(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, TagRelationTable, TagRelationColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasTagRelationWith applies the HasEdge predicate on the "tag_relation" edge with a given conditions (other predicates).
+func HasTagRelationWith(preds ...predicate.TagsRelation) predicate.Blogs {
+	return predicate.Blogs(func(s *sql.Selector) {
+		step := newTagRelationStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
 }
 
 // And groups predicates with the AND operator between them.

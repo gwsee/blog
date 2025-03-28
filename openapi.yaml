@@ -3,10 +3,557 @@
 
 openapi: 3.0.3
 info:
-    title: User API
+    title: Palaces API
     version: 0.0.1
-paths: {}
+paths:
+    /v1/palaces/create:
+        post:
+            tags:
+                - Palaces
+            operationId: Palaces_CreatePalaces
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreatePalacesRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreatePalacesReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/palaces/delete:
+        post:
+            tags:
+                - Palaces
+            operationId: Palaces_DeletePalaces
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/DeletePalacesRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeletePalacesReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/palaces/get:
+        post:
+            tags:
+                - Palaces
+            operationId: Palaces_GetPalaces
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/GetPalacesRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetPalacesReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/palaces/list:
+        post:
+            tags:
+                - Palaces
+            operationId: Palaces_ListPalaces
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/ListPalacesRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListPalacesReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/palaces/memo/delete:
+        post:
+            tags:
+                - Palaces
+            operationId: Palaces_DeleteMemo
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/ID'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Empty'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/palaces/memo/done:
+        post:
+            tags:
+                - Palaces
+            operationId: Palaces_DoneMemo
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/State'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Empty'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/palaces/memo/list:
+        post:
+            tags:
+                - Palaces
+            operationId: Palaces_ListMemo
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/ListMemoRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListMemoReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/palaces/memo/save:
+        post:
+            tags:
+                - Palaces
+            operationId: Palaces_SaveMemo
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/SaveMemoRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Empty'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/palaces/todo-done/delete:
+        post:
+            tags:
+                - Palaces
+            operationId: Palaces_DeleteTodoDone
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/ID'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Empty'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/palaces/todo-done/list:
+        post:
+            tags:
+                - Palaces
+            operationId: Palaces_ListTodoDone
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/ListTodoRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListTodoReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/palaces/todo-record/delete:
+        post:
+            tags:
+                - Palaces
+            description: 删除所有某个todo的记录
+            operationId: Palaces_DeleteTodoRecord
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/ID'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Empty'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/palaces/todo/delete:
+        post:
+            tags:
+                - Palaces
+            operationId: Palaces_DeleteTodo
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/ID'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Empty'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/palaces/todo/done:
+        post:
+            tags:
+                - Palaces
+            operationId: Palaces_DoneTodo
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/ID'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Empty'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/palaces/todo/list:
+        post:
+            tags:
+                - Palaces
+            operationId: Palaces_ListTodo
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/ListTodoRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListTodoReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/palaces/todo/save:
+        post:
+            tags:
+                - Palaces
+            operationId: Palaces_SaveTodo
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/SaveTodoItem'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Empty'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/palaces/update:
+        post:
+            tags:
+                - Palaces
+            operationId: Palaces_UpdatePalaces
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdatePalacesRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpdatePalacesReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
 components:
-    schemas: {}
+    schemas:
+        CreatePalacesReply:
+            type: object
+            properties: {}
+        CreatePalacesRequest:
+            type: object
+            properties: {}
+        DeletePalacesReply:
+            type: object
+            properties: {}
+        DeletePalacesRequest:
+            type: object
+            properties: {}
+        Empty:
+            type: object
+            properties: {}
+        GetPalacesReply:
+            type: object
+            properties: {}
+        GetPalacesRequest:
+            type: object
+            properties: {}
+        GoogleProtobufAny:
+            type: object
+            properties:
+                '@type':
+                    type: string
+                    description: The type of the serialized message.
+            additionalProperties: true
+            description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+        ID:
+            type: object
+            properties:
+                id:
+                    type: string
+                accountId:
+                    type: string
+        ListMemoReply:
+            type: object
+            properties:
+                total:
+                    type: string
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/SaveMemoRequest'
+        ListMemoRequest:
+            type: object
+            properties:
+                page:
+                    $ref: '#/components/schemas/PageInfo'
+                name:
+                    type: string
+                status:
+                    type: string
+        ListPalacesReply:
+            type: object
+            properties: {}
+        ListPalacesRequest:
+            type: object
+            properties: {}
+        ListTodoReply:
+            type: object
+            properties:
+                total:
+                    type: string
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/SaveTodoItem'
+        ListTodoRequest:
+            type: object
+            properties:
+                page:
+                    $ref: '#/components/schemas/PageInfo'
+                theme:
+                    type: string
+                type:
+                    type: string
+                status:
+                    type: string
+                from:
+                    type: string
+        PageInfo:
+            type: object
+            properties:
+                pageNum:
+                    type: string
+                pageSize:
+                    type: string
+        SaveMemoRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                name:
+                    type: string
+                content:
+                    type: string
+                status:
+                    type: string
+                createdAt:
+                    type: string
+                updatedAt:
+                    type: string
+        SaveTodoItem:
+            type: object
+            properties:
+                id:
+                    type: string
+                theme:
+                    type: string
+                type:
+                    type: string
+                from:
+                    type: string
+                to:
+                    type: string
+                num:
+                    type: string
+                sort:
+                    type: string
+                content:
+                    type: string
+                status:
+                    type: string
+                createdAt:
+                    type: string
+                updatedAt:
+                    type: string
+                doneId:
+                    type: string
+        State:
+            type: object
+            properties:
+                id:
+                    type: string
+                state:
+                    type: string
+                accountId:
+                    type: string
+        Status:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+                    format: int32
+                message:
+                    type: string
+                    description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+                details:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GoogleProtobufAny'
+                    description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
+            description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+        UpdatePalacesReply:
+            type: object
+            properties: {}
+        UpdatePalacesRequest:
+            type: object
+            properties: {}
 tags:
-    - name: User
+    - name: Palaces

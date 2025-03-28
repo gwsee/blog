@@ -82,6 +82,7 @@
               <a-list-item class="a-list-item-action">
                 <template #actions >
                   <a key="list-loadmore-edit" @click="showProject(item.id,item.experienceId)">edit</a>&nbsp;
+                  <a key="list-loadmore-del" @click="delProject(item.id)">del</a>&nbsp;
                   <a key="list-loadmore-more" v-if="false">more</a>
                 </template>
                 <a-skeleton avatar :title="false"  :loading="false" class="relative">
@@ -109,7 +110,7 @@
     <a-modal :open="previewVisible" :footer="null" @cancel="handleCancel">
       <img alt="example" style="width: 100%" :src="previewImage" />
     </a-modal>
-    <project ref="projectRef"  />
+    <project ref="projectRef" @ok="loadProjects" />
   </div>
 </template>
 
@@ -121,7 +122,9 @@ import {reactive, ref, onMounted, getCurrentInstance} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 const router = useRouter()
 const projectRef = ref(null);
+const experienceId = ref(0)
 import { message } from 'ant-design-vue'
+import {projectDel} from "../../../api/user.js";
 const labelCol = { style: { width: '90px' } };
 const wrapperCol = { span: 24 };
 const formRef = ref(null)
@@ -156,6 +159,7 @@ onMounted(()=>{
   if(!id){
     return
   }
+  experienceId.value = id;
   const { appContext } = getCurrentInstance();
   const $fileFull = appContext.config.globalProperties.$fileFull;
   experienceGet({id:id}).then((res) => {
@@ -177,13 +181,24 @@ onMounted(()=>{
       }
     }
   })
-  projectList({experienceId: id}).then((res) => {
-      if(res){
-        formState.projects = res.data&&res.data.list || [];
-      }
-  })
+  loadProjects()
 })
-
+const delProject =(id)=>{
+  projectDel({id:id}).then((res) => {
+    if(res&&res.code==200){
+      message.success('deleted successfully!')
+    }
+  }).finally(() => {
+    loadProjects()
+  })
+}
+const loadProjects = () => {
+  projectList({experienceId: experienceId.value}).then((res) => {
+    if(res){
+      formState.projects = res.data&&res.data.list || [];
+    }
+  })
+}
 const onFinish = (values) => {
   loading.value = true;
   if(formState.imageList.length>0){
@@ -203,7 +218,6 @@ const onFinish = (values) => {
   values.responsibilities = values.responsibilities.split('\n').filter(item => item.trim() !== '')
   values.achievements = values.achievements.split('\n').filter(item => item.trim() !== '')
 
-  console.log('Success:', values)
   message.success('Experience saved successfully!')
   // Here you would typically send the data to your backend
 }

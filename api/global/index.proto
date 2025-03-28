@@ -11,17 +11,26 @@ message Empty {
 
 message ID {
   int64 id = 1;
+  optional int64 accountId = 2;
 }
 
 message IDStr {
   string id = 1;
+  optional int64 accountId = 2;
 }
 
 message Action {
   int64 id = 1;
   bool do =2;
+  optional int64 accountId = 3;
 }
 
 message Byte {
   bytes data = 1;
+}
+
+message State {
+  int64 id = 1;
+  int64 state = 2;
+  optional int64 accountId = 3;
 }

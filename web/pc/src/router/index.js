@@ -34,7 +34,7 @@ export const constantRoutes = [
             },
             {
                 path: 'about/experience/demo/:id(\\d+)',
-                component: () => import('@/views/about/info/experience_demo.vue'),
+                component: () => import('@/views/about/info/demo/experience_demo.vue'),
                 name: 'about-experience-demo-id',
                 meta: { title: '工作经历管理',  affix: true }
             },

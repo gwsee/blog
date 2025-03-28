@@ -1,34 +1,37 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br ">
-    <!-- 头部展示区 -->
+  <div class="min-h-screen bg-gradient-to-br" style="background: transparent;">
+    <!-- 头部展示区 - 添加玻璃态效果 -->
     <section class="container mx-auto px-4 py-12 md:py-24">
-      <div class="flex flex-col md:flex-row items-center gap-8">
-        <div class="relative w-32 h-32 md:w-48 md:h-48">
-          <img
-              :src="userInfo.avatar?($fileFull(userInfo.avatar)):avatar"
-              alt="Profile"
-              class="rounded-full w-full h-full object-cover shadow-xl"
-          />
-        </div>
-        <div class="text-center md:text-left">
-          <h1 class="text-4xl md:text-6xl font-bold text-gray-800 dark:text-white mb-2">
-            {{ userInfo.name || '天天开心' }}
-          </h1>
-          <h2 class="text-xl md:text-2xl text-gray-600 dark:text-gray-400 mb-6">
-            {{
-              userInfo.description || '我稍微偷点懒哈!'
-            }}
-          </h2>
-          <div class="flex flex-wrap gap-4 justify-center md:justify-start">
-            <button class="px-6 py-2  rounded-md hover:bg-gray-100 transition-colors"  @click="toRoute('/about/experience')">
-              View Experiences
-            </button>
-            <button class="px-6 py-2 text-gray-800 rounded-md hover:bg-gray-100 transition-colors"  @click="toRoute('/about/project')">
-              View Projects
-            </button>
-            <button class="px-6 py-2  text-gray-800 rounded-md hover:bg-gray-100 transition-colors"  @click="toRoute('/about/profile/manage')">
-              Manage
-            </button>
+      <div class="backdrop-blur-xl bg-black/30 border border-white/20 rounded-2xl p-8 shadow-xl">
+        <div class="flex flex-col md:flex-row items-center gap-8">
+          <div class="relative w-32 h-32 md:w-48 md:h-48 flex-none">
+            <img
+                :src="($fileFull(userInfo.avatar))||avatar"
+                alt="Profile"
+                class="rounded-full w-full h-full object-cover shadow-xl border-4 border-white/30"
+            />
+          </div>
+          <div class="text-center md:text-left w-full">
+            <h1 class="text-4xl md:text-6xl font-bold text-white mb-2">
+              {{ userInfo.name || '天天开心' }}
+            </h1>
+            <!-- Fixed description element with proper containment -->
+            <div class="w-full overflow-hidden mb-6">
+              <h2 class="text-xl md:text-2xl text-white/80 pt-2 break-words md:line-clamp-none text-left"
+                  v-html="formattedContent(userInfo.description||'我稍微偷点懒哈')">
+              </h2>
+            </div>
+            <div class="flex flex-wrap gap-4 justify-center md:justify-start">
+              <button class="px-6 py-2 backdrop-blur-md bg-white/20 border border-white/30 text-white rounded-md hover:bg-white/30 transition-colors" @click="toRoute('/about/experience')">
+                View Experiences
+              </button>
+              <button class="px-6 py-2 backdrop-blur-md bg-white/20 border border-white/30 text-white rounded-md hover:bg-white/30 transition-colors" @click="toRoute('/about/project')">
+                View Projects
+              </button>
+              <button class="px-6 py-2 backdrop-blur-md bg-white/20 border border-white/30 text-white rounded-md hover:bg-white/30 transition-colors" @click="toRoute('/about/profile/manage')">
+                Manage
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -58,19 +61,23 @@
                 @click="toRoute('/about/experience/'+experience.id)"
             >
               <img
-                  :src="$fileFull(experience.image)||'https://images.unsplash.com/photo-1537996194471-e657df975ab4?height=600&width=400'"
+                  :src="$fileFull(experience.image)||defaultCover"
                   :alt="experience.company"
                   class="absolute inset-0 w-full h-full object-cover"
               />
               <div :class="`absolute inset-0 bg-gradient-to-b ${colors[key%5]} opacity-75`"></div>
-              <div class="absolute inset-0 p-6 flex flex-col justify-between transform transition-transform duration-500 group-hover:scale-105">
-                <div>
-                  <span class="text-4xl font-bold opacity-50">{{ experience.company }}</span>
+              <div class="absolute inset-0 p-6 flex flex-col h-full transform transition-transform duration-500 group-hover:scale-105">
+                <div class="flex-none h-[50%] flex flex-col justify-start">
+                  <div class="h-[5.0rem] overflow-hidden">
+                    <span class="text-4xl font-bold opacity-50 line-clamp-2">{{ experience.company }}</span>
+                  </div>
                   <div class="mt-2 text-sm opacity-75">{{ $formatDate(experience.start,'{y}-{m}-{d}')  }} - {{experience.end?$formatDate(experience.end,'{y}-{m}-{d}'):'至今'}}</div>
                 </div>
-                <div>
-                  <h3 class="text-2xl font-bold mb-2">{{ experience.role }}</h3>
-                  <p class="text-sm opacity-75" v-html="formattedContent( experience.description)"></p>
+                <div class="flex-none h-[50%] flex flex-col justify-start">
+                  <h3 class="text-2xl font-bold mb-2 truncate">{{ experience.role }}</h3>
+                  <div class="overflow-hidden max-h-[calc(100%-2.5rem)]">
+                    <p class="text-sm opacity-75 line-clamp-9" v-html="formattedContent(experience.description)"></p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -78,15 +85,14 @@
         </div>
 
       </div>
-      <div class=" bottom-0 left-0 w-full flex justify-center pb-8" v-if="experiencesMore">
+      <div class="bottom-0 left-0 w-full flex justify-center pb-8" v-if="experiencesMore">
         <router-link
-            to="/projects"
-            class="px-8 py-3 bg-white/10 backdrop-blur-sm rounded-full
-                 hover:bg-white/20 transition-all duration-300
+            to="/about/experience"
+            class="px-8 py-3 backdrop-blur-md bg-white/20 border border-white/30 rounded-full
+                 hover:bg-white/30 transition-all duration-300
                  flex items-center gap-2 group"
         >
-          View All Projects
-          <!--          <ArrowRightIcon class="w-5 h-5 transform group-hover:translate-x-1 transition-transform" />-->
+          View All Experiences
         </router-link>
       </div>
     </section>
@@ -160,38 +166,16 @@ import {
   CodeOutlined,
   AppstoreOutlined,
 } from '@ant-design/icons-vue'
+import defaultCover from "@/assets/image/default-cover.jpg";
 const formattedContent=(data)=> {
   if(!data){
     return data
   }
   return data.replace(/\n/g, '<br/>');
 }
-// const projects = ref([
-//   // {
-//   //   id: 1,
-//   //   title: 'E-commerce App',
-//   //   image: '/src/assets/image/bg.jpg?height=400&width=600',
-//   // },
-//   // {
-//   //   id: 2,
-//   //   title: 'Social Media Platform',
-//   //   image: '/src/assets/image/bg.jpg?height=400&width=600',
-//   // },
-//   // {
-//   //   id: 3,
-//   //   title: 'Fitness Tracker',
-//   //   image: '/src/assets/image/bg.jpg?height=400&width=600',
-//   // },
-//   // {
-//   //   id: 4,
-//   //   title: 'Task Management',
-//   //   image: '/src/assets/image/bg.jpg?height=400&width=600',
-//   // },
-// ])
-const projectsMore = ref(false)
-const experiences = ref([
 
-])
+const projectsMore = ref(false)
+const experiences = ref([])
 const experiencesMore = ref(false)
 const userInfo = ref({})
 
@@ -239,5 +223,43 @@ const toRoute = (path) => {
 
 .hover\:tilt:hover {
   animation: tilt 5s infinite;
+}
+/* 添加 Tailwind 的 line-clamp 工具类 */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-9 {
+  display: -webkit-box;
+  -webkit-line-clamp: 9;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* 添加额外的玻璃态效果样式 */
+.backdrop-blur-md {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.backdrop-blur-xl {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* 确保文本换行 */
+.break-words {
+  word-wrap: break-word;
+  word-break: break-word;
 }
 </style>

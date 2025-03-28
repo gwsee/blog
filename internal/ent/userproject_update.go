@@ -291,6 +291,13 @@ func (upu *UserProjectUpdate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (upu *UserProjectUpdate) defaults() error {
+	if _, ok := upu.mutation.CreatedAt(); !ok {
+		if userproject.UpdateDefaultCreatedAt == nil {
+			return fmt.Errorf("ent: uninitialized userproject.UpdateDefaultCreatedAt (forgotten import ent/runtime?)")
+		}
+		v := userproject.UpdateDefaultCreatedAt()
+		upu.mutation.SetCreatedAt(v)
+	}
 	if _, ok := upu.mutation.UpdatedAt(); !ok {
 		if userproject.UpdateDefaultUpdatedAt == nil {
 			return fmt.Errorf("ent: uninitialized userproject.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
@@ -309,6 +316,12 @@ func (upu *UserProjectUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := upu.mutation.CreatedAt(); ok {
+		_spec.SetField(userproject.FieldCreatedAt, field.TypeInt64, value)
+	}
+	if value, ok := upu.mutation.AddedCreatedAt(); ok {
+		_spec.AddField(userproject.FieldCreatedAt, field.TypeInt64, value)
 	}
 	if value, ok := upu.mutation.UpdatedAt(); ok {
 		_spec.SetField(userproject.FieldUpdatedAt, field.TypeInt64, value)
@@ -679,6 +692,13 @@ func (upuo *UserProjectUpdateOne) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (upuo *UserProjectUpdateOne) defaults() error {
+	if _, ok := upuo.mutation.CreatedAt(); !ok {
+		if userproject.UpdateDefaultCreatedAt == nil {
+			return fmt.Errorf("ent: uninitialized userproject.UpdateDefaultCreatedAt (forgotten import ent/runtime?)")
+		}
+		v := userproject.UpdateDefaultCreatedAt()
+		upuo.mutation.SetCreatedAt(v)
+	}
 	if _, ok := upuo.mutation.UpdatedAt(); !ok {
 		if userproject.UpdateDefaultUpdatedAt == nil {
 			return fmt.Errorf("ent: uninitialized userproject.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
@@ -714,6 +734,12 @@ func (upuo *UserProjectUpdateOne) sqlSave(ctx context.Context) (_node *UserProje
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := upuo.mutation.CreatedAt(); ok {
+		_spec.SetField(userproject.FieldCreatedAt, field.TypeInt64, value)
+	}
+	if value, ok := upuo.mutation.AddedCreatedAt(); ok {
+		_spec.AddField(userproject.FieldCreatedAt, field.TypeInt64, value)
 	}
 	if value, ok := upuo.mutation.UpdatedAt(); ok {
 		_spec.SetField(userproject.FieldUpdatedAt, field.TypeInt64, value)

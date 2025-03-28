@@ -7,12 +7,20 @@ import (
 	"blog/internal/ent/blogs"
 	"blog/internal/ent/blogscomment"
 	"blog/internal/ent/blogscontent"
+	"blog/internal/ent/blogsextend"
 	"blog/internal/ent/files"
 	"blog/internal/ent/filesextend"
+	"blog/internal/ent/palacesmemo"
+	"blog/internal/ent/palacesmemory"
+	"blog/internal/ent/palacestodo"
+	"blog/internal/ent/palacestododone"
+	"blog/internal/ent/tags"
+	"blog/internal/ent/tagsrelation"
 	"blog/internal/ent/travelextends"
 	"blog/internal/ent/travels"
 	"blog/internal/ent/user"
 	"blog/internal/ent/userexperience"
+	"blog/internal/ent/userfamousquotes"
 	"blog/internal/ent/userproject"
 	"context"
 	"errors"
@@ -83,17 +91,25 @@ var (
 func checkColumn(table, column string) error {
 	initCheck.Do(func() {
 		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
-			account.Table:        account.ValidColumn,
-			blogs.Table:          blogs.ValidColumn,
-			blogscomment.Table:   blogscomment.ValidColumn,
-			blogscontent.Table:   blogscontent.ValidColumn,
-			files.Table:          files.ValidColumn,
-			filesextend.Table:    filesextend.ValidColumn,
-			travelextends.Table:  travelextends.ValidColumn,
-			travels.Table:        travels.ValidColumn,
-			user.Table:           user.ValidColumn,
-			userexperience.Table: userexperience.ValidColumn,
-			userproject.Table:    userproject.ValidColumn,
+			account.Table:          account.ValidColumn,
+			blogs.Table:            blogs.ValidColumn,
+			blogscomment.Table:     blogscomment.ValidColumn,
+			blogscontent.Table:     blogscontent.ValidColumn,
+			blogsextend.Table:      blogsextend.ValidColumn,
+			files.Table:            files.ValidColumn,
+			filesextend.Table:      filesextend.ValidColumn,
+			palacesmemo.Table:      palacesmemo.ValidColumn,
+			palacesmemory.Table:    palacesmemory.ValidColumn,
+			palacestodo.Table:      palacestodo.ValidColumn,
+			palacestododone.Table:  palacestododone.ValidColumn,
+			tags.Table:             tags.ValidColumn,
+			tagsrelation.Table:     tagsrelation.ValidColumn,
+			travelextends.Table:    travelextends.ValidColumn,
+			travels.Table:          travels.ValidColumn,
+			user.Table:             user.ValidColumn,
+			userexperience.Table:   userexperience.ValidColumn,
+			userfamousquotes.Table: userfamousquotes.ValidColumn,
+			userproject.Table:      userproject.ValidColumn,
 		})
 	})
 	return columnCheck(table, column)

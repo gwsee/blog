@@ -38,36 +38,19 @@
 
           <a-divider  v-if="false" />
 
-          <a-typography-paragraph class="post-summary" v-if="formState.description">
-            &nbsp;&nbsp;&nbsp;&nbsp;{{ formState.description }}
+          <a-typography-paragraph class="post-summary" v-if="formState.description" >
+          <div v-html="formattedContent(formState.description)"></div>
           </a-typography-paragraph>
 
           <a-divider  v-if="formState.description"/>
+          <div class="preview-wrapper">
+            <div class="post-content ql-snow">
+              <div class="ql-editor" v-html="formState.content"></div>
+            </div>
+          </div>
 
-          <div class="post-content" v-if="formState.content" v-html="formState.content"></div>
         </a-layout-content>
       </a-layout>
-      <a-card hoverable v-if="false">
-        <template #cover>
-          <img
-              alt="example"
-              src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-          />
-        </template>
-        <template #actions>
-          <setting-outlined key="setting" />
-          <edit-outlined key="edit" />
-          <ellipsis-outlined key="ellipsis" />
-        </template>
-        <a-card-meta :title="formState.title" :description="formState.description">
-          <template #avatar>
-            <a-avatar src="https://joeschmoe.io/api/v1/random" />
-          </template>
-        </a-card-meta>
-        <div  v-html="formState.content" style="overflow-x: hidden">
-
-        </div>
-      </a-card>
       </a-spin>
     </a-col>
     <a-col :md="5" :sm="24" :xs="24"  >
@@ -77,20 +60,13 @@
 </template>
 
 <script setup>
-import '@wangeditor/editor/dist/css/style.css' // 引入 css
-import { onBeforeUnmount,  shallowRef, onMounted ,reactive, toRaw, ref } from 'vue'
-import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
-import { blogUpdate,blogCreate, blogGet} from "@/api/blog";
+import "quill/dist/quill.snow.css";
+import "quill/dist/quill.core.css";
+import "quill/dist/quill.bubble.css";
+import { onBeforeUnmount,  shallowRef, onMounted ,reactive, ref } from 'vue'
+import {  blogGet} from "@/api/blog";
 const editorRef = shallowRef()
-import { useRouter,useRoute } from 'vue-router';
-const router = useRouter();
-
-const toRoute=(path)=> {
-  router.push(path)
-}
-const mode = ref("default")
-const toolbarConfig = {}
-const editorConfig = { placeholder: '请输入内容...' }
+import { useRoute } from 'vue-router';
 const loading = ref(false);
 // 组件销毁时，也及时销毁编辑器
 onBeforeUnmount(() => {
@@ -99,14 +75,12 @@ onBeforeUnmount(() => {
   editor.destroy()
 })
 
-const handleChange = (value) => {
-  console.log(`selected ${value}`);
-};
-
-const handleCreated = (editor) => {
-  editorRef.value = editor // 记录 editor 实例，重要！
+const formattedContent=(data)=> {
+  if(!data){
+    return data
+  }
+  return data.replace(/\n/g, '<br/>');
 }
-
 const formState = reactive({
   id: 0,
   title: '',
@@ -123,7 +97,6 @@ onMounted(function (){
   if(formBlogRef.value){
     formBlogRef.value.resetFields();
   }
-  console.log("here, on Mounted")
   const route = useRoute();
   let id = route.params.id;
   id = id - 0
@@ -147,39 +120,6 @@ onMounted(function (){
     loading.value = false;
   })
 })
-const confirmLoading = ref(false);
-const onSubmit = () => {
-  formBlogRef.value
-      .validate()
-      .then(() => {
-        confirmLoading.value = true
-        if(formState.Id>0){
-          blogUpdate(formState).then(res=>{
-            console.log(res,"....")
-            if(res&&res.code===200){
-              toRoute('/blog')
-            }
-          }).finally(()=>{
-            confirmLoading.value = false
-          })
-        }else{
-          blogCreate(formState).then(res=>{
-            console.log(res,"....")
-            if(res&&res.code===200){
-              toRoute('/blog')
-            }
-          }).finally(()=>{
-            confirmLoading.value = false
-          })
-        }
-      })
-      .catch(error => {
-        console.log('error', error);
-      });
-};
-const labelCol = { style: { width: '100px' } };
-const wrapperCol = { span: 24 };
-
 </script>
 
 <style scoped>
@@ -252,24 +192,6 @@ const wrapperCol = { span: 24 };
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-.post-content h2 {
-  font-size: 24px;
-  margin-top: 32px;
-  margin-bottom: 16px;
-  color: #34495e;
-}
-
-.post-content p {
-  margin-bottom: 16px;
-}
-
-.post-content pre {
-  background-color: #f8f8f8;
-  padding: 16px;
-  border-radius: 4px;
-  overflow-x: auto;
-  border: 1px solid #e8e8e8;
-}
 
 @media (max-width: 768px) {
   .blog-post {
@@ -277,5 +199,13 @@ const wrapperCol = { span: 24 };
     margin: 10px;
   }
 }
-
+.preview-wrapper {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+/* 确保预览区域的 ql-editor 不会被 Quill 的默认高度限制 */
+.preview-wrapper .ql-editor {
+  min-height: auto;
+  max-height: none;
+}
 </style>

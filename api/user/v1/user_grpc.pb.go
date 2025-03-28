@@ -31,6 +31,7 @@ const (
 	User_GetExperience_FullMethodName    = "/api.user.v1.User/GetExperience"
 	User_ListExperience_FullMethodName   = "/api.user.v1.User/ListExperience"
 	User_Photos_FullMethodName           = "/api.user.v1.User/Photos"
+	User_Messages_FullMethodName         = "/api.user.v1.User/Messages"
 )
 
 // UserClient is the client API for User service.
@@ -51,6 +52,8 @@ type UserClient interface {
 	GetExperience(ctx context.Context, in *global.ID, opts ...grpc.CallOption) (*GetExperienceReply, error)
 	ListExperience(ctx context.Context, in *ListExperienceRequest, opts ...grpc.CallOption) (*ListExperienceReply, error)
 	Photos(ctx context.Context, in *PhotosReq, opts ...grpc.CallOption) (*PhotosReply, error)
+	// 用户侧返回的信息 随机返回 如果存在公告的话 也可能优先返回公告
+	Messages(ctx context.Context, in *global.PageInfo, opts ...grpc.CallOption) (*MessagesReply, error)
 }
 
 type userClient struct {
@@ -171,6 +174,16 @@ func (c *userClient) Photos(ctx context.Context, in *PhotosReq, opts ...grpc.Cal
 	return out, nil
 }
 
+func (c *userClient) Messages(ctx context.Context, in *global.PageInfo, opts ...grpc.CallOption) (*MessagesReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MessagesReply)
+	err := c.cc.Invoke(ctx, User_Messages_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServer is the server API for User service.
 // All implementations must embed UnimplementedUserServer
 // for forward compatibility.
@@ -189,6 +202,8 @@ type UserServer interface {
 	GetExperience(context.Context, *global.ID) (*GetExperienceReply, error)
 	ListExperience(context.Context, *ListExperienceRequest) (*ListExperienceReply, error)
 	Photos(context.Context, *PhotosReq) (*PhotosReply, error)
+	// 用户侧返回的信息 随机返回 如果存在公告的话 也可能优先返回公告
+	Messages(context.Context, *global.PageInfo) (*MessagesReply, error)
 	mustEmbedUnimplementedUserServer()
 }
 
@@ -231,6 +246,9 @@ func (UnimplementedUserServer) ListExperience(context.Context, *ListExperienceRe
 }
 func (UnimplementedUserServer) Photos(context.Context, *PhotosReq) (*PhotosReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Photos not implemented")
+}
+func (UnimplementedUserServer) Messages(context.Context, *global.PageInfo) (*MessagesReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Messages not implemented")
 }
 func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}
 func (UnimplementedUserServer) testEmbeddedByValue()              {}
@@ -451,6 +469,24 @@ func _User_Photos_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_Messages_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(global.PageInfo)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).Messages(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_Messages_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).Messages(ctx, req.(*global.PageInfo))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -501,6 +537,10 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Photos",
 			Handler:    _User_Photos_Handler,
+		},
+		{
+			MethodName: "Messages",
+			Handler:    _User_Messages_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

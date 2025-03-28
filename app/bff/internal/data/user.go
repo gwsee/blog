@@ -62,3 +62,6 @@ func (o *userRepo) Photos(ctx context.Context, in *v1.PhotosReq) (*v1.PhotosRepl
 	//}
 	return res, err
 }
+func (o *userRepo) Messages(ctx context.Context, in *global.PageInfo) (*v1.MessagesReply, error) {
+	return o.data.uc.Messages(ctx, in)
+}

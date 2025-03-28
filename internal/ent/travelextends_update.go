@@ -235,6 +235,13 @@ func (teu *TravelExtendsUpdate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (teu *TravelExtendsUpdate) defaults() error {
+	if _, ok := teu.mutation.CreatedAt(); !ok {
+		if travelextends.UpdateDefaultCreatedAt == nil {
+			return fmt.Errorf("ent: uninitialized travelextends.UpdateDefaultCreatedAt (forgotten import ent/runtime?)")
+		}
+		v := travelextends.UpdateDefaultCreatedAt()
+		teu.mutation.SetCreatedAt(v)
+	}
 	if _, ok := teu.mutation.UpdatedAt(); !ok {
 		if travelextends.UpdateDefaultUpdatedAt == nil {
 			return fmt.Errorf("ent: uninitialized travelextends.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
@@ -266,6 +273,12 @@ func (teu *TravelExtendsUpdate) sqlSave(ctx context.Context) (n int, err error) 
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := teu.mutation.CreatedAt(); ok {
+		_spec.SetField(travelextends.FieldCreatedAt, field.TypeInt64, value)
+	}
+	if value, ok := teu.mutation.AddedCreatedAt(); ok {
+		_spec.AddField(travelextends.FieldCreatedAt, field.TypeInt64, value)
 	}
 	if value, ok := teu.mutation.UpdatedAt(); ok {
 		_spec.SetField(travelextends.FieldUpdatedAt, field.TypeInt64, value)
@@ -572,6 +585,13 @@ func (teuo *TravelExtendsUpdateOne) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (teuo *TravelExtendsUpdateOne) defaults() error {
+	if _, ok := teuo.mutation.CreatedAt(); !ok {
+		if travelextends.UpdateDefaultCreatedAt == nil {
+			return fmt.Errorf("ent: uninitialized travelextends.UpdateDefaultCreatedAt (forgotten import ent/runtime?)")
+		}
+		v := travelextends.UpdateDefaultCreatedAt()
+		teuo.mutation.SetCreatedAt(v)
+	}
 	if _, ok := teuo.mutation.UpdatedAt(); !ok {
 		if travelextends.UpdateDefaultUpdatedAt == nil {
 			return fmt.Errorf("ent: uninitialized travelextends.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
@@ -620,6 +640,12 @@ func (teuo *TravelExtendsUpdateOne) sqlSave(ctx context.Context) (_node *TravelE
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := teuo.mutation.CreatedAt(); ok {
+		_spec.SetField(travelextends.FieldCreatedAt, field.TypeInt64, value)
+	}
+	if value, ok := teuo.mutation.AddedCreatedAt(); ok {
+		_spec.AddField(travelextends.FieldCreatedAt, field.TypeInt64, value)
 	}
 	if value, ok := teuo.mutation.UpdatedAt(); ok {
 		_spec.SetField(travelextends.FieldUpdatedAt, field.TypeInt64, value)

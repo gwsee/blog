@@ -17,12 +17,14 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@': resolve(__dirname, "./src")
+      '@': resolve(__dirname, "./src"),
     }
   },
   server:{
     hmr: true,
     https:false,
+    host: '127.0.0.1',
+    open: true,
     proxy:{
       "/api":{
         target: `http://127.0.0.1:1000/`,

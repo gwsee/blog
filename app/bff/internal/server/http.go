@@ -22,8 +22,10 @@ import (
 
 // NewHTTPServer new an HTTP server.
 func NewHTTPServer(c *conf.Bootstrap, logger log.Logger, tp *trace.TracerProvider,
-	account *service.AccountService, blogs *service.BlogsService, blogsComment *service.BlogsCommentService,
-	tool *service.ToolsService, travel *service.TravelService, user *service.UserService) *http.Server {
+	account *service.AccountService, blogs *service.BlogsService,
+	blogsComment *service.BlogsCommentService,
+	tool *service.ToolsService, travel *service.TravelService,
+	user *service.UserService, palace *service.PalacesService) *http.Server {
 	opts := []http.ServerOption{
 		http.ResponseEncoder(JsonResponse),
 		http.Middleware(
@@ -70,6 +72,7 @@ func NewHTTPServer(c *conf.Bootstrap, logger log.Logger, tp *trace.TracerProvide
 	v1.RegisterTravelsHTTPServer(srv, travel)
 	v1.RegisterToolsHTTPServer(srv, tool)
 	v1.RegisterUserHTTPServer(srv, user)
+	v1.RegisterPalacesHTTPServer(srv, palace)
 	return srv
 }
 

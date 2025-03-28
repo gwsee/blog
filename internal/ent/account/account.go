@@ -44,7 +44,7 @@ const (
 	// EdgeTravels holds the string denoting the travels edge name in mutations.
 	EdgeTravels = "travels"
 	// Table holds the table name of the account in the database.
-	Table = "account"
+	Table = "accounts"
 	// TravelsTable is the table that holds the travels relation/edge.
 	TravelsTable = "travels"
 	// TravelsInverseTable is the table name for the Travels entity.
@@ -89,9 +89,12 @@ func ValidColumn(column string) bool {
 //
 //	import _ "blog/internal/ent/runtime"
 var (
-	Hooks [3]ent.Hook
+	Hooks        [3]ent.Hook
+	Interceptors [1]ent.Interceptor
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
 	DefaultCreatedAt int64
+	// UpdateDefaultCreatedAt holds the default value on update for the "created_at" field.
+	UpdateDefaultCreatedAt func() int64
 	// DefaultCreatedBy holds the default value on creation for the "created_by" field.
 	DefaultCreatedBy int64
 	// DefaultUpdatedAt holds the default value on creation for the "updated_at" field.

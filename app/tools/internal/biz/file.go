@@ -89,8 +89,8 @@ func (uc *ToolsUsecase) UploadFile(ctx context.Context, req *v1.UploadFileReques
 	//自定义存储路径
 	kind, _ := filetype.Match(req.Content)
 	ty := strings.Split(kind.MIME.Value, "/")[0]
+	extArr := strings.Split(req.Filename, ".")
 	if kind == filetype.Unknown {
-		extArr := strings.Split(req.Filename, ".")
 		ext := extArr[len(extArr)-1]
 		if ext == "" {
 			ext = fileAuto
@@ -104,8 +104,10 @@ func (uc *ToolsUsecase) UploadFile(ctx context.Context, req *v1.UploadFileReques
 		kind = filetype.NewType(ext, fileAuto)
 		ty = strings.Split(kind.MIME.Value, "/")[0]
 	}
+	//md5文件名称到oss
+	extArr[0] = uuid
 	path := fmt.Sprintf(filePath, ty, kind.Extension,
-		time.Now().Format("20060102"), req.Filename)
+		time.Now().Format("20060102"), strings.Join(extArr, "."))
 
 	//上传文件并记录关系
 	fileCli := oss.NewFileClient(ctx).SetBucket(uc.oss.Bucket).SetSite(uc.oss.Site).
@@ -162,7 +164,40 @@ func (uc *ToolsUsecase) Files(ctx context.Context, req *global.IDStr) (*global.I
 	}
 	return uc.fileLink(ctx, req.Id, one.Path)
 }
-
+func (uc *ToolsUsecase) UploadOssToken(ctx context.Context, req *global.IDStr) (*v1.UploadOssTokenReply, error) {
+	//判断文件是否存在
+	exist, err := uc.repo.ExistFile(ctx, &File{ID: req.Id})
+	if err != nil {
+		return nil, err
+	}
+	if exist != "" {
+		return &v1.UploadOssTokenReply{Exist: true}, nil
+	}
+	//不存在就获取token
+	res, err := oss.NewFileClient(ctx).UploadToken(uc.oss)
+	if err != nil {
+		return nil, err
+	}
+	return &v1.UploadOssTokenReply{
+		Host:      uc.oss.Site,
+		Expire:    uc.oss.Expire,
+		Region:    uc.oss.Region,
+		Bucket:    uc.oss.Bucket,
+		ExpireStr: *res.Expiration,
+		KeyId:     *res.AccessKeyId,
+		KeySecret: *res.AccessKeySecret,
+		Token:     *res.SecurityToken,
+	}, nil
+}
+func (uc *ToolsUsecase) UploadOssSave(ctx context.Context, req *v1.UploadOssSaveReq) (*global.Empty, error) {
+	return &global.Empty{}, uc.repo.SaveFile(ctx, &File{
+		ID:   req.Id,
+		Type: req.Type,
+		Size: req.Size,
+		Name: req.Name,
+		Path: req.Path,
+	})
+}
 func (uc *ToolsUsecase) fileLink(ctx context.Context, id, url string) (*global.IDStr, error) {
 	fileCli := oss.NewFileClient(ctx).SetBucket(uc.oss.Bucket).SetSite(uc.oss.Site).
 		SetOSSClient(uc.oss.Key, uc.oss.Secret, uc.oss.Region)

@@ -5,6 +5,7 @@ import (
 	"blog/internal/ent"
 	"blog/internal/ent/filesextend"
 	"blog/internal/ent/userexperience"
+	"blog/internal/ent/userfamousquotes"
 	"blog/internal/ent/userproject"
 	"context"
 	sql2 "entgo.io/ent/dialect/sql"
@@ -146,6 +147,9 @@ func (o *userRepo) DeleteProject(ctx context.Context, data *biz.Project) (err er
 		return errors.New("project not found")
 	}
 	_, err = tx.User.UpdateOneID(int(data.UserId)).AddProject(-1).Save(ctx)
+	if err != nil {
+		return
+	}
 	_, err = tx.UserExperience.UpdateOneID(int(info.ExperienceID)).AddProject(-1).Save(ctx)
 	return
 }
@@ -170,7 +174,7 @@ func (o *userRepo) ListProject(ctx context.Context, data *biz.ProjectQuery) (tot
 		return
 	}
 	all, err := tx.Limit(int(data.GetPageSize())).Offset(int(data.GetOffset())).
-		Order(ent.Desc(userproject.FieldID)).All(ctx)
+		Order(ent.Desc(userproject.FieldStart, userproject.FieldEnd)).All(ctx)
 	if err != nil {
 		return
 	}
@@ -294,7 +298,7 @@ func (o *userRepo) ListExperience(ctx context.Context, data *biz.ExperienceQuery
 		return
 	}
 	all, err := tx.Limit(int(data.GetPageSize())).Offset(int(data.GetOffset())).
-		Order(ent.Desc(userexperience.FieldID)).All(ctx)
+		Order(ent.Desc(userexperience.FieldStart, userexperience.FieldEnd)).All(ctx)
 	if err != nil {
 		return
 	}
@@ -410,4 +414,10 @@ func (o *userRepo) Photos(ctx context.Context, data *biz.PhotosQuery) ([]*biz.Ph
 		images = append(images, one)
 	}
 	return images, nil
+}
+func (o *userRepo) Messages(ctx context.Context, num int64) ([]string, error) {
+	//Order(ent.Desc("rand()")).WithFiles().
+	return o.data.db.UserFamousQuotes.Query().Limit(int(num)).Order(func(selector *sql2.Selector) {
+		selector.OrderBy("rand()")
+	}).Select(userfamousquotes.FieldText).Strings(ctx)
 }

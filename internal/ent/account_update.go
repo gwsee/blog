@@ -303,6 +303,13 @@ func (au *AccountUpdate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (au *AccountUpdate) defaults() error {
+	if _, ok := au.mutation.CreatedAt(); !ok {
+		if account.UpdateDefaultCreatedAt == nil {
+			return fmt.Errorf("ent: uninitialized account.UpdateDefaultCreatedAt (forgotten import ent/runtime?)")
+		}
+		v := account.UpdateDefaultCreatedAt()
+		au.mutation.SetCreatedAt(v)
+	}
 	if _, ok := au.mutation.UpdatedAt(); !ok {
 		if account.UpdateDefaultUpdatedAt == nil {
 			return fmt.Errorf("ent: uninitialized account.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
@@ -339,6 +346,12 @@ func (au *AccountUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := au.mutation.CreatedAt(); ok {
+		_spec.SetField(account.FieldCreatedAt, field.TypeInt64, value)
+	}
+	if value, ok := au.mutation.AddedCreatedAt(); ok {
+		_spec.AddField(account.FieldCreatedAt, field.TypeInt64, value)
 	}
 	if value, ok := au.mutation.UpdatedAt(); ok {
 		_spec.SetField(account.FieldUpdatedAt, field.TypeInt64, value)
@@ -747,6 +760,13 @@ func (auo *AccountUpdateOne) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (auo *AccountUpdateOne) defaults() error {
+	if _, ok := auo.mutation.CreatedAt(); !ok {
+		if account.UpdateDefaultCreatedAt == nil {
+			return fmt.Errorf("ent: uninitialized account.UpdateDefaultCreatedAt (forgotten import ent/runtime?)")
+		}
+		v := account.UpdateDefaultCreatedAt()
+		auo.mutation.SetCreatedAt(v)
+	}
 	if _, ok := auo.mutation.UpdatedAt(); !ok {
 		if account.UpdateDefaultUpdatedAt == nil {
 			return fmt.Errorf("ent: uninitialized account.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
@@ -800,6 +820,12 @@ func (auo *AccountUpdateOne) sqlSave(ctx context.Context) (_node *Account, err e
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := auo.mutation.CreatedAt(); ok {
+		_spec.SetField(account.FieldCreatedAt, field.TypeInt64, value)
+	}
+	if value, ok := auo.mutation.AddedCreatedAt(); ok {
+		_spec.AddField(account.FieldCreatedAt, field.TypeInt64, value)
 	}
 	if value, ok := auo.mutation.UpdatedAt(); ok {
 		_spec.SetField(account.FieldUpdatedAt, field.TypeInt64, value)

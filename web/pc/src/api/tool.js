@@ -11,4 +11,18 @@ export function fileUpload(data) {
         },
     })
 }
+export function fileOssToken(data) {
+    return request({
+        url: '/v1/upload/oss/token',
+        method: 'post',
+        data: data,
+    })
+}
+export function fileOssSave(data) {
+    return request({
+        url: '/v1/upload/oss/save',
+        method: 'post',
+        data: data,
+    })
+}
 export const  filePrefix = "/api/v1/file/"

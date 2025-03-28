@@ -4,6 +4,7 @@ import (
 	"blog/internal/constx"
 	gen "blog/internal/ent"
 	"blog/internal/ent/hook"
+	"blog/internal/ent/intercept"
 	"context"
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
@@ -35,14 +36,14 @@ func SkipSoftDelete(parent context.Context) context.Context {
 // Interceptors of the SoftDelete.
 func (d SoftDelete) Interceptors() []ent.Interceptor {
 	return []ent.Interceptor{
-		//intercept.TraverseFunc(func(ctx context.Context, q intercept.Query) error {
-		//	// Skip soft-delete, means include soft-deleted entities.
-		//	if skip, _ := ctx.Value(softDeleteKey{}).(bool); skip {
-		//		return nil
-		//	}
-		//	d.P(q)
-		//	return nil
-		//}),
+		intercept.TraverseFunc(func(ctx context.Context, q intercept.Query) error {
+			// Skip soft-delete, means include soft-deleted entities.
+			if skip, _ := ctx.Value(softDeleteKey{}).(bool); skip {
+				return nil
+			}
+			d.P(q)
+			return nil
+		}),
 	}
 }
 

@@ -6,6 +6,7 @@ import (
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema"
+	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 )
 
@@ -36,11 +37,17 @@ func (Blogs) Fields() []ent.Field {
 			SchemaType(map[string]string{
 				dialect.MySQL: "varchar(200)",
 			}),
+		field.Int("browse_num").Default(0).Comment("浏览量"),
+		field.Int("collect_num").Default(0).Comment("收藏量"),
+		field.Int("love_num").Default(0).Comment("点赞量"),
 	}
 }
 
 func (Blogs) Edges() []ent.Edge {
-	return []ent.Edge{}
+	return []ent.Edge{
+		edge.To("tag", Tags.Type).
+			Through("tag_relation", TagsRelation.Type),
+	}
 }
 func (Blogs) Mixin() []ent.Mixin {
 	return []ent.Mixin{

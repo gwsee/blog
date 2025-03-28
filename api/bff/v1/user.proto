@@ -7,7 +7,7 @@ option java_multiple_files = true;
 option java_package = "api.bff.v1";
 import "third_party/google/api/annotations.proto";
 import "api/global/index.proto";
-
+import "api/global/page.proto";
 import "api/user/v1/user.proto";
 
 service User {
@@ -81,4 +81,10 @@ service User {
       body: "*"
     };
   }
+  rpc Messages(global.PageInfo) returns(user.v1.MessagesReply){
+    option (google.api.http) = {
+      post: "/v1/messages"
+      body: "*"
+    };
+  };
 }

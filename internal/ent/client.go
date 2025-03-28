@@ -15,12 +15,20 @@ import (
 	"blog/internal/ent/blogs"
 	"blog/internal/ent/blogscomment"
 	"blog/internal/ent/blogscontent"
+	"blog/internal/ent/blogsextend"
 	"blog/internal/ent/files"
 	"blog/internal/ent/filesextend"
+	"blog/internal/ent/palacesmemo"
+	"blog/internal/ent/palacesmemory"
+	"blog/internal/ent/palacestodo"
+	"blog/internal/ent/palacestododone"
+	"blog/internal/ent/tags"
+	"blog/internal/ent/tagsrelation"
 	"blog/internal/ent/travelextends"
 	"blog/internal/ent/travels"
 	"blog/internal/ent/user"
 	"blog/internal/ent/userexperience"
+	"blog/internal/ent/userfamousquotes"
 	"blog/internal/ent/userproject"
 
 	"entgo.io/ent"
@@ -44,10 +52,24 @@ type Client struct {
 	BlogsComment *BlogsCommentClient
 	// BlogsContent is the client for interacting with the BlogsContent builders.
 	BlogsContent *BlogsContentClient
+	// BlogsExtend is the client for interacting with the BlogsExtend builders.
+	BlogsExtend *BlogsExtendClient
 	// Files is the client for interacting with the Files builders.
 	Files *FilesClient
 	// FilesExtend is the client for interacting with the FilesExtend builders.
 	FilesExtend *FilesExtendClient
+	// PalacesMemo is the client for interacting with the PalacesMemo builders.
+	PalacesMemo *PalacesMemoClient
+	// PalacesMemory is the client for interacting with the PalacesMemory builders.
+	PalacesMemory *PalacesMemoryClient
+	// PalacesTodo is the client for interacting with the PalacesTodo builders.
+	PalacesTodo *PalacesTodoClient
+	// PalacesTodoDone is the client for interacting with the PalacesTodoDone builders.
+	PalacesTodoDone *PalacesTodoDoneClient
+	// Tags is the client for interacting with the Tags builders.
+	Tags *TagsClient
+	// TagsRelation is the client for interacting with the TagsRelation builders.
+	TagsRelation *TagsRelationClient
 	// TravelExtends is the client for interacting with the TravelExtends builders.
 	TravelExtends *TravelExtendsClient
 	// Travels is the client for interacting with the Travels builders.
@@ -56,6 +78,8 @@ type Client struct {
 	User *UserClient
 	// UserExperience is the client for interacting with the UserExperience builders.
 	UserExperience *UserExperienceClient
+	// UserFamousQuotes is the client for interacting with the UserFamousQuotes builders.
+	UserFamousQuotes *UserFamousQuotesClient
 	// UserProject is the client for interacting with the UserProject builders.
 	UserProject *UserProjectClient
 }
@@ -73,12 +97,20 @@ func (c *Client) init() {
 	c.Blogs = NewBlogsClient(c.config)
 	c.BlogsComment = NewBlogsCommentClient(c.config)
 	c.BlogsContent = NewBlogsContentClient(c.config)
+	c.BlogsExtend = NewBlogsExtendClient(c.config)
 	c.Files = NewFilesClient(c.config)
 	c.FilesExtend = NewFilesExtendClient(c.config)
+	c.PalacesMemo = NewPalacesMemoClient(c.config)
+	c.PalacesMemory = NewPalacesMemoryClient(c.config)
+	c.PalacesTodo = NewPalacesTodoClient(c.config)
+	c.PalacesTodoDone = NewPalacesTodoDoneClient(c.config)
+	c.Tags = NewTagsClient(c.config)
+	c.TagsRelation = NewTagsRelationClient(c.config)
 	c.TravelExtends = NewTravelExtendsClient(c.config)
 	c.Travels = NewTravelsClient(c.config)
 	c.User = NewUserClient(c.config)
 	c.UserExperience = NewUserExperienceClient(c.config)
+	c.UserFamousQuotes = NewUserFamousQuotesClient(c.config)
 	c.UserProject = NewUserProjectClient(c.config)
 }
 
@@ -170,19 +202,27 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	cfg := c.config
 	cfg.driver = tx
 	return &Tx{
-		ctx:            ctx,
-		config:         cfg,
-		Account:        NewAccountClient(cfg),
-		Blogs:          NewBlogsClient(cfg),
-		BlogsComment:   NewBlogsCommentClient(cfg),
-		BlogsContent:   NewBlogsContentClient(cfg),
-		Files:          NewFilesClient(cfg),
-		FilesExtend:    NewFilesExtendClient(cfg),
-		TravelExtends:  NewTravelExtendsClient(cfg),
-		Travels:        NewTravelsClient(cfg),
-		User:           NewUserClient(cfg),
-		UserExperience: NewUserExperienceClient(cfg),
-		UserProject:    NewUserProjectClient(cfg),
+		ctx:              ctx,
+		config:           cfg,
+		Account:          NewAccountClient(cfg),
+		Blogs:            NewBlogsClient(cfg),
+		BlogsComment:     NewBlogsCommentClient(cfg),
+		BlogsContent:     NewBlogsContentClient(cfg),
+		BlogsExtend:      NewBlogsExtendClient(cfg),
+		Files:            NewFilesClient(cfg),
+		FilesExtend:      NewFilesExtendClient(cfg),
+		PalacesMemo:      NewPalacesMemoClient(cfg),
+		PalacesMemory:    NewPalacesMemoryClient(cfg),
+		PalacesTodo:      NewPalacesTodoClient(cfg),
+		PalacesTodoDone:  NewPalacesTodoDoneClient(cfg),
+		Tags:             NewTagsClient(cfg),
+		TagsRelation:     NewTagsRelationClient(cfg),
+		TravelExtends:    NewTravelExtendsClient(cfg),
+		Travels:          NewTravelsClient(cfg),
+		User:             NewUserClient(cfg),
+		UserExperience:   NewUserExperienceClient(cfg),
+		UserFamousQuotes: NewUserFamousQuotesClient(cfg),
+		UserProject:      NewUserProjectClient(cfg),
 	}, nil
 }
 
@@ -200,19 +240,27 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	cfg := c.config
 	cfg.driver = &txDriver{tx: tx, drv: c.driver}
 	return &Tx{
-		ctx:            ctx,
-		config:         cfg,
-		Account:        NewAccountClient(cfg),
-		Blogs:          NewBlogsClient(cfg),
-		BlogsComment:   NewBlogsCommentClient(cfg),
-		BlogsContent:   NewBlogsContentClient(cfg),
-		Files:          NewFilesClient(cfg),
-		FilesExtend:    NewFilesExtendClient(cfg),
-		TravelExtends:  NewTravelExtendsClient(cfg),
-		Travels:        NewTravelsClient(cfg),
-		User:           NewUserClient(cfg),
-		UserExperience: NewUserExperienceClient(cfg),
-		UserProject:    NewUserProjectClient(cfg),
+		ctx:              ctx,
+		config:           cfg,
+		Account:          NewAccountClient(cfg),
+		Blogs:            NewBlogsClient(cfg),
+		BlogsComment:     NewBlogsCommentClient(cfg),
+		BlogsContent:     NewBlogsContentClient(cfg),
+		BlogsExtend:      NewBlogsExtendClient(cfg),
+		Files:            NewFilesClient(cfg),
+		FilesExtend:      NewFilesExtendClient(cfg),
+		PalacesMemo:      NewPalacesMemoClient(cfg),
+		PalacesMemory:    NewPalacesMemoryClient(cfg),
+		PalacesTodo:      NewPalacesTodoClient(cfg),
+		PalacesTodoDone:  NewPalacesTodoDoneClient(cfg),
+		Tags:             NewTagsClient(cfg),
+		TagsRelation:     NewTagsRelationClient(cfg),
+		TravelExtends:    NewTravelExtendsClient(cfg),
+		Travels:          NewTravelsClient(cfg),
+		User:             NewUserClient(cfg),
+		UserExperience:   NewUserExperienceClient(cfg),
+		UserFamousQuotes: NewUserFamousQuotesClient(cfg),
+		UserProject:      NewUserProjectClient(cfg),
 	}, nil
 }
 
@@ -242,8 +290,10 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	for _, n := range []interface{ Use(...Hook) }{
-		c.Account, c.Blogs, c.BlogsComment, c.BlogsContent, c.Files, c.FilesExtend,
-		c.TravelExtends, c.Travels, c.User, c.UserExperience, c.UserProject,
+		c.Account, c.Blogs, c.BlogsComment, c.BlogsContent, c.BlogsExtend, c.Files,
+		c.FilesExtend, c.PalacesMemo, c.PalacesMemory, c.PalacesTodo,
+		c.PalacesTodoDone, c.Tags, c.TagsRelation, c.TravelExtends, c.Travels, c.User,
+		c.UserExperience, c.UserFamousQuotes, c.UserProject,
 	} {
 		n.Use(hooks...)
 	}
@@ -253,8 +303,10 @@ func (c *Client) Use(hooks ...Hook) {
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
 	for _, n := range []interface{ Intercept(...Interceptor) }{
-		c.Account, c.Blogs, c.BlogsComment, c.BlogsContent, c.Files, c.FilesExtend,
-		c.TravelExtends, c.Travels, c.User, c.UserExperience, c.UserProject,
+		c.Account, c.Blogs, c.BlogsComment, c.BlogsContent, c.BlogsExtend, c.Files,
+		c.FilesExtend, c.PalacesMemo, c.PalacesMemory, c.PalacesTodo,
+		c.PalacesTodoDone, c.Tags, c.TagsRelation, c.TravelExtends, c.Travels, c.User,
+		c.UserExperience, c.UserFamousQuotes, c.UserProject,
 	} {
 		n.Intercept(interceptors...)
 	}
@@ -271,10 +323,24 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.BlogsComment.mutate(ctx, m)
 	case *BlogsContentMutation:
 		return c.BlogsContent.mutate(ctx, m)
+	case *BlogsExtendMutation:
+		return c.BlogsExtend.mutate(ctx, m)
 	case *FilesMutation:
 		return c.Files.mutate(ctx, m)
 	case *FilesExtendMutation:
 		return c.FilesExtend.mutate(ctx, m)
+	case *PalacesMemoMutation:
+		return c.PalacesMemo.mutate(ctx, m)
+	case *PalacesMemoryMutation:
+		return c.PalacesMemory.mutate(ctx, m)
+	case *PalacesTodoMutation:
+		return c.PalacesTodo.mutate(ctx, m)
+	case *PalacesTodoDoneMutation:
+		return c.PalacesTodoDone.mutate(ctx, m)
+	case *TagsMutation:
+		return c.Tags.mutate(ctx, m)
+	case *TagsRelationMutation:
+		return c.TagsRelation.mutate(ctx, m)
 	case *TravelExtendsMutation:
 		return c.TravelExtends.mutate(ctx, m)
 	case *TravelsMutation:
@@ -283,6 +349,8 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.User.mutate(ctx, m)
 	case *UserExperienceMutation:
 		return c.UserExperience.mutate(ctx, m)
+	case *UserFamousQuotesMutation:
+		return c.UserFamousQuotes.mutate(ctx, m)
 	case *UserProjectMutation:
 		return c.UserProject.mutate(ctx, m)
 	default:
@@ -422,7 +490,8 @@ func (c *AccountClient) Hooks() []Hook {
 
 // Interceptors returns the client interceptors.
 func (c *AccountClient) Interceptors() []Interceptor {
-	return c.inters.Account
+	inters := c.inters.Account
+	return append(inters[:len(inters):len(inters)], account.Interceptors[:]...)
 }
 
 func (c *AccountClient) mutate(ctx context.Context, m *AccountMutation) (Value, error) {
@@ -548,6 +617,38 @@ func (c *BlogsClient) GetX(ctx context.Context, id int) *Blogs {
 	return obj
 }
 
+// QueryTag queries the tag edge of a Blogs.
+func (c *BlogsClient) QueryTag(b *Blogs) *TagsQuery {
+	query := (&TagsClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := b.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(blogs.Table, blogs.FieldID, id),
+			sqlgraph.To(tags.Table, tags.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, blogs.TagTable, blogs.TagPrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(b.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryTagRelation queries the tag_relation edge of a Blogs.
+func (c *BlogsClient) QueryTagRelation(b *Blogs) *TagsRelationQuery {
+	query := (&TagsRelationClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := b.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(blogs.Table, blogs.FieldID, id),
+			sqlgraph.To(tagsrelation.Table, tagsrelation.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, blogs.TagRelationTable, blogs.TagRelationColumn),
+		)
+		fromV = sqlgraph.Neighbors(b.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *BlogsClient) Hooks() []Hook {
 	hooks := c.hooks.Blogs
@@ -556,7 +657,8 @@ func (c *BlogsClient) Hooks() []Hook {
 
 // Interceptors returns the client interceptors.
 func (c *BlogsClient) Interceptors() []Interceptor {
-	return c.inters.Blogs
+	inters := c.inters.Blogs
+	return append(inters[:len(inters):len(inters)], blogs.Interceptors[:]...)
 }
 
 func (c *BlogsClient) mutate(ctx context.Context, m *BlogsMutation) (Value, error) {
@@ -690,7 +792,8 @@ func (c *BlogsCommentClient) Hooks() []Hook {
 
 // Interceptors returns the client interceptors.
 func (c *BlogsCommentClient) Interceptors() []Interceptor {
-	return c.inters.BlogsComment
+	inters := c.inters.BlogsComment
+	return append(inters[:len(inters):len(inters)], blogscomment.Interceptors[:]...)
 }
 
 func (c *BlogsCommentClient) mutate(ctx context.Context, m *BlogsCommentMutation) (Value, error) {
@@ -841,6 +944,139 @@ func (c *BlogsContentClient) mutate(ctx context.Context, m *BlogsContentMutation
 	}
 }
 
+// BlogsExtendClient is a client for the BlogsExtend schema.
+type BlogsExtendClient struct {
+	config
+}
+
+// NewBlogsExtendClient returns a client for the BlogsExtend from the given config.
+func NewBlogsExtendClient(c config) *BlogsExtendClient {
+	return &BlogsExtendClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `blogsextend.Hooks(f(g(h())))`.
+func (c *BlogsExtendClient) Use(hooks ...Hook) {
+	c.hooks.BlogsExtend = append(c.hooks.BlogsExtend, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `blogsextend.Intercept(f(g(h())))`.
+func (c *BlogsExtendClient) Intercept(interceptors ...Interceptor) {
+	c.inters.BlogsExtend = append(c.inters.BlogsExtend, interceptors...)
+}
+
+// Create returns a builder for creating a BlogsExtend entity.
+func (c *BlogsExtendClient) Create() *BlogsExtendCreate {
+	mutation := newBlogsExtendMutation(c.config, OpCreate)
+	return &BlogsExtendCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of BlogsExtend entities.
+func (c *BlogsExtendClient) CreateBulk(builders ...*BlogsExtendCreate) *BlogsExtendCreateBulk {
+	return &BlogsExtendCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *BlogsExtendClient) MapCreateBulk(slice any, setFunc func(*BlogsExtendCreate, int)) *BlogsExtendCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &BlogsExtendCreateBulk{err: fmt.Errorf("calling to BlogsExtendClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*BlogsExtendCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &BlogsExtendCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for BlogsExtend.
+func (c *BlogsExtendClient) Update() *BlogsExtendUpdate {
+	mutation := newBlogsExtendMutation(c.config, OpUpdate)
+	return &BlogsExtendUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *BlogsExtendClient) UpdateOne(be *BlogsExtend) *BlogsExtendUpdateOne {
+	mutation := newBlogsExtendMutation(c.config, OpUpdateOne, withBlogsExtend(be))
+	return &BlogsExtendUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *BlogsExtendClient) UpdateOneID(id int) *BlogsExtendUpdateOne {
+	mutation := newBlogsExtendMutation(c.config, OpUpdateOne, withBlogsExtendID(id))
+	return &BlogsExtendUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for BlogsExtend.
+func (c *BlogsExtendClient) Delete() *BlogsExtendDelete {
+	mutation := newBlogsExtendMutation(c.config, OpDelete)
+	return &BlogsExtendDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *BlogsExtendClient) DeleteOne(be *BlogsExtend) *BlogsExtendDeleteOne {
+	return c.DeleteOneID(be.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *BlogsExtendClient) DeleteOneID(id int) *BlogsExtendDeleteOne {
+	builder := c.Delete().Where(blogsextend.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &BlogsExtendDeleteOne{builder}
+}
+
+// Query returns a query builder for BlogsExtend.
+func (c *BlogsExtendClient) Query() *BlogsExtendQuery {
+	return &BlogsExtendQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeBlogsExtend},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a BlogsExtend entity by its id.
+func (c *BlogsExtendClient) Get(ctx context.Context, id int) (*BlogsExtend, error) {
+	return c.Query().Where(blogsextend.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *BlogsExtendClient) GetX(ctx context.Context, id int) *BlogsExtend {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *BlogsExtendClient) Hooks() []Hook {
+	return c.hooks.BlogsExtend
+}
+
+// Interceptors returns the client interceptors.
+func (c *BlogsExtendClient) Interceptors() []Interceptor {
+	return c.inters.BlogsExtend
+}
+
+func (c *BlogsExtendClient) mutate(ctx context.Context, m *BlogsExtendMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&BlogsExtendCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&BlogsExtendUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&BlogsExtendUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&BlogsExtendDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown BlogsExtend mutation op: %q", m.Op())
+	}
+}
+
 // FilesClient is a client for the Files schema.
 type FilesClient struct {
 	config
@@ -973,7 +1209,8 @@ func (c *FilesClient) Hooks() []Hook {
 
 // Interceptors returns the client interceptors.
 func (c *FilesClient) Interceptors() []Interceptor {
-	return c.inters.Files
+	inters := c.inters.Files
+	return append(inters[:len(inters):len(inters)], files.Interceptors[:]...)
 }
 
 func (c *FilesClient) mutate(ctx context.Context, m *FilesMutation) (Value, error) {
@@ -1123,7 +1360,8 @@ func (c *FilesExtendClient) Hooks() []Hook {
 
 // Interceptors returns the client interceptors.
 func (c *FilesExtendClient) Interceptors() []Interceptor {
-	return c.inters.FilesExtend
+	inters := c.inters.FilesExtend
+	return append(inters[:len(inters):len(inters)], filesextend.Interceptors[:]...)
 }
 
 func (c *FilesExtendClient) mutate(ctx context.Context, m *FilesExtendMutation) (Value, error) {
@@ -1138,6 +1376,910 @@ func (c *FilesExtendClient) mutate(ctx context.Context, m *FilesExtendMutation) 
 		return (&FilesExtendDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
 	default:
 		return nil, fmt.Errorf("ent: unknown FilesExtend mutation op: %q", m.Op())
+	}
+}
+
+// PalacesMemoClient is a client for the PalacesMemo schema.
+type PalacesMemoClient struct {
+	config
+}
+
+// NewPalacesMemoClient returns a client for the PalacesMemo from the given config.
+func NewPalacesMemoClient(c config) *PalacesMemoClient {
+	return &PalacesMemoClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `palacesmemo.Hooks(f(g(h())))`.
+func (c *PalacesMemoClient) Use(hooks ...Hook) {
+	c.hooks.PalacesMemo = append(c.hooks.PalacesMemo, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `palacesmemo.Intercept(f(g(h())))`.
+func (c *PalacesMemoClient) Intercept(interceptors ...Interceptor) {
+	c.inters.PalacesMemo = append(c.inters.PalacesMemo, interceptors...)
+}
+
+// Create returns a builder for creating a PalacesMemo entity.
+func (c *PalacesMemoClient) Create() *PalacesMemoCreate {
+	mutation := newPalacesMemoMutation(c.config, OpCreate)
+	return &PalacesMemoCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of PalacesMemo entities.
+func (c *PalacesMemoClient) CreateBulk(builders ...*PalacesMemoCreate) *PalacesMemoCreateBulk {
+	return &PalacesMemoCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *PalacesMemoClient) MapCreateBulk(slice any, setFunc func(*PalacesMemoCreate, int)) *PalacesMemoCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &PalacesMemoCreateBulk{err: fmt.Errorf("calling to PalacesMemoClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*PalacesMemoCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &PalacesMemoCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for PalacesMemo.
+func (c *PalacesMemoClient) Update() *PalacesMemoUpdate {
+	mutation := newPalacesMemoMutation(c.config, OpUpdate)
+	return &PalacesMemoUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *PalacesMemoClient) UpdateOne(pm *PalacesMemo) *PalacesMemoUpdateOne {
+	mutation := newPalacesMemoMutation(c.config, OpUpdateOne, withPalacesMemo(pm))
+	return &PalacesMemoUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *PalacesMemoClient) UpdateOneID(id int) *PalacesMemoUpdateOne {
+	mutation := newPalacesMemoMutation(c.config, OpUpdateOne, withPalacesMemoID(id))
+	return &PalacesMemoUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for PalacesMemo.
+func (c *PalacesMemoClient) Delete() *PalacesMemoDelete {
+	mutation := newPalacesMemoMutation(c.config, OpDelete)
+	return &PalacesMemoDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *PalacesMemoClient) DeleteOne(pm *PalacesMemo) *PalacesMemoDeleteOne {
+	return c.DeleteOneID(pm.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *PalacesMemoClient) DeleteOneID(id int) *PalacesMemoDeleteOne {
+	builder := c.Delete().Where(palacesmemo.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &PalacesMemoDeleteOne{builder}
+}
+
+// Query returns a query builder for PalacesMemo.
+func (c *PalacesMemoClient) Query() *PalacesMemoQuery {
+	return &PalacesMemoQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypePalacesMemo},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a PalacesMemo entity by its id.
+func (c *PalacesMemoClient) Get(ctx context.Context, id int) (*PalacesMemo, error) {
+	return c.Query().Where(palacesmemo.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *PalacesMemoClient) GetX(ctx context.Context, id int) *PalacesMemo {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *PalacesMemoClient) Hooks() []Hook {
+	hooks := c.hooks.PalacesMemo
+	return append(hooks[:len(hooks):len(hooks)], palacesmemo.Hooks[:]...)
+}
+
+// Interceptors returns the client interceptors.
+func (c *PalacesMemoClient) Interceptors() []Interceptor {
+	inters := c.inters.PalacesMemo
+	return append(inters[:len(inters):len(inters)], palacesmemo.Interceptors[:]...)
+}
+
+func (c *PalacesMemoClient) mutate(ctx context.Context, m *PalacesMemoMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&PalacesMemoCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&PalacesMemoUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&PalacesMemoUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&PalacesMemoDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown PalacesMemo mutation op: %q", m.Op())
+	}
+}
+
+// PalacesMemoryClient is a client for the PalacesMemory schema.
+type PalacesMemoryClient struct {
+	config
+}
+
+// NewPalacesMemoryClient returns a client for the PalacesMemory from the given config.
+func NewPalacesMemoryClient(c config) *PalacesMemoryClient {
+	return &PalacesMemoryClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `palacesmemory.Hooks(f(g(h())))`.
+func (c *PalacesMemoryClient) Use(hooks ...Hook) {
+	c.hooks.PalacesMemory = append(c.hooks.PalacesMemory, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `palacesmemory.Intercept(f(g(h())))`.
+func (c *PalacesMemoryClient) Intercept(interceptors ...Interceptor) {
+	c.inters.PalacesMemory = append(c.inters.PalacesMemory, interceptors...)
+}
+
+// Create returns a builder for creating a PalacesMemory entity.
+func (c *PalacesMemoryClient) Create() *PalacesMemoryCreate {
+	mutation := newPalacesMemoryMutation(c.config, OpCreate)
+	return &PalacesMemoryCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of PalacesMemory entities.
+func (c *PalacesMemoryClient) CreateBulk(builders ...*PalacesMemoryCreate) *PalacesMemoryCreateBulk {
+	return &PalacesMemoryCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *PalacesMemoryClient) MapCreateBulk(slice any, setFunc func(*PalacesMemoryCreate, int)) *PalacesMemoryCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &PalacesMemoryCreateBulk{err: fmt.Errorf("calling to PalacesMemoryClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*PalacesMemoryCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &PalacesMemoryCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for PalacesMemory.
+func (c *PalacesMemoryClient) Update() *PalacesMemoryUpdate {
+	mutation := newPalacesMemoryMutation(c.config, OpUpdate)
+	return &PalacesMemoryUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *PalacesMemoryClient) UpdateOne(pm *PalacesMemory) *PalacesMemoryUpdateOne {
+	mutation := newPalacesMemoryMutation(c.config, OpUpdateOne, withPalacesMemory(pm))
+	return &PalacesMemoryUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *PalacesMemoryClient) UpdateOneID(id int) *PalacesMemoryUpdateOne {
+	mutation := newPalacesMemoryMutation(c.config, OpUpdateOne, withPalacesMemoryID(id))
+	return &PalacesMemoryUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for PalacesMemory.
+func (c *PalacesMemoryClient) Delete() *PalacesMemoryDelete {
+	mutation := newPalacesMemoryMutation(c.config, OpDelete)
+	return &PalacesMemoryDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *PalacesMemoryClient) DeleteOne(pm *PalacesMemory) *PalacesMemoryDeleteOne {
+	return c.DeleteOneID(pm.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *PalacesMemoryClient) DeleteOneID(id int) *PalacesMemoryDeleteOne {
+	builder := c.Delete().Where(palacesmemory.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &PalacesMemoryDeleteOne{builder}
+}
+
+// Query returns a query builder for PalacesMemory.
+func (c *PalacesMemoryClient) Query() *PalacesMemoryQuery {
+	return &PalacesMemoryQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypePalacesMemory},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a PalacesMemory entity by its id.
+func (c *PalacesMemoryClient) Get(ctx context.Context, id int) (*PalacesMemory, error) {
+	return c.Query().Where(palacesmemory.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *PalacesMemoryClient) GetX(ctx context.Context, id int) *PalacesMemory {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *PalacesMemoryClient) Hooks() []Hook {
+	hooks := c.hooks.PalacesMemory
+	return append(hooks[:len(hooks):len(hooks)], palacesmemory.Hooks[:]...)
+}
+
+// Interceptors returns the client interceptors.
+func (c *PalacesMemoryClient) Interceptors() []Interceptor {
+	inters := c.inters.PalacesMemory
+	return append(inters[:len(inters):len(inters)], palacesmemory.Interceptors[:]...)
+}
+
+func (c *PalacesMemoryClient) mutate(ctx context.Context, m *PalacesMemoryMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&PalacesMemoryCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&PalacesMemoryUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&PalacesMemoryUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&PalacesMemoryDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown PalacesMemory mutation op: %q", m.Op())
+	}
+}
+
+// PalacesTodoClient is a client for the PalacesTodo schema.
+type PalacesTodoClient struct {
+	config
+}
+
+// NewPalacesTodoClient returns a client for the PalacesTodo from the given config.
+func NewPalacesTodoClient(c config) *PalacesTodoClient {
+	return &PalacesTodoClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `palacestodo.Hooks(f(g(h())))`.
+func (c *PalacesTodoClient) Use(hooks ...Hook) {
+	c.hooks.PalacesTodo = append(c.hooks.PalacesTodo, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `palacestodo.Intercept(f(g(h())))`.
+func (c *PalacesTodoClient) Intercept(interceptors ...Interceptor) {
+	c.inters.PalacesTodo = append(c.inters.PalacesTodo, interceptors...)
+}
+
+// Create returns a builder for creating a PalacesTodo entity.
+func (c *PalacesTodoClient) Create() *PalacesTodoCreate {
+	mutation := newPalacesTodoMutation(c.config, OpCreate)
+	return &PalacesTodoCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of PalacesTodo entities.
+func (c *PalacesTodoClient) CreateBulk(builders ...*PalacesTodoCreate) *PalacesTodoCreateBulk {
+	return &PalacesTodoCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *PalacesTodoClient) MapCreateBulk(slice any, setFunc func(*PalacesTodoCreate, int)) *PalacesTodoCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &PalacesTodoCreateBulk{err: fmt.Errorf("calling to PalacesTodoClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*PalacesTodoCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &PalacesTodoCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for PalacesTodo.
+func (c *PalacesTodoClient) Update() *PalacesTodoUpdate {
+	mutation := newPalacesTodoMutation(c.config, OpUpdate)
+	return &PalacesTodoUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *PalacesTodoClient) UpdateOne(pt *PalacesTodo) *PalacesTodoUpdateOne {
+	mutation := newPalacesTodoMutation(c.config, OpUpdateOne, withPalacesTodo(pt))
+	return &PalacesTodoUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *PalacesTodoClient) UpdateOneID(id int) *PalacesTodoUpdateOne {
+	mutation := newPalacesTodoMutation(c.config, OpUpdateOne, withPalacesTodoID(id))
+	return &PalacesTodoUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for PalacesTodo.
+func (c *PalacesTodoClient) Delete() *PalacesTodoDelete {
+	mutation := newPalacesTodoMutation(c.config, OpDelete)
+	return &PalacesTodoDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *PalacesTodoClient) DeleteOne(pt *PalacesTodo) *PalacesTodoDeleteOne {
+	return c.DeleteOneID(pt.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *PalacesTodoClient) DeleteOneID(id int) *PalacesTodoDeleteOne {
+	builder := c.Delete().Where(palacestodo.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &PalacesTodoDeleteOne{builder}
+}
+
+// Query returns a query builder for PalacesTodo.
+func (c *PalacesTodoClient) Query() *PalacesTodoQuery {
+	return &PalacesTodoQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypePalacesTodo},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a PalacesTodo entity by its id.
+func (c *PalacesTodoClient) Get(ctx context.Context, id int) (*PalacesTodo, error) {
+	return c.Query().Where(palacestodo.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *PalacesTodoClient) GetX(ctx context.Context, id int) *PalacesTodo {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// QueryDones queries the dones edge of a PalacesTodo.
+func (c *PalacesTodoClient) QueryDones(pt *PalacesTodo) *PalacesTodoDoneQuery {
+	query := (&PalacesTodoDoneClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := pt.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(palacestodo.Table, palacestodo.FieldID, id),
+			sqlgraph.To(palacestododone.Table, palacestododone.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, palacestodo.DonesTable, palacestodo.DonesColumn),
+		)
+		fromV = sqlgraph.Neighbors(pt.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *PalacesTodoClient) Hooks() []Hook {
+	hooks := c.hooks.PalacesTodo
+	return append(hooks[:len(hooks):len(hooks)], palacestodo.Hooks[:]...)
+}
+
+// Interceptors returns the client interceptors.
+func (c *PalacesTodoClient) Interceptors() []Interceptor {
+	inters := c.inters.PalacesTodo
+	return append(inters[:len(inters):len(inters)], palacestodo.Interceptors[:]...)
+}
+
+func (c *PalacesTodoClient) mutate(ctx context.Context, m *PalacesTodoMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&PalacesTodoCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&PalacesTodoUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&PalacesTodoUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&PalacesTodoDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown PalacesTodo mutation op: %q", m.Op())
+	}
+}
+
+// PalacesTodoDoneClient is a client for the PalacesTodoDone schema.
+type PalacesTodoDoneClient struct {
+	config
+}
+
+// NewPalacesTodoDoneClient returns a client for the PalacesTodoDone from the given config.
+func NewPalacesTodoDoneClient(c config) *PalacesTodoDoneClient {
+	return &PalacesTodoDoneClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `palacestododone.Hooks(f(g(h())))`.
+func (c *PalacesTodoDoneClient) Use(hooks ...Hook) {
+	c.hooks.PalacesTodoDone = append(c.hooks.PalacesTodoDone, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `palacestododone.Intercept(f(g(h())))`.
+func (c *PalacesTodoDoneClient) Intercept(interceptors ...Interceptor) {
+	c.inters.PalacesTodoDone = append(c.inters.PalacesTodoDone, interceptors...)
+}
+
+// Create returns a builder for creating a PalacesTodoDone entity.
+func (c *PalacesTodoDoneClient) Create() *PalacesTodoDoneCreate {
+	mutation := newPalacesTodoDoneMutation(c.config, OpCreate)
+	return &PalacesTodoDoneCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of PalacesTodoDone entities.
+func (c *PalacesTodoDoneClient) CreateBulk(builders ...*PalacesTodoDoneCreate) *PalacesTodoDoneCreateBulk {
+	return &PalacesTodoDoneCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *PalacesTodoDoneClient) MapCreateBulk(slice any, setFunc func(*PalacesTodoDoneCreate, int)) *PalacesTodoDoneCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &PalacesTodoDoneCreateBulk{err: fmt.Errorf("calling to PalacesTodoDoneClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*PalacesTodoDoneCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &PalacesTodoDoneCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for PalacesTodoDone.
+func (c *PalacesTodoDoneClient) Update() *PalacesTodoDoneUpdate {
+	mutation := newPalacesTodoDoneMutation(c.config, OpUpdate)
+	return &PalacesTodoDoneUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *PalacesTodoDoneClient) UpdateOne(ptd *PalacesTodoDone) *PalacesTodoDoneUpdateOne {
+	mutation := newPalacesTodoDoneMutation(c.config, OpUpdateOne, withPalacesTodoDone(ptd))
+	return &PalacesTodoDoneUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *PalacesTodoDoneClient) UpdateOneID(id int) *PalacesTodoDoneUpdateOne {
+	mutation := newPalacesTodoDoneMutation(c.config, OpUpdateOne, withPalacesTodoDoneID(id))
+	return &PalacesTodoDoneUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for PalacesTodoDone.
+func (c *PalacesTodoDoneClient) Delete() *PalacesTodoDoneDelete {
+	mutation := newPalacesTodoDoneMutation(c.config, OpDelete)
+	return &PalacesTodoDoneDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *PalacesTodoDoneClient) DeleteOne(ptd *PalacesTodoDone) *PalacesTodoDoneDeleteOne {
+	return c.DeleteOneID(ptd.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *PalacesTodoDoneClient) DeleteOneID(id int) *PalacesTodoDoneDeleteOne {
+	builder := c.Delete().Where(palacestododone.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &PalacesTodoDoneDeleteOne{builder}
+}
+
+// Query returns a query builder for PalacesTodoDone.
+func (c *PalacesTodoDoneClient) Query() *PalacesTodoDoneQuery {
+	return &PalacesTodoDoneQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypePalacesTodoDone},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a PalacesTodoDone entity by its id.
+func (c *PalacesTodoDoneClient) Get(ctx context.Context, id int) (*PalacesTodoDone, error) {
+	return c.Query().Where(palacestododone.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *PalacesTodoDoneClient) GetX(ctx context.Context, id int) *PalacesTodoDone {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// QueryOwner queries the owner edge of a PalacesTodoDone.
+func (c *PalacesTodoDoneClient) QueryOwner(ptd *PalacesTodoDone) *PalacesTodoQuery {
+	query := (&PalacesTodoClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := ptd.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(palacestododone.Table, palacestododone.FieldID, id),
+			sqlgraph.To(palacestodo.Table, palacestodo.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, palacestododone.OwnerTable, palacestododone.OwnerColumn),
+		)
+		fromV = sqlgraph.Neighbors(ptd.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *PalacesTodoDoneClient) Hooks() []Hook {
+	hooks := c.hooks.PalacesTodoDone
+	return append(hooks[:len(hooks):len(hooks)], palacestododone.Hooks[:]...)
+}
+
+// Interceptors returns the client interceptors.
+func (c *PalacesTodoDoneClient) Interceptors() []Interceptor {
+	inters := c.inters.PalacesTodoDone
+	return append(inters[:len(inters):len(inters)], palacestododone.Interceptors[:]...)
+}
+
+func (c *PalacesTodoDoneClient) mutate(ctx context.Context, m *PalacesTodoDoneMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&PalacesTodoDoneCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&PalacesTodoDoneUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&PalacesTodoDoneUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&PalacesTodoDoneDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown PalacesTodoDone mutation op: %q", m.Op())
+	}
+}
+
+// TagsClient is a client for the Tags schema.
+type TagsClient struct {
+	config
+}
+
+// NewTagsClient returns a client for the Tags from the given config.
+func NewTagsClient(c config) *TagsClient {
+	return &TagsClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `tags.Hooks(f(g(h())))`.
+func (c *TagsClient) Use(hooks ...Hook) {
+	c.hooks.Tags = append(c.hooks.Tags, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `tags.Intercept(f(g(h())))`.
+func (c *TagsClient) Intercept(interceptors ...Interceptor) {
+	c.inters.Tags = append(c.inters.Tags, interceptors...)
+}
+
+// Create returns a builder for creating a Tags entity.
+func (c *TagsClient) Create() *TagsCreate {
+	mutation := newTagsMutation(c.config, OpCreate)
+	return &TagsCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of Tags entities.
+func (c *TagsClient) CreateBulk(builders ...*TagsCreate) *TagsCreateBulk {
+	return &TagsCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *TagsClient) MapCreateBulk(slice any, setFunc func(*TagsCreate, int)) *TagsCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &TagsCreateBulk{err: fmt.Errorf("calling to TagsClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*TagsCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &TagsCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for Tags.
+func (c *TagsClient) Update() *TagsUpdate {
+	mutation := newTagsMutation(c.config, OpUpdate)
+	return &TagsUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *TagsClient) UpdateOne(t *Tags) *TagsUpdateOne {
+	mutation := newTagsMutation(c.config, OpUpdateOne, withTags(t))
+	return &TagsUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *TagsClient) UpdateOneID(id int) *TagsUpdateOne {
+	mutation := newTagsMutation(c.config, OpUpdateOne, withTagsID(id))
+	return &TagsUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Tags.
+func (c *TagsClient) Delete() *TagsDelete {
+	mutation := newTagsMutation(c.config, OpDelete)
+	return &TagsDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *TagsClient) DeleteOne(t *Tags) *TagsDeleteOne {
+	return c.DeleteOneID(t.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *TagsClient) DeleteOneID(id int) *TagsDeleteOne {
+	builder := c.Delete().Where(tags.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &TagsDeleteOne{builder}
+}
+
+// Query returns a query builder for Tags.
+func (c *TagsClient) Query() *TagsQuery {
+	return &TagsQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeTags},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a Tags entity by its id.
+func (c *TagsClient) Get(ctx context.Context, id int) (*Tags, error) {
+	return c.Query().Where(tags.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *TagsClient) GetX(ctx context.Context, id int) *Tags {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// QueryBlogs queries the blogs edge of a Tags.
+func (c *TagsClient) QueryBlogs(t *Tags) *BlogsQuery {
+	query := (&BlogsClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := t.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(tags.Table, tags.FieldID, id),
+			sqlgraph.To(blogs.Table, blogs.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, true, tags.BlogsTable, tags.BlogsPrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(t.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryTagRelation queries the tag_relation edge of a Tags.
+func (c *TagsClient) QueryTagRelation(t *Tags) *TagsRelationQuery {
+	query := (&TagsRelationClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := t.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(tags.Table, tags.FieldID, id),
+			sqlgraph.To(tagsrelation.Table, tagsrelation.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, tags.TagRelationTable, tags.TagRelationColumn),
+		)
+		fromV = sqlgraph.Neighbors(t.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *TagsClient) Hooks() []Hook {
+	hooks := c.hooks.Tags
+	return append(hooks[:len(hooks):len(hooks)], tags.Hooks[:]...)
+}
+
+// Interceptors returns the client interceptors.
+func (c *TagsClient) Interceptors() []Interceptor {
+	inters := c.inters.Tags
+	return append(inters[:len(inters):len(inters)], tags.Interceptors[:]...)
+}
+
+func (c *TagsClient) mutate(ctx context.Context, m *TagsMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&TagsCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&TagsUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&TagsUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&TagsDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown Tags mutation op: %q", m.Op())
+	}
+}
+
+// TagsRelationClient is a client for the TagsRelation schema.
+type TagsRelationClient struct {
+	config
+}
+
+// NewTagsRelationClient returns a client for the TagsRelation from the given config.
+func NewTagsRelationClient(c config) *TagsRelationClient {
+	return &TagsRelationClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `tagsrelation.Hooks(f(g(h())))`.
+func (c *TagsRelationClient) Use(hooks ...Hook) {
+	c.hooks.TagsRelation = append(c.hooks.TagsRelation, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `tagsrelation.Intercept(f(g(h())))`.
+func (c *TagsRelationClient) Intercept(interceptors ...Interceptor) {
+	c.inters.TagsRelation = append(c.inters.TagsRelation, interceptors...)
+}
+
+// Create returns a builder for creating a TagsRelation entity.
+func (c *TagsRelationClient) Create() *TagsRelationCreate {
+	mutation := newTagsRelationMutation(c.config, OpCreate)
+	return &TagsRelationCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of TagsRelation entities.
+func (c *TagsRelationClient) CreateBulk(builders ...*TagsRelationCreate) *TagsRelationCreateBulk {
+	return &TagsRelationCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *TagsRelationClient) MapCreateBulk(slice any, setFunc func(*TagsRelationCreate, int)) *TagsRelationCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &TagsRelationCreateBulk{err: fmt.Errorf("calling to TagsRelationClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*TagsRelationCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &TagsRelationCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for TagsRelation.
+func (c *TagsRelationClient) Update() *TagsRelationUpdate {
+	mutation := newTagsRelationMutation(c.config, OpUpdate)
+	return &TagsRelationUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *TagsRelationClient) UpdateOne(tr *TagsRelation) *TagsRelationUpdateOne {
+	mutation := newTagsRelationMutation(c.config, OpUpdateOne, withTagsRelation(tr))
+	return &TagsRelationUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *TagsRelationClient) UpdateOneID(id int) *TagsRelationUpdateOne {
+	mutation := newTagsRelationMutation(c.config, OpUpdateOne, withTagsRelationID(id))
+	return &TagsRelationUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for TagsRelation.
+func (c *TagsRelationClient) Delete() *TagsRelationDelete {
+	mutation := newTagsRelationMutation(c.config, OpDelete)
+	return &TagsRelationDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *TagsRelationClient) DeleteOne(tr *TagsRelation) *TagsRelationDeleteOne {
+	return c.DeleteOneID(tr.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *TagsRelationClient) DeleteOneID(id int) *TagsRelationDeleteOne {
+	builder := c.Delete().Where(tagsrelation.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &TagsRelationDeleteOne{builder}
+}
+
+// Query returns a query builder for TagsRelation.
+func (c *TagsRelationClient) Query() *TagsRelationQuery {
+	return &TagsRelationQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeTagsRelation},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a TagsRelation entity by its id.
+func (c *TagsRelationClient) Get(ctx context.Context, id int) (*TagsRelation, error) {
+	return c.Query().Where(tagsrelation.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *TagsRelationClient) GetX(ctx context.Context, id int) *TagsRelation {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// QueryBlog queries the blog edge of a TagsRelation.
+func (c *TagsRelationClient) QueryBlog(tr *TagsRelation) *BlogsQuery {
+	query := (&BlogsClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := tr.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(tagsrelation.Table, tagsrelation.FieldID, id),
+			sqlgraph.To(blogs.Table, blogs.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, false, tagsrelation.BlogTable, tagsrelation.BlogColumn),
+		)
+		fromV = sqlgraph.Neighbors(tr.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryTag queries the tag edge of a TagsRelation.
+func (c *TagsRelationClient) QueryTag(tr *TagsRelation) *TagsQuery {
+	query := (&TagsClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := tr.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(tagsrelation.Table, tagsrelation.FieldID, id),
+			sqlgraph.To(tags.Table, tags.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, false, tagsrelation.TagTable, tagsrelation.TagColumn),
+		)
+		fromV = sqlgraph.Neighbors(tr.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *TagsRelationClient) Hooks() []Hook {
+	return c.hooks.TagsRelation
+}
+
+// Interceptors returns the client interceptors.
+func (c *TagsRelationClient) Interceptors() []Interceptor {
+	return c.inters.TagsRelation
+}
+
+func (c *TagsRelationClient) mutate(ctx context.Context, m *TagsRelationMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&TagsRelationCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&TagsRelationUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&TagsRelationUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&TagsRelationDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown TagsRelation mutation op: %q", m.Op())
 	}
 }
 
@@ -1273,7 +2415,8 @@ func (c *TravelExtendsClient) Hooks() []Hook {
 
 // Interceptors returns the client interceptors.
 func (c *TravelExtendsClient) Interceptors() []Interceptor {
-	return c.inters.TravelExtends
+	inters := c.inters.TravelExtends
+	return append(inters[:len(inters):len(inters)], travelextends.Interceptors[:]...)
 }
 
 func (c *TravelExtendsClient) mutate(ctx context.Context, m *TravelExtendsMutation) (Value, error) {
@@ -1439,7 +2582,8 @@ func (c *TravelsClient) Hooks() []Hook {
 
 // Interceptors returns the client interceptors.
 func (c *TravelsClient) Interceptors() []Interceptor {
-	return c.inters.Travels
+	inters := c.inters.Travels
+	return append(inters[:len(inters):len(inters)], travels.Interceptors[:]...)
 }
 
 func (c *TravelsClient) mutate(ctx context.Context, m *TravelsMutation) (Value, error) {
@@ -1573,7 +2717,8 @@ func (c *UserClient) Hooks() []Hook {
 
 // Interceptors returns the client interceptors.
 func (c *UserClient) Interceptors() []Interceptor {
-	return c.inters.User
+	inters := c.inters.User
+	return append(inters[:len(inters):len(inters)], user.Interceptors[:]...)
 }
 
 func (c *UserClient) mutate(ctx context.Context, m *UserMutation) (Value, error) {
@@ -1707,7 +2852,8 @@ func (c *UserExperienceClient) Hooks() []Hook {
 
 // Interceptors returns the client interceptors.
 func (c *UserExperienceClient) Interceptors() []Interceptor {
-	return c.inters.UserExperience
+	inters := c.inters.UserExperience
+	return append(inters[:len(inters):len(inters)], userexperience.Interceptors[:]...)
 }
 
 func (c *UserExperienceClient) mutate(ctx context.Context, m *UserExperienceMutation) (Value, error) {
@@ -1722,6 +2868,141 @@ func (c *UserExperienceClient) mutate(ctx context.Context, m *UserExperienceMuta
 		return (&UserExperienceDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
 	default:
 		return nil, fmt.Errorf("ent: unknown UserExperience mutation op: %q", m.Op())
+	}
+}
+
+// UserFamousQuotesClient is a client for the UserFamousQuotes schema.
+type UserFamousQuotesClient struct {
+	config
+}
+
+// NewUserFamousQuotesClient returns a client for the UserFamousQuotes from the given config.
+func NewUserFamousQuotesClient(c config) *UserFamousQuotesClient {
+	return &UserFamousQuotesClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `userfamousquotes.Hooks(f(g(h())))`.
+func (c *UserFamousQuotesClient) Use(hooks ...Hook) {
+	c.hooks.UserFamousQuotes = append(c.hooks.UserFamousQuotes, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `userfamousquotes.Intercept(f(g(h())))`.
+func (c *UserFamousQuotesClient) Intercept(interceptors ...Interceptor) {
+	c.inters.UserFamousQuotes = append(c.inters.UserFamousQuotes, interceptors...)
+}
+
+// Create returns a builder for creating a UserFamousQuotes entity.
+func (c *UserFamousQuotesClient) Create() *UserFamousQuotesCreate {
+	mutation := newUserFamousQuotesMutation(c.config, OpCreate)
+	return &UserFamousQuotesCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of UserFamousQuotes entities.
+func (c *UserFamousQuotesClient) CreateBulk(builders ...*UserFamousQuotesCreate) *UserFamousQuotesCreateBulk {
+	return &UserFamousQuotesCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *UserFamousQuotesClient) MapCreateBulk(slice any, setFunc func(*UserFamousQuotesCreate, int)) *UserFamousQuotesCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &UserFamousQuotesCreateBulk{err: fmt.Errorf("calling to UserFamousQuotesClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*UserFamousQuotesCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &UserFamousQuotesCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for UserFamousQuotes.
+func (c *UserFamousQuotesClient) Update() *UserFamousQuotesUpdate {
+	mutation := newUserFamousQuotesMutation(c.config, OpUpdate)
+	return &UserFamousQuotesUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *UserFamousQuotesClient) UpdateOne(ufq *UserFamousQuotes) *UserFamousQuotesUpdateOne {
+	mutation := newUserFamousQuotesMutation(c.config, OpUpdateOne, withUserFamousQuotes(ufq))
+	return &UserFamousQuotesUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *UserFamousQuotesClient) UpdateOneID(id int) *UserFamousQuotesUpdateOne {
+	mutation := newUserFamousQuotesMutation(c.config, OpUpdateOne, withUserFamousQuotesID(id))
+	return &UserFamousQuotesUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for UserFamousQuotes.
+func (c *UserFamousQuotesClient) Delete() *UserFamousQuotesDelete {
+	mutation := newUserFamousQuotesMutation(c.config, OpDelete)
+	return &UserFamousQuotesDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *UserFamousQuotesClient) DeleteOne(ufq *UserFamousQuotes) *UserFamousQuotesDeleteOne {
+	return c.DeleteOneID(ufq.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *UserFamousQuotesClient) DeleteOneID(id int) *UserFamousQuotesDeleteOne {
+	builder := c.Delete().Where(userfamousquotes.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &UserFamousQuotesDeleteOne{builder}
+}
+
+// Query returns a query builder for UserFamousQuotes.
+func (c *UserFamousQuotesClient) Query() *UserFamousQuotesQuery {
+	return &UserFamousQuotesQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeUserFamousQuotes},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a UserFamousQuotes entity by its id.
+func (c *UserFamousQuotesClient) Get(ctx context.Context, id int) (*UserFamousQuotes, error) {
+	return c.Query().Where(userfamousquotes.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *UserFamousQuotesClient) GetX(ctx context.Context, id int) *UserFamousQuotes {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *UserFamousQuotesClient) Hooks() []Hook {
+	hooks := c.hooks.UserFamousQuotes
+	return append(hooks[:len(hooks):len(hooks)], userfamousquotes.Hooks[:]...)
+}
+
+// Interceptors returns the client interceptors.
+func (c *UserFamousQuotesClient) Interceptors() []Interceptor {
+	inters := c.inters.UserFamousQuotes
+	return append(inters[:len(inters):len(inters)], userfamousquotes.Interceptors[:]...)
+}
+
+func (c *UserFamousQuotesClient) mutate(ctx context.Context, m *UserFamousQuotesMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&UserFamousQuotesCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&UserFamousQuotesUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&UserFamousQuotesUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&UserFamousQuotesDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown UserFamousQuotes mutation op: %q", m.Op())
 	}
 }
 
@@ -1841,7 +3122,8 @@ func (c *UserProjectClient) Hooks() []Hook {
 
 // Interceptors returns the client interceptors.
 func (c *UserProjectClient) Interceptors() []Interceptor {
-	return c.inters.UserProject
+	inters := c.inters.UserProject
+	return append(inters[:len(inters):len(inters)], userproject.Interceptors[:]...)
 }
 
 func (c *UserProjectClient) mutate(ctx context.Context, m *UserProjectMutation) (Value, error) {
@@ -1862,12 +3144,16 @@ func (c *UserProjectClient) mutate(ctx context.Context, m *UserProjectMutation) 
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		Account, Blogs, BlogsComment, BlogsContent, Files, FilesExtend, TravelExtends,
-		Travels, User, UserExperience, UserProject []ent.Hook
+		Account, Blogs, BlogsComment, BlogsContent, BlogsExtend, Files, FilesExtend,
+		PalacesMemo, PalacesMemory, PalacesTodo, PalacesTodoDone, Tags, TagsRelation,
+		TravelExtends, Travels, User, UserExperience, UserFamousQuotes,
+		UserProject []ent.Hook
 	}
 	inters struct {
-		Account, Blogs, BlogsComment, BlogsContent, Files, FilesExtend, TravelExtends,
-		Travels, User, UserExperience, UserProject []ent.Interceptor
+		Account, Blogs, BlogsComment, BlogsContent, BlogsExtend, Files, FilesExtend,
+		PalacesMemo, PalacesMemory, PalacesTodo, PalacesTodoDone, Tags, TagsRelation,
+		TravelExtends, Travels, User, UserExperience, UserFamousQuotes,
+		UserProject []ent.Interceptor
 	}
 )
 

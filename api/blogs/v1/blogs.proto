@@ -36,6 +36,30 @@ service Blogs {
 			body: "*"
 		};
 	};
+	//最新 热门文章
+	rpc HotBlogs(global.PageInfo) returns (ListBlogsReply){
+		option (google.api.http) = {
+			body: "*"
+		};
+	}
+	//点赞
+	rpc Thumb(global.Action) returns (global.Empty){
+		option (google.api.http) = {
+			body: "*"
+		};
+	};
+	//收藏
+	rpc Collect(global.Action) returns (global.Empty){
+		option (google.api.http) = {
+			body: "*"
+		};
+	};
+	//标签
+	rpc ListBlogTags (ListBlogsRequest) returns (ListBlogTagsReply){
+		option (google.api.http) = {
+			body: "*"
+		};
+	};
 }
 
 message CreateBlogsRequest {
@@ -69,6 +93,9 @@ message BlogsHeader {
 	int64 accountId = 7;//所属帐号ID
 	int64 createdAt = 8;//创建时间
 	int64 updatedAt = 9;//更新时间
+	int64 browseNum = 10;//浏览量
+	int64 thumbNum = 11;//点赞数
+	int64 collectNum = 12;//收藏数
 }
 
 message GetBlogsReply {
@@ -81,9 +108,18 @@ message ListBlogsRequest {
 	global.PageInfo page = 1; //分页
 	string title = 2; //标题
 	repeated string tags = 3; //标签
+	bool mine = 4;//是否是只展示自己的
 }
 
 message ListBlogsReply {
 	int64 total = 1; //总博客数
 	repeated BlogsHeader list = 2; //返回的内容
+}
+message ListBlogTagsReply{
+	int64 total = 1; //总共自己可以见到的标签有多少
+	repeated BlogTags tags = 2; //
+}
+message BlogTags {
+	string name = 1;//标签名称
+	int64  num = 2;//标签数
 }

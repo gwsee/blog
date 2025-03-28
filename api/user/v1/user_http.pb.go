@@ -27,6 +27,7 @@ const OperationUserGetProject = "/api.user.v1.User/GetProject"
 const OperationUserGetUser = "/api.user.v1.User/GetUser"
 const OperationUserListExperience = "/api.user.v1.User/ListExperience"
 const OperationUserListProject = "/api.user.v1.User/ListProject"
+const OperationUserMessages = "/api.user.v1.User/Messages"
 const OperationUserPhotos = "/api.user.v1.User/Photos"
 const OperationUserSaveExperience = "/api.user.v1.User/SaveExperience"
 const OperationUserSaveProject = "/api.user.v1.User/SaveProject"
@@ -40,6 +41,8 @@ type UserHTTPServer interface {
 	GetUser(context.Context, *global.Empty) (*GetUserReply, error)
 	ListExperience(context.Context, *ListExperienceRequest) (*ListExperienceReply, error)
 	ListProject(context.Context, *ListProjectRequest) (*ListProjectReply, error)
+	// Messages用户侧返回的信息 随机返回 如果存在公告的话 也可能优先返回公告
+	Messages(context.Context, *global.PageInfo) (*MessagesReply, error)
 	Photos(context.Context, *PhotosReq) (*PhotosReply, error)
 	// SaveExperience工作经验管理
 	SaveExperience(context.Context, *SaveExperienceRequest) (*global.Empty, error)
@@ -62,6 +65,7 @@ func RegisterUserHTTPServer(s *http.Server, srv UserHTTPServer) {
 	r.POST("/api.user.v1.User/GetExperience", _User_GetExperience0_HTTP_Handler(srv))
 	r.POST("/api.user.v1.User/ListExperience", _User_ListExperience0_HTTP_Handler(srv))
 	r.POST("/api.user.v1.User/Photos", _User_Photos0_HTTP_Handler(srv))
+	r.POST("/api.user.v1.User/Messages", _User_Messages0_HTTP_Handler(srv))
 }
 
 func _User_SaveUser0_HTTP_Handler(srv UserHTTPServer) func(ctx http.Context) error {
@@ -306,6 +310,28 @@ func _User_Photos0_HTTP_Handler(srv UserHTTPServer) func(ctx http.Context) error
 	}
 }
 
+func _User_Messages0_HTTP_Handler(srv UserHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in global.PageInfo
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationUserMessages)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.Messages(ctx, req.(*global.PageInfo))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*MessagesReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 type UserHTTPClient interface {
 	DeleteExperience(ctx context.Context, req *global.ID, opts ...http.CallOption) (rsp *global.Empty, err error)
 	DeleteProject(ctx context.Context, req *global.ID, opts ...http.CallOption) (rsp *global.Empty, err error)
@@ -314,6 +340,7 @@ type UserHTTPClient interface {
 	GetUser(ctx context.Context, req *global.Empty, opts ...http.CallOption) (rsp *GetUserReply, err error)
 	ListExperience(ctx context.Context, req *ListExperienceRequest, opts ...http.CallOption) (rsp *ListExperienceReply, err error)
 	ListProject(ctx context.Context, req *ListProjectRequest, opts ...http.CallOption) (rsp *ListProjectReply, err error)
+	Messages(ctx context.Context, req *global.PageInfo, opts ...http.CallOption) (rsp *MessagesReply, err error)
 	Photos(ctx context.Context, req *PhotosReq, opts ...http.CallOption) (rsp *PhotosReply, err error)
 	SaveExperience(ctx context.Context, req *SaveExperienceRequest, opts ...http.CallOption) (rsp *global.Empty, err error)
 	SaveProject(ctx context.Context, req *SaveProjectRequest, opts ...http.CallOption) (rsp *global.Empty, err error)
@@ -411,6 +438,19 @@ func (c *UserHTTPClientImpl) ListProject(ctx context.Context, in *ListProjectReq
 	pattern := "/api.user.v1.User/ListProject"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationUserListProject))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *UserHTTPClientImpl) Messages(ctx context.Context, in *global.PageInfo, opts ...http.CallOption) (*MessagesReply, error) {
+	var out MessagesReply
+	pattern := "/api.user.v1.User/Messages"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationUserMessages))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {

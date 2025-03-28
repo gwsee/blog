@@ -1,6 +1,5 @@
 <template>
-  <!--bg-[url('https://images.unsplash.com/photo-1537996194471-e657df975ab4?height=1080&width=1920')]-->
-  <div class="min-h-screen  bg-cover bg-center bg-fixed">
+  <div class="min-h-screen bg-cover bg-center bg-fixed">
     <div class="min-h-screen backdrop-blur-sm">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <!-- 返回按钮 -->
@@ -16,18 +15,18 @@
           <!-- 主要内容区域 -->
           <div class="lg:col-span-2 space-y-8">
             <!-- 项目标题区域 -->
-            <div class="bg-gray-800/50 backdrop-blur-md rounded-2xl p-8 border border-gray-800">
+            <div class="backdrop-blur-md bg-black/30 rounded-2xl p-8 border border-white/20 shadow-lg">
               <h1 class="text-4xl font-bold text-white mb-4">{{ project.title }}</h1>
-              <div class="flex flex-wrap gap-4 items-center text-sm text-gray-300">
+              <div class="flex flex-wrap gap-4 items-center text-sm text-gray-200">
                 <div class="flex items-center space-x-2" v-if="false">
                   <CalendarIcon class="w-4 h-4" />
-                  <span>  {{ $formatDate(project.start,'{y}-{m}') }} - {{ $formatDate(project.end,'{y}-{m}') }}</span>
+                  <span>{{ $formatDate(project.start,'{y}-{m}') }} - {{ $formatDate(project.end,'{y}-{m}') }}</span>
                 </div>
                 <a
                     v-if="project.link"
                     :href="project.link"
                     target="_blank"
-                    class="flex items-center space-x-2 text-blue-400 hover:text-blue-300"
+                    class="flex items-center space-x-2 text-white-400 hover:text-blue-300"
                 >
                   <LinkIcon class="w-4 h-4" />
                   <span>项目地址</span>
@@ -35,18 +34,18 @@
               </div>
             </div>
             <!-- Technologies & Tools -->
-            <div class="space-y-4" v-if=" project.skills&& project.skills.length>0">
+            <div class="space-y-4" v-if="project.skills && project.skills.length>0">
               <h2 class="text-2xl font-bold text-white flex items-center space-x-2">
                 <CodeBracketIcon class="w-6 h-6" />
                 <span>Technologies & Tools</span>
               </h2>
               <div class="grid gap-4">
-                <div class="bg-gray-800/50 backdrop-blur-md rounded-xl p-6 border border-gray-800">
+                <div class="backdrop-blur-md bg-black/30 rounded-xl p-6 border border-white/20 shadow-lg">
                   <div class="flex flex-wrap gap-3">
                     <span
                         v-for="skill in project.skills"
                         :key="skill"
-                        class="px-4 py-2 bg-gray-800/60 rounded-full text-sm text-gray-300 hover:bg-gray-700/60 transition-colors duration-300"
+                        class="px-4 py-2 backdrop-blur-md bg-black/40 rounded-full text-sm text-gray-200 hover:bg-black/50 transition-colors duration-300"
                     >
                       {{ skill }}
                     </span>
@@ -55,7 +54,7 @@
               </div>
             </div>
             <!-- Key Projects -->
-            <div class="space-y-4" v-if=" project.photos&& project.photos.length>0">
+            <div class="space-y-4" v-if="project.photos && project.photos.length>0">
               <h2 class="text-2xl font-bold text-white flex items-center space-x-2">
                 <DocumentIcon class="w-6 h-6" />
                 <span>Snapshot</span>
@@ -64,22 +63,22 @@
                 <div
                     v-for="(image, index) in project.photos"
                     :key="index"
-                    class="group relative overflow-hidden rounded-xl cursor-pointer"
+                    class="group relative overflow-hidden rounded-xl cursor-pointer shadow-lg"
                     @click="openImage(index)"
                 >
                   <img
-                      :src="$fileFull(image)"
+                      :src="$fileFull(image)||defaultCover"
                       :alt="`Project image ${index + 1}`"
                       class="w-full h-48 object-cover transform transition duration-500 group-hover:scale-110"
                   />
                   <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent">
                     <div class="absolute bottom-0 p-4 w-full">
                       <h3 class="text-lg font-semibold text-white mb-1" v-if="false">Project {{ index + 1 }}</h3>
-                      <div class="flex flex-wrap gap-2"  v-if="false">
+                      <div class="flex flex-wrap gap-2" v-if="false">
                         <span
                             v-for="tech in project.skills"
                             :key="tech"
-                            class="px-2 py-1 bg-gray-800/60 backdrop-blur-sm rounded text-xs text-gray-300"
+                            class="px-2 py-1 backdrop-blur-md bg-black/40 rounded text-xs text-gray-200"
                         >
                           {{ tech }}
                         </span>
@@ -94,7 +93,7 @@
           <!-- 右侧信息 -->
           <div class="space-y-6">
             <!-- Key Achievements -->
-            <div class="bg-gray-800/50 backdrop-blur-md rounded-2xl p-6 border border-gray-800">
+            <div class="backdrop-blur-md bg-black/30 rounded-2xl p-6 border border-white/20 shadow-lg">
               <h2 class="text-2xl font-bold text-white mb-6 flex items-center space-x-2">
                 <TrophyIcon class="w-6 h-6" />
                 <span>Key Achievements</span>
@@ -102,23 +101,23 @@
               <div class="space-y-6">
                 <div class="space-y-2">
                   <h3 class="text-lg font-semibold text-white">项目描述</h3>
-                  <p class="text-gray-300 leading-relaxed" v-html="formattedContent(project.description)"></p>
+                  <p class="text-gray-200 leading-relaxed" v-html="formattedContent(project.description)"></p>
                 </div>
                 <div class="space-y-2">
                   <h3 class="text-lg font-semibold text-white">项目周期</h3>
-                  <div class="flex justify-between text-gray-300">
-                    <span>开始时间:  {{ $formatDate(project.start,'{y}-{m}') }}</span>
-                    <span>结束时间:  {{ $formatDate(project.end,'{y}-{m}') }}</span>
+                  <div class="flex justify-between text-gray-200">
+                    <span>开始时间: {{ $formatDate(project.start,'{y}-{m}') }}</span>
+                    <span>结束时间: {{ $formatDate(project.end,'{y}-{m}') }}</span>
                   </div>
                 </div>
                 <div class="space-y-2">
                   <h3 class="text-lg font-semibold text-white">项目状态</h3>
-                  <div class="flex items-center space-x-2 text-gray-300">
+                  <div class="flex items-center space-x-2 text-gray-200">
                     <span
                         class="w-2 h-2 rounded-full"
                         :class="!project.end ? 'bg-green-500' : 'bg-gray-500'"
                     ></span>
-                    <span>{{ !project.end  ? '进行中' : '已完成' }}</span>
+                    <span>{{ !project.end ? '进行中' : '已完成' }}</span>
                   </div>
                 </div>
               </div>
@@ -183,6 +182,7 @@ import {
 } from '@heroicons/vue/24/outline'
 import {useRoute} from "vue-router";
 import {projectGet} from "@/api/user";
+import defaultCover from "@/assets/image/default-cover.jpg";
 const formattedContent=(data)=> {
   if(!data){
     return data
@@ -244,3 +244,12 @@ const openImage = (index) => {
 }
 
 </script>
+
+<style>
+/* 添加额外的玻璃态效果样式 */
+.backdrop-blur-md {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+</style>
+

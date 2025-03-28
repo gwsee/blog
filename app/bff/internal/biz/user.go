@@ -23,6 +23,7 @@ type UserRepo interface {
 	GetExperience(context.Context, *global.ID) (*v1.GetExperienceReply, error)
 	ListExperience(context.Context, *v1.ListExperienceRequest) (*v1.ListExperienceReply, error)
 	Photos(context.Context, *v1.PhotosReq) (*v1.PhotosReply, error)
+	Messages(context.Context, *global.PageInfo) (*v1.MessagesReply, error)
 }
 
 func NewUserUseCase(repo UserRepo, logger log.Logger) *UserUseCase {
@@ -61,4 +62,7 @@ func (uc *UserUseCase) ListExperience(ctx context.Context, req *v1.ListExperienc
 }
 func (uc *UserUseCase) Photos(ctx context.Context, req *v1.PhotosReq) (*v1.PhotosReply, error) {
 	return uc.repo.Photos(ctx, req)
+}
+func (uc *UserUseCase) Messages(ctx context.Context, req *global.PageInfo) (*v1.MessagesReply, error) {
+	return uc.repo.Messages(ctx, req)
 }

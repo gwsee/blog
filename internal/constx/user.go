@@ -9,7 +9,7 @@ import (
 )
 
 const UserInfo = "_user_info"
-const EmptyUser = 0
+const EmptyInt = 0
 
 var DefaultUser User
 

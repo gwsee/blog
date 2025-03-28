@@ -279,6 +279,13 @@ func (uu *UserUpdate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (uu *UserUpdate) defaults() error {
+	if _, ok := uu.mutation.CreatedAt(); !ok {
+		if user.UpdateDefaultCreatedAt == nil {
+			return fmt.Errorf("ent: uninitialized user.UpdateDefaultCreatedAt (forgotten import ent/runtime?)")
+		}
+		v := user.UpdateDefaultCreatedAt()
+		uu.mutation.SetCreatedAt(v)
+	}
 	if _, ok := uu.mutation.UpdatedAt(); !ok {
 		if user.UpdateDefaultUpdatedAt == nil {
 			return fmt.Errorf("ent: uninitialized user.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
@@ -310,6 +317,12 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := uu.mutation.CreatedAt(); ok {
+		_spec.SetField(user.FieldCreatedAt, field.TypeInt64, value)
+	}
+	if value, ok := uu.mutation.AddedCreatedAt(); ok {
+		_spec.AddField(user.FieldCreatedAt, field.TypeInt64, value)
 	}
 	if value, ok := uu.mutation.UpdatedAt(); ok {
 		_spec.SetField(user.FieldUpdatedAt, field.TypeInt64, value)
@@ -657,6 +670,13 @@ func (uuo *UserUpdateOne) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (uuo *UserUpdateOne) defaults() error {
+	if _, ok := uuo.mutation.CreatedAt(); !ok {
+		if user.UpdateDefaultCreatedAt == nil {
+			return fmt.Errorf("ent: uninitialized user.UpdateDefaultCreatedAt (forgotten import ent/runtime?)")
+		}
+		v := user.UpdateDefaultCreatedAt()
+		uuo.mutation.SetCreatedAt(v)
+	}
 	if _, ok := uuo.mutation.UpdatedAt(); !ok {
 		if user.UpdateDefaultUpdatedAt == nil {
 			return fmt.Errorf("ent: uninitialized user.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
@@ -705,6 +725,12 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := uuo.mutation.CreatedAt(); ok {
+		_spec.SetField(user.FieldCreatedAt, field.TypeInt64, value)
+	}
+	if value, ok := uuo.mutation.AddedCreatedAt(); ok {
+		_spec.AddField(user.FieldCreatedAt, field.TypeInt64, value)
 	}
 	if value, ok := uuo.mutation.UpdatedAt(); ok {
 		_spec.SetField(user.FieldUpdatedAt, field.TypeInt64, value)

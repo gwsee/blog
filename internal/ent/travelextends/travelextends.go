@@ -36,9 +36,9 @@ const (
 	// EdgeExtends holds the string denoting the extends edge name in mutations.
 	EdgeExtends = "extends"
 	// Table holds the table name of the travelextends in the database.
-	Table = "travel_extends"
+	Table = "travels_extend"
 	// ExtendsTable is the table that holds the extends relation/edge.
-	ExtendsTable = "travel_extends"
+	ExtendsTable = "travels_extend"
 	// ExtendsInverseTable is the table name for the Travels entity.
 	// It exists in this package in order to avoid circular dependency with the "travels" package.
 	ExtendsInverseTable = "travels"
@@ -77,9 +77,12 @@ func ValidColumn(column string) bool {
 //
 //	import _ "blog/internal/ent/runtime"
 var (
-	Hooks [3]ent.Hook
+	Hooks        [3]ent.Hook
+	Interceptors [1]ent.Interceptor
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
 	DefaultCreatedAt int64
+	// UpdateDefaultCreatedAt holds the default value on update for the "created_at" field.
+	UpdateDefaultCreatedAt func() int64
 	// DefaultCreatedBy holds the default value on creation for the "created_by" field.
 	DefaultCreatedBy int64
 	// DefaultUpdatedAt holds the default value on creation for the "updated_at" field.

@@ -33,15 +33,15 @@ func (UserExperience) Fields() []ent.Field {
 		field.Int64("end").Comment("结束时间"),
 		field.String("description").Comment("职位描述").
 			SchemaType(map[string]string{
-				dialect.MySQL: "tinytext",
+				dialect.MySQL: "mediumtext",
 			}),
 		field.String("responsibilities").Comment("主要职责").
 			SchemaType(map[string]string{
-				dialect.MySQL: "tinytext",
+				dialect.MySQL: "mediumtext",
 			}),
 		field.String("achievements").Comment("工作成就").
 			SchemaType(map[string]string{
-				dialect.MySQL: "tinytext",
+				dialect.MySQL: "mediumtext",
 			}),
 		field.JSON("skills", []string{}).Comment("使用技能"),
 		field.Int("project").Default(0).Comment("项目数"),
@@ -59,7 +59,7 @@ func (UserExperience) Mixin() []ent.Mixin {
 }
 func (UserExperience) Annotations() []schema.Annotation {
 	return []schema.Annotation{
-		entsql.Annotation{Table: "user_experience"},
+		entsql.Annotation{Table: "users_experience"},
 		entsql.WithComments(true),
 		schema.Comment("经历表"),
 	}

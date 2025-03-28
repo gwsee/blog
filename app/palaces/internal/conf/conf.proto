@@ -1,0 +1,12 @@
+syntax = "proto3";
+package app.palaces.conf;
+import "api/global/cfg.proto";
+option go_package = "blog/app/palaces/internal/conf;conf";
+
+message Bootstrap {
+  api.global.Server server = 1;
+  api.global.Data data = 2;
+  api.global.Auth auth = 3;
+  api.global.Trace trace = 4;
+  api.global.Etcd  etcd = 5;
+}

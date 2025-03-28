@@ -11,9 +11,6 @@
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
-# Dependency directories (remove the comment below to include it)
-vendor/
-
 # Go workspace file
 go.work
 
@@ -36,6 +33,7 @@ bin/
 .vscode/
 .idea/
 *.swp
-/deploy/*
+/deploy/cfg/*
+/deploy/local/*
 /node_modules/
 configs/*.yaml

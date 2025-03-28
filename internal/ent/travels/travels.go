@@ -50,17 +50,17 @@ const (
 	// Table holds the table name of the travels in the database.
 	Table = "travels"
 	// TravelExtendsTable is the table that holds the travel_extends relation/edge.
-	TravelExtendsTable = "travel_extends"
+	TravelExtendsTable = "travels_extend"
 	// TravelExtendsInverseTable is the table name for the TravelExtends entity.
 	// It exists in this package in order to avoid circular dependency with the "travelextends" package.
-	TravelExtendsInverseTable = "travel_extends"
+	TravelExtendsInverseTable = "travels_extend"
 	// TravelExtendsColumn is the table column denoting the travel_extends relation/edge.
 	TravelExtendsColumn = "travel_id"
 	// TravelAccountTable is the table that holds the travel_account relation/edge.
 	TravelAccountTable = "travels"
 	// TravelAccountInverseTable is the table name for the Account entity.
 	// It exists in this package in order to avoid circular dependency with the "account" package.
-	TravelAccountInverseTable = "account"
+	TravelAccountInverseTable = "accounts"
 	// TravelAccountColumn is the table column denoting the travel_account relation/edge.
 	TravelAccountColumn = "account_id"
 )
@@ -101,9 +101,12 @@ func ValidColumn(column string) bool {
 //
 //	import _ "blog/internal/ent/runtime"
 var (
-	Hooks [3]ent.Hook
+	Hooks        [3]ent.Hook
+	Interceptors [1]ent.Interceptor
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
 	DefaultCreatedAt int64
+	// UpdateDefaultCreatedAt holds the default value on update for the "created_at" field.
+	UpdateDefaultCreatedAt func() int64
 	// DefaultCreatedBy holds the default value on creation for the "created_by" field.
 	DefaultCreatedBy int64
 	// DefaultUpdatedAt holds the default value on creation for the "updated_at" field.

@@ -56,6 +56,18 @@ func (f BlogsContentFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.BlogsContentMutation", m)
 }
 
+// The BlogsExtendFunc type is an adapter to allow the use of ordinary
+// function as BlogsExtend mutator.
+type BlogsExtendFunc func(context.Context, *ent.BlogsExtendMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f BlogsExtendFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.BlogsExtendMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.BlogsExtendMutation", m)
+}
+
 // The FilesFunc type is an adapter to allow the use of ordinary
 // function as Files mutator.
 type FilesFunc func(context.Context, *ent.FilesMutation) (ent.Value, error)
@@ -78,6 +90,78 @@ func (f FilesExtendFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value,
 		return f(ctx, mv)
 	}
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.FilesExtendMutation", m)
+}
+
+// The PalacesMemoFunc type is an adapter to allow the use of ordinary
+// function as PalacesMemo mutator.
+type PalacesMemoFunc func(context.Context, *ent.PalacesMemoMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f PalacesMemoFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.PalacesMemoMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.PalacesMemoMutation", m)
+}
+
+// The PalacesMemoryFunc type is an adapter to allow the use of ordinary
+// function as PalacesMemory mutator.
+type PalacesMemoryFunc func(context.Context, *ent.PalacesMemoryMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f PalacesMemoryFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.PalacesMemoryMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.PalacesMemoryMutation", m)
+}
+
+// The PalacesTodoFunc type is an adapter to allow the use of ordinary
+// function as PalacesTodo mutator.
+type PalacesTodoFunc func(context.Context, *ent.PalacesTodoMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f PalacesTodoFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.PalacesTodoMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.PalacesTodoMutation", m)
+}
+
+// The PalacesTodoDoneFunc type is an adapter to allow the use of ordinary
+// function as PalacesTodoDone mutator.
+type PalacesTodoDoneFunc func(context.Context, *ent.PalacesTodoDoneMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f PalacesTodoDoneFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.PalacesTodoDoneMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.PalacesTodoDoneMutation", m)
+}
+
+// The TagsFunc type is an adapter to allow the use of ordinary
+// function as Tags mutator.
+type TagsFunc func(context.Context, *ent.TagsMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f TagsFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.TagsMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.TagsMutation", m)
+}
+
+// The TagsRelationFunc type is an adapter to allow the use of ordinary
+// function as TagsRelation mutator.
+type TagsRelationFunc func(context.Context, *ent.TagsRelationMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f TagsRelationFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.TagsRelationMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.TagsRelationMutation", m)
 }
 
 // The TravelExtendsFunc type is an adapter to allow the use of ordinary
@@ -126,6 +210,18 @@ func (f UserExperienceFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Val
 		return f(ctx, mv)
 	}
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.UserExperienceMutation", m)
+}
+
+// The UserFamousQuotesFunc type is an adapter to allow the use of ordinary
+// function as UserFamousQuotes mutator.
+type UserFamousQuotesFunc func(context.Context, *ent.UserFamousQuotesMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f UserFamousQuotesFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.UserFamousQuotesMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.UserFamousQuotesMutation", m)
 }
 
 // The UserProjectFunc type is an adapter to allow the use of ordinary

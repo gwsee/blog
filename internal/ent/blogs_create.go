@@ -4,6 +4,8 @@ package ent
 
 import (
 	"blog/internal/ent/blogs"
+	"blog/internal/ent/tags"
+	"blog/internal/ent/tagsrelation"
 	"context"
 	"errors"
 	"fmt"
@@ -149,10 +151,82 @@ func (bc *BlogsCreate) SetCover(s string) *BlogsCreate {
 	return bc
 }
 
+// SetBrowseNum sets the "browse_num" field.
+func (bc *BlogsCreate) SetBrowseNum(i int) *BlogsCreate {
+	bc.mutation.SetBrowseNum(i)
+	return bc
+}
+
+// SetNillableBrowseNum sets the "browse_num" field if the given value is not nil.
+func (bc *BlogsCreate) SetNillableBrowseNum(i *int) *BlogsCreate {
+	if i != nil {
+		bc.SetBrowseNum(*i)
+	}
+	return bc
+}
+
+// SetCollectNum sets the "collect_num" field.
+func (bc *BlogsCreate) SetCollectNum(i int) *BlogsCreate {
+	bc.mutation.SetCollectNum(i)
+	return bc
+}
+
+// SetNillableCollectNum sets the "collect_num" field if the given value is not nil.
+func (bc *BlogsCreate) SetNillableCollectNum(i *int) *BlogsCreate {
+	if i != nil {
+		bc.SetCollectNum(*i)
+	}
+	return bc
+}
+
+// SetLoveNum sets the "love_num" field.
+func (bc *BlogsCreate) SetLoveNum(i int) *BlogsCreate {
+	bc.mutation.SetLoveNum(i)
+	return bc
+}
+
+// SetNillableLoveNum sets the "love_num" field if the given value is not nil.
+func (bc *BlogsCreate) SetNillableLoveNum(i *int) *BlogsCreate {
+	if i != nil {
+		bc.SetLoveNum(*i)
+	}
+	return bc
+}
+
 // SetID sets the "id" field.
 func (bc *BlogsCreate) SetID(i int) *BlogsCreate {
 	bc.mutation.SetID(i)
 	return bc
+}
+
+// AddTagIDs adds the "tag" edge to the Tags entity by IDs.
+func (bc *BlogsCreate) AddTagIDs(ids ...int) *BlogsCreate {
+	bc.mutation.AddTagIDs(ids...)
+	return bc
+}
+
+// AddTag adds the "tag" edges to the Tags entity.
+func (bc *BlogsCreate) AddTag(t ...*Tags) *BlogsCreate {
+	ids := make([]int, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return bc.AddTagIDs(ids...)
+}
+
+// AddTagRelationIDs adds the "tag_relation" edge to the TagsRelation entity by IDs.
+func (bc *BlogsCreate) AddTagRelationIDs(ids ...int) *BlogsCreate {
+	bc.mutation.AddTagRelationIDs(ids...)
+	return bc
+}
+
+// AddTagRelation adds the "tag_relation" edges to the TagsRelation entity.
+func (bc *BlogsCreate) AddTagRelation(t ...*TagsRelation) *BlogsCreate {
+	ids := make([]int, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return bc.AddTagRelationIDs(ids...)
 }
 
 // Mutation returns the BlogsMutation object of the builder.
@@ -220,6 +294,18 @@ func (bc *BlogsCreate) defaults() error {
 		v := blogs.DefaultIsHidden
 		bc.mutation.SetIsHidden(v)
 	}
+	if _, ok := bc.mutation.BrowseNum(); !ok {
+		v := blogs.DefaultBrowseNum
+		bc.mutation.SetBrowseNum(v)
+	}
+	if _, ok := bc.mutation.CollectNum(); !ok {
+		v := blogs.DefaultCollectNum
+		bc.mutation.SetCollectNum(v)
+	}
+	if _, ok := bc.mutation.LoveNum(); !ok {
+		v := blogs.DefaultLoveNum
+		bc.mutation.SetLoveNum(v)
+	}
 	return nil
 }
 
@@ -260,6 +346,15 @@ func (bc *BlogsCreate) check() error {
 	}
 	if _, ok := bc.mutation.Cover(); !ok {
 		return &ValidationError{Name: "cover", err: errors.New(`ent: missing required field "Blogs.cover"`)}
+	}
+	if _, ok := bc.mutation.BrowseNum(); !ok {
+		return &ValidationError{Name: "browse_num", err: errors.New(`ent: missing required field "Blogs.browse_num"`)}
+	}
+	if _, ok := bc.mutation.CollectNum(); !ok {
+		return &ValidationError{Name: "collect_num", err: errors.New(`ent: missing required field "Blogs.collect_num"`)}
+	}
+	if _, ok := bc.mutation.LoveNum(); !ok {
+		return &ValidationError{Name: "love_num", err: errors.New(`ent: missing required field "Blogs.love_num"`)}
 	}
 	if v, ok := bc.mutation.ID(); ok {
 		if err := blogs.IDValidator(v); err != nil {
@@ -346,6 +441,50 @@ func (bc *BlogsCreate) createSpec() (*Blogs, *sqlgraph.CreateSpec) {
 	if value, ok := bc.mutation.Cover(); ok {
 		_spec.SetField(blogs.FieldCover, field.TypeString, value)
 		_node.Cover = value
+	}
+	if value, ok := bc.mutation.BrowseNum(); ok {
+		_spec.SetField(blogs.FieldBrowseNum, field.TypeInt, value)
+		_node.BrowseNum = value
+	}
+	if value, ok := bc.mutation.CollectNum(); ok {
+		_spec.SetField(blogs.FieldCollectNum, field.TypeInt, value)
+		_node.CollectNum = value
+	}
+	if value, ok := bc.mutation.LoveNum(); ok {
+		_spec.SetField(blogs.FieldLoveNum, field.TypeInt, value)
+		_node.LoveNum = value
+	}
+	if nodes := bc.mutation.TagIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   blogs.TagTable,
+			Columns: blogs.TagPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(tags.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := bc.mutation.TagRelationIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   blogs.TagRelationTable,
+			Columns: []string{blogs.TagRelationColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(tagsrelation.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec
 }
@@ -552,6 +691,60 @@ func (u *BlogsUpsert) SetCover(v string) *BlogsUpsert {
 // UpdateCover sets the "cover" field to the value that was provided on create.
 func (u *BlogsUpsert) UpdateCover() *BlogsUpsert {
 	u.SetExcluded(blogs.FieldCover)
+	return u
+}
+
+// SetBrowseNum sets the "browse_num" field.
+func (u *BlogsUpsert) SetBrowseNum(v int) *BlogsUpsert {
+	u.Set(blogs.FieldBrowseNum, v)
+	return u
+}
+
+// UpdateBrowseNum sets the "browse_num" field to the value that was provided on create.
+func (u *BlogsUpsert) UpdateBrowseNum() *BlogsUpsert {
+	u.SetExcluded(blogs.FieldBrowseNum)
+	return u
+}
+
+// AddBrowseNum adds v to the "browse_num" field.
+func (u *BlogsUpsert) AddBrowseNum(v int) *BlogsUpsert {
+	u.Add(blogs.FieldBrowseNum, v)
+	return u
+}
+
+// SetCollectNum sets the "collect_num" field.
+func (u *BlogsUpsert) SetCollectNum(v int) *BlogsUpsert {
+	u.Set(blogs.FieldCollectNum, v)
+	return u
+}
+
+// UpdateCollectNum sets the "collect_num" field to the value that was provided on create.
+func (u *BlogsUpsert) UpdateCollectNum() *BlogsUpsert {
+	u.SetExcluded(blogs.FieldCollectNum)
+	return u
+}
+
+// AddCollectNum adds v to the "collect_num" field.
+func (u *BlogsUpsert) AddCollectNum(v int) *BlogsUpsert {
+	u.Add(blogs.FieldCollectNum, v)
+	return u
+}
+
+// SetLoveNum sets the "love_num" field.
+func (u *BlogsUpsert) SetLoveNum(v int) *BlogsUpsert {
+	u.Set(blogs.FieldLoveNum, v)
+	return u
+}
+
+// UpdateLoveNum sets the "love_num" field to the value that was provided on create.
+func (u *BlogsUpsert) UpdateLoveNum() *BlogsUpsert {
+	u.SetExcluded(blogs.FieldLoveNum)
+	return u
+}
+
+// AddLoveNum adds v to the "love_num" field.
+func (u *BlogsUpsert) AddLoveNum(v int) *BlogsUpsert {
+	u.Add(blogs.FieldLoveNum, v)
 	return u
 }
 
@@ -788,6 +981,69 @@ func (u *BlogsUpsertOne) SetCover(v string) *BlogsUpsertOne {
 func (u *BlogsUpsertOne) UpdateCover() *BlogsUpsertOne {
 	return u.Update(func(s *BlogsUpsert) {
 		s.UpdateCover()
+	})
+}
+
+// SetBrowseNum sets the "browse_num" field.
+func (u *BlogsUpsertOne) SetBrowseNum(v int) *BlogsUpsertOne {
+	return u.Update(func(s *BlogsUpsert) {
+		s.SetBrowseNum(v)
+	})
+}
+
+// AddBrowseNum adds v to the "browse_num" field.
+func (u *BlogsUpsertOne) AddBrowseNum(v int) *BlogsUpsertOne {
+	return u.Update(func(s *BlogsUpsert) {
+		s.AddBrowseNum(v)
+	})
+}
+
+// UpdateBrowseNum sets the "browse_num" field to the value that was provided on create.
+func (u *BlogsUpsertOne) UpdateBrowseNum() *BlogsUpsertOne {
+	return u.Update(func(s *BlogsUpsert) {
+		s.UpdateBrowseNum()
+	})
+}
+
+// SetCollectNum sets the "collect_num" field.
+func (u *BlogsUpsertOne) SetCollectNum(v int) *BlogsUpsertOne {
+	return u.Update(func(s *BlogsUpsert) {
+		s.SetCollectNum(v)
+	})
+}
+
+// AddCollectNum adds v to the "collect_num" field.
+func (u *BlogsUpsertOne) AddCollectNum(v int) *BlogsUpsertOne {
+	return u.Update(func(s *BlogsUpsert) {
+		s.AddCollectNum(v)
+	})
+}
+
+// UpdateCollectNum sets the "collect_num" field to the value that was provided on create.
+func (u *BlogsUpsertOne) UpdateCollectNum() *BlogsUpsertOne {
+	return u.Update(func(s *BlogsUpsert) {
+		s.UpdateCollectNum()
+	})
+}
+
+// SetLoveNum sets the "love_num" field.
+func (u *BlogsUpsertOne) SetLoveNum(v int) *BlogsUpsertOne {
+	return u.Update(func(s *BlogsUpsert) {
+		s.SetLoveNum(v)
+	})
+}
+
+// AddLoveNum adds v to the "love_num" field.
+func (u *BlogsUpsertOne) AddLoveNum(v int) *BlogsUpsertOne {
+	return u.Update(func(s *BlogsUpsert) {
+		s.AddLoveNum(v)
+	})
+}
+
+// UpdateLoveNum sets the "love_num" field to the value that was provided on create.
+func (u *BlogsUpsertOne) UpdateLoveNum() *BlogsUpsertOne {
+	return u.Update(func(s *BlogsUpsert) {
+		s.UpdateLoveNum()
 	})
 }
 
@@ -1190,6 +1446,69 @@ func (u *BlogsUpsertBulk) SetCover(v string) *BlogsUpsertBulk {
 func (u *BlogsUpsertBulk) UpdateCover() *BlogsUpsertBulk {
 	return u.Update(func(s *BlogsUpsert) {
 		s.UpdateCover()
+	})
+}
+
+// SetBrowseNum sets the "browse_num" field.
+func (u *BlogsUpsertBulk) SetBrowseNum(v int) *BlogsUpsertBulk {
+	return u.Update(func(s *BlogsUpsert) {
+		s.SetBrowseNum(v)
+	})
+}
+
+// AddBrowseNum adds v to the "browse_num" field.
+func (u *BlogsUpsertBulk) AddBrowseNum(v int) *BlogsUpsertBulk {
+	return u.Update(func(s *BlogsUpsert) {
+		s.AddBrowseNum(v)
+	})
+}
+
+// UpdateBrowseNum sets the "browse_num" field to the value that was provided on create.
+func (u *BlogsUpsertBulk) UpdateBrowseNum() *BlogsUpsertBulk {
+	return u.Update(func(s *BlogsUpsert) {
+		s.UpdateBrowseNum()
+	})
+}
+
+// SetCollectNum sets the "collect_num" field.
+func (u *BlogsUpsertBulk) SetCollectNum(v int) *BlogsUpsertBulk {
+	return u.Update(func(s *BlogsUpsert) {
+		s.SetCollectNum(v)
+	})
+}
+
+// AddCollectNum adds v to the "collect_num" field.
+func (u *BlogsUpsertBulk) AddCollectNum(v int) *BlogsUpsertBulk {
+	return u.Update(func(s *BlogsUpsert) {
+		s.AddCollectNum(v)
+	})
+}
+
+// UpdateCollectNum sets the "collect_num" field to the value that was provided on create.
+func (u *BlogsUpsertBulk) UpdateCollectNum() *BlogsUpsertBulk {
+	return u.Update(func(s *BlogsUpsert) {
+		s.UpdateCollectNum()
+	})
+}
+
+// SetLoveNum sets the "love_num" field.
+func (u *BlogsUpsertBulk) SetLoveNum(v int) *BlogsUpsertBulk {
+	return u.Update(func(s *BlogsUpsert) {
+		s.SetLoveNum(v)
+	})
+}
+
+// AddLoveNum adds v to the "love_num" field.
+func (u *BlogsUpsertBulk) AddLoveNum(v int) *BlogsUpsertBulk {
+	return u.Update(func(s *BlogsUpsert) {
+		s.AddLoveNum(v)
+	})
+}
+
+// UpdateLoveNum sets the "love_num" field to the value that was provided on create.
+func (u *BlogsUpsertBulk) UpdateLoveNum() *BlogsUpsertBulk {
+	return u.Update(func(s *BlogsUpsert) {
+		s.UpdateLoveNum()
 	})
 }
 

@@ -20,11 +20,15 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Blogs_CreateBlogs_FullMethodName = "/api.blogs.v1.Blogs/CreateBlogs"
-	Blogs_UpdateBlogs_FullMethodName = "/api.blogs.v1.Blogs/UpdateBlogs"
-	Blogs_DeleteBlogs_FullMethodName = "/api.blogs.v1.Blogs/DeleteBlogs"
-	Blogs_GetBlogs_FullMethodName    = "/api.blogs.v1.Blogs/GetBlogs"
-	Blogs_ListBlogs_FullMethodName   = "/api.blogs.v1.Blogs/ListBlogs"
+	Blogs_CreateBlogs_FullMethodName  = "/api.blogs.v1.Blogs/CreateBlogs"
+	Blogs_UpdateBlogs_FullMethodName  = "/api.blogs.v1.Blogs/UpdateBlogs"
+	Blogs_DeleteBlogs_FullMethodName  = "/api.blogs.v1.Blogs/DeleteBlogs"
+	Blogs_GetBlogs_FullMethodName     = "/api.blogs.v1.Blogs/GetBlogs"
+	Blogs_ListBlogs_FullMethodName    = "/api.blogs.v1.Blogs/ListBlogs"
+	Blogs_HotBlogs_FullMethodName     = "/api.blogs.v1.Blogs/HotBlogs"
+	Blogs_Thumb_FullMethodName        = "/api.blogs.v1.Blogs/Thumb"
+	Blogs_Collect_FullMethodName      = "/api.blogs.v1.Blogs/Collect"
+	Blogs_ListBlogTags_FullMethodName = "/api.blogs.v1.Blogs/ListBlogTags"
 )
 
 // BlogsClient is the client API for Blogs service.
@@ -36,6 +40,14 @@ type BlogsClient interface {
 	DeleteBlogs(ctx context.Context, in *global.ID, opts ...grpc.CallOption) (*global.Empty, error)
 	GetBlogs(ctx context.Context, in *global.ID, opts ...grpc.CallOption) (*GetBlogsReply, error)
 	ListBlogs(ctx context.Context, in *ListBlogsRequest, opts ...grpc.CallOption) (*ListBlogsReply, error)
+	// 最新 热门文章
+	HotBlogs(ctx context.Context, in *global.PageInfo, opts ...grpc.CallOption) (*ListBlogsReply, error)
+	// 点赞
+	Thumb(ctx context.Context, in *global.Action, opts ...grpc.CallOption) (*global.Empty, error)
+	// 收藏
+	Collect(ctx context.Context, in *global.Action, opts ...grpc.CallOption) (*global.Empty, error)
+	// 标签
+	ListBlogTags(ctx context.Context, in *ListBlogsRequest, opts ...grpc.CallOption) (*ListBlogTagsReply, error)
 }
 
 type blogsClient struct {
@@ -96,6 +108,46 @@ func (c *blogsClient) ListBlogs(ctx context.Context, in *ListBlogsRequest, opts 
 	return out, nil
 }
 
+func (c *blogsClient) HotBlogs(ctx context.Context, in *global.PageInfo, opts ...grpc.CallOption) (*ListBlogsReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListBlogsReply)
+	err := c.cc.Invoke(ctx, Blogs_HotBlogs_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *blogsClient) Thumb(ctx context.Context, in *global.Action, opts ...grpc.CallOption) (*global.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(global.Empty)
+	err := c.cc.Invoke(ctx, Blogs_Thumb_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *blogsClient) Collect(ctx context.Context, in *global.Action, opts ...grpc.CallOption) (*global.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(global.Empty)
+	err := c.cc.Invoke(ctx, Blogs_Collect_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *blogsClient) ListBlogTags(ctx context.Context, in *ListBlogsRequest, opts ...grpc.CallOption) (*ListBlogTagsReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListBlogTagsReply)
+	err := c.cc.Invoke(ctx, Blogs_ListBlogTags_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // BlogsServer is the server API for Blogs service.
 // All implementations must embed UnimplementedBlogsServer
 // for forward compatibility.
@@ -105,6 +157,14 @@ type BlogsServer interface {
 	DeleteBlogs(context.Context, *global.ID) (*global.Empty, error)
 	GetBlogs(context.Context, *global.ID) (*GetBlogsReply, error)
 	ListBlogs(context.Context, *ListBlogsRequest) (*ListBlogsReply, error)
+	// 最新 热门文章
+	HotBlogs(context.Context, *global.PageInfo) (*ListBlogsReply, error)
+	// 点赞
+	Thumb(context.Context, *global.Action) (*global.Empty, error)
+	// 收藏
+	Collect(context.Context, *global.Action) (*global.Empty, error)
+	// 标签
+	ListBlogTags(context.Context, *ListBlogsRequest) (*ListBlogTagsReply, error)
 	mustEmbedUnimplementedBlogsServer()
 }
 
@@ -129,6 +189,18 @@ func (UnimplementedBlogsServer) GetBlogs(context.Context, *global.ID) (*GetBlogs
 }
 func (UnimplementedBlogsServer) ListBlogs(context.Context, *ListBlogsRequest) (*ListBlogsReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListBlogs not implemented")
+}
+func (UnimplementedBlogsServer) HotBlogs(context.Context, *global.PageInfo) (*ListBlogsReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method HotBlogs not implemented")
+}
+func (UnimplementedBlogsServer) Thumb(context.Context, *global.Action) (*global.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Thumb not implemented")
+}
+func (UnimplementedBlogsServer) Collect(context.Context, *global.Action) (*global.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Collect not implemented")
+}
+func (UnimplementedBlogsServer) ListBlogTags(context.Context, *ListBlogsRequest) (*ListBlogTagsReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListBlogTags not implemented")
 }
 func (UnimplementedBlogsServer) mustEmbedUnimplementedBlogsServer() {}
 func (UnimplementedBlogsServer) testEmbeddedByValue()               {}
@@ -241,6 +313,78 @@ func _Blogs_ListBlogs_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Blogs_HotBlogs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(global.PageInfo)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BlogsServer).HotBlogs(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Blogs_HotBlogs_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BlogsServer).HotBlogs(ctx, req.(*global.PageInfo))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Blogs_Thumb_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(global.Action)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BlogsServer).Thumb(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Blogs_Thumb_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BlogsServer).Thumb(ctx, req.(*global.Action))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Blogs_Collect_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(global.Action)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BlogsServer).Collect(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Blogs_Collect_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BlogsServer).Collect(ctx, req.(*global.Action))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Blogs_ListBlogTags_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListBlogsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BlogsServer).ListBlogTags(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Blogs_ListBlogTags_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BlogsServer).ListBlogTags(ctx, req.(*ListBlogsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Blogs_ServiceDesc is the grpc.ServiceDesc for Blogs service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -267,6 +411,22 @@ var Blogs_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListBlogs",
 			Handler:    _Blogs_ListBlogs_Handler,
+		},
+		{
+			MethodName: "HotBlogs",
+			Handler:    _Blogs_HotBlogs_Handler,
+		},
+		{
+			MethodName: "Thumb",
+			Handler:    _Blogs_Thumb_Handler,
+		},
+		{
+			MethodName: "Collect",
+			Handler:    _Blogs_Collect_Handler,
+		},
+		{
+			MethodName: "ListBlogTags",
+			Handler:    _Blogs_ListBlogTags_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

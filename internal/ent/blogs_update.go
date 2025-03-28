@@ -5,6 +5,8 @@ package ent
 import (
 	"blog/internal/ent/blogs"
 	"blog/internal/ent/predicate"
+	"blog/internal/ent/tags"
+	"blog/internal/ent/tagsrelation"
 	"context"
 	"errors"
 	"fmt"
@@ -200,9 +202,144 @@ func (bu *BlogsUpdate) SetNillableCover(s *string) *BlogsUpdate {
 	return bu
 }
 
+// SetBrowseNum sets the "browse_num" field.
+func (bu *BlogsUpdate) SetBrowseNum(i int) *BlogsUpdate {
+	bu.mutation.ResetBrowseNum()
+	bu.mutation.SetBrowseNum(i)
+	return bu
+}
+
+// SetNillableBrowseNum sets the "browse_num" field if the given value is not nil.
+func (bu *BlogsUpdate) SetNillableBrowseNum(i *int) *BlogsUpdate {
+	if i != nil {
+		bu.SetBrowseNum(*i)
+	}
+	return bu
+}
+
+// AddBrowseNum adds i to the "browse_num" field.
+func (bu *BlogsUpdate) AddBrowseNum(i int) *BlogsUpdate {
+	bu.mutation.AddBrowseNum(i)
+	return bu
+}
+
+// SetCollectNum sets the "collect_num" field.
+func (bu *BlogsUpdate) SetCollectNum(i int) *BlogsUpdate {
+	bu.mutation.ResetCollectNum()
+	bu.mutation.SetCollectNum(i)
+	return bu
+}
+
+// SetNillableCollectNum sets the "collect_num" field if the given value is not nil.
+func (bu *BlogsUpdate) SetNillableCollectNum(i *int) *BlogsUpdate {
+	if i != nil {
+		bu.SetCollectNum(*i)
+	}
+	return bu
+}
+
+// AddCollectNum adds i to the "collect_num" field.
+func (bu *BlogsUpdate) AddCollectNum(i int) *BlogsUpdate {
+	bu.mutation.AddCollectNum(i)
+	return bu
+}
+
+// SetLoveNum sets the "love_num" field.
+func (bu *BlogsUpdate) SetLoveNum(i int) *BlogsUpdate {
+	bu.mutation.ResetLoveNum()
+	bu.mutation.SetLoveNum(i)
+	return bu
+}
+
+// SetNillableLoveNum sets the "love_num" field if the given value is not nil.
+func (bu *BlogsUpdate) SetNillableLoveNum(i *int) *BlogsUpdate {
+	if i != nil {
+		bu.SetLoveNum(*i)
+	}
+	return bu
+}
+
+// AddLoveNum adds i to the "love_num" field.
+func (bu *BlogsUpdate) AddLoveNum(i int) *BlogsUpdate {
+	bu.mutation.AddLoveNum(i)
+	return bu
+}
+
+// AddTagIDs adds the "tag" edge to the Tags entity by IDs.
+func (bu *BlogsUpdate) AddTagIDs(ids ...int) *BlogsUpdate {
+	bu.mutation.AddTagIDs(ids...)
+	return bu
+}
+
+// AddTag adds the "tag" edges to the Tags entity.
+func (bu *BlogsUpdate) AddTag(t ...*Tags) *BlogsUpdate {
+	ids := make([]int, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return bu.AddTagIDs(ids...)
+}
+
+// AddTagRelationIDs adds the "tag_relation" edge to the TagsRelation entity by IDs.
+func (bu *BlogsUpdate) AddTagRelationIDs(ids ...int) *BlogsUpdate {
+	bu.mutation.AddTagRelationIDs(ids...)
+	return bu
+}
+
+// AddTagRelation adds the "tag_relation" edges to the TagsRelation entity.
+func (bu *BlogsUpdate) AddTagRelation(t ...*TagsRelation) *BlogsUpdate {
+	ids := make([]int, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return bu.AddTagRelationIDs(ids...)
+}
+
 // Mutation returns the BlogsMutation object of the builder.
 func (bu *BlogsUpdate) Mutation() *BlogsMutation {
 	return bu.mutation
+}
+
+// ClearTag clears all "tag" edges to the Tags entity.
+func (bu *BlogsUpdate) ClearTag() *BlogsUpdate {
+	bu.mutation.ClearTag()
+	return bu
+}
+
+// RemoveTagIDs removes the "tag" edge to Tags entities by IDs.
+func (bu *BlogsUpdate) RemoveTagIDs(ids ...int) *BlogsUpdate {
+	bu.mutation.RemoveTagIDs(ids...)
+	return bu
+}
+
+// RemoveTag removes "tag" edges to Tags entities.
+func (bu *BlogsUpdate) RemoveTag(t ...*Tags) *BlogsUpdate {
+	ids := make([]int, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return bu.RemoveTagIDs(ids...)
+}
+
+// ClearTagRelation clears all "tag_relation" edges to the TagsRelation entity.
+func (bu *BlogsUpdate) ClearTagRelation() *BlogsUpdate {
+	bu.mutation.ClearTagRelation()
+	return bu
+}
+
+// RemoveTagRelationIDs removes the "tag_relation" edge to TagsRelation entities by IDs.
+func (bu *BlogsUpdate) RemoveTagRelationIDs(ids ...int) *BlogsUpdate {
+	bu.mutation.RemoveTagRelationIDs(ids...)
+	return bu
+}
+
+// RemoveTagRelation removes "tag_relation" edges to TagsRelation entities.
+func (bu *BlogsUpdate) RemoveTagRelation(t ...*TagsRelation) *BlogsUpdate {
+	ids := make([]int, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return bu.RemoveTagRelationIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -237,6 +374,13 @@ func (bu *BlogsUpdate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (bu *BlogsUpdate) defaults() error {
+	if _, ok := bu.mutation.CreatedAt(); !ok {
+		if blogs.UpdateDefaultCreatedAt == nil {
+			return fmt.Errorf("ent: uninitialized blogs.UpdateDefaultCreatedAt (forgotten import ent/runtime?)")
+		}
+		v := blogs.UpdateDefaultCreatedAt()
+		bu.mutation.SetCreatedAt(v)
+	}
 	if _, ok := bu.mutation.UpdatedAt(); !ok {
 		if blogs.UpdateDefaultUpdatedAt == nil {
 			return fmt.Errorf("ent: uninitialized blogs.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
@@ -255,6 +399,12 @@ func (bu *BlogsUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := bu.mutation.CreatedAt(); ok {
+		_spec.SetField(blogs.FieldCreatedAt, field.TypeInt64, value)
+	}
+	if value, ok := bu.mutation.AddedCreatedAt(); ok {
+		_spec.AddField(blogs.FieldCreatedAt, field.TypeInt64, value)
 	}
 	if value, ok := bu.mutation.UpdatedAt(); ok {
 		_spec.SetField(blogs.FieldUpdatedAt, field.TypeInt64, value)
@@ -308,6 +458,114 @@ func (bu *BlogsUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := bu.mutation.Cover(); ok {
 		_spec.SetField(blogs.FieldCover, field.TypeString, value)
+	}
+	if value, ok := bu.mutation.BrowseNum(); ok {
+		_spec.SetField(blogs.FieldBrowseNum, field.TypeInt, value)
+	}
+	if value, ok := bu.mutation.AddedBrowseNum(); ok {
+		_spec.AddField(blogs.FieldBrowseNum, field.TypeInt, value)
+	}
+	if value, ok := bu.mutation.CollectNum(); ok {
+		_spec.SetField(blogs.FieldCollectNum, field.TypeInt, value)
+	}
+	if value, ok := bu.mutation.AddedCollectNum(); ok {
+		_spec.AddField(blogs.FieldCollectNum, field.TypeInt, value)
+	}
+	if value, ok := bu.mutation.LoveNum(); ok {
+		_spec.SetField(blogs.FieldLoveNum, field.TypeInt, value)
+	}
+	if value, ok := bu.mutation.AddedLoveNum(); ok {
+		_spec.AddField(blogs.FieldLoveNum, field.TypeInt, value)
+	}
+	if bu.mutation.TagCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   blogs.TagTable,
+			Columns: blogs.TagPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(tags.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := bu.mutation.RemovedTagIDs(); len(nodes) > 0 && !bu.mutation.TagCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   blogs.TagTable,
+			Columns: blogs.TagPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(tags.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := bu.mutation.TagIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   blogs.TagTable,
+			Columns: blogs.TagPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(tags.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if bu.mutation.TagRelationCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   blogs.TagRelationTable,
+			Columns: []string{blogs.TagRelationColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(tagsrelation.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := bu.mutation.RemovedTagRelationIDs(); len(nodes) > 0 && !bu.mutation.TagRelationCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   blogs.TagRelationTable,
+			Columns: []string{blogs.TagRelationColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(tagsrelation.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := bu.mutation.TagRelationIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   blogs.TagRelationTable,
+			Columns: []string{blogs.TagRelationColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(tagsrelation.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, bu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -501,9 +759,144 @@ func (buo *BlogsUpdateOne) SetNillableCover(s *string) *BlogsUpdateOne {
 	return buo
 }
 
+// SetBrowseNum sets the "browse_num" field.
+func (buo *BlogsUpdateOne) SetBrowseNum(i int) *BlogsUpdateOne {
+	buo.mutation.ResetBrowseNum()
+	buo.mutation.SetBrowseNum(i)
+	return buo
+}
+
+// SetNillableBrowseNum sets the "browse_num" field if the given value is not nil.
+func (buo *BlogsUpdateOne) SetNillableBrowseNum(i *int) *BlogsUpdateOne {
+	if i != nil {
+		buo.SetBrowseNum(*i)
+	}
+	return buo
+}
+
+// AddBrowseNum adds i to the "browse_num" field.
+func (buo *BlogsUpdateOne) AddBrowseNum(i int) *BlogsUpdateOne {
+	buo.mutation.AddBrowseNum(i)
+	return buo
+}
+
+// SetCollectNum sets the "collect_num" field.
+func (buo *BlogsUpdateOne) SetCollectNum(i int) *BlogsUpdateOne {
+	buo.mutation.ResetCollectNum()
+	buo.mutation.SetCollectNum(i)
+	return buo
+}
+
+// SetNillableCollectNum sets the "collect_num" field if the given value is not nil.
+func (buo *BlogsUpdateOne) SetNillableCollectNum(i *int) *BlogsUpdateOne {
+	if i != nil {
+		buo.SetCollectNum(*i)
+	}
+	return buo
+}
+
+// AddCollectNum adds i to the "collect_num" field.
+func (buo *BlogsUpdateOne) AddCollectNum(i int) *BlogsUpdateOne {
+	buo.mutation.AddCollectNum(i)
+	return buo
+}
+
+// SetLoveNum sets the "love_num" field.
+func (buo *BlogsUpdateOne) SetLoveNum(i int) *BlogsUpdateOne {
+	buo.mutation.ResetLoveNum()
+	buo.mutation.SetLoveNum(i)
+	return buo
+}
+
+// SetNillableLoveNum sets the "love_num" field if the given value is not nil.
+func (buo *BlogsUpdateOne) SetNillableLoveNum(i *int) *BlogsUpdateOne {
+	if i != nil {
+		buo.SetLoveNum(*i)
+	}
+	return buo
+}
+
+// AddLoveNum adds i to the "love_num" field.
+func (buo *BlogsUpdateOne) AddLoveNum(i int) *BlogsUpdateOne {
+	buo.mutation.AddLoveNum(i)
+	return buo
+}
+
+// AddTagIDs adds the "tag" edge to the Tags entity by IDs.
+func (buo *BlogsUpdateOne) AddTagIDs(ids ...int) *BlogsUpdateOne {
+	buo.mutation.AddTagIDs(ids...)
+	return buo
+}
+
+// AddTag adds the "tag" edges to the Tags entity.
+func (buo *BlogsUpdateOne) AddTag(t ...*Tags) *BlogsUpdateOne {
+	ids := make([]int, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return buo.AddTagIDs(ids...)
+}
+
+// AddTagRelationIDs adds the "tag_relation" edge to the TagsRelation entity by IDs.
+func (buo *BlogsUpdateOne) AddTagRelationIDs(ids ...int) *BlogsUpdateOne {
+	buo.mutation.AddTagRelationIDs(ids...)
+	return buo
+}
+
+// AddTagRelation adds the "tag_relation" edges to the TagsRelation entity.
+func (buo *BlogsUpdateOne) AddTagRelation(t ...*TagsRelation) *BlogsUpdateOne {
+	ids := make([]int, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return buo.AddTagRelationIDs(ids...)
+}
+
 // Mutation returns the BlogsMutation object of the builder.
 func (buo *BlogsUpdateOne) Mutation() *BlogsMutation {
 	return buo.mutation
+}
+
+// ClearTag clears all "tag" edges to the Tags entity.
+func (buo *BlogsUpdateOne) ClearTag() *BlogsUpdateOne {
+	buo.mutation.ClearTag()
+	return buo
+}
+
+// RemoveTagIDs removes the "tag" edge to Tags entities by IDs.
+func (buo *BlogsUpdateOne) RemoveTagIDs(ids ...int) *BlogsUpdateOne {
+	buo.mutation.RemoveTagIDs(ids...)
+	return buo
+}
+
+// RemoveTag removes "tag" edges to Tags entities.
+func (buo *BlogsUpdateOne) RemoveTag(t ...*Tags) *BlogsUpdateOne {
+	ids := make([]int, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return buo.RemoveTagIDs(ids...)
+}
+
+// ClearTagRelation clears all "tag_relation" edges to the TagsRelation entity.
+func (buo *BlogsUpdateOne) ClearTagRelation() *BlogsUpdateOne {
+	buo.mutation.ClearTagRelation()
+	return buo
+}
+
+// RemoveTagRelationIDs removes the "tag_relation" edge to TagsRelation entities by IDs.
+func (buo *BlogsUpdateOne) RemoveTagRelationIDs(ids ...int) *BlogsUpdateOne {
+	buo.mutation.RemoveTagRelationIDs(ids...)
+	return buo
+}
+
+// RemoveTagRelation removes "tag_relation" edges to TagsRelation entities.
+func (buo *BlogsUpdateOne) RemoveTagRelation(t ...*TagsRelation) *BlogsUpdateOne {
+	ids := make([]int, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return buo.RemoveTagRelationIDs(ids...)
 }
 
 // Where appends a list predicates to the BlogsUpdate builder.
@@ -551,6 +944,13 @@ func (buo *BlogsUpdateOne) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (buo *BlogsUpdateOne) defaults() error {
+	if _, ok := buo.mutation.CreatedAt(); !ok {
+		if blogs.UpdateDefaultCreatedAt == nil {
+			return fmt.Errorf("ent: uninitialized blogs.UpdateDefaultCreatedAt (forgotten import ent/runtime?)")
+		}
+		v := blogs.UpdateDefaultCreatedAt()
+		buo.mutation.SetCreatedAt(v)
+	}
 	if _, ok := buo.mutation.UpdatedAt(); !ok {
 		if blogs.UpdateDefaultUpdatedAt == nil {
 			return fmt.Errorf("ent: uninitialized blogs.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
@@ -586,6 +986,12 @@ func (buo *BlogsUpdateOne) sqlSave(ctx context.Context) (_node *Blogs, err error
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := buo.mutation.CreatedAt(); ok {
+		_spec.SetField(blogs.FieldCreatedAt, field.TypeInt64, value)
+	}
+	if value, ok := buo.mutation.AddedCreatedAt(); ok {
+		_spec.AddField(blogs.FieldCreatedAt, field.TypeInt64, value)
 	}
 	if value, ok := buo.mutation.UpdatedAt(); ok {
 		_spec.SetField(blogs.FieldUpdatedAt, field.TypeInt64, value)
@@ -639,6 +1045,114 @@ func (buo *BlogsUpdateOne) sqlSave(ctx context.Context) (_node *Blogs, err error
 	}
 	if value, ok := buo.mutation.Cover(); ok {
 		_spec.SetField(blogs.FieldCover, field.TypeString, value)
+	}
+	if value, ok := buo.mutation.BrowseNum(); ok {
+		_spec.SetField(blogs.FieldBrowseNum, field.TypeInt, value)
+	}
+	if value, ok := buo.mutation.AddedBrowseNum(); ok {
+		_spec.AddField(blogs.FieldBrowseNum, field.TypeInt, value)
+	}
+	if value, ok := buo.mutation.CollectNum(); ok {
+		_spec.SetField(blogs.FieldCollectNum, field.TypeInt, value)
+	}
+	if value, ok := buo.mutation.AddedCollectNum(); ok {
+		_spec.AddField(blogs.FieldCollectNum, field.TypeInt, value)
+	}
+	if value, ok := buo.mutation.LoveNum(); ok {
+		_spec.SetField(blogs.FieldLoveNum, field.TypeInt, value)
+	}
+	if value, ok := buo.mutation.AddedLoveNum(); ok {
+		_spec.AddField(blogs.FieldLoveNum, field.TypeInt, value)
+	}
+	if buo.mutation.TagCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   blogs.TagTable,
+			Columns: blogs.TagPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(tags.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := buo.mutation.RemovedTagIDs(); len(nodes) > 0 && !buo.mutation.TagCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   blogs.TagTable,
+			Columns: blogs.TagPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(tags.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := buo.mutation.TagIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   blogs.TagTable,
+			Columns: blogs.TagPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(tags.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if buo.mutation.TagRelationCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   blogs.TagRelationTable,
+			Columns: []string{blogs.TagRelationColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(tagsrelation.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := buo.mutation.RemovedTagRelationIDs(); len(nodes) > 0 && !buo.mutation.TagRelationCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   blogs.TagRelationTable,
+			Columns: []string{blogs.TagRelationColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(tagsrelation.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := buo.mutation.TagRelationIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   blogs.TagRelationTable,
+			Columns: []string{blogs.TagRelationColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(tagsrelation.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	_node = &Blogs{config: buo.config}
 	_spec.Assign = _node.assignValues

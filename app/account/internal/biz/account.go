@@ -10,6 +10,7 @@ import (
 	"errors"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/golang-jwt/jwt/v5"
+	"time"
 )
 
 type Account struct {
@@ -22,6 +23,8 @@ type Account struct {
 	Description string
 	BlogNum     int
 }
+
+const ExpiredKeyTime = 7 * 24 * 60 * 60
 
 // AccountRepo is a  repo.
 type AccountRepo interface {
@@ -64,6 +67,12 @@ func (uc *AccountUseCase) CreateAccount(ctx context.Context, req *v1.CreateAccou
 	}
 	return &global.Empty{}, err
 }
+
+type MyClaims struct {
+	Payload string `json:"_user_info"`
+	jwt.RegisteredClaims
+}
+
 func (uc *AccountUseCase) ResetPassword(ctx context.Context, req *v1.ResetPasswordRequest) (reply *global.Empty, err error) {
 	user, err := constx.DefaultUser.User(ctx)
 	if err != nil {
@@ -91,9 +100,15 @@ func (uc *AccountUseCase) LoginByAccount(ctx context.Context, req *v1.LoginByAcc
 		Id:      int64(account.Id),
 		Account: account.Account,
 	})
-	claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		constx.UserInfo: string(by),
-	})
+	iat := time.Now().Unix()
+	obj := MyClaims{
+		Payload: string(string(by)),
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Unix(iat+ExpiredKeyTime, 0)),
+			IssuedAt:  jwt.NewNumericDate(time.Unix(iat, 0)),
+		},
+	}
+	claims := jwt.NewWithClaims(jwt.SigningMethodHS256, obj)
 	signedStr, err := claims.SignedString([]byte(uc.key))
 	if err != nil {
 		return nil, err

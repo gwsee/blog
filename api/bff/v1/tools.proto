@@ -30,4 +30,17 @@ service Tools {
       get: "/v1/file/{id}"
     };
   }
+  //下面两个是通过客户端上传文件并且保存
+  rpc UploadOssToken(global.IDStr)returns(tools.v1.UploadOssTokenReply){
+    option (google.api.http) = {
+      post: "/v1/upload/oss/token"
+      body: "*"
+    };
+  }
+  rpc UploadOssSave(tools.v1.UploadOssSaveReq)returns(global.Empty){
+    option (google.api.http) = {
+      post: "/v1/upload/oss/save"
+      body: "*"
+    };
+  }
 }

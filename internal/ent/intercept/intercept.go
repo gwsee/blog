@@ -11,13 +11,21 @@ import (
 	"blog/internal/ent/blogs"
 	"blog/internal/ent/blogscomment"
 	"blog/internal/ent/blogscontent"
+	"blog/internal/ent/blogsextend"
 	"blog/internal/ent/files"
 	"blog/internal/ent/filesextend"
+	"blog/internal/ent/palacesmemo"
+	"blog/internal/ent/palacesmemory"
+	"blog/internal/ent/palacestodo"
+	"blog/internal/ent/palacestododone"
 	"blog/internal/ent/predicate"
+	"blog/internal/ent/tags"
+	"blog/internal/ent/tagsrelation"
 	"blog/internal/ent/travelextends"
 	"blog/internal/ent/travels"
 	"blog/internal/ent/user"
 	"blog/internal/ent/userexperience"
+	"blog/internal/ent/userfamousquotes"
 	"blog/internal/ent/userproject"
 
 	"entgo.io/ent/dialect/sql"
@@ -187,6 +195,33 @@ func (f TraverseBlogsContent) Traverse(ctx context.Context, q ent.Query) error {
 	return fmt.Errorf("unexpected query type %T. expect *ent.BlogsContentQuery", q)
 }
 
+// The BlogsExtendFunc type is an adapter to allow the use of ordinary function as a Querier.
+type BlogsExtendFunc func(context.Context, *ent.BlogsExtendQuery) (ent.Value, error)
+
+// Query calls f(ctx, q).
+func (f BlogsExtendFunc) Query(ctx context.Context, q ent.Query) (ent.Value, error) {
+	if q, ok := q.(*ent.BlogsExtendQuery); ok {
+		return f(ctx, q)
+	}
+	return nil, fmt.Errorf("unexpected query type %T. expect *ent.BlogsExtendQuery", q)
+}
+
+// The TraverseBlogsExtend type is an adapter to allow the use of ordinary function as Traverser.
+type TraverseBlogsExtend func(context.Context, *ent.BlogsExtendQuery) error
+
+// Intercept is a dummy implementation of Intercept that returns the next Querier in the pipeline.
+func (f TraverseBlogsExtend) Intercept(next ent.Querier) ent.Querier {
+	return next
+}
+
+// Traverse calls f(ctx, q).
+func (f TraverseBlogsExtend) Traverse(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.BlogsExtendQuery); ok {
+		return f(ctx, q)
+	}
+	return fmt.Errorf("unexpected query type %T. expect *ent.BlogsExtendQuery", q)
+}
+
 // The FilesFunc type is an adapter to allow the use of ordinary function as a Querier.
 type FilesFunc func(context.Context, *ent.FilesQuery) (ent.Value, error)
 
@@ -239,6 +274,168 @@ func (f TraverseFilesExtend) Traverse(ctx context.Context, q ent.Query) error {
 		return f(ctx, q)
 	}
 	return fmt.Errorf("unexpected query type %T. expect *ent.FilesExtendQuery", q)
+}
+
+// The PalacesMemoFunc type is an adapter to allow the use of ordinary function as a Querier.
+type PalacesMemoFunc func(context.Context, *ent.PalacesMemoQuery) (ent.Value, error)
+
+// Query calls f(ctx, q).
+func (f PalacesMemoFunc) Query(ctx context.Context, q ent.Query) (ent.Value, error) {
+	if q, ok := q.(*ent.PalacesMemoQuery); ok {
+		return f(ctx, q)
+	}
+	return nil, fmt.Errorf("unexpected query type %T. expect *ent.PalacesMemoQuery", q)
+}
+
+// The TraversePalacesMemo type is an adapter to allow the use of ordinary function as Traverser.
+type TraversePalacesMemo func(context.Context, *ent.PalacesMemoQuery) error
+
+// Intercept is a dummy implementation of Intercept that returns the next Querier in the pipeline.
+func (f TraversePalacesMemo) Intercept(next ent.Querier) ent.Querier {
+	return next
+}
+
+// Traverse calls f(ctx, q).
+func (f TraversePalacesMemo) Traverse(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.PalacesMemoQuery); ok {
+		return f(ctx, q)
+	}
+	return fmt.Errorf("unexpected query type %T. expect *ent.PalacesMemoQuery", q)
+}
+
+// The PalacesMemoryFunc type is an adapter to allow the use of ordinary function as a Querier.
+type PalacesMemoryFunc func(context.Context, *ent.PalacesMemoryQuery) (ent.Value, error)
+
+// Query calls f(ctx, q).
+func (f PalacesMemoryFunc) Query(ctx context.Context, q ent.Query) (ent.Value, error) {
+	if q, ok := q.(*ent.PalacesMemoryQuery); ok {
+		return f(ctx, q)
+	}
+	return nil, fmt.Errorf("unexpected query type %T. expect *ent.PalacesMemoryQuery", q)
+}
+
+// The TraversePalacesMemory type is an adapter to allow the use of ordinary function as Traverser.
+type TraversePalacesMemory func(context.Context, *ent.PalacesMemoryQuery) error
+
+// Intercept is a dummy implementation of Intercept that returns the next Querier in the pipeline.
+func (f TraversePalacesMemory) Intercept(next ent.Querier) ent.Querier {
+	return next
+}
+
+// Traverse calls f(ctx, q).
+func (f TraversePalacesMemory) Traverse(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.PalacesMemoryQuery); ok {
+		return f(ctx, q)
+	}
+	return fmt.Errorf("unexpected query type %T. expect *ent.PalacesMemoryQuery", q)
+}
+
+// The PalacesTodoFunc type is an adapter to allow the use of ordinary function as a Querier.
+type PalacesTodoFunc func(context.Context, *ent.PalacesTodoQuery) (ent.Value, error)
+
+// Query calls f(ctx, q).
+func (f PalacesTodoFunc) Query(ctx context.Context, q ent.Query) (ent.Value, error) {
+	if q, ok := q.(*ent.PalacesTodoQuery); ok {
+		return f(ctx, q)
+	}
+	return nil, fmt.Errorf("unexpected query type %T. expect *ent.PalacesTodoQuery", q)
+}
+
+// The TraversePalacesTodo type is an adapter to allow the use of ordinary function as Traverser.
+type TraversePalacesTodo func(context.Context, *ent.PalacesTodoQuery) error
+
+// Intercept is a dummy implementation of Intercept that returns the next Querier in the pipeline.
+func (f TraversePalacesTodo) Intercept(next ent.Querier) ent.Querier {
+	return next
+}
+
+// Traverse calls f(ctx, q).
+func (f TraversePalacesTodo) Traverse(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.PalacesTodoQuery); ok {
+		return f(ctx, q)
+	}
+	return fmt.Errorf("unexpected query type %T. expect *ent.PalacesTodoQuery", q)
+}
+
+// The PalacesTodoDoneFunc type is an adapter to allow the use of ordinary function as a Querier.
+type PalacesTodoDoneFunc func(context.Context, *ent.PalacesTodoDoneQuery) (ent.Value, error)
+
+// Query calls f(ctx, q).
+func (f PalacesTodoDoneFunc) Query(ctx context.Context, q ent.Query) (ent.Value, error) {
+	if q, ok := q.(*ent.PalacesTodoDoneQuery); ok {
+		return f(ctx, q)
+	}
+	return nil, fmt.Errorf("unexpected query type %T. expect *ent.PalacesTodoDoneQuery", q)
+}
+
+// The TraversePalacesTodoDone type is an adapter to allow the use of ordinary function as Traverser.
+type TraversePalacesTodoDone func(context.Context, *ent.PalacesTodoDoneQuery) error
+
+// Intercept is a dummy implementation of Intercept that returns the next Querier in the pipeline.
+func (f TraversePalacesTodoDone) Intercept(next ent.Querier) ent.Querier {
+	return next
+}
+
+// Traverse calls f(ctx, q).
+func (f TraversePalacesTodoDone) Traverse(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.PalacesTodoDoneQuery); ok {
+		return f(ctx, q)
+	}
+	return fmt.Errorf("unexpected query type %T. expect *ent.PalacesTodoDoneQuery", q)
+}
+
+// The TagsFunc type is an adapter to allow the use of ordinary function as a Querier.
+type TagsFunc func(context.Context, *ent.TagsQuery) (ent.Value, error)
+
+// Query calls f(ctx, q).
+func (f TagsFunc) Query(ctx context.Context, q ent.Query) (ent.Value, error) {
+	if q, ok := q.(*ent.TagsQuery); ok {
+		return f(ctx, q)
+	}
+	return nil, fmt.Errorf("unexpected query type %T. expect *ent.TagsQuery", q)
+}
+
+// The TraverseTags type is an adapter to allow the use of ordinary function as Traverser.
+type TraverseTags func(context.Context, *ent.TagsQuery) error
+
+// Intercept is a dummy implementation of Intercept that returns the next Querier in the pipeline.
+func (f TraverseTags) Intercept(next ent.Querier) ent.Querier {
+	return next
+}
+
+// Traverse calls f(ctx, q).
+func (f TraverseTags) Traverse(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.TagsQuery); ok {
+		return f(ctx, q)
+	}
+	return fmt.Errorf("unexpected query type %T. expect *ent.TagsQuery", q)
+}
+
+// The TagsRelationFunc type is an adapter to allow the use of ordinary function as a Querier.
+type TagsRelationFunc func(context.Context, *ent.TagsRelationQuery) (ent.Value, error)
+
+// Query calls f(ctx, q).
+func (f TagsRelationFunc) Query(ctx context.Context, q ent.Query) (ent.Value, error) {
+	if q, ok := q.(*ent.TagsRelationQuery); ok {
+		return f(ctx, q)
+	}
+	return nil, fmt.Errorf("unexpected query type %T. expect *ent.TagsRelationQuery", q)
+}
+
+// The TraverseTagsRelation type is an adapter to allow the use of ordinary function as Traverser.
+type TraverseTagsRelation func(context.Context, *ent.TagsRelationQuery) error
+
+// Intercept is a dummy implementation of Intercept that returns the next Querier in the pipeline.
+func (f TraverseTagsRelation) Intercept(next ent.Querier) ent.Querier {
+	return next
+}
+
+// Traverse calls f(ctx, q).
+func (f TraverseTagsRelation) Traverse(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.TagsRelationQuery); ok {
+		return f(ctx, q)
+	}
+	return fmt.Errorf("unexpected query type %T. expect *ent.TagsRelationQuery", q)
 }
 
 // The TravelExtendsFunc type is an adapter to allow the use of ordinary function as a Querier.
@@ -349,6 +546,33 @@ func (f TraverseUserExperience) Traverse(ctx context.Context, q ent.Query) error
 	return fmt.Errorf("unexpected query type %T. expect *ent.UserExperienceQuery", q)
 }
 
+// The UserFamousQuotesFunc type is an adapter to allow the use of ordinary function as a Querier.
+type UserFamousQuotesFunc func(context.Context, *ent.UserFamousQuotesQuery) (ent.Value, error)
+
+// Query calls f(ctx, q).
+func (f UserFamousQuotesFunc) Query(ctx context.Context, q ent.Query) (ent.Value, error) {
+	if q, ok := q.(*ent.UserFamousQuotesQuery); ok {
+		return f(ctx, q)
+	}
+	return nil, fmt.Errorf("unexpected query type %T. expect *ent.UserFamousQuotesQuery", q)
+}
+
+// The TraverseUserFamousQuotes type is an adapter to allow the use of ordinary function as Traverser.
+type TraverseUserFamousQuotes func(context.Context, *ent.UserFamousQuotesQuery) error
+
+// Intercept is a dummy implementation of Intercept that returns the next Querier in the pipeline.
+func (f TraverseUserFamousQuotes) Intercept(next ent.Querier) ent.Querier {
+	return next
+}
+
+// Traverse calls f(ctx, q).
+func (f TraverseUserFamousQuotes) Traverse(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.UserFamousQuotesQuery); ok {
+		return f(ctx, q)
+	}
+	return fmt.Errorf("unexpected query type %T. expect *ent.UserFamousQuotesQuery", q)
+}
+
 // The UserProjectFunc type is an adapter to allow the use of ordinary function as a Querier.
 type UserProjectFunc func(context.Context, *ent.UserProjectQuery) (ent.Value, error)
 
@@ -387,10 +611,24 @@ func NewQuery(q ent.Query) (Query, error) {
 		return &query[*ent.BlogsCommentQuery, predicate.BlogsComment, blogscomment.OrderOption]{typ: ent.TypeBlogsComment, tq: q}, nil
 	case *ent.BlogsContentQuery:
 		return &query[*ent.BlogsContentQuery, predicate.BlogsContent, blogscontent.OrderOption]{typ: ent.TypeBlogsContent, tq: q}, nil
+	case *ent.BlogsExtendQuery:
+		return &query[*ent.BlogsExtendQuery, predicate.BlogsExtend, blogsextend.OrderOption]{typ: ent.TypeBlogsExtend, tq: q}, nil
 	case *ent.FilesQuery:
 		return &query[*ent.FilesQuery, predicate.Files, files.OrderOption]{typ: ent.TypeFiles, tq: q}, nil
 	case *ent.FilesExtendQuery:
 		return &query[*ent.FilesExtendQuery, predicate.FilesExtend, filesextend.OrderOption]{typ: ent.TypeFilesExtend, tq: q}, nil
+	case *ent.PalacesMemoQuery:
+		return &query[*ent.PalacesMemoQuery, predicate.PalacesMemo, palacesmemo.OrderOption]{typ: ent.TypePalacesMemo, tq: q}, nil
+	case *ent.PalacesMemoryQuery:
+		return &query[*ent.PalacesMemoryQuery, predicate.PalacesMemory, palacesmemory.OrderOption]{typ: ent.TypePalacesMemory, tq: q}, nil
+	case *ent.PalacesTodoQuery:
+		return &query[*ent.PalacesTodoQuery, predicate.PalacesTodo, palacestodo.OrderOption]{typ: ent.TypePalacesTodo, tq: q}, nil
+	case *ent.PalacesTodoDoneQuery:
+		return &query[*ent.PalacesTodoDoneQuery, predicate.PalacesTodoDone, palacestododone.OrderOption]{typ: ent.TypePalacesTodoDone, tq: q}, nil
+	case *ent.TagsQuery:
+		return &query[*ent.TagsQuery, predicate.Tags, tags.OrderOption]{typ: ent.TypeTags, tq: q}, nil
+	case *ent.TagsRelationQuery:
+		return &query[*ent.TagsRelationQuery, predicate.TagsRelation, tagsrelation.OrderOption]{typ: ent.TypeTagsRelation, tq: q}, nil
 	case *ent.TravelExtendsQuery:
 		return &query[*ent.TravelExtendsQuery, predicate.TravelExtends, travelextends.OrderOption]{typ: ent.TypeTravelExtends, tq: q}, nil
 	case *ent.TravelsQuery:
@@ -399,6 +637,8 @@ func NewQuery(q ent.Query) (Query, error) {
 		return &query[*ent.UserQuery, predicate.User, user.OrderOption]{typ: ent.TypeUser, tq: q}, nil
 	case *ent.UserExperienceQuery:
 		return &query[*ent.UserExperienceQuery, predicate.UserExperience, userexperience.OrderOption]{typ: ent.TypeUserExperience, tq: q}, nil
+	case *ent.UserFamousQuotesQuery:
+		return &query[*ent.UserFamousQuotesQuery, predicate.UserFamousQuotes, userfamousquotes.OrderOption]{typ: ent.TypeUserFamousQuotes, tq: q}, nil
 	case *ent.UserProjectQuery:
 		return &query[*ent.UserProjectQuery, predicate.UserProject, userproject.OrderOption]{typ: ent.TypeUserProject, tq: q}, nil
 	default:

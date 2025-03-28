@@ -240,6 +240,13 @@ func (fu *FilesUpdate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (fu *FilesUpdate) defaults() error {
+	if _, ok := fu.mutation.CreatedAt(); !ok {
+		if files.UpdateDefaultCreatedAt == nil {
+			return fmt.Errorf("ent: uninitialized files.UpdateDefaultCreatedAt (forgotten import ent/runtime?)")
+		}
+		v := files.UpdateDefaultCreatedAt()
+		fu.mutation.SetCreatedAt(v)
+	}
 	if _, ok := fu.mutation.UpdatedAt(); !ok {
 		if files.UpdateDefaultUpdatedAt == nil {
 			return fmt.Errorf("ent: uninitialized files.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
@@ -258,6 +265,12 @@ func (fu *FilesUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := fu.mutation.CreatedAt(); ok {
+		_spec.SetField(files.FieldCreatedAt, field.TypeInt64, value)
+	}
+	if value, ok := fu.mutation.AddedCreatedAt(); ok {
+		_spec.AddField(files.FieldCreatedAt, field.TypeInt64, value)
 	}
 	if value, ok := fu.mutation.UpdatedAt(); ok {
 		_spec.SetField(files.FieldUpdatedAt, field.TypeInt64, value)
@@ -588,6 +601,13 @@ func (fuo *FilesUpdateOne) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (fuo *FilesUpdateOne) defaults() error {
+	if _, ok := fuo.mutation.CreatedAt(); !ok {
+		if files.UpdateDefaultCreatedAt == nil {
+			return fmt.Errorf("ent: uninitialized files.UpdateDefaultCreatedAt (forgotten import ent/runtime?)")
+		}
+		v := files.UpdateDefaultCreatedAt()
+		fuo.mutation.SetCreatedAt(v)
+	}
 	if _, ok := fuo.mutation.UpdatedAt(); !ok {
 		if files.UpdateDefaultUpdatedAt == nil {
 			return fmt.Errorf("ent: uninitialized files.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
@@ -623,6 +643,12 @@ func (fuo *FilesUpdateOne) sqlSave(ctx context.Context) (_node *Files, err error
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := fuo.mutation.CreatedAt(); ok {
+		_spec.SetField(files.FieldCreatedAt, field.TypeInt64, value)
+	}
+	if value, ok := fuo.mutation.AddedCreatedAt(); ok {
+		_spec.AddField(files.FieldCreatedAt, field.TypeInt64, value)
 	}
 	if value, ok := fuo.mutation.UpdatedAt(); ok {
 		_spec.SetField(files.FieldUpdatedAt, field.TypeInt64, value)

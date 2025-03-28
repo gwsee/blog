@@ -41,7 +41,7 @@ func (TravelExtends) Mixin() []ent.Mixin {
 }
 func (TravelExtends) Annotations() []schema.Annotation {
 	return []schema.Annotation{
-		entsql.Annotation{Table: "travel_extends"},
+		entsql.Annotation{Table: "travels_extend"},
 		entsql.WithComments(true),
 		schema.Comment("旅行关联关系"),
 	}

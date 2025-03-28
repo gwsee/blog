@@ -68,6 +68,7 @@
               <a-list-item class="a-list-item-action">
                 <template #actions >
                   <a key="list-loadmore-edit" @click="toRoute('/about/experience/manage/'+item.id)">edit</a>&nbsp;
+                  <a key="list-loadmore-delete" @click="toDel(item.id)">del</a>&nbsp;
                   <a key="list-loadmore-more" v-if="false">more</a>
                 </template>
                 <a-skeleton avatar :title="false"  :loading="false" class="relative">
@@ -96,7 +97,7 @@
 
 <script setup>
 import {ref, reactive, onMounted, getCurrentInstance} from 'vue'
-import {userGet,userSave,projectList,experienceList} from "@/api/user";
+import {userGet,userSave,projectList,experienceList,experienceDel} from "@/api/user";
 import {useRouter} from 'vue-router'
 const router = useRouter()
 import { message } from 'ant-design-vue'
@@ -144,14 +145,19 @@ onMounted(()=> {
       formState.description = data.description
       formState.address = data.address
     }
-  })
-  experienceList({}).then(res=>{
-    if(res&&res.code===200){
-      let data =res.data
-      formState.experiences = data.list || []
-    }
+  }).finally(()=>{
+    loadExperience()
   })
 })
+const toDel = (id) => {
+  experienceDel({id:id}).then(res=>{
+    if(res&&res.code===200){
+      message.success('deleted successfully!')
+    }
+  }).finally(()=>{
+    loadExperience()
+  })
+}
 const getBase64 = (img, callback) => {
   const reader = new FileReader()
   reader.addEventListener('load', () => callback(reader.result))
@@ -166,6 +172,14 @@ const onFinish = (values) => {
   userSave(formState).then(res=>{
     if(res){
       message.success('saved successfully!')
+    }
+  })
+}
+const loadExperience = () => {
+  experienceList({}).then(res=>{
+    if(res&&res.code===200){
+      let data =res.data
+      formState.experiences = data.list || []
     }
   })
 }

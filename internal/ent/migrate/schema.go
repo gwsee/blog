@@ -9,12 +9,12 @@ import (
 )
 
 var (
-	// AccountColumns holds the columns for the "account" table.
-	AccountColumns = []*schema.Column{
+	// AccountsColumns holds the columns for the "accounts" table.
+	AccountsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true, Comment: "账户ID"},
-		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1736627068},
+		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 0},
 		{Name: "created_by", Type: field.TypeInt64, Comment: "创建人", Default: 0},
-		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1736627068},
+		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 0},
 		{Name: "updated_by", Type: field.TypeInt64, Comment: "更新人", Default: 0},
 		{Name: "deleted_at", Type: field.TypeInt64, Comment: "软删除时间", Default: 0},
 		{Name: "deleted_by", Type: field.TypeInt64, Comment: "删除人", Default: 0},
@@ -27,19 +27,19 @@ var (
 		{Name: "blog_num", Type: field.TypeInt, Comment: "博客数量", Default: 0},
 		{Name: "status", Type: field.TypeInt8, Comment: "状态:0失效,1正常", Default: 1, SchemaType: map[string]string{"mysql": "tinyint"}},
 	}
-	// AccountTable holds the schema information for the "account" table.
-	AccountTable = &schema.Table{
-		Name:       "account",
+	// AccountsTable holds the schema information for the "accounts" table.
+	AccountsTable = &schema.Table{
+		Name:       "accounts",
 		Comment:    "站点",
-		Columns:    AccountColumns,
-		PrimaryKey: []*schema.Column{AccountColumns[0]},
+		Columns:    AccountsColumns,
+		PrimaryKey: []*schema.Column{AccountsColumns[0]},
 	}
 	// BlogsColumns holds the columns for the "blogs" table.
 	BlogsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true, Comment: "博客ID"},
-		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1736627068},
+		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 0},
 		{Name: "created_by", Type: field.TypeInt64, Comment: "创建人", Default: 0},
-		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1736627068},
+		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 0},
 		{Name: "updated_by", Type: field.TypeInt64, Comment: "更新人", Default: 0},
 		{Name: "deleted_at", Type: field.TypeInt64, Comment: "软删除时间", Default: 0},
 		{Name: "deleted_by", Type: field.TypeInt64, Comment: "删除人", Default: 0},
@@ -49,6 +49,9 @@ var (
 		{Name: "is_hidden", Type: field.TypeInt8, Comment: "是否隐藏:0否,1是", Default: 0, SchemaType: map[string]string{"mysql": "tinyint"}},
 		{Name: "tags", Type: field.TypeJSON, Comment: "标签"},
 		{Name: "cover", Type: field.TypeString, Comment: "封面", SchemaType: map[string]string{"mysql": "varchar(200)"}},
+		{Name: "browse_num", Type: field.TypeInt, Comment: "浏览量", Default: 0},
+		{Name: "collect_num", Type: field.TypeInt, Comment: "收藏量", Default: 0},
+		{Name: "love_num", Type: field.TypeInt, Comment: "点赞量", Default: 0},
 	}
 	// BlogsTable holds the schema information for the "blogs" table.
 	BlogsTable = &schema.Table{
@@ -60,9 +63,9 @@ var (
 	// BlogsCommentsColumns holds the columns for the "blogs_comments" table.
 	BlogsCommentsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true, Comment: "评论ID"},
-		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1736627068},
+		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 0},
 		{Name: "created_by", Type: field.TypeInt64, Comment: "创建人", Default: 0},
-		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1736627068},
+		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 0},
 		{Name: "updated_by", Type: field.TypeInt64, Comment: "更新人", Default: 0},
 		{Name: "deleted_at", Type: field.TypeInt64, Comment: "软删除时间", Default: 0},
 		{Name: "deleted_by", Type: field.TypeInt64, Comment: "删除人", Default: 0},
@@ -95,12 +98,38 @@ var (
 		Columns:    BlogsContentColumns,
 		PrimaryKey: []*schema.Column{BlogsContentColumns[0]},
 	}
+	// BlogsExtendColumns holds the columns for the "blogs_extend" table.
+	BlogsExtendColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true, Comment: "ID"},
+		{Name: "blog_id", Type: field.TypeInt, Comment: "博客ID"},
+		{Name: "account_id", Type: field.TypeInt, Comment: "账户ID"},
+		{Name: "browse_num", Type: field.TypeInt, Comment: "浏览量", Default: 0},
+		{Name: "browse_at", Type: field.TypeInt64, Comment: "最后的浏览时间", Default: 0},
+		{Name: "collect", Type: field.TypeBool, Comment: "是否收藏", Default: false},
+		{Name: "collect_at", Type: field.TypeInt64, Comment: "收藏时间", Default: 0},
+		{Name: "love", Type: field.TypeBool, Comment: "是否点赞", Default: false},
+		{Name: "love_at", Type: field.TypeInt64, Comment: "点赞时间", Default: 0},
+	}
+	// BlogsExtendTable holds the schema information for the "blogs_extend" table.
+	BlogsExtendTable = &schema.Table{
+		Name:       "blogs_extend",
+		Comment:    "博客关联信息",
+		Columns:    BlogsExtendColumns,
+		PrimaryKey: []*schema.Column{BlogsExtendColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "blogsextend_blog_id_account_id",
+				Unique:  true,
+				Columns: []*schema.Column{BlogsExtendColumns[1], BlogsExtendColumns[2]},
+			},
+		},
+	}
 	// FilesColumns holds the columns for the "files" table.
 	FilesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString, Unique: true, Comment: "文件的ID(内容MD5)"},
-		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1736627068},
+		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 0},
 		{Name: "created_by", Type: field.TypeInt64, Comment: "创建人", Default: 0},
-		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1736627068},
+		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 0},
 		{Name: "updated_by", Type: field.TypeInt64, Comment: "更新人", Default: 0},
 		{Name: "deleted_at", Type: field.TypeInt64, Comment: "软删除时间", Default: 0},
 		{Name: "deleted_by", Type: field.TypeInt64, Comment: "删除人", Default: 0},
@@ -119,9 +148,9 @@ var (
 	// FilesExtendColumns holds the columns for the "files_extend" table.
 	FilesExtendColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true, Comment: "当前账户关联的文件的ID"},
-		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1736627068},
+		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 0},
 		{Name: "created_by", Type: field.TypeInt64, Comment: "创建人", Default: 0},
-		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1736627068},
+		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 0},
 		{Name: "updated_by", Type: field.TypeInt64, Comment: "更新人", Default: 0},
 		{Name: "deleted_at", Type: field.TypeInt64, Comment: "软删除时间", Default: 0},
 		{Name: "deleted_by", Type: field.TypeInt64, Comment: "删除人", Default: 0},
@@ -153,12 +182,156 @@ var (
 			},
 		},
 	}
-	// TravelExtendsColumns holds the columns for the "travel_extends" table.
-	TravelExtendsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1736627068},
+	// PalacesMemoColumns holds the columns for the "palaces_memo" table.
+	PalacesMemoColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true, Comment: "ID"},
+		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 0},
 		{Name: "created_by", Type: field.TypeInt64, Comment: "创建人", Default: 0},
-		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1736627068},
+		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 0},
+		{Name: "updated_by", Type: field.TypeInt64, Comment: "更新人", Default: 0},
+		{Name: "deleted_at", Type: field.TypeInt64, Comment: "软删除时间", Default: 0},
+		{Name: "deleted_by", Type: field.TypeInt64, Comment: "删除人", Default: 0},
+		{Name: "account_id", Type: field.TypeInt, Comment: "账户ID"},
+		{Name: "name", Type: field.TypeString},
+		{Name: "content", Type: field.TypeString, Comment: "内容", SchemaType: map[string]string{"mysql": "mediumtext"}},
+		{Name: "status", Type: field.TypeInt8, Comment: "不同数值代办的不同记忆情况 越大代表越不需要记忆 为后续数据列表做铺垫"},
+	}
+	// PalacesMemoTable holds the schema information for the "palaces_memo" table.
+	PalacesMemoTable = &schema.Table{
+		Name:       "palaces_memo",
+		Comment:    "备忘录",
+		Columns:    PalacesMemoColumns,
+		PrimaryKey: []*schema.Column{PalacesMemoColumns[0]},
+	}
+	// PalacesMemoryColumns holds the columns for the "palaces_memory" table.
+	PalacesMemoryColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true, Comment: "ID"},
+		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 0},
+		{Name: "created_by", Type: field.TypeInt64, Comment: "创建人", Default: 0},
+		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 0},
+		{Name: "updated_by", Type: field.TypeInt64, Comment: "更新人", Default: 0},
+		{Name: "deleted_at", Type: field.TypeInt64, Comment: "软删除时间", Default: 0},
+		{Name: "deleted_by", Type: field.TypeInt64, Comment: "删除人", Default: 0},
+		{Name: "status", Type: field.TypeInt8},
+	}
+	// PalacesMemoryTable holds the schema information for the "palaces_memory" table.
+	PalacesMemoryTable = &schema.Table{
+		Name:       "palaces_memory",
+		Comment:    "记忆宫殿",
+		Columns:    PalacesMemoryColumns,
+		PrimaryKey: []*schema.Column{PalacesMemoryColumns[0]},
+	}
+	// PalacesTodoColumns holds the columns for the "palaces_todo" table.
+	PalacesTodoColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true, Comment: "ID"},
+		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 0},
+		{Name: "created_by", Type: field.TypeInt64, Comment: "创建人", Default: 0},
+		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 0},
+		{Name: "updated_by", Type: field.TypeInt64, Comment: "更新人", Default: 0},
+		{Name: "deleted_at", Type: field.TypeInt64, Comment: "软删除时间", Default: 0},
+		{Name: "deleted_by", Type: field.TypeInt64, Comment: "删除人", Default: 0},
+		{Name: "account_id", Type: field.TypeInt, Comment: "账户ID"},
+		{Name: "theme", Type: field.TypeString},
+		{Name: "type", Type: field.TypeInt8, Comment: "类型(1:按次,2：固定日期,2无固定日期)", Default: 1},
+		{Name: "from", Type: field.TypeInt64},
+		{Name: "to", Type: field.TypeInt64},
+		{Name: "num", Type: field.TypeInt64},
+		{Name: "sort", Type: field.TypeInt64},
+		{Name: "content", Type: field.TypeString, Comment: "内容", SchemaType: map[string]string{"mysql": "mediumtext"}},
+		{Name: "status", Type: field.TypeInt8, Comment: "状态 0 代办,1 已做"},
+	}
+	// PalacesTodoTable holds the schema information for the "palaces_todo" table.
+	PalacesTodoTable = &schema.Table{
+		Name:       "palaces_todo",
+		Comment:    "代办事项",
+		Columns:    PalacesTodoColumns,
+		PrimaryKey: []*schema.Column{PalacesTodoColumns[0]},
+	}
+	// PalacesTodoDoneColumns holds the columns for the "palaces_todo_done" table.
+	PalacesTodoDoneColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true, Comment: "ID"},
+		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 0},
+		{Name: "created_by", Type: field.TypeInt64, Comment: "创建人", Default: 0},
+		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 0},
+		{Name: "updated_by", Type: field.TypeInt64, Comment: "更新人", Default: 0},
+		{Name: "deleted_at", Type: field.TypeInt64, Comment: "软删除时间", Default: 0},
+		{Name: "deleted_by", Type: field.TypeInt64, Comment: "删除人", Default: 0},
+		{Name: "todo_id", Type: field.TypeInt, Nullable: true, Comment: "代办事项的ID"},
+	}
+	// PalacesTodoDoneTable holds the schema information for the "palaces_todo_done" table.
+	PalacesTodoDoneTable = &schema.Table{
+		Name:       "palaces_todo_done",
+		Comment:    "代办事项完成记录表",
+		Columns:    PalacesTodoDoneColumns,
+		PrimaryKey: []*schema.Column{PalacesTodoDoneColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "palaces_todo_done_palaces_todo_dones",
+				Columns:    []*schema.Column{PalacesTodoDoneColumns[7]},
+				RefColumns: []*schema.Column{PalacesTodoColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
+	}
+	// TagsColumns holds the columns for the "tags" table.
+	TagsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true, Comment: "标签ID"},
+		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 0},
+		{Name: "created_by", Type: field.TypeInt64, Comment: "创建人", Default: 0},
+		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 0},
+		{Name: "updated_by", Type: field.TypeInt64, Comment: "更新人", Default: 0},
+		{Name: "deleted_at", Type: field.TypeInt64, Comment: "软删除时间", Default: 0},
+		{Name: "deleted_by", Type: field.TypeInt64, Comment: "删除人", Default: 0},
+		{Name: "name", Type: field.TypeString, Unique: true},
+	}
+	// TagsTable holds the schema information for the "tags" table.
+	TagsTable = &schema.Table{
+		Name:       "tags",
+		Comment:    "标签信息",
+		Columns:    TagsColumns,
+		PrimaryKey: []*schema.Column{TagsColumns[0]},
+	}
+	// TagsRelationColumns holds the columns for the "tags_relation" table.
+	TagsRelationColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "relation", Type: field.TypeString},
+		{Name: "relation_id", Type: field.TypeInt},
+		{Name: "tag_id", Type: field.TypeInt, Comment: "标签ID"},
+	}
+	// TagsRelationTable holds the schema information for the "tags_relation" table.
+	TagsRelationTable = &schema.Table{
+		Name:       "tags_relation",
+		Comment:    "标签-关联表信息",
+		Columns:    TagsRelationColumns,
+		PrimaryKey: []*schema.Column{TagsRelationColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "tags_relation_blogs_blog",
+				Columns:    []*schema.Column{TagsRelationColumns[2]},
+				RefColumns: []*schema.Column{BlogsColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+			{
+				Symbol:     "tags_relation_tags_tag",
+				Columns:    []*schema.Column{TagsRelationColumns[3]},
+				RefColumns: []*schema.Column{TagsColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+		Indexes: []*schema.Index{
+			{
+				Name:    "tagsrelation_tag_id_relation_id",
+				Unique:  true,
+				Columns: []*schema.Column{TagsRelationColumns[3], TagsRelationColumns[2]},
+			},
+		},
+	}
+	// TravelsExtendColumns holds the columns for the "travels_extend" table.
+	TravelsExtendColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 0},
+		{Name: "created_by", Type: field.TypeInt64, Comment: "创建人", Default: 0},
+		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 0},
 		{Name: "updated_by", Type: field.TypeInt64, Comment: "更新人", Default: 0},
 		{Name: "deleted_at", Type: field.TypeInt64, Comment: "软删除时间", Default: 0},
 		{Name: "deleted_by", Type: field.TypeInt64, Comment: "删除人", Default: 0},
@@ -167,16 +340,16 @@ var (
 		{Name: "is_collect", Type: field.TypeBool, Comment: "收藏量", Default: false},
 		{Name: "travel_id", Type: field.TypeInt, Nullable: true, Comment: "旅行的ID"},
 	}
-	// TravelExtendsTable holds the schema information for the "travel_extends" table.
-	TravelExtendsTable = &schema.Table{
-		Name:       "travel_extends",
+	// TravelsExtendTable holds the schema information for the "travels_extend" table.
+	TravelsExtendTable = &schema.Table{
+		Name:       "travels_extend",
 		Comment:    "旅行关联关系",
-		Columns:    TravelExtendsColumns,
-		PrimaryKey: []*schema.Column{TravelExtendsColumns[0]},
+		Columns:    TravelsExtendColumns,
+		PrimaryKey: []*schema.Column{TravelsExtendColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:     "travel_extends_travels_travel_extends",
-				Columns:    []*schema.Column{TravelExtendsColumns[10]},
+				Symbol:     "travels_extend_travels_travel_extends",
+				Columns:    []*schema.Column{TravelsExtendColumns[10]},
 				RefColumns: []*schema.Column{TravelsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
@@ -185,16 +358,16 @@ var (
 			{
 				Name:    "travelextends_account_id_travel_id",
 				Unique:  true,
-				Columns: []*schema.Column{TravelExtendsColumns[7], TravelExtendsColumns[10]},
+				Columns: []*schema.Column{TravelsExtendColumns[7], TravelsExtendColumns[10]},
 			},
 		},
 	}
 	// TravelsColumns holds the columns for the "travels" table.
 	TravelsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true, Comment: "旅行记录的ID"},
-		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1736627068},
+		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 0},
 		{Name: "created_by", Type: field.TypeInt64, Comment: "创建人", Default: 0},
-		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1736627068},
+		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 0},
 		{Name: "updated_by", Type: field.TypeInt64, Comment: "更新人", Default: 0},
 		{Name: "deleted_at", Type: field.TypeInt64, Comment: "软删除时间", Default: 0},
 		{Name: "deleted_by", Type: field.TypeInt64, Comment: "删除人", Default: 0},
@@ -216,19 +389,19 @@ var (
 		PrimaryKey: []*schema.Column{TravelsColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:     "travels_account_travels",
+				Symbol:     "travels_accounts_travels",
 				Columns:    []*schema.Column{TravelsColumns[15]},
-				RefColumns: []*schema.Column{AccountColumns[0]},
+				RefColumns: []*schema.Column{AccountsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 		},
 	}
-	// UserColumns holds the columns for the "user" table.
-	UserColumns = []*schema.Column{
+	// UsersColumns holds the columns for the "users" table.
+	UsersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true, Comment: "用户ID=账户ID"},
-		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1736627068},
+		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 0},
 		{Name: "created_by", Type: field.TypeInt64, Comment: "创建人", Default: 0},
-		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1736627068},
+		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 0},
 		{Name: "updated_by", Type: field.TypeInt64, Comment: "更新人", Default: 0},
 		{Name: "deleted_at", Type: field.TypeInt64, Comment: "软删除时间", Default: 0},
 		{Name: "deleted_by", Type: field.TypeInt64, Comment: "删除人", Default: 0},
@@ -242,19 +415,19 @@ var (
 		{Name: "experience", Type: field.TypeInt, Comment: "经历数", Default: 0},
 		{Name: "project", Type: field.TypeInt, Comment: "项目数", Default: 0},
 	}
-	// UserTable holds the schema information for the "user" table.
-	UserTable = &schema.Table{
-		Name:       "user",
+	// UsersTable holds the schema information for the "users" table.
+	UsersTable = &schema.Table{
+		Name:       "users",
 		Comment:    "用户",
-		Columns:    UserColumns,
-		PrimaryKey: []*schema.Column{UserColumns[0]},
+		Columns:    UsersColumns,
+		PrimaryKey: []*schema.Column{UsersColumns[0]},
 	}
-	// UserExperienceColumns holds the columns for the "user_experience" table.
-	UserExperienceColumns = []*schema.Column{
+	// UsersExperienceColumns holds the columns for the "users_experience" table.
+	UsersExperienceColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true, Comment: "ID"},
-		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1736627068},
+		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 0},
 		{Name: "created_by", Type: field.TypeInt64, Comment: "创建人", Default: 0},
-		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1736627068},
+		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 0},
 		{Name: "updated_by", Type: field.TypeInt64, Comment: "更新人", Default: 0},
 		{Name: "deleted_at", Type: field.TypeInt64, Comment: "软删除时间", Default: 0},
 		{Name: "deleted_by", Type: field.TypeInt64, Comment: "删除人", Default: 0},
@@ -264,26 +437,44 @@ var (
 		{Name: "location", Type: field.TypeString, Comment: "公司地址", SchemaType: map[string]string{"mysql": "varchar(200)"}},
 		{Name: "start", Type: field.TypeInt64, Comment: "开始时间"},
 		{Name: "end", Type: field.TypeInt64, Comment: "结束时间"},
-		{Name: "description", Type: field.TypeString, Comment: "职位描述", SchemaType: map[string]string{"mysql": "tinytext"}},
-		{Name: "responsibilities", Type: field.TypeString, Comment: "主要职责", SchemaType: map[string]string{"mysql": "tinytext"}},
-		{Name: "achievements", Type: field.TypeString, Comment: "工作成就", SchemaType: map[string]string{"mysql": "tinytext"}},
+		{Name: "description", Type: field.TypeString, Comment: "职位描述", SchemaType: map[string]string{"mysql": "mediumtext"}},
+		{Name: "responsibilities", Type: field.TypeString, Comment: "主要职责", SchemaType: map[string]string{"mysql": "mediumtext"}},
+		{Name: "achievements", Type: field.TypeString, Comment: "工作成就", SchemaType: map[string]string{"mysql": "mediumtext"}},
 		{Name: "skills", Type: field.TypeJSON, Comment: "使用技能"},
 		{Name: "project", Type: field.TypeInt, Comment: "项目数", Default: 0},
 		{Name: "image", Type: field.TypeString, Comment: "公司名称", Default: "863f7821fa42eb9d61091b5c6df1c4b0", SchemaType: map[string]string{"mysql": "varchar(255)"}},
 	}
-	// UserExperienceTable holds the schema information for the "user_experience" table.
-	UserExperienceTable = &schema.Table{
-		Name:       "user_experience",
+	// UsersExperienceTable holds the schema information for the "users_experience" table.
+	UsersExperienceTable = &schema.Table{
+		Name:       "users_experience",
 		Comment:    "经历表",
-		Columns:    UserExperienceColumns,
-		PrimaryKey: []*schema.Column{UserExperienceColumns[0]},
+		Columns:    UsersExperienceColumns,
+		PrimaryKey: []*schema.Column{UsersExperienceColumns[0]},
 	}
-	// UserProjectColumns holds the columns for the "user_project" table.
-	UserProjectColumns = []*schema.Column{
+	// UsersFamousQuotesColumns holds the columns for the "users_famous_quotes" table.
+	UsersFamousQuotesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true, Comment: "ID"},
-		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 1736627068},
+		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 0},
 		{Name: "created_by", Type: field.TypeInt64, Comment: "创建人", Default: 0},
-		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 1736627068},
+		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 0},
+		{Name: "updated_by", Type: field.TypeInt64, Comment: "更新人", Default: 0},
+		{Name: "deleted_at", Type: field.TypeInt64, Comment: "软删除时间", Default: 0},
+		{Name: "deleted_by", Type: field.TypeInt64, Comment: "删除人", Default: 0},
+		{Name: "text", Type: field.TypeString, Comment: "名言警句", SchemaType: map[string]string{"mysql": "mediumtext"}},
+	}
+	// UsersFamousQuotesTable holds the schema information for the "users_famous_quotes" table.
+	UsersFamousQuotesTable = &schema.Table{
+		Name:       "users_famous_quotes",
+		Comment:    "名言警句",
+		Columns:    UsersFamousQuotesColumns,
+		PrimaryKey: []*schema.Column{UsersFamousQuotesColumns[0]},
+	}
+	// UsersProjectColumns holds the columns for the "users_project" table.
+	UsersProjectColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true, Comment: "ID"},
+		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 0},
+		{Name: "created_by", Type: field.TypeInt64, Comment: "创建人", Default: 0},
+		{Name: "updated_at", Type: field.TypeInt64, Comment: "更新时间", Default: 0},
 		{Name: "updated_by", Type: field.TypeInt64, Comment: "更新人", Default: 0},
 		{Name: "deleted_at", Type: field.TypeInt64, Comment: "软删除时间", Default: 0},
 		{Name: "deleted_by", Type: field.TypeInt64, Comment: "删除人", Default: 0},
@@ -297,32 +488,40 @@ var (
 		{Name: "link", Type: field.TypeString, Comment: "项目地址", SchemaType: map[string]string{"mysql": "varchar(200)"}},
 		{Name: "photos", Type: field.TypeJSON, Comment: "项目照片"},
 	}
-	// UserProjectTable holds the schema information for the "user_project" table.
-	UserProjectTable = &schema.Table{
-		Name:       "user_project",
+	// UsersProjectTable holds the schema information for the "users_project" table.
+	UsersProjectTable = &schema.Table{
+		Name:       "users_project",
 		Comment:    "项目表",
-		Columns:    UserProjectColumns,
-		PrimaryKey: []*schema.Column{UserProjectColumns[0]},
+		Columns:    UsersProjectColumns,
+		PrimaryKey: []*schema.Column{UsersProjectColumns[0]},
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
-		AccountTable,
+		AccountsTable,
 		BlogsTable,
 		BlogsCommentsTable,
 		BlogsContentTable,
+		BlogsExtendTable,
 		FilesTable,
 		FilesExtendTable,
-		TravelExtendsTable,
+		PalacesMemoTable,
+		PalacesMemoryTable,
+		PalacesTodoTable,
+		PalacesTodoDoneTable,
+		TagsTable,
+		TagsRelationTable,
+		TravelsExtendTable,
 		TravelsTable,
-		UserTable,
-		UserExperienceTable,
-		UserProjectTable,
+		UsersTable,
+		UsersExperienceTable,
+		UsersFamousQuotesTable,
+		UsersProjectTable,
 	}
 )
 
 func init() {
-	AccountTable.Annotation = &entsql.Annotation{
-		Table: "account",
+	AccountsTable.Annotation = &entsql.Annotation{
+		Table: "accounts",
 	}
 	BlogsTable.Annotation = &entsql.Annotation{
 		Table: "blogs",
@@ -333,6 +532,9 @@ func init() {
 	BlogsContentTable.Annotation = &entsql.Annotation{
 		Table: "blogs_content",
 	}
+	BlogsExtendTable.Annotation = &entsql.Annotation{
+		Table: "blogs_extend",
+	}
 	FilesTable.Annotation = &entsql.Annotation{
 		Table: "files",
 	}
@@ -340,21 +542,45 @@ func init() {
 	FilesExtendTable.Annotation = &entsql.Annotation{
 		Table: "files_extend",
 	}
-	TravelExtendsTable.ForeignKeys[0].RefTable = TravelsTable
-	TravelExtendsTable.Annotation = &entsql.Annotation{
-		Table: "travel_extends",
+	PalacesMemoTable.Annotation = &entsql.Annotation{
+		Table: "palaces_memo",
 	}
-	TravelsTable.ForeignKeys[0].RefTable = AccountTable
+	PalacesMemoryTable.Annotation = &entsql.Annotation{
+		Table: "palaces_memory",
+	}
+	PalacesTodoTable.Annotation = &entsql.Annotation{
+		Table: "palaces_todo",
+	}
+	PalacesTodoDoneTable.ForeignKeys[0].RefTable = PalacesTodoTable
+	PalacesTodoDoneTable.Annotation = &entsql.Annotation{
+		Table: "palaces_todo_done",
+	}
+	TagsTable.Annotation = &entsql.Annotation{
+		Table: "tags",
+	}
+	TagsRelationTable.ForeignKeys[0].RefTable = BlogsTable
+	TagsRelationTable.ForeignKeys[1].RefTable = TagsTable
+	TagsRelationTable.Annotation = &entsql.Annotation{
+		Table: "tags_relation",
+	}
+	TravelsExtendTable.ForeignKeys[0].RefTable = TravelsTable
+	TravelsExtendTable.Annotation = &entsql.Annotation{
+		Table: "travels_extend",
+	}
+	TravelsTable.ForeignKeys[0].RefTable = AccountsTable
 	TravelsTable.Annotation = &entsql.Annotation{
 		Table: "travels",
 	}
-	UserTable.Annotation = &entsql.Annotation{
-		Table: "user",
+	UsersTable.Annotation = &entsql.Annotation{
+		Table: "users",
 	}
-	UserExperienceTable.Annotation = &entsql.Annotation{
-		Table: "user_experience",
+	UsersExperienceTable.Annotation = &entsql.Annotation{
+		Table: "users_experience",
 	}
-	UserProjectTable.Annotation = &entsql.Annotation{
-		Table: "user_project",
+	UsersFamousQuotesTable.Annotation = &entsql.Annotation{
+		Table: "users_famous_quotes",
+	}
+	UsersProjectTable.Annotation = &entsql.Annotation{
+		Table: "users_project",
 	}
 }

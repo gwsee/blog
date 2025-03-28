@@ -8,6 +8,20 @@ export function blogList(data) {
         data: data
     })
 }
+export function blogHot(data) {
+    return request({
+        url: '/v1/blogs/hot',
+        method: 'post',
+        data: data
+    })
+}
+export function blogTags(data) {
+    return request({
+        url: '/v1/blogs/tags',
+        method: 'post',
+        data: data
+    })
+}
 // 创建
 export function blogCreate(data) {
     return request({

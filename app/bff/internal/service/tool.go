@@ -25,3 +25,9 @@ func (o *ToolsService) UploadFile(ctx context.Context, in *v1.UploadFileRequest)
 func (o *ToolsService) Files(ctx context.Context, in *global.IDStr) (*global.IDStr, error) {
 	return o.biz.Files(ctx, in)
 }
+func (o *ToolsService) UploadOssToken(ctx context.Context, req *global.IDStr) (*v1.UploadOssTokenReply, error) {
+	return o.biz.UploadOssToken(ctx, req)
+}
+func (o *ToolsService) UploadOssSave(ctx context.Context, req *v1.UploadOssSaveReq) (*global.Empty, error) {
+	return o.biz.UploadOssSave(ctx, req)
+}

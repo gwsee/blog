@@ -18,11 +18,32 @@ type BlogsComment func(*sql.Selector)
 // BlogsContent is the predicate function for blogscontent builders.
 type BlogsContent func(*sql.Selector)
 
+// BlogsExtend is the predicate function for blogsextend builders.
+type BlogsExtend func(*sql.Selector)
+
 // Files is the predicate function for files builders.
 type Files func(*sql.Selector)
 
 // FilesExtend is the predicate function for filesextend builders.
 type FilesExtend func(*sql.Selector)
+
+// PalacesMemo is the predicate function for palacesmemo builders.
+type PalacesMemo func(*sql.Selector)
+
+// PalacesMemory is the predicate function for palacesmemory builders.
+type PalacesMemory func(*sql.Selector)
+
+// PalacesTodo is the predicate function for palacestodo builders.
+type PalacesTodo func(*sql.Selector)
+
+// PalacesTodoDone is the predicate function for palacestododone builders.
+type PalacesTodoDone func(*sql.Selector)
+
+// Tags is the predicate function for tags builders.
+type Tags func(*sql.Selector)
+
+// TagsRelation is the predicate function for tagsrelation builders.
+type TagsRelation func(*sql.Selector)
 
 // TravelExtends is the predicate function for travelextends builders.
 type TravelExtends func(*sql.Selector)
@@ -35,6 +56,9 @@ type User func(*sql.Selector)
 
 // UserExperience is the predicate function for userexperience builders.
 type UserExperience func(*sql.Selector)
+
+// UserFamousQuotes is the predicate function for userfamousquotes builders.
+type UserFamousQuotes func(*sql.Selector)
 
 // UserProject is the predicate function for userproject builders.
 type UserProject func(*sql.Selector)

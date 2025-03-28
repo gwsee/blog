@@ -18,6 +18,10 @@ type BlogsRepo interface {
 	DeleteBlogs(ctx context.Context, data *global.ID) (*global.Empty, error)
 	GetBlogs(ctx context.Context, data *global.ID) (*blogs.GetBlogsReply, error)
 	ListBlogs(ctx context.Context, data *blogs.ListBlogsRequest) (*blogs.ListBlogsReply, error)
+	HotBlogs(ctx context.Context, data *global.PageInfo) (*blogs.ListBlogsReply, error)
+	Thumb(ctx context.Context, data *global.Action) (*global.Empty, error)
+	Collect(ctx context.Context, data *global.Action) (*global.Empty, error)
+	ListBlogTags(ctx context.Context, data *blogs.ListBlogsRequest) (*blogs.ListBlogTagsReply, error)
 	CreateBlogsComment(ctx context.Context, data *blogs.CreateBlogsCommentRequest) (*global.Empty, error)
 	UpdateBlogsComment(ctx context.Context, data *blogs.UpdateBlogsCommentRequest) (*global.Empty, error)
 	DeleteBlogsComment(ctx context.Context, data *global.ID) (*global.Empty, error)
@@ -94,6 +98,19 @@ func (l *BlogsUseCase) ListBlogs(ctx context.Context, data *blogs.ListBlogsReque
 	//	Data: anyData,
 	//}, nil
 }
+func (l *BlogsUseCase) HotBlogs(ctx context.Context, data *global.PageInfo) (*blogs.ListBlogsReply, error) {
+	return l.repo.HotBlogs(ctx, data)
+}
+func (l *BlogsUseCase) Thumb(ctx context.Context, data *global.Action) (*global.Empty, error) {
+	return l.repo.Thumb(ctx, data)
+}
+func (l *BlogsUseCase) Collect(ctx context.Context, data *global.Action) (*global.Empty, error) {
+	return l.repo.Collect(ctx, data)
+}
+func (l *BlogsUseCase) ListBlogTags(ctx context.Context, data *blogs.ListBlogsRequest) (*blogs.ListBlogTagsReply, error) {
+	return l.repo.ListBlogTags(ctx, data)
+}
+
 func (l *BlogsUseCase) CreateBlogsComment(ctx context.Context, data *blogs.CreateBlogsCommentRequest) (*global.Empty, error) {
 	return l.repo.CreateBlogsComment(ctx, data)
 	//if err != nil {

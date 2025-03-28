@@ -355,6 +355,13 @@ func (tu *TravelsUpdate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (tu *TravelsUpdate) defaults() error {
+	if _, ok := tu.mutation.CreatedAt(); !ok {
+		if travels.UpdateDefaultCreatedAt == nil {
+			return fmt.Errorf("ent: uninitialized travels.UpdateDefaultCreatedAt (forgotten import ent/runtime?)")
+		}
+		v := travels.UpdateDefaultCreatedAt()
+		tu.mutation.SetCreatedAt(v)
+	}
 	if _, ok := tu.mutation.UpdatedAt(); !ok {
 		if travels.UpdateDefaultUpdatedAt == nil {
 			return fmt.Errorf("ent: uninitialized travels.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
@@ -391,6 +398,12 @@ func (tu *TravelsUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := tu.mutation.CreatedAt(); ok {
+		_spec.SetField(travels.FieldCreatedAt, field.TypeInt64, value)
+	}
+	if value, ok := tu.mutation.AddedCreatedAt(); ok {
+		_spec.AddField(travels.FieldCreatedAt, field.TypeInt64, value)
 	}
 	if value, ok := tu.mutation.UpdatedAt(); ok {
 		_spec.SetField(travels.FieldUpdatedAt, field.TypeInt64, value)
@@ -886,6 +899,13 @@ func (tuo *TravelsUpdateOne) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (tuo *TravelsUpdateOne) defaults() error {
+	if _, ok := tuo.mutation.CreatedAt(); !ok {
+		if travels.UpdateDefaultCreatedAt == nil {
+			return fmt.Errorf("ent: uninitialized travels.UpdateDefaultCreatedAt (forgotten import ent/runtime?)")
+		}
+		v := travels.UpdateDefaultCreatedAt()
+		tuo.mutation.SetCreatedAt(v)
+	}
 	if _, ok := tuo.mutation.UpdatedAt(); !ok {
 		if travels.UpdateDefaultUpdatedAt == nil {
 			return fmt.Errorf("ent: uninitialized travels.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
@@ -939,6 +959,12 @@ func (tuo *TravelsUpdateOne) sqlSave(ctx context.Context) (_node *Travels, err e
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := tuo.mutation.CreatedAt(); ok {
+		_spec.SetField(travels.FieldCreatedAt, field.TypeInt64, value)
+	}
+	if value, ok := tuo.mutation.AddedCreatedAt(); ok {
+		_spec.AddField(travels.FieldCreatedAt, field.TypeInt64, value)
 	}
 	if value, ok := tuo.mutation.UpdatedAt(); ok {
 		_spec.SetField(travels.FieldUpdatedAt, field.TypeInt64, value)

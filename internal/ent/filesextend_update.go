@@ -256,6 +256,13 @@ func (feu *FilesExtendUpdate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (feu *FilesExtendUpdate) defaults() error {
+	if _, ok := feu.mutation.CreatedAt(); !ok {
+		if filesextend.UpdateDefaultCreatedAt == nil {
+			return fmt.Errorf("ent: uninitialized filesextend.UpdateDefaultCreatedAt (forgotten import ent/runtime?)")
+		}
+		v := filesextend.UpdateDefaultCreatedAt()
+		feu.mutation.SetCreatedAt(v)
+	}
 	if _, ok := feu.mutation.UpdatedAt(); !ok {
 		if filesextend.UpdateDefaultUpdatedAt == nil {
 			return fmt.Errorf("ent: uninitialized filesextend.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
@@ -274,6 +281,12 @@ func (feu *FilesExtendUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := feu.mutation.CreatedAt(); ok {
+		_spec.SetField(filesextend.FieldCreatedAt, field.TypeInt64, value)
+	}
+	if value, ok := feu.mutation.AddedCreatedAt(); ok {
+		_spec.AddField(filesextend.FieldCreatedAt, field.TypeInt64, value)
 	}
 	if value, ok := feu.mutation.UpdatedAt(); ok {
 		_spec.SetField(filesextend.FieldUpdatedAt, field.TypeInt64, value)
@@ -607,6 +620,13 @@ func (feuo *FilesExtendUpdateOne) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (feuo *FilesExtendUpdateOne) defaults() error {
+	if _, ok := feuo.mutation.CreatedAt(); !ok {
+		if filesextend.UpdateDefaultCreatedAt == nil {
+			return fmt.Errorf("ent: uninitialized filesextend.UpdateDefaultCreatedAt (forgotten import ent/runtime?)")
+		}
+		v := filesextend.UpdateDefaultCreatedAt()
+		feuo.mutation.SetCreatedAt(v)
+	}
 	if _, ok := feuo.mutation.UpdatedAt(); !ok {
 		if filesextend.UpdateDefaultUpdatedAt == nil {
 			return fmt.Errorf("ent: uninitialized filesextend.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
@@ -642,6 +662,12 @@ func (feuo *FilesExtendUpdateOne) sqlSave(ctx context.Context) (_node *FilesExte
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := feuo.mutation.CreatedAt(); ok {
+		_spec.SetField(filesextend.FieldCreatedAt, field.TypeInt64, value)
+	}
+	if value, ok := feuo.mutation.AddedCreatedAt(); ok {
+		_spec.AddField(filesextend.FieldCreatedAt, field.TypeInt64, value)
 	}
 	if value, ok := feuo.mutation.UpdatedAt(); ok {
 		_spec.SetField(filesextend.FieldUpdatedAt, field.TypeInt64, value)

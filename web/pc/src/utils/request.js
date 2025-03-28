@@ -91,7 +91,6 @@ service.interceptors.response.use(res => {
     },
     error => {
         let { response } = error;
-        console.log(error,"??????????????")
         if(error.status === 401) {
             message.error("请登录");
             setLoginShow(true)
@@ -104,8 +103,6 @@ service.interceptors.response.use(res => {
                 return
             }
         }else{
-            console.log(error,"xxxx")
-
             let msg = error.message || ''
             if (msg === "Network Error") {
                 msg = "后端接口连接异常";

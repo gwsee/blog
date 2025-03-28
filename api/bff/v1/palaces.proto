@@ -1,0 +1,112 @@
+syntax = "proto3";
+
+package api.bff.v1;
+
+option go_package = "blog/api/bff/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.bff.v1";
+import "third_party/google/api/annotations.proto";
+import "api/global/index.proto";
+import "api/palaces/v1/palaces.proto";
+
+service Palaces {
+  rpc CreatePalaces (palaces.v1.CreatePalacesRequest) returns (palaces.v1.CreatePalacesReply){
+    option (google.api.http) = {
+      post: "/v1/palaces/create"
+      body: "*"
+    };
+  };
+  rpc UpdatePalaces (palaces.v1.UpdatePalacesRequest) returns (palaces.v1.UpdatePalacesReply){
+    option (google.api.http) = {
+      post: "/v1/palaces/update"
+      body: "*"
+    };
+  };
+  rpc DeletePalaces (palaces.v1.DeletePalacesRequest) returns (palaces.v1.DeletePalacesReply){
+    option (google.api.http) = {
+      post: "/v1/palaces/delete"
+      body: "*"
+    };
+  };
+  rpc GetPalaces (palaces.v1.GetPalacesRequest) returns (palaces.v1.GetPalacesReply){
+    option (google.api.http) = {
+      post: "/v1/palaces/get"
+      body: "*"
+    };
+  };
+  rpc ListPalaces (palaces.v1.ListPalacesRequest) returns (palaces.v1.ListPalacesReply){
+    option (google.api.http) = {
+      post: "/v1/palaces/list"
+      body: "*"
+    };
+  };
+
+  rpc SaveMemo(palaces.v1.SaveMemoRequest) returns (global.Empty){
+    option (google.api.http) = {
+      post: "/v1/palaces/memo/save"
+      body: "*"
+    };
+  };
+  rpc DoneMemo(global.State)returns(global.Empty){
+    option (google.api.http) = {
+      post: "/v1/palaces/memo/done"
+      body: "*"
+    };
+  };
+  rpc DeleteMemo(global.ID)returns(global.Empty){
+    option (google.api.http) = {
+      post: "/v1/palaces/memo/delete"
+      body: "*"
+    };
+  };
+  rpc ListMemo(palaces.v1.ListMemoRequest)returns(palaces.v1.ListMemoReply){
+    option (google.api.http) = {
+      post: "/v1/palaces/memo/list"
+      body: "*"
+    };
+  };
+
+  rpc SaveTodo(palaces.v1.SaveTodoItem) returns(global.Empty){
+    option (google.api.http) = {
+      post: "/v1/palaces/todo/save"
+      body: "*"
+    };
+  };
+  rpc DoneTodo(global.ID)returns(global.Empty){
+    option (google.api.http) = {
+      post: "/v1/palaces/todo/done"
+      body: "*"
+    };
+  };
+  rpc DeleteTodo(global.ID)returns(global.Empty){
+    option (google.api.http) = {
+      post: "/v1/palaces/todo/delete"
+      body: "*"
+    };
+  };
+  rpc DeleteTodoDone(global.ID)returns(global.Empty){
+    option (google.api.http) = {
+      post: "/v1/palaces/todo-done/delete"
+      body: "*"
+    };
+  };
+  //删除所有某个todo的记录
+  rpc DeleteTodoRecord(global.ID)returns(global.Empty){
+    option (google.api.http) = {
+      post: "/v1/palaces/todo-record/delete"
+      body: "*"
+    };
+  };
+  rpc ListTodo(palaces.v1.ListTodoRequest)returns(palaces.v1.ListTodoReply){
+    option (google.api.http) = {
+      post: "/v1/palaces/todo/list"
+      body: "*"
+    };
+  };
+  rpc ListTodoDone(palaces.v1.ListTodoRequest)returns(palaces.v1.ListTodoReply){
+    option (google.api.http) = {
+      post: "/v1/palaces/todo-done/list"
+      body: "*"
+    };
+  };
+}

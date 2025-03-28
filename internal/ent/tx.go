@@ -22,10 +22,24 @@ type Tx struct {
 	BlogsComment *BlogsCommentClient
 	// BlogsContent is the client for interacting with the BlogsContent builders.
 	BlogsContent *BlogsContentClient
+	// BlogsExtend is the client for interacting with the BlogsExtend builders.
+	BlogsExtend *BlogsExtendClient
 	// Files is the client for interacting with the Files builders.
 	Files *FilesClient
 	// FilesExtend is the client for interacting with the FilesExtend builders.
 	FilesExtend *FilesExtendClient
+	// PalacesMemo is the client for interacting with the PalacesMemo builders.
+	PalacesMemo *PalacesMemoClient
+	// PalacesMemory is the client for interacting with the PalacesMemory builders.
+	PalacesMemory *PalacesMemoryClient
+	// PalacesTodo is the client for interacting with the PalacesTodo builders.
+	PalacesTodo *PalacesTodoClient
+	// PalacesTodoDone is the client for interacting with the PalacesTodoDone builders.
+	PalacesTodoDone *PalacesTodoDoneClient
+	// Tags is the client for interacting with the Tags builders.
+	Tags *TagsClient
+	// TagsRelation is the client for interacting with the TagsRelation builders.
+	TagsRelation *TagsRelationClient
 	// TravelExtends is the client for interacting with the TravelExtends builders.
 	TravelExtends *TravelExtendsClient
 	// Travels is the client for interacting with the Travels builders.
@@ -34,6 +48,8 @@ type Tx struct {
 	User *UserClient
 	// UserExperience is the client for interacting with the UserExperience builders.
 	UserExperience *UserExperienceClient
+	// UserFamousQuotes is the client for interacting with the UserFamousQuotes builders.
+	UserFamousQuotes *UserFamousQuotesClient
 	// UserProject is the client for interacting with the UserProject builders.
 	UserProject *UserProjectClient
 
@@ -171,12 +187,20 @@ func (tx *Tx) init() {
 	tx.Blogs = NewBlogsClient(tx.config)
 	tx.BlogsComment = NewBlogsCommentClient(tx.config)
 	tx.BlogsContent = NewBlogsContentClient(tx.config)
+	tx.BlogsExtend = NewBlogsExtendClient(tx.config)
 	tx.Files = NewFilesClient(tx.config)
 	tx.FilesExtend = NewFilesExtendClient(tx.config)
+	tx.PalacesMemo = NewPalacesMemoClient(tx.config)
+	tx.PalacesMemory = NewPalacesMemoryClient(tx.config)
+	tx.PalacesTodo = NewPalacesTodoClient(tx.config)
+	tx.PalacesTodoDone = NewPalacesTodoDoneClient(tx.config)
+	tx.Tags = NewTagsClient(tx.config)
+	tx.TagsRelation = NewTagsRelationClient(tx.config)
 	tx.TravelExtends = NewTravelExtendsClient(tx.config)
 	tx.Travels = NewTravelsClient(tx.config)
 	tx.User = NewUserClient(tx.config)
 	tx.UserExperience = NewUserExperienceClient(tx.config)
+	tx.UserFamousQuotes = NewUserFamousQuotesClient(tx.config)
 	tx.UserProject = NewUserProjectClient(tx.config)
 }
 

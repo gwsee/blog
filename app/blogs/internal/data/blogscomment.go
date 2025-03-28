@@ -2,6 +2,7 @@ package data
 
 import (
 	"blog/app/blogs/internal/biz"
+	"blog/internal/constx"
 	"blog/internal/ent"
 	"blog/internal/ent/blogscomment"
 	"blog/internal/ent/migrate"
@@ -74,7 +75,7 @@ func (o *blogsCommentRepo) GetBlogsComment(ctx context.Context, id int64) (*biz.
 func (o *blogsCommentRepo) ListBlogsComment(ctx context.Context, query *biz.BlogsCommentQuery) (int64, []*biz.BlogsComment, error) {
 	tx := o.data.db.BlogsComment.Query().Where(blogscomment.IDGT(int(query.GetStart()))).Where(blogscomment.Or(
 		blogscomment.AccountIDEQ(int(query.AccountId)),
-		blogscomment.StatusEQ(NotHidden),
+		blogscomment.StatusEQ(constx.BlogNotHidden),
 	))
 	list, err := tx.Limit(int(query.GetPageSize())).
 		Order(ent.Asc(blogscomment.FieldID)).All(ctx)

@@ -70,19 +70,17 @@
 </template>
 
 <script setup>
-import {onBeforeUnmount, shallowRef, onMounted, reactive, toRaw, ref, getCurrentInstance} from 'vue'
+import { onBeforeUnmount, shallowRef, onMounted, reactive, toRaw, ref, getCurrentInstance} from 'vue'
+import {customRequest} from "@/utils/util.js";
 import { useRouter,useRoute } from 'vue-router';
 import {message} from "ant-design-vue";
 import { PlusOutlined } from '@ant-design/icons-vue'
 import { blogUpdate,blogCreate, blogGet} from "@/api/blog";
-import { fileUpload,filePrefix } from "@/api/tool.js";
 import Quill from 'quill';
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.bubble.css";
-import {fileFull} from "@/utils/util.js";
-// import ImageResize from 'quill-image-resize-module';
-// Quill.register('modules/imageResize', ImageResize);
+
 let quill = null;
 const quillEditor = ref(null);
 // const editorRef = shallowRef()
@@ -111,22 +109,7 @@ const handleChange = (value) => {
 
 const uploadFile = async (file) => {
   // 这里应该是您的实际文件上传逻辑
-  console.log('处理文件');
-  return new Promise((resolve,reject) => {
-    let formData = new FormData();
-    formData.append('file',file)
-    fileUpload(formData).then(res=>{
-      if(res&&res.code===200){
-        resolve({ fileName:file.name, fileUrl:filePrefix+res.data.uuid });
-      }else{
-        reject(new Error(res.msg||'上传失败'))
-      }
-      console.log("here")
-    }).finally(()=>{
-    }).catch((e)=>{
-      reject(new Error('上传失败'))
-    })
-  });
+  return await customRequest({file})
 };
 
 const insertImage = async (file) => {
@@ -135,7 +118,7 @@ const insertImage = async (file) => {
   const loadingText = '正在上传图片...';
   quill.insertText(range.index,loadingText);
   try {
-    const { fileUrl } = await uploadFile(file);
+   const {fileUrl}= await uploadFile(file);
     quill.deleteText(insertIndex, loadingText.length);
     quill.insertEmbed(insertIndex, 'image', fileUrl);
     quill.setSelection(insertIndex + 1);
@@ -157,6 +140,7 @@ const insertVideo = async (file) => {
     const { fileUrl } = await uploadFile(file);
     quill.deleteText(range.index, '正在上传视频...'.length);
     quill.insertEmbed(range.index, 'video', fileUrl);
+    // quill.clipboard.dangerouslyPasteHTML(range.index, `<video src="`+fileUrl+`" controls style="max-width: 100%;"></video>`);
     quill.setSelection(range.index + 1);
   } catch (error) {
     console.error('视频上传失败', error);
@@ -204,7 +188,6 @@ const videoHandler = () => {
     }
   };
 };
-
 const fileHandler = () => {
   const input = document.createElement('input');
   input.setAttribute('type', 'file');
@@ -217,7 +200,6 @@ const fileHandler = () => {
     }
   };
 };
-
 const pasteHandler = (e) => {
   const clipboard = e.clipboardData || window.clipboardData;
   if (clipboard && clipboard.items) {
@@ -259,9 +241,11 @@ const onReadyQuill =  () => {
           [{ 'font': [] }],
           [{ 'align': [] }],
 
-          ['clean']                                         // remove formatting button
+          ['clean'],                                         // remove formatting
+          ['custom-image-resize'],
         ],
         handlers: {
+          'custom-image-resize': customImageResize,
           image: imageHandler,
           video: videoHandler,
           file: fileHandler
@@ -275,17 +259,46 @@ const onReadyQuill =  () => {
     theme: 'snow'
   };
   quill = quill = new Quill(quillEditor.value,options);  // First matching element will be used
+  const toolbar = quill.getModule('toolbar');
+  toolbar.addHandler('custom-image-resize', customImageResize);
   quill.on('editor-change', (eventName, ...args) => {
     if (eventName === 'text-change') {
-      formState.content = quill.getSemanticHTML()
+      formState.content =  quillEditor.value.getHTML()
     } else if (eventName === 'selection-change') {
       // args[0] will be old range
-      formState.content= quill.getSemanticHTML()
+      formState.content=  quillEditor.value.getHTML()
     }
   });
   quill.root.addEventListener('paste', pasteHandler);
+  quill.root.addEventListener('click', handleImageClick);
   return quill;
 }
+const customImageResize = () => {
+  const range = quill.getSelection();
+  if (range) {
+    const [leaf] = quill.getLeaf(range.index);
+    if (leaf.domNode && leaf.domNode.tagName === 'IMG') {
+      const img = leaf.domNode;
+      const newWidth = prompt('Enter new width (in pixels):', img.width);
+      if (newWidth && !isNaN(newWidth)) {
+        img.width = newWidth;
+        img.height = 'auto'; // Maintain aspect ratio
+      }
+    }
+  }
+};
+
+const handleImageClick = (event) => {
+  if (event.target && event.target.tagName === 'IMG') {
+    const img = event.target;
+    const newWidth = prompt('Enter new width (in pixels):', img.width);
+    if (newWidth && !isNaN(newWidth)) {
+      img.width = newWidth;
+      img.height = 'auto'; // Maintain aspect ratio
+    }
+  }
+};
+
 onMounted(function (){
   if(formBlogRef.value){
     formBlogRef.value.resetFields();
@@ -302,8 +315,8 @@ onMounted(function (){
   blogGet({id:id}).then(res=>{
     if(res&&res.code===200){
       formState.content = res.data.content
-      // quill.clipboard.dangerouslyPasteHTML(res.data.content);
-      quill.root.innerHTML = formState.content
+      quill.clipboard.dangerouslyPasteHTML(res.data.content);
+      //quill.root.innerHTML = formState.content//文档提供的 有bug
       const obj = res.data.header
       formState.cover = obj.cover
       formState.tags = obj.tags
@@ -321,6 +334,7 @@ onBeforeUnmount(() => {
   if (quill) {
     quill.off('text-change');
     quill.root.removeEventListener('paste', pasteHandler);
+    quill.root.removeEventListener('click', handleImageClick);
     quill = null;
   }
 });
@@ -400,7 +414,6 @@ const handleChangeCover = (info) => {
     let uuid = item.uuid||item.response.uuid
     let url = item.url||item.response.url
     if(!uuid){
-      console.log(item,"哪里出现问题了")
       return false
     }
     if(!includes.includes(uuid)){
@@ -440,5 +453,15 @@ const handleChangeCover = (info) => {
   margin-right: auto;
 }
 .tag-class{
+}
+
+:deep(.ql-custom-image-resize) {
+  &::after {
+    content: "Resize";
+  }
+}
+
+:deep(.ql-editor img) {
+  cursor: pointer;
 }
 </style>

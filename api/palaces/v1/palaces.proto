@@ -1,0 +1,87 @@
+syntax = "proto3";
+
+package api.palaces.v1;
+
+option go_package = "blog/api/palaces/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.palaces.v1";
+import "api/global/page.proto";
+import "api/global/index.proto";
+service Palaces {
+	rpc CreatePalaces (CreatePalacesRequest) returns (CreatePalacesReply);
+	rpc UpdatePalaces (UpdatePalacesRequest) returns (UpdatePalacesReply);
+	rpc DeletePalaces (DeletePalacesRequest) returns (DeletePalacesReply);
+	rpc GetPalaces (GetPalacesRequest) returns (GetPalacesReply);
+	rpc ListPalaces (ListPalacesRequest) returns (ListPalacesReply);
+
+	rpc SaveMemo(SaveMemoRequest) returns (global.Empty);
+	rpc DoneMemo(global.State)returns(global.Empty);
+	rpc DeleteMemo(global.ID)returns(global.Empty);
+	rpc ListMemo(ListMemoRequest)returns(ListMemoReply);
+
+	rpc SaveTodo(SaveTodoItem) returns(global.Empty);
+	rpc DoneTodo(global.ID)returns(global.Empty);
+	rpc DeleteTodo(global.ID)returns(global.Empty);
+	rpc DeleteTodoDone(global.ID)returns(global.Empty);
+	rpc DeleteTodoRecord(global.ID)returns(global.Empty);//删除所有某个todo的记录
+	rpc ListTodo(ListTodoRequest)returns(ListTodoReply);
+	rpc ListTodoDone(ListTodoRequest)returns(ListTodoReply);
+}
+message ListTodoReply {
+	int64 total = 1;
+	repeated SaveTodoItem list = 2;
+}
+message ListTodoRequest {
+	global.PageInfo page = 1;
+	string theme = 2;
+	int64 type = 3;
+	optional int64 status = 4;
+	int64 from = 5; //开始日期
+}
+message SaveTodoItem {
+	int64 id = 1; //ID
+	string theme = 2; //主题
+	int64 type = 3; //类型  1:按次,2：固定日期,2无固定日期
+	int64 from = 4; //开始日期
+	int64 to = 5; //截止日期
+	int64 num = 6; //次数
+	int64 sort = 7; //排序
+	string content = 8; //内容
+	int64 status = 9; //状态
+	int64 createdAt = 10;//创建时间
+	int64 updatedAt = 11;//更新时间
+	optional int64 doneId = 12 ; //完成记录的ID
+}
+message ListMemoRequest {
+	global.PageInfo page = 1;
+	string name = 2;
+	optional int64 status = 3;
+}
+message ListMemoReply {
+	int64 total = 1;
+	repeated SaveMemoRequest list = 2;
+}
+message SaveMemoRequest {
+	int64 id = 1;
+	string name = 2;
+	string content = 3;
+	int64 status = 4;
+	int64 createdAt = 5;
+	int64 updatedAt = 6;
+}
+
+
+message CreatePalacesRequest {}
+message CreatePalacesReply {}
+
+message UpdatePalacesRequest {}
+message UpdatePalacesReply {}
+
+message DeletePalacesRequest {}
+message DeletePalacesReply {}
+
+message GetPalacesRequest {}
+message GetPalacesReply {}
+
+message ListPalacesRequest {}
+message ListPalacesReply {}

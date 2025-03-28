@@ -144,7 +144,7 @@ const loginOut = ()=>{
 }
 watch(showLogin,(value)=>{
   if(value){
-    open.value = true
+    open.value = false
   }
 })
 const close = ()=>{
@@ -239,7 +239,6 @@ const handleCancel = () => {
 const beforeUpload = (file) => {
   const isImage = file.type.split("/")[0]==='image'
   if (!isImage) {
-    console.log(file)
     message.error('只能上传 图片 文件!');
     return false
   }
@@ -264,7 +263,6 @@ const handleChange = (info) => {
     let uuid = item.uuid||item.response.uuid
     let url = item.url||item.response.url
     if(!uuid){
-      console.log(item,"哪里出现问题了")
       return false
     }
     if(!includes.includes(uuid)){

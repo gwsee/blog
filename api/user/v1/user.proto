@@ -69,6 +69,19 @@ service User {
 			body: "*"
 		};
 	}
+	//用户侧返回的信息 随机返回 如果存在公告的话 也可能优先返回公告
+	rpc Messages(global.PageInfo) returns(MessagesReply){
+		option (google.api.http) = {
+			body: "*"
+		};
+	};
+}
+message MessagesReply{
+	repeated Message data = 1;
+}
+message Message {
+	int64 id = 1;
+	string content = 2;
 }
 message PhotosReq {
 	int64	 pageSize = 1; //默认返回66个

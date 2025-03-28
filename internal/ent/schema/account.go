@@ -55,7 +55,7 @@ func (Account) Edges() []ent.Edge {
 }
 func (Account) Annotations() []schema.Annotation {
 	return []schema.Annotation{
-		entsql.Annotation{Table: "account"},
+		entsql.Annotation{Table: "accounts"},
 		entsql.WithComments(true),
 		schema.Comment("站点"),
 	}

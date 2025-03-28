@@ -15,9 +15,9 @@ type BlogsComment struct {
 
 func (BlogsComment) Fields() []ent.Field {
 	return []ent.Field{
+		field.Int("id").Positive().Unique().Comment("评论ID"),
 		field.Int("account_id").Positive().Comment("账户ID"),
 		field.Int("blog_id").Positive().Comment("博客ID"),
-		field.Int("id").Positive().Unique().Comment("评论ID"),
 		field.Int("top_id").Default(0).Comment("顶级ID"),
 		field.Int("parent_id").Default(0).Comment("父评论"),
 		field.Int("level").Default(0).Comment("第几楼"),

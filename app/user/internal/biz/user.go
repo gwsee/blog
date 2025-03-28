@@ -100,19 +100,20 @@ type UserRepo interface {
 	DeleteExperience(context.Context, *Experience) error
 	ListExperience(context.Context, *ExperienceQuery) (int, []*Experience, error)
 	Photos(context.Context, *PhotosQuery) ([]*PhotosResp, error)
+	Messages(context.Context, int64) ([]string, error)
 }
 
-// UserUsecase is a User usecase.
-type UserUsecase struct {
+// UserUseCase is a User usecase.
+type UserUseCase struct {
 	repo UserRepo
 	log  *log.Helper
 }
 
-func NewUserUsecase(repo UserRepo, logger log.Logger) *UserUsecase {
-	return &UserUsecase{repo: repo, log: log.NewHelper(logger)}
+func NewUserUseCase(repo UserRepo, logger log.Logger) *UserUseCase {
+	return &UserUseCase{repo: repo, log: log.NewHelper(logger)}
 }
 
-func (uc *UserUsecase) SaveUser(ctx context.Context, req *v1.SaveUserRequest) (*global.Empty, error) {
+func (uc *UserUseCase) SaveUser(ctx context.Context, req *v1.SaveUserRequest) (*global.Empty, error) {
 	if req.Name == "" {
 		return nil, errors.New("姓名必须")
 	}
@@ -131,7 +132,7 @@ func (uc *UserUsecase) SaveUser(ctx context.Context, req *v1.SaveUserRequest) (*
 		Address:      req.Address,
 	})
 }
-func (uc *UserUsecase) GetUser(ctx context.Context) (*v1.GetUserReply, error) {
+func (uc *UserUseCase) GetUser(ctx context.Context) (*v1.GetUserReply, error) {
 	u, err := constx.DefaultUser.User(ctx)
 	if err != nil {
 		return nil, err
@@ -155,7 +156,7 @@ func (uc *UserUsecase) GetUser(ctx context.Context) (*v1.GetUserReply, error) {
 		UpdatedAt:    info.UpdatedAt,
 	}, nil
 }
-func (uc *UserUsecase) SaveProject(ctx context.Context, req *v1.SaveProjectRequest) (*global.Empty, error) {
+func (uc *UserUseCase) SaveProject(ctx context.Context, req *v1.SaveProjectRequest) (*global.Empty, error) {
 	if req.ExperienceId == 0 || req.Start == 0 || len(req.Title) == 0 {
 		return nil, errors.New("参数丢失")
 	}
@@ -176,7 +177,7 @@ func (uc *UserUsecase) SaveProject(ctx context.Context, req *v1.SaveProjectReque
 		Photos:       req.Photos,
 	})
 }
-func (uc *UserUsecase) GetProject(ctx context.Context, req *global.ID) (*v1.GetProjectReply, error) {
+func (uc *UserUseCase) GetProject(ctx context.Context, req *global.ID) (*v1.GetProjectReply, error) {
 	u, err := constx.DefaultUser.User(ctx)
 	if err != nil {
 		return nil, err
@@ -200,14 +201,14 @@ func (uc *UserUsecase) GetProject(ctx context.Context, req *global.ID) (*v1.GetP
 		UserId:       int64(info.UserId),
 	}, nil
 }
-func (uc *UserUsecase) DeleteProject(ctx context.Context, req *global.ID) (*global.Empty, error) {
+func (uc *UserUseCase) DeleteProject(ctx context.Context, req *global.ID) (*global.Empty, error) {
 	u, err := constx.DefaultUser.User(ctx)
 	if err != nil {
 		return nil, err
 	}
 	return &global.Empty{}, uc.repo.DeleteProject(ctx, &Project{ID: int(req.Id), UserId: int(u.Id)})
 }
-func (uc *UserUsecase) ListProject(ctx context.Context, req *v1.ListProjectRequest) (*v1.ListProjectReply, error) {
+func (uc *UserUseCase) ListProject(ctx context.Context, req *v1.ListProjectRequest) (*v1.ListProjectReply, error) {
 	u, err := constx.DefaultUser.User(ctx)
 	if err != nil {
 		return nil, err
@@ -248,7 +249,7 @@ func (uc *UserUsecase) ListProject(ctx context.Context, req *v1.ListProjectReque
 	}
 	return resp, nil
 }
-func (uc *UserUsecase) SaveExperience(ctx context.Context, req *v1.SaveExperienceRequest) (*global.Empty, error) {
+func (uc *UserUseCase) SaveExperience(ctx context.Context, req *v1.SaveExperienceRequest) (*global.Empty, error) {
 	if req.Start == 0 || len(req.Company) == 0 {
 		return nil, errors.New("参数丢失")
 	}
@@ -271,7 +272,7 @@ func (uc *UserUsecase) SaveExperience(ctx context.Context, req *v1.SaveExperienc
 		Skills:           req.Skills,
 	})
 }
-func (uc *UserUsecase) GetExperience(ctx context.Context, req *global.ID) (*v1.GetExperienceReply, error) {
+func (uc *UserUseCase) GetExperience(ctx context.Context, req *global.ID) (*v1.GetExperienceReply, error) {
 	u, err := constx.DefaultUser.User(ctx)
 	if err != nil {
 		return nil, err
@@ -297,14 +298,14 @@ func (uc *UserUsecase) GetExperience(ctx context.Context, req *global.ID) (*v1.G
 		UserId:           int64(info.UserId),
 	}, nil
 }
-func (uc *UserUsecase) DeleteExperience(ctx context.Context, req *global.ID) (*global.Empty, error) {
+func (uc *UserUseCase) DeleteExperience(ctx context.Context, req *global.ID) (*global.Empty, error) {
 	u, err := constx.DefaultUser.User(ctx)
 	if err != nil {
 		return nil, err
 	}
 	return &global.Empty{}, uc.repo.DeleteExperience(ctx, &Experience{ID: int(req.Id), UserId: int(u.Id)})
 }
-func (uc *UserUsecase) ListExperience(ctx context.Context, req *v1.ListExperienceRequest) (*v1.ListExperienceReply, error) {
+func (uc *UserUseCase) ListExperience(ctx context.Context, req *v1.ListExperienceRequest) (*v1.ListExperienceReply, error) {
 	u, err := constx.DefaultUser.User(ctx)
 	if err != nil {
 		return nil, err
@@ -356,7 +357,7 @@ func (uc *UserUsecase) ListExperience(ctx context.Context, req *v1.ListExperienc
 	}
 	return resp, nil
 }
-func (uc *UserUsecase) Photos(ctx context.Context, req *v1.PhotosReq) (*v1.PhotosReply, error) {
+func (uc *UserUseCase) Photos(ctx context.Context, req *v1.PhotosReq) (*v1.PhotosReply, error) {
 	u, err := constx.DefaultUser.User(ctx)
 	if err != nil {
 		return nil, err
@@ -368,6 +369,9 @@ func (uc *UserUsecase) Photos(ctx context.Context, req *v1.PhotosReq) (*v1.Photo
 		Type:     req.Type,
 	}
 	list, err := uc.repo.Photos(ctx, query)
+	if err != nil {
+		return nil, err
+	}
 	var res []*v1.PhotosOne
 	for _, v := range list {
 		res = append(res, &v1.PhotosOne{
@@ -381,4 +385,18 @@ func (uc *UserUsecase) Photos(ctx context.Context, req *v1.PhotosReq) (*v1.Photo
 	return &v1.PhotosReply{
 		Images: res,
 	}, nil
+}
+func (uc *UserUseCase) Messages(ctx context.Context, req *global.PageInfo) (*v1.MessagesReply, error) {
+	//TODO 先获取是否有通知 然后获取名言警句
+	data, err := uc.repo.Messages(ctx, req.PageSize)
+	if err != nil {
+		return nil, err
+	}
+	resp := &v1.MessagesReply{}
+	for _, v := range data {
+		resp.Data = append(resp.Data, &v1.Message{
+			Content: v,
+		})
+	}
+	return resp, nil
 }

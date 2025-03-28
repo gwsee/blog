@@ -54,7 +54,7 @@ func (User) Mixin() []ent.Mixin {
 }
 func (User) Annotations() []schema.Annotation {
 	return []schema.Annotation{
-		entsql.Annotation{Table: "user"},
+		entsql.Annotation{Table: "users"},
 		entsql.WithComments(true),
 		schema.Comment("用户"),
 	}

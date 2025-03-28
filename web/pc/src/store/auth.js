@@ -6,7 +6,7 @@ const state = reactive({
     token: null,
 })
 
-const isLoggedIn = computed(() => !!state.token)
+const isLoggedIn = ref(false)
 
 const showLogin = ref(false)
 
@@ -14,6 +14,7 @@ const setLoginData = (token) => {
     if(!token){
         state.user = null
         state.token = null
+        isLoggedIn.value = false
         return
     }
     localStorage.setItem('token', token)
@@ -22,6 +23,7 @@ const setLoginData = (token) => {
             state.user = res.data
         }
     }).finally(()=>{
+        isLoggedIn.value = !!token
         state.token = token
     })
 }
@@ -31,14 +33,12 @@ const setLoginShow=(flag)=>{
         showLogin.value = false
         return
     }
-    if(isLoggedIn.value){
-        console.log("这里去掉了token？")
-        logout()
-    }
+    logout()
     showLogin.value = true
 }
 
 const logout = () => {
+    isLoggedIn.value = false
     state.user = null
     state.token = null
     localStorage.removeItem('token')
@@ -54,6 +54,7 @@ const checkAuth = () => {
         // 这里应该验证 token 是否有效
         // 如果有效，设置用户信息
         state.token = token
+        isLoggedIn.value = true
         // 获取用户信息的逻辑
     }
 }

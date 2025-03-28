@@ -50,12 +50,16 @@ func wireApp(conf *conf.Bootstrap, tracerProvider *trace.TracerProvider, logger 
 	userUseCase := biz.NewUserUseCase(userRepo, logger)
 	userService := service.NewUserService(userUseCase)
 
+	palacesRepo := data.NewPalacesRepo(dataData, logger)
+	palacesUseCase := biz.NewPalacesUseCase(palacesRepo, logger)
+	palacesService:=service.NewPalacesService(palacesUseCase)
+
 	grpcServer := server.NewGRPCServer(conf, logger, tracerProvider,
 		accountService, blogsService, blogsCommentService,
-		toolService,travelService,userService		)
+		toolService,travelService,userService	,palacesService	)
 	httpServer := server.NewHTTPServer(conf, logger, tracerProvider,
 		accountService, blogsService, blogsCommentService,
-		toolService,travelService,userService		)
+		toolService,travelService,userService,palacesService)
 	app := newApp(logger, grpcServer, httpServer)
 	return app, func() {
 		cleanup()

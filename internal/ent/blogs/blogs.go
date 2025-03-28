@@ -5,6 +5,7 @@ package blogs
 import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 )
 
 const (
@@ -36,8 +37,30 @@ const (
 	FieldTags = "tags"
 	// FieldCover holds the string denoting the cover field in the database.
 	FieldCover = "cover"
+	// FieldBrowseNum holds the string denoting the browse_num field in the database.
+	FieldBrowseNum = "browse_num"
+	// FieldCollectNum holds the string denoting the collect_num field in the database.
+	FieldCollectNum = "collect_num"
+	// FieldLoveNum holds the string denoting the love_num field in the database.
+	FieldLoveNum = "love_num"
+	// EdgeTag holds the string denoting the tag edge name in mutations.
+	EdgeTag = "tag"
+	// EdgeTagRelation holds the string denoting the tag_relation edge name in mutations.
+	EdgeTagRelation = "tag_relation"
 	// Table holds the table name of the blogs in the database.
 	Table = "blogs"
+	// TagTable is the table that holds the tag relation/edge. The primary key declared below.
+	TagTable = "tags_relation"
+	// TagInverseTable is the table name for the Tags entity.
+	// It exists in this package in order to avoid circular dependency with the "tags" package.
+	TagInverseTable = "tags"
+	// TagRelationTable is the table that holds the tag_relation relation/edge.
+	TagRelationTable = "tags_relation"
+	// TagRelationInverseTable is the table name for the TagsRelation entity.
+	// It exists in this package in order to avoid circular dependency with the "tagsrelation" package.
+	TagRelationInverseTable = "tags_relation"
+	// TagRelationColumn is the table column denoting the tag_relation relation/edge.
+	TagRelationColumn = "relation_id"
 )
 
 // Columns holds all SQL columns for blogs fields.
@@ -55,7 +78,16 @@ var Columns = []string{
 	FieldIsHidden,
 	FieldTags,
 	FieldCover,
+	FieldBrowseNum,
+	FieldCollectNum,
+	FieldLoveNum,
 }
+
+var (
+	// TagPrimaryKey and TagColumn2 are the table columns denoting the
+	// primary key for the tag relation (M2M).
+	TagPrimaryKey = []string{"relation_id", "tag_id"}
+)
 
 // ValidColumn reports if the column name is valid (part of the table columns).
 func ValidColumn(column string) bool {
@@ -73,9 +105,12 @@ func ValidColumn(column string) bool {
 //
 //	import _ "blog/internal/ent/runtime"
 var (
-	Hooks [3]ent.Hook
+	Hooks        [3]ent.Hook
+	Interceptors [1]ent.Interceptor
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
 	DefaultCreatedAt int64
+	// UpdateDefaultCreatedAt holds the default value on update for the "created_at" field.
+	UpdateDefaultCreatedAt func() int64
 	// DefaultCreatedBy holds the default value on creation for the "created_by" field.
 	DefaultCreatedBy int64
 	// DefaultUpdatedAt holds the default value on creation for the "updated_at" field.
@@ -90,6 +125,12 @@ var (
 	DefaultDeletedBy int64
 	// DefaultIsHidden holds the default value on creation for the "is_hidden" field.
 	DefaultIsHidden int8
+	// DefaultBrowseNum holds the default value on creation for the "browse_num" field.
+	DefaultBrowseNum int
+	// DefaultCollectNum holds the default value on creation for the "collect_num" field.
+	DefaultCollectNum int
+	// DefaultLoveNum holds the default value on creation for the "love_num" field.
+	DefaultLoveNum int
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
 	IDValidator func(int) error
 )
@@ -155,4 +196,61 @@ func ByIsHidden(opts ...sql.OrderTermOption) OrderOption {
 // ByCover orders the results by the cover field.
 func ByCover(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldCover, opts...).ToFunc()
+}
+
+// ByBrowseNum orders the results by the browse_num field.
+func ByBrowseNum(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldBrowseNum, opts...).ToFunc()
+}
+
+// ByCollectNum orders the results by the collect_num field.
+func ByCollectNum(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCollectNum, opts...).ToFunc()
+}
+
+// ByLoveNum orders the results by the love_num field.
+func ByLoveNum(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldLoveNum, opts...).ToFunc()
+}
+
+// ByTagCount orders the results by tag count.
+func ByTagCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newTagStep(), opts...)
+	}
+}
+
+// ByTag orders the results by tag terms.
+func ByTag(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newTagStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+
+// ByTagRelationCount orders the results by tag_relation count.
+func ByTagRelationCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newTagRelationStep(), opts...)
+	}
+}
+
+// ByTagRelation orders the results by tag_relation terms.
+func ByTagRelation(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newTagRelationStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+func newTagStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(TagInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2M, false, TagTable, TagPrimaryKey...),
+	)
+}
+func newTagRelationStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(TagRelationInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, true, TagRelationTable, TagRelationColumn),
+	)
 }

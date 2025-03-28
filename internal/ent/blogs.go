@@ -41,8 +41,46 @@ type Blogs struct {
 	// 标签
 	Tags []string `json:"tags,omitempty"`
 	// 封面
-	Cover        string `json:"cover,omitempty"`
+	Cover string `json:"cover,omitempty"`
+	// 浏览量
+	BrowseNum int `json:"browse_num,omitempty"`
+	// 收藏量
+	CollectNum int `json:"collect_num,omitempty"`
+	// 点赞量
+	LoveNum int `json:"love_num,omitempty"`
+	// Edges holds the relations/edges for other nodes in the graph.
+	// The values are being populated by the BlogsQuery when eager-loading is set.
+	Edges        BlogsEdges `json:"edges"`
 	selectValues sql.SelectValues
+}
+
+// BlogsEdges holds the relations/edges for other nodes in the graph.
+type BlogsEdges struct {
+	// Tag holds the value of the tag edge.
+	Tag []*Tags `json:"tag,omitempty"`
+	// TagRelation holds the value of the tag_relation edge.
+	TagRelation []*TagsRelation `json:"tag_relation,omitempty"`
+	// loadedTypes holds the information for reporting if a
+	// type was loaded (or requested) in eager-loading or not.
+	loadedTypes [2]bool
+}
+
+// TagOrErr returns the Tag value or an error if the edge
+// was not loaded in eager-loading.
+func (e BlogsEdges) TagOrErr() ([]*Tags, error) {
+	if e.loadedTypes[0] {
+		return e.Tag, nil
+	}
+	return nil, &NotLoadedError{edge: "tag"}
+}
+
+// TagRelationOrErr returns the TagRelation value or an error if the edge
+// was not loaded in eager-loading.
+func (e BlogsEdges) TagRelationOrErr() ([]*TagsRelation, error) {
+	if e.loadedTypes[1] {
+		return e.TagRelation, nil
+	}
+	return nil, &NotLoadedError{edge: "tag_relation"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -52,7 +90,7 @@ func (*Blogs) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case blogs.FieldTags:
 			values[i] = new([]byte)
-		case blogs.FieldID, blogs.FieldCreatedAt, blogs.FieldCreatedBy, blogs.FieldUpdatedAt, blogs.FieldUpdatedBy, blogs.FieldDeletedAt, blogs.FieldDeletedBy, blogs.FieldAccountID, blogs.FieldIsHidden:
+		case blogs.FieldID, blogs.FieldCreatedAt, blogs.FieldCreatedBy, blogs.FieldUpdatedAt, blogs.FieldUpdatedBy, blogs.FieldDeletedAt, blogs.FieldDeletedBy, blogs.FieldAccountID, blogs.FieldIsHidden, blogs.FieldBrowseNum, blogs.FieldCollectNum, blogs.FieldLoveNum:
 			values[i] = new(sql.NullInt64)
 		case blogs.FieldTitle, blogs.FieldDescription, blogs.FieldCover:
 			values[i] = new(sql.NullString)
@@ -151,6 +189,24 @@ func (b *Blogs) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				b.Cover = value.String
 			}
+		case blogs.FieldBrowseNum:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field browse_num", values[i])
+			} else if value.Valid {
+				b.BrowseNum = int(value.Int64)
+			}
+		case blogs.FieldCollectNum:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field collect_num", values[i])
+			} else if value.Valid {
+				b.CollectNum = int(value.Int64)
+			}
+		case blogs.FieldLoveNum:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field love_num", values[i])
+			} else if value.Valid {
+				b.LoveNum = int(value.Int64)
+			}
 		default:
 			b.selectValues.Set(columns[i], values[i])
 		}
@@ -162,6 +218,16 @@ func (b *Blogs) assignValues(columns []string, values []any) error {
 // This includes values selected through modifiers, order, etc.
 func (b *Blogs) Value(name string) (ent.Value, error) {
 	return b.selectValues.Get(name)
+}
+
+// QueryTag queries the "tag" edge of the Blogs entity.
+func (b *Blogs) QueryTag() *TagsQuery {
+	return NewBlogsClient(b.config).QueryTag(b)
+}
+
+// QueryTagRelation queries the "tag_relation" edge of the Blogs entity.
+func (b *Blogs) QueryTagRelation() *TagsRelationQuery {
+	return NewBlogsClient(b.config).QueryTagRelation(b)
 }
 
 // Update returns a builder for updating this Blogs.
@@ -222,6 +288,15 @@ func (b *Blogs) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("cover=")
 	builder.WriteString(b.Cover)
+	builder.WriteString(", ")
+	builder.WriteString("browse_num=")
+	builder.WriteString(fmt.Sprintf("%v", b.BrowseNum))
+	builder.WriteString(", ")
+	builder.WriteString("collect_num=")
+	builder.WriteString(fmt.Sprintf("%v", b.CollectNum))
+	builder.WriteString(", ")
+	builder.WriteString("love_num=")
+	builder.WriteString(fmt.Sprintf("%v", b.LoveNum))
 	builder.WriteByte(')')
 	return builder.String()
 }

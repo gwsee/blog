@@ -20,17 +20,29 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
+const OperationBlogsCollect = "/api.blogs.v1.Blogs/Collect"
 const OperationBlogsCreateBlogs = "/api.blogs.v1.Blogs/CreateBlogs"
 const OperationBlogsDeleteBlogs = "/api.blogs.v1.Blogs/DeleteBlogs"
 const OperationBlogsGetBlogs = "/api.blogs.v1.Blogs/GetBlogs"
+const OperationBlogsHotBlogs = "/api.blogs.v1.Blogs/HotBlogs"
+const OperationBlogsListBlogTags = "/api.blogs.v1.Blogs/ListBlogTags"
 const OperationBlogsListBlogs = "/api.blogs.v1.Blogs/ListBlogs"
+const OperationBlogsThumb = "/api.blogs.v1.Blogs/Thumb"
 const OperationBlogsUpdateBlogs = "/api.blogs.v1.Blogs/UpdateBlogs"
 
 type BlogsHTTPServer interface {
+	// Collect收藏
+	Collect(context.Context, *global.Action) (*global.Empty, error)
 	CreateBlogs(context.Context, *CreateBlogsRequest) (*global.Empty, error)
 	DeleteBlogs(context.Context, *global.ID) (*global.Empty, error)
 	GetBlogs(context.Context, *global.ID) (*GetBlogsReply, error)
+	// HotBlogs最新 热门文章
+	HotBlogs(context.Context, *global.PageInfo) (*ListBlogsReply, error)
+	// ListBlogTags标签
+	ListBlogTags(context.Context, *ListBlogsRequest) (*ListBlogTagsReply, error)
 	ListBlogs(context.Context, *ListBlogsRequest) (*ListBlogsReply, error)
+	// Thumb点赞
+	Thumb(context.Context, *global.Action) (*global.Empty, error)
 	UpdateBlogs(context.Context, *UpdateBlogsRequest) (*global.Empty, error)
 }
 
@@ -41,6 +53,10 @@ func RegisterBlogsHTTPServer(s *http.Server, srv BlogsHTTPServer) {
 	r.POST("/api.blogs.v1.Blogs/DeleteBlogs", _Blogs_DeleteBlogs0_HTTP_Handler(srv))
 	r.POST("/api.blogs.v1.Blogs/GetBlogs", _Blogs_GetBlogs0_HTTP_Handler(srv))
 	r.POST("/api.blogs.v1.Blogs/ListBlogs", _Blogs_ListBlogs0_HTTP_Handler(srv))
+	r.POST("/api.blogs.v1.Blogs/HotBlogs", _Blogs_HotBlogs0_HTTP_Handler(srv))
+	r.POST("/api.blogs.v1.Blogs/Thumb", _Blogs_Thumb0_HTTP_Handler(srv))
+	r.POST("/api.blogs.v1.Blogs/Collect", _Blogs_Collect0_HTTP_Handler(srv))
+	r.POST("/api.blogs.v1.Blogs/ListBlogTags", _Blogs_ListBlogTags0_HTTP_Handler(srv))
 }
 
 func _Blogs_CreateBlogs0_HTTP_Handler(srv BlogsHTTPServer) func(ctx http.Context) error {
@@ -153,11 +169,103 @@ func _Blogs_ListBlogs0_HTTP_Handler(srv BlogsHTTPServer) func(ctx http.Context) 
 	}
 }
 
+func _Blogs_HotBlogs0_HTTP_Handler(srv BlogsHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in global.PageInfo
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationBlogsHotBlogs)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.HotBlogs(ctx, req.(*global.PageInfo))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ListBlogsReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Blogs_Thumb0_HTTP_Handler(srv BlogsHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in global.Action
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationBlogsThumb)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.Thumb(ctx, req.(*global.Action))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*global.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Blogs_Collect0_HTTP_Handler(srv BlogsHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in global.Action
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationBlogsCollect)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.Collect(ctx, req.(*global.Action))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*global.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Blogs_ListBlogTags0_HTTP_Handler(srv BlogsHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListBlogsRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationBlogsListBlogTags)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListBlogTags(ctx, req.(*ListBlogsRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ListBlogTagsReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 type BlogsHTTPClient interface {
+	Collect(ctx context.Context, req *global.Action, opts ...http.CallOption) (rsp *global.Empty, err error)
 	CreateBlogs(ctx context.Context, req *CreateBlogsRequest, opts ...http.CallOption) (rsp *global.Empty, err error)
 	DeleteBlogs(ctx context.Context, req *global.ID, opts ...http.CallOption) (rsp *global.Empty, err error)
 	GetBlogs(ctx context.Context, req *global.ID, opts ...http.CallOption) (rsp *GetBlogsReply, err error)
+	HotBlogs(ctx context.Context, req *global.PageInfo, opts ...http.CallOption) (rsp *ListBlogsReply, err error)
+	ListBlogTags(ctx context.Context, req *ListBlogsRequest, opts ...http.CallOption) (rsp *ListBlogTagsReply, err error)
 	ListBlogs(ctx context.Context, req *ListBlogsRequest, opts ...http.CallOption) (rsp *ListBlogsReply, err error)
+	Thumb(ctx context.Context, req *global.Action, opts ...http.CallOption) (rsp *global.Empty, err error)
 	UpdateBlogs(ctx context.Context, req *UpdateBlogsRequest, opts ...http.CallOption) (rsp *global.Empty, err error)
 }
 
@@ -167,6 +275,19 @@ type BlogsHTTPClientImpl struct {
 
 func NewBlogsHTTPClient(client *http.Client) BlogsHTTPClient {
 	return &BlogsHTTPClientImpl{client}
+}
+
+func (c *BlogsHTTPClientImpl) Collect(ctx context.Context, in *global.Action, opts ...http.CallOption) (*global.Empty, error) {
+	var out global.Empty
+	pattern := "/api.blogs.v1.Blogs/Collect"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationBlogsCollect))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
 }
 
 func (c *BlogsHTTPClientImpl) CreateBlogs(ctx context.Context, in *CreateBlogsRequest, opts ...http.CallOption) (*global.Empty, error) {
@@ -208,11 +329,50 @@ func (c *BlogsHTTPClientImpl) GetBlogs(ctx context.Context, in *global.ID, opts 
 	return &out, nil
 }
 
+func (c *BlogsHTTPClientImpl) HotBlogs(ctx context.Context, in *global.PageInfo, opts ...http.CallOption) (*ListBlogsReply, error) {
+	var out ListBlogsReply
+	pattern := "/api.blogs.v1.Blogs/HotBlogs"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationBlogsHotBlogs))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *BlogsHTTPClientImpl) ListBlogTags(ctx context.Context, in *ListBlogsRequest, opts ...http.CallOption) (*ListBlogTagsReply, error) {
+	var out ListBlogTagsReply
+	pattern := "/api.blogs.v1.Blogs/ListBlogTags"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationBlogsListBlogTags))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 func (c *BlogsHTTPClientImpl) ListBlogs(ctx context.Context, in *ListBlogsRequest, opts ...http.CallOption) (*ListBlogsReply, error) {
 	var out ListBlogsReply
 	pattern := "/api.blogs.v1.Blogs/ListBlogs"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationBlogsListBlogs))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *BlogsHTTPClientImpl) Thumb(ctx context.Context, in *global.Action, opts ...http.CallOption) (*global.Empty, error) {
+	var out global.Empty
+	pattern := "/api.blogs.v1.Blogs/Thumb"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationBlogsThumb))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
